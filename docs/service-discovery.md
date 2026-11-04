@@ -1,8 +1,8 @@
 # Service Discovery
 
-Service discovery turns device XML configuration snapshots into SORESPO service
+Service discovery turns device XML configuration snapshots into DORSI service
 data. The test inputs live under `test/sd`, and the discovery implementation
-lives under `src/sorespo/discovery`.
+lives under `src/dorsi/discovery`.
 
 ## Adding Device XML
 
@@ -12,7 +12,7 @@ Put each device snapshot in:
 test/sd/<device-type>/<device-name>.xml
 ```
 
-`<device-type>` must match a key in `sorespo.sysspec.SYSSPEC.device_types`, for
+`<device-type>` must match a key in `dorsi.sysspec.SYSSPEC.device_types`, for
 example:
 
 ```text
@@ -27,11 +27,11 @@ schema-compatible source.
 
 If the snapshot contains encrypted BGP authentication keys, add the possible
 plaintext values to `_AUTHENTICATION_KEY_HINTS` in
-`src/sorespo/test_discovery.act`.
+`src/dorsi/test_discovery.act`.
 
 ## Test Flow
 
-`src/sorespo/test_discovery.act` defines two service-discovery tests:
+`src/dorsi/test_discovery.act` defines two service-discovery tests:
 
 - `_test_sd_to_rfs` runs `rfs_discovery.discover_rfs(...)` and applies the
   result at layer 2 - rfs layer.
@@ -53,13 +53,13 @@ acton test
 
 ## Code Layout
 
-`src/sorespo/discovery/rfs_discovery.act` is the device-normalization stage. It
+`src/dorsi/discovery/rfs_discovery.act` is the device-normalization stage. It
 detects the device type once per input device, extracts base config, backbone
 interfaces, and iBGP neighbors, then writes
 them into an RFS root. `discover_rfs_root(...)` returns the typed RFS tree;
 `discover_rfs(...)` returns the same data as gdata for the test rig.
 
-`src/sorespo/discovery/cfs_discovery.act` is the service-aggregation stage. It
+`src/dorsi/discovery/cfs_discovery.act` is the service-aggregation stage. It
 calls `discover_rfs_root(...)`, iterates over `rfs_root.rfs`, creates CFS routers,
 aggregates backbone links, and writes global iBGP
 settings.
