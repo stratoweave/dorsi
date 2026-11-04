@@ -1,0 +1,61 @@
+import testing
+
+import stratoweave
+import stratoweave.test_rig as swts
+
+import dorsi.sysspec as sysspec
+
+netinfra1_in = """<data>
+    <netinfra xmlns="http://example.com/netinfra">
+        <router>
+            <name>AMS-CORE-1</name>
+            <id>1</id>
+            <type>CiscoIosXr_25_3_1</type>
+            <role>edge</role>
+            <asn>65001</asn>
+            <mock>true</mock>
+        </router>
+        <router>
+            <name>FRA-CORE-1</name>
+            <id>2</id>
+            <type>CiscoIosXr_25_3_1</type>
+            <role>edge</role>
+            <asn>65001</asn>
+            <mock>true</mock>
+        </router>
+        <router>
+            <name>STO-CORE-1</name>
+            <id>3</id>
+            <type>JuniperCRPD_24_4R1_9</type>
+            <role>edge</role>
+            <asn>65001</asn>
+            <mock>true</mock>
+        </router>
+        <backbone-link>
+            <left-router>AMS-CORE-1</left-router>
+            <left-interface>GigabitEthernet0/0/0/0</left-interface>
+            <right-router>FRA-CORE-1</right-router>
+            <right-interface>GigabitEthernet0/0/0/0</right-interface>
+        </backbone-link>
+        <global-settings>
+            <ibgp-authentication-key>ibgp-authentication-key</ibgp-authentication-key>
+        </global-settings>
+    </netinfra>
+</data>"""
+
+actor _test_netinfra1(t: testing.AsyncT):
+    tr = stratoweave.test_main(sysspec.SYSSPEC, t.log_handler)
+
+    def cont(r: value):
+        if isinstance(r, Exception):
+            t.failure(r)
+            return
+        # Convert every layer's config to XML to confirm the gdata produced by
+        # TTT is valid and round-trips through XML serialization.
+        ln_cfg = None
+        for n in range(4):
+            ln_cfg = tr.layer_config(n).to_xmlstr(pretty=True, deterministic=True)
+        # Report the last (device) layer config.
+        t.success(ln_cfg)
+
+    tr.edit_config_xml(netinfra1_in, cont)

@@ -23,7 +23,7 @@ module netinfra {
       description "Network Infrastructure Router";
       key name;
 
-      sw:transform sorespo.cfs.Router;
+      sw:transform dorsi.cfs.Router;
       tmf:cfs-service "Router";
       sw:link global {
         sw:path /netinfra:netinfra/netinfra:global-settings;
@@ -67,7 +67,7 @@ module netinfra {
     list backbone-link {
       key "left-router left-interface right-router right-interface";
 
-      sw:transform sorespo.cfs.BBLink;
+      sw:transform dorsi.cfs.BBLink;
       tmf:cfs-service "Backbone Link";
 
       leaf left-router {
@@ -100,7 +100,7 @@ module netinfra {
     }
 
     container global-settings {
-      sw:transform sorespo.cfs.GlobalSettings;
+      sw:transform dorsi.cfs.GlobalSettings;
       description
         "Network-wide settings shared across all routers.";
       leaf ibgp-authentication-key {

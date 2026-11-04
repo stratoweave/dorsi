@@ -36,14 +36,14 @@ test-ldep:
 
 .PHONY: gen
 gen:
-	cd spec && acton build $(RELEASE) $(DEP_OVERRIDES) && out/bin/sorespo_gen
+	cd spec && acton build $(RELEASE) $(DEP_OVERRIDES) && out/bin/dorsi_gen
 
 .PHONY: gen-ldep
 gen-ldep:
 	$(MAKE) gen DEP_OVERRIDES="--dep netconf=../../netconf --dep stratoweave=../../stratoweave --dep yang=../../acton-yang --dep tmf=../../actmf --dep http_router=../../http-router"
 
 # Rebuild the web UI and regenerate the embedded-assets module
-# (src/sorespo/webui_assets.act, committed). Requires bun.
+# (src/dorsi/webui_assets.act, committed). Requires bun.
 .PHONY: gen-webui
 gen-webui:
 	rm -rf webui/build
@@ -65,15 +65,15 @@ download-release:
 	fi; \
 	ARCH=$$(uname -m); \
 	if [ "$$ARCH" = "arm64" ]; then ARCH="aarch64"; fi; \
-	RELEASE_FILE=sorespo-linux-$$ARCH.tar.gz; \
+	RELEASE_FILE=dorsi-linux-$$ARCH.tar.gz; \
 	echo "Downloading $$RELEASE_FILE from GitHub..."; \
 	mkdir -p out/bin; \
-	if ! curl -L -f -o /tmp/$$RELEASE_FILE https://github.com/stratoweave/sorespo/releases/download/tip/$$RELEASE_FILE; then \
+	if ! curl -L -f -o /tmp/$$RELEASE_FILE https://github.com/stratoweave/dorsi/releases/download/tip/$$RELEASE_FILE; then \
 		echo "Error: Failed to download $$RELEASE_FILE - this platform may not have a pre-built release"; \
 		exit 1; \
 	fi; \
 	echo "Extracting binary..."; \
 	tar -xzf /tmp/$$RELEASE_FILE -C out/bin/; \
-	chmod +x out/bin/sorespo; \
+	chmod +x out/bin/dorsi; \
 	rm /tmp/$$RELEASE_FILE; \
-	echo "Download complete: out/bin/sorespo"
+	echo "Download complete: out/bin/dorsi"

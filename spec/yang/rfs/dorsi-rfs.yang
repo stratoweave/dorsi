@@ -1,0 +1,123 @@
+module dorsi-rfs {
+    yang-version "1.1";
+    namespace "http://example.com/dorsi-rfs";
+    prefix "dorsi-rfs";
+
+    import stratoweave-rfs {
+        prefix sw-rfs;
+    }
+    import ietf-inet-types {
+      prefix inet;
+    }
+    import stratoweave {
+      prefix sw;
+    }
+
+    augment "/sw-rfs:rfs" {
+        container base-config {
+
+            sw:rfs-transform dorsi.rfs.BaseConfig;
+
+            leaf role {
+                type string;
+            }
+
+            leaf ipv4-address {
+                type string;
+                mandatory true;
+            }
+
+            leaf ipv6-address {
+                type string;
+                mandatory true;
+            }
+
+            leaf asn {
+                type inet:as-number;
+                mandatory true;
+            }
+
+            leaf ibgp-authentication-key {
+                type string;
+                mandatory true;
+            }
+        }
+
+        list backbone-interface {
+            key name;
+
+            sw:rfs-transform dorsi.rfs.BBInterface;
+
+            leaf name {
+                type string;
+            }
+
+            leaf ipv4-address {
+                type string;
+            }
+
+            leaf ipv4-prefix-length {
+                type uint8 {
+                    range "0..32";
+                }
+                default "30";
+            }
+
+            leaf ipv6-address {
+                type string;
+            }
+
+            leaf ipv6-prefix-length {
+                type uint8 {
+                    range "0..128";
+                }
+            }
+
+            container remote {
+                leaf device {
+                    type string;
+                    mandatory true;
+                }
+                leaf interface {
+                    type string;
+                    mandatory true;
+                }
+            }
+
+            container state {
+                config false;
+                description
+                    "Operational state of the backbone interface, polled from
+                     the device. oper-status is the interface oper-state.";
+                leaf oper-status {
+                    type enumeration {
+                        enum up;
+                        enum down;
+                        enum unknown;
+                    }
+                }
+            }
+
+        }
+
+        list ibgp-neighbor {
+          key address;
+          sw:rfs-transform dorsi.rfs.IbgpNeighbor;
+          leaf address {
+            type inet:ip-address;
+          }
+          leaf asn {
+            // Need this one for IOS XR: router bgp <asn>
+            type inet:as-number;
+            mandatory true;
+          }
+          leaf description {
+            type string;
+            mandatory true;
+          }
+          leaf ibgp-authentication-key {
+            type string;
+          }
+        }
+  }
+}

@@ -1,5 +1,5 @@
-name = "sorespo_gen"
-fingerprint = 0xcb43a968b1316986
+name = "dorsi_gen"
+fingerprint = 0xe058ccacde9909b7
 dependencies = {
     "stratoweave": (
         repo_url="https://github.com/stratoweave/stratoweave",
