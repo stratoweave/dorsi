@@ -1,0 +1,91 @@
+module l3vpn-inter {
+  yang-version "1.1";
+  namespace "http://example.com/l3vpn-inter";
+  prefix "l3vpn-inter";
+  description "L3VPN intermediate";
+  revision 2019-01-01 {
+    description "test revision";
+    reference "ref1";
+  }
+  import stratoweave {
+    prefix sw;
+  }
+
+  container l3vpns {
+    description "L3VPN";
+    list l3vpn {
+      key name;
+
+      sw:transform sorespo.inter.L3Vpn;
+
+      leaf name {
+        type string;
+      }
+      leaf description {
+        type string;
+      }
+      list endpoint {
+        key "device interface";
+
+        leaf device {
+          type string;
+        }
+        leaf interface {
+          type string;
+        }
+        leaf site {
+          type string;
+          mandatory true;
+        }
+        leaf site-network-access {
+          type string;
+          mandatory true;
+        }
+        leaf provider-ipv4-address {
+          type string;
+          mandatory true;
+        }
+        leaf customer-ipv4-address {
+          type string;
+        }
+        leaf ipv4-prefix-length {
+          type uint8 {
+            range "0..32";
+          }
+          mandatory true;
+        }
+        container bgp {
+          presence "BGP enabled";
+          leaf as-number {
+            type uint32;
+            mandatory true;
+          }
+          leaf authentication-key {
+            type string;
+          }
+        }
+        container state {
+          config false;
+          description
+            "eBGP customer session telemetry, lifted from the RFS ebgp-customer
+             entry. debug-active reflects the per-neighbor escalation.";
+          leaf session-state {
+            type enumeration {
+              enum idle;
+              enum connect;
+              enum active;
+              enum opensent;
+              enum openconfirm;
+              enum established;
+            }
+          }
+          leaf last-event { type string; }
+          leaf established-transitions { type uint64; }
+          leaf debug-active { type boolean; }
+          leaf negotiated-hold-time { type uint64; }
+          leaf last-notification { type string; }
+        }
+      }
+    }
+  }
+}

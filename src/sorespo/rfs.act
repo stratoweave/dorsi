@@ -1,0 +1,744 @@
+import yang.adata
+import yang.gdata as gdata
+import stratoweave.device as swdev
+import stratoweave.ttt
+from stratoweave.exception import UnsupportedDevice
+
+from rtrsecrets.junos import *
+from rtrsecrets.cisco import cisco_type7_encrypt
+from rtrsecrets.nokia import nokia_srl_aes1_encrypt
+
+import timeseries
+
+import sorespo.layers.base_2 as base
+import sorespo.layers.y_2 as y_2
+import sorespo.layers.y_2_oper as y_2_oper
+
+from sorespo.layers.y_2 import stratoweave_rfs__rfs__backbone_interface_entry
+
+import sorespo.devices.CiscoIosXr_25_3_1 as xr25
+import sorespo.devices.CiscoIosXr_25_3_1_oper as xr25_oper
+from sorespo.devices.CiscoIosXr_25_3_1_oper import root as xr25_oper_root
+import sorespo.devices.JuniperCRPD_24_4R1_9 as crpd24
+import sorespo.devices.NokiaSRLinux_25_3_2 as srl25
+import sorespo.devices.NokiaSRLinux_25_3_2_oper as srl25_oper
+from sorespo.devices.NokiaSRLinux_25_3_2_oper import root as srl25_oper_root
+
+CRPD = True
+
+_SRL_AES1_SALT = b"\x01\x00sorespo!\x6f"
+
+def prefix_length_to_netmask(prefix_length):
+    binary_netmask = ("1" * prefix_length).ljust(32, "0")
+    octets = [int(binary_netmask[i:i + 8], 2) for i in range(0, 32, 8)]
+    return ".".join(map(str, octets))
+
+def split_interface_name(interface):
+    """Split interface name into main interface and unit number.
+    Example: 'ge-0/0/0.100' returns ('ge-0/0/0', '100')
+    """
+    parts = interface.split('.')
+    if len(parts) == 2:
+        return (parts[0], parts[1])
+    return (interface, "0")
+
+def net_from_ip_address(ip_address):
+    """Generate a NET address from an IPv4 address."""
+    # calculate the net-clns-address from IPv4 address:
+    # first split the address into an array of padded strings
+    # 123.45.67.8 => ['123', '045', '067', '008'],
+    # then join to form a long string '123045067008'
+    # and split the long string into '1230.4506.7008' to be used in the final net_clns_address
+    padded_split = ["%03d" % int(v) for v in ip_address.split('.')]
+    join_str = ''.join(padded_split)
+    net_clns_address = '49.0001.' + join_str[0:4] + '.' + join_str[4:8] + '.' + join_str[8:] + '.00'
+    return net_clns_address
+
+def _bb_interface_description(remote_device: str, remote_interface: str) -> str:
+    return "Link to {remote_device} [{remote_interface}]"
+
+def bb_interface_subscription_owner_id(interface_name: str) -> str:
+    return "backbone-interface:{interface_name}"
+
+# --- BGP neighbor session telemetry (SR Linux) -------------------------------
+# Poll SR Linux BGP session-state normally; subscribe to details only in debug.
+
+class BgpNeighborStats(object):
+    session_state: ?str
+    last_event: ?str
+    established_transitions: ?u64
+    negotiated_hold_time: ?u64
+    last_notification: ?str
+
+    def __init__(self):
+        self.session_state = None
+        self.last_event = None
+        self.established_transitions = None
+        self.negotiated_hold_time = None
+        self.last_notification = None
+
+def _fmt_notification(sent: ?str, received: ?str) -> ?str:
+    # Tag notification direction so local and peer teardowns stay distinct.
+    if sent is not None and received is not None:
+        return "sent:{sent} received:{received}"
+    if sent is not None:
+        return "sent:{sent}"
+    if received is not None:
+        return "received:{received}"
+    return None
+
+def _read_srl_bgp(root: srl25_oper_root, ni: str, addr: str) -> BgpNeighborStats:
+    s = BgpNeighborStats()
+    for n in root.network_instance:
+        if n.name == ni:
+            bgp = n.protocols.bgp
+            if bgp is not None:
+                for nb in bgp.neighbor:
+                    if nb.peer_address == addr:
+                        s.session_state = nb.session_state
+                        s.last_event = nb.last_event
+                        s.established_transitions = nb.established_transitions
+                        s.negotiated_hold_time = nb.timers.negotiated_hold_time
+                        s.last_notification = _fmt_notification(nb.sent_messages.last_notification_error_code, nb.received_messages.last_notification_error_code)
+    return s
+
+# --- BGP neighbor session telemetry (Cisco IOS XR) ---------------------------
+# XR exposes neighbor oper state under Cisco-IOS-XR-ipv4-bgp-oper; the eBGP
+# customer neighbor lives in the per-VRF table (vrfs/vrf), matching the RFS
+# ebgp-customer config which places it under `router bgp <as> / vrf <name>`.
+
+def _xr_conn_state(s: ?str) -> ?str:
+    # Normalise XR Bgp-conn-state ("bgp-st-estab", …) to the layer's session-state
+    # enum. Anything other than "established" keeps debug escalation armed.
+    if s is None:
+        return None
+    elif s == "bgp-st-idle":
+        return "idle"
+    elif s == "bgp-st-connect":
+        return "connect"
+    elif s == "bgp-st-active":
+        return "active"
+    elif s == "bgp-st-open-sent":
+        return "opensent"
+    elif s == "bgp-st-open-confirm":
+        return "openconfirm"
+    elif s == "bgp-st-estab":
+        return "established"
+    else:
+        # closing / closing-sync / dont-care: not established.
+        return "idle"
+
+def _xr_reset_reason(r: ?str) -> ?str:
+    # "bgp-none" means the session has never reset; treat as no event.
+    if r is None or r == "bgp-none":
+        return None
+    return r
+
+def _fmt_xr_notification(code: ?u64, subcode: ?u64) -> ?str:
+    # XR reports the last NOTIFICATION as numeric code/subcode; surface only real ones.
+    if code is not None and code != 0:
+        sc = subcode if subcode is not None else u64(0)
+        return "code:{code} subcode:{sc}"
+    return None
+
+def _read_xr_bgp(root: xr25_oper_root, vrf: str, addr: str) -> BgpNeighborStats:
+    s = BgpNeighborStats()
+    for inst in root.bgp.instances.instance:
+        for v in inst.instance_active.vrfs.vrf:
+            if v.vrf_name == vrf:
+                for nb in v.neighbors.neighbor:
+                    if nb.neighbor_address == addr:
+                        s.session_state = _xr_conn_state(nb.connection_state)
+                        s.negotiated_hold_time = nb.hold_time
+                        s.last_event = _xr_reset_reason(nb.reset_reason)
+                        s.last_notification = _fmt_xr_notification(nb.last_notify_error_code, nb.last_notify_error_subcode)
+    return s
+
+class BaseConfig(base.BaseConfig):
+    def transform(self, i, di):
+        print("RFS /rfs{{{di.name}}}/base-config transform running {i.role}", err=True)
+
+        net_clns_address = net_from_ip_address(i.ipv4_address)
+
+        if "Cisco-IOS-XR-um-hostname-cfg" in di.modules:
+            print("RFS /rfs{{{di.name}}}/base-config transform for Cisco IOS XR", err=True)
+            dev = xr25.root()
+            dev.hostname.system_network_name = di.name
+            intf = dev.interfaces.interface.create("Loopback0")
+            intf.ipv4.addresses.create_address(i.ipv4_address, "255.255.255.255")
+
+            # IS-IS global config
+            ip = dev.um_router_isis_cfg_router.isis.processes.process.create("1")
+            ip.is_type = "level-2-only"
+            ip.nets.net.create(net_clns_address)
+            af = ip.address_families.address_family.create(("ipv4", "unicast"))
+            af.metric_style.create_wide()
+
+            # Loopback0 IS-IS interface config
+            lo0 = ip.interfaces.interface.create("Loopback0", state="passive")
+            lo0.address_families.address_family.create(("ipv4", "unicast"))
+
+            # BGP global config
+            bgp_as = dev.um_router_bgp_cfg_router.bgp.as_.create(i.asn)
+            bgp_as.bgp.router_id = i.ipv4_address
+            # Create neighbor-group: IPV4-IBGP
+            bgp_ng = bgp_as.neighbor_groups.neighbor_group.create("IPV4-IBGP", remote_as=i.asn, update_source="Loopback0")
+            bgp_ng.address_families.address_family.create("vpnv4-unicast")
+            bgp_ng.address_families.address_family.create("vpnv6-unicast")
+            bgp_ng.password.encrypted = cisco_type7_encrypt(i.ibgp_authentication_key, 4)
+
+            bgp_as.address_families.address_family.create("vpnv4-unicast")
+            bgp_as.address_families.address_family.create("vpnv6-unicast")
+
+            # Route policy ACCEPT
+            rpl = """route-policy ACCEPT
+  done
+end-policy
+"""
+            dev.routing_policy.route_policies.route_policy.create("ACCEPT", rpl)
+
+            return dev
+
+        elif "http://xml.juniper.net/netconf/junos/1.0" in di.modules or "junos-conf-root" in di.modules:
+            print("RFS /rfs{{{di.name}}}/base-config transform for JUNOS", err=True)
+            dev = crpd24.root()
+
+            dev.configuration.system.host_name = di.name
+
+            services = dev.configuration.system.create_services()
+            services.netconf.rfc_compliant = True
+            services.netconf.yang_compliant = True
+
+            lo0 = dev.configuration.interfaces.interface.create("lo0", description="ROLE: {i.role}")
+            unit = lo0.unit.create("0")
+            unit.family.create_inet().address.create("{i.ipv4_address}/32")
+            unit.family.create_iso().address.create(net_clns_address)
+
+            # IS-IS global config
+            dcpi = dev.configuration.protocols.isis
+            dcpi.lsp_lifetime = 65535
+            dcpi.level.create(1, disable=True)
+            dcpi.level.create(2, wide_metrics_only=True)
+            ilo0 = dcpi.interface.create("lo0.0")
+            ilo0.create_passive()
+
+            # BGP global config
+            dev.configuration.routing_options.autonomous_system.as_number = str(i.asn)
+            bgp = dev.configuration.protocols.bgp
+            bgp.log_updown = True
+
+            # Create neighbor-group: IPV4-IBGP
+            g1 = bgp.group.create("IPV4-IBGP", type="internal", local_address=i.ipv4_address, hold_time=90, authentication_key=junos_encrypt(i.ibgp_authentication_key, "4"))
+            g1.family.inet_vpn.create_unicast()
+            g1.family.inet6_vpn.create_unicast()
+            g1.family.create_route_target()
+
+            return dev
+            
+        elif "srl_nokia-system" in di.modules:
+            print("RFS /rfs{{{di.name}}}/base-config transform for Nokia SRLinux", err=True)
+            dev = srl25.root()
+            device_name = di.name
+            dev.system.name.host_name = device_name
+            index = dev.interface.create("system0").subinterface.create(0)
+            index.ipv4.admin_state = "enable"
+            index.ipv4.address.create("{i.ipv4_address}/32")
+
+            intf_mgmt = dev.interface.create("mgmt0", admin_state="enable")
+            intf_mgmt0 = intf_mgmt.subinterface.create(0, admin_state="enable")
+            intf_mgmt0.ipv4.admin_state = "enable"
+            intf_mgmt0.ipv6.admin_state = "enable"
+
+            # mgmt network-instance is required
+            ni_mgmt = dev.network_instance.create("mgmt", type=srl25.srl_nokia_network_instance_ip_vrf, admin_state="enable", description="Management network instance")
+            ni_mgmt.interface.create("mgmt0.0")
+
+            # IS-IS global config
+            ni = dev.network_instance.create("default")
+            ni.interface.create("system0.0")
+            isis = ni.protocols.create_isis()
+            instance = isis.instance.create("quicklab", level_capability="L2", admin_state="enable")
+            instance.net = [ net_clns_address ]
+            instance.ipv4_unicast.admin_state = "enable"
+            instance.interface.create("system0.0", admin_state="enable", passive=True)
+
+            # BGP global config
+            bgp = ni.protocols.create_bgp(autonomous_system=i.asn, router_id=i.ipv4_address)
+            bgp.afi_safi.create(srl25.srl_nokia_common_ipv4_unicast, admin_state="enable")
+            bgp.afi_safi.create(srl25.srl_nokia_common_evpn, admin_state="enable")
+
+            # Create neighbor-group: IPV4-IBGP
+            bgp.group.create("IPV4-IBGP", peer_as=i.asn)
+
+            return dev
+
+        raise UnsupportedDevice()
+
+class BBInterface(base.BBInterface):
+    def transform(self, i, di):
+        print("RFS /rfs{{{di.name}}}/backbone-interface transform running [{i.name}] <-> {i.remote.device} [{i.remote.interface}]", err=True)
+        if_description = _bb_interface_description(i.remote.device, i.remote.interface)
+
+        if "Cisco-IOS-XR-um-hostname-cfg" in di.modules:
+            print("RFS /rfs{{{di.name}}}/backbone-interface transform running [{i.name}] <-> {i.remote.device} [{i.remote.interface}] for Cisco IOS XR", err=True)
+            dev = xr25.root()
+
+            # Create the interface
+            intf = dev.interfaces.interface.create(i.name, description=if_description)
+            ipv4_address = i.ipv4_address
+            if ipv4_address is not None:
+                intf.ipv4.addresses.create_address(ipv4_address, prefix_length_to_netmask(int(i.ipv4_prefix_length)))
+
+            # IS-IS config for this interface
+            ip = dev.um_router_isis_cfg_router.isis.processes.process.create("1")
+            ci = ip.interfaces.interface.create(i.name, circuit_type="level-2-only", point_to_point=True)
+            af = ci.address_families.address_family.create(("ipv4", "unicast"))
+            af.metric_levels.metric_level.create(2, default_metric=5000)
+
+            # MPLS and LDP config for this interface
+            ldp = dev.mpls.create_ldp()
+            ldp.interfaces.interface.create(i.name)
+            ldp.address_families.address_family.create("ipv4")
+
+            return dev
+        elif "http://xml.juniper.net/netconf/junos/1.0" in di.modules or "junos-conf-root" in di.modules:
+            print("RFS /rfs{{{di.name}}}/backbone-interface transform running [{i.name}] <-> {i.remote.device} [{i.remote.interface}] for JUNOS", err=True)
+            dev = crpd24.root()
+
+            # Create the interface
+            unit = dev.configuration.interfaces.interface.create(i.name).unit.create("0")
+            unit.description = if_description
+            ipv4_address = i.ipv4_address
+            if ipv4_address is not None:
+                unit.family.create_inet().address.create("{ipv4_address}/{i.ipv4_prefix_length}")
+
+            # IS-IS config for this interface
+            dcpi = dev.configuration.protocols.isis
+            # vMX: ge-0/0/0.0, cRPD: eth0 (must not include unit)
+            if not CRPD:
+                interface = "{i.name}.0"
+            else:
+                interface = i.name
+            isis_intf = dcpi.interface.create(interface)
+            isis_intf.point_to_point = True
+            isis_intf.level.create(1, disable=True)
+            isis_intf.level.create(2, metric=5000)
+
+            # MPLS and LDP config for this interface
+            dev.configuration.protocols.mpls.interface.create(interface)
+            dev.configuration.protocols.ldp.interface.create(interface)
+
+            return dev
+
+        elif "srl_nokia-system" in di.modules:
+            print("RFS /rfs{{{di.name}}}/backbone-interface transform running [{i.name}] <-> {i.remote.device} [{i.remote.interface}] for Nokia SRLinux", err=True)
+            dev = srl25.root()
+
+            # Create the interface
+            ni = dev.network_instance.create("default")
+            intf = dev.interface.create(i.name)
+            intf.description = if_description
+            intf.admin_state = "enable"
+            subif = intf.subinterface.create(0)
+            subif.admin_state = "enable"
+            subif.description = if_description
+            subif.ipv4.admin_state = "enable"
+            ipv4_address = i.ipv4_address
+            if ipv4_address is not None:
+                subif.ipv4.address.create("%s/%s" % (ipv4_address, str(i.ipv4_prefix_length)))
+
+            # Add interface to network-instance
+            ni.interface.create("%s.0" % i.name)
+
+            # IS-IS config for this interface
+            isis = ni.protocols.create_isis()
+            instance = isis.instance.create("quicklab")
+            isis_intf = instance.interface.create("%s.0" % i.name)
+            isis_intf.admin_state = "enable"
+            isis_intf.circuit_type = "point-to-point"
+            il2 = isis_intf.level.create(2)
+            il2.metric = 5000
+
+            return dev
+
+        raise UnsupportedDevice()
+
+
+# --- Backbone interface oper-status -------------------------------------------
+# Poll each backbone interface's oper-state from the device. The inter/CFS
+# BBLinkTransform lift combines the two endpoints into a link-status (up only
+# when both ends are up). SR Linux and IOS XR expose interface oper-state.
+actor BBInterfaceTransform(path, update_oper: proc(?y_2_oper.stratoweave_rfs__rfs__backbone_interface_entry)->None, dev: swdev.DeviceMgr):
+    _subs = gdata.SubscriptionManager(dev.tree_provider(), str(path))
+    _oper = base.BBInterface.new_state(path)
+
+    def publish(oper_status: ?str):
+        _oper.state.oper_status = oper_status
+        update_oper(_oper)
+
+    def on_xr_state(root: ?xr25_oper_root, err: ?Exception):
+        status: ?str = None
+        if err is not None:
+            print("BBInterfaceTransform subscription error: {err}", err=True)
+        elif root is not None:
+            for interface in root.pfi_im_cmd_oper_interfaces.interface_xr.interface:
+                raw = interface.state
+                if raw == "im-state-up" or raw == "im-state-operational":
+                    status = "up"
+                elif raw == "im-state-unknown" or raw == "im-state-not-ready" or raw == "im-state-last":
+                    status = "unknown"
+                elif raw is not None and raw.startswith("im-state-"):
+                    # Any other im-state-* (admin/non-admin down, shutdown,
+                    # err-disable, transitions, reset, …) is operationally down.
+                    status = "down"
+                elif raw is not None:
+                    status = "unknown"
+        publish(status)
+
+    def on_srl_state(root: ?srl25_oper_root, err: ?Exception):
+        status: ?str = None
+        if err is not None:
+            print("BBInterfaceTransform subscription error: {err}", err=True)
+        elif root is not None:
+            for interface in root.interface:
+                raw = interface.oper_state
+                if raw == "up":
+                    status = "up"
+                elif raw == "down":
+                    status = "down"
+                elif raw is not None:
+                    status = "unknown"
+        publish(status)
+
+    def on_conf(conf: y_2.stratoweave_rfs__rfs__backbone_interface_entry):
+        want: set[gdata.Delivery] = set()
+        modset = dev.get_modules().0
+        if "Cisco-IOS-XR-um-hostname-cfg" in modset:
+            xr_dst = xr25_oper.dst(on_xr_state)
+            want.add(xr_dst.deliver({
+                xr25_oper.subs.pfi_im_cmd_oper_interfaces.interface_xr.interface.entry(conf.name).state.subscribe(period=5.0)
+            }))
+        elif "srl_nokia-system" in modset:
+            srl_dst = srl25_oper.dst(on_srl_state)
+            want.add(srl_dst.deliver({
+                srl25_oper.subs.interface.entry(conf.name).oper_state.subscribe(period=5.0)
+            }))
+        _subs.declare(want)
+
+    def shutdown():
+        pass
+
+
+class IbgpNeighbor(base.IbgpNeighbor):
+    def transform(self, i, di):
+        print("RFS /rfs{{{di.name}}}/ibgp-neighbor transform running {i.address}", err=True)
+
+        if "Cisco-IOS-XR-um-hostname-cfg" in di.modules:
+            print("RFS /rfs{{{di.name}}}/ibgp-neighbor transform running {i.address} for Cisco IOS XR", err=True)
+            dev = xr25.root()
+            bgp_as = dev.um_router_bgp_cfg_router.bgp.as_.create(i.asn)
+            nb = bgp_as.neighbors.neighbor.create(i.address, description=i.description)
+            nb.use.neighbor_group = "IPV4-IBGP"
+            return dev
+        elif "http://xml.juniper.net/netconf/junos/1.0" in di.modules or "junos-conf-root" in di.modules:
+            print("RFS /rfs{{{di.name}}}/ibgp-neighbor transform running {i.address} for JUNOS", err=True)
+            dev = crpd24.root()
+            bgp = dev.configuration.protocols.bgp
+            g = bgp.group.create("IPV4-IBGP")
+            g.neighbor.create(i.address, description=i.description)
+            return dev
+
+        elif "srl_nokia-system" in di.modules:
+            print("RFS /rfs{{{di.name}}}/ibgp-neighbor transform running {i.address} for Nokia SRLinux", err=True)
+            dev = srl25.root()
+            bgp = dev.network_instance.create("default").protocols.create_bgp()
+            bgp.group.create("IPV4-IBGP")
+            n = bgp.neighbor.create(i.address, peer_group="IPV4-IBGP", admin_state="enable", description=i.description)
+            if i.ibgp_authentication_key is not None:
+                n.authentication.password = nokia_srl_aes1_encrypt(i.ibgp_authentication_key!, _SRL_AES1_SALT)
+            return dev
+
+        raise UnsupportedDevice()
+
+
+class Vrf(base.Vrf):
+    def transform(self, i, di):
+        print("RFS /rfs{{{di.name}}}/vrf transform running {i.name}", err=True)
+
+        route_distinguisher_id = "{i.id}{i.router_id}"
+        if "Cisco-IOS-XR-um-hostname-cfg" in di.modules:
+            print("RFS /rfs{{{di.name}}}/vrf transform running {i.name} for Cisco IOS XR", err=True)
+            dev = xr25.root()
+
+            # Create global VRF
+            vrf = dev.vrfs.vrf.create(i.name)
+            ipv4_unicast = vrf.address_family.ipv4.create_unicast()
+            ipv4_unicast.import.route_target.two_byte_as_route_targets.two_byte_as_route_target.create((i.asn, i.id, "disable"))
+            ipv4_unicast.export.route_target.two_byte_as_route_targets.two_byte_as_route_target.create((i.asn, i.id, "disable"))
+
+            # Create RD in BGP VRF
+            bgp_as = dev.um_router_bgp_cfg_router.bgp.as_.create(i.asn)
+            bgp_vrf = bgp_as.vrfs.vrf.create(i.name)
+            bgp_vrf.rd.create_two_byte_as(i.asn, u64(route_distinguisher_id))
+
+            return dev
+        elif "http://xml.juniper.net/netconf/junos/1.0" in di.modules or "junos-conf-root" in di.modules:
+            print("RFS /rfs{{{di.name}}}/vrf transform running {i.name} for JUNOS", err=True)
+            dev = crpd24.root()
+            ri = dev.configuration.routing_instances.instance.create(i.name)
+            ri.instance_type = "vrf"
+            ri.route_distinguisher.rd_type = "{i.asn}:{route_distinguisher_id}"
+            ri.vrf_target.community = "target:{i.asn}:{i.id}"
+            ri.create_vrf_table_label()
+            group = ri.protocols.bgp.group.create("customer")
+            group.passive = True
+            # group.import_.append("ACCEPT")
+            # group.export.append("ACCEPT")
+
+            return dev
+
+        elif "srl_nokia-system" in di.modules:
+            print("RFS /rfs{{{di.name}}}/vrf transform running {i.name} for Nokia SRLinux", err=True)
+            dev = srl25.root()
+
+            # Create the VRF
+            ni = dev.network_instance.create(i.name, type=srl25.srl_nokia_network_instance_ip_vrf, admin_state="enable")
+
+            # VXLAN interface
+            tunnel_if = dev.tunnel_interface.create("vxlan1")
+            vxlan_if = tunnel_if.vxlan_interface.create(i.id)
+            vxlan_if.type = srl25.srl_nokia_interfaces_routed
+            vxlan_if.ingress.vni = i.id
+            vxlan_if_name = "vxlan1.{i.id}"
+            ni.vxlan_interface.create(vxlan_if_name)
+
+            # BGP-VPN protocol
+            bgp_vpn = ni.protocols.create_bgp_vpn()
+            bgp_vpn_instance = bgp_vpn.bgp_instance.create(1)
+            bgp_vpn_instance.route_target.export_rt = "target:{i.asn}:{i.id}"
+            bgp_vpn_instance.route_target.import_rt = "target:{i.asn}:{i.id}"
+
+            # BGP-EVPN protocol
+            bgp_evpn = ni.protocols.create_bgp_evpn()
+            bgp_evpn.bgp_instance.create(1, admin_state="enable", vxlan_interface=vxlan_if_name, evi=i.id)
+
+            # BGP protocol
+            bgp = ni.protocols.create_bgp(router_id="10.0.0.{i.router_id}", autonomous_system=i.asn)
+            bgp.ebgp_default_policy.import_reject_all = False
+            bgp.ebgp_default_policy.export_reject_all = False
+            bgp.afi_safi.create(srl25.srl_nokia_common_ipv4_unicast, admin_state="enable")
+            group = bgp.group.create("customer")
+            group.send_default_route.ipv4_unicast = True
+
+            return dev
+
+        raise UnsupportedDevice()
+
+
+class VrfInterface(base.VrfInterface):
+    def transform(self, i, di):
+        print("RFS /rfs{{{di.name}}}/vrf-interface transform running {i.name}", err=True)
+        # TODO: input validation to ensure this is a subinterface with VLAN ID
+        # Split interface name into main interface and unit
+        main_intf, vlan_id = split_interface_name(i.name)
+
+        if "Cisco-IOS-XR-um-hostname-cfg" in di.modules:
+            print("RFS /rfs{{{di.name}}}/vrf-interface transform running {i.name} for Cisco IOS XR", err=True)
+            dev = xr25.root()
+
+            # Main interface config. The description also anchors the entry in
+            # the XR running config: a default-only interface (just "no
+            # shutdown") is not stored by XR
+            dev.interfaces.interface.create(main_intf, description="Customer access port")
+            sub_intf = dev.interfaces.interface.create(i.name, description=i.description, vrf=i.vrf)
+            ipv4_address = i.ipv4_address
+            if ipv4_address is not None:
+                sub_intf.ipv4.addresses.create_address(ipv4_address, prefix_length_to_netmask(int(i.ipv4_prefix_length)))
+            sub_intf.encapsulation.dot1q.vlan_id = u64(vlan_id)
+            return dev
+
+        elif "http://xml.juniper.net/netconf/junos/1.0" in di.modules or "junos-conf-root" in di.modules:
+            print("RFS /rfs{{{di.name}}}/vrf-interface transform running {i.name} for JUNOS", err=True)
+            dev = crpd24.root()
+
+            # Main interface config
+            intf = dev.configuration.interfaces.interface.create(main_intf, description=i.description)
+
+            # Unit config
+            unit = intf.unit.create(vlan_id, description=i.description, vlan_id=vlan_id)
+
+            ipv4_address = i.ipv4_address
+            if ipv4_address is not None:
+                unit.family.create_inet().address.create("%s/%s" % (ipv4_address, str(i.ipv4_prefix_length)))
+            ri = dev.configuration.routing_instances.instance.create(i.vrf)
+            ri.interface.create(i.name)
+            return dev
+
+        elif "srl_nokia-system" in di.modules:
+            print("RFS /rfs{{{di.name}}}/vrf-interface transform running {i.name} for Nokia SRLinux", err=True)
+            dev = srl25.root()
+
+            # Create the main interface
+            intf = dev.interface.create(main_intf, admin_state="enable", vlan_tagging=True)
+
+            # Create the subinterface
+            subif = intf.subinterface.create(u64(vlan_id), description=i.description, admin_state="enable")
+            subif.vlan.encap.create_single_tagged().vlan_id = int(vlan_id)
+
+            # Configure IPv4 address if present
+            ipv4_address = i.ipv4_address
+            if ipv4_address is not None:
+                subif.ipv4.admin_state = "enable"
+                subif.ipv4.address.create("%s/%s" % (ipv4_address, str(i.ipv4_prefix_length)))
+
+            # Add interface to the correct network-instance (VRF)
+            ni = dev.network_instance.create(i.vrf)
+            ni.interface.create("%s.%s" % (main_intf, vlan_id))
+
+            return dev
+
+        raise UnsupportedDevice()
+
+class EbgpCustomer(base.EbgpCustomer):
+    def transform(self, i, di):
+        print("RFS /rfs{{{di.name}}}/ebgp-customer transform running {i.address}", err=True)
+
+        if "Cisco-IOS-XR-um-hostname-cfg" in di.modules:
+            print("RFS /rfs{{{di.name}}}/ebgp-customer transform running {i.address} for Cisco IOS XR", err=True)
+            dev = xr25.root()
+
+            bgp_as = dev.um_router_bgp_cfg_router.bgp.as_.create(i.local_asn)
+
+            vrf = bgp_as.vrfs.vrf.create(i.vrf)
+            vrf.address_families.address_family.create("ipv4-unicast")
+
+            neighbor = vrf.neighbors.neighbor.create(i.address, remote_as=i.peer_asn, description=i.description)
+            af = neighbor.address_families.address_family.create("ipv4-unicast")
+            # TODO: restrict?
+            af.route_policy.in_ = "ACCEPT"
+            af.route_policy.out = "ACCEPT"
+            af.create_as_override()
+            if i.authentication_key is not None:
+                neighbor.password.encrypted = cisco_type7_encrypt(i.authentication_key!, 4)
+            neighbor.timers.keepalive_interval = 1
+            neighbor.timers.create_holdtime(holdtime_number=3)
+
+            return dev
+
+        elif "http://xml.juniper.net/netconf/junos/1.0" in di.modules or "junos-conf-root" in di.modules:
+            print("RFS /rfs{{{di.name}}}/ebgp-customer transform running {i.address} for JUNOS", err=True)
+            dev = crpd24.root()
+
+            ri = dev.configuration.routing_instances.instance.create(i.vrf)
+            # TODO: why group?!
+            group = ri.protocols.bgp.group.create("customer")
+
+            authentication_key = junos_encrypt(i.authentication_key!, "4") if i.authentication_key is not None else None
+            group.neighbor.create(i.address, description=i.description, authentication_key=authentication_key, peer_as=str(i.peer_asn), as_override=True, hold_time=3)
+
+            return dev
+
+        elif "srl_nokia-system" in di.modules:
+            print("RFS /rfs{{{di.name}}}/ebgp-customer transform running {i.address} for Nokia SRLinux", err=True)
+            dev = srl25.root()
+            ni = dev.network_instance.create(i.vrf)
+
+            # Neighbor config
+            bgp = ni.protocols.create_bgp()
+            neighbor = bgp.neighbor.create(i.address, peer_as=i.peer_asn, peer_group="customer")
+            if i.authentication_key is not None:
+                neighbor.authentication.password = nokia_srl_aes1_encrypt(i.authentication_key!, _SRL_AES1_SALT)
+            neighbor.timers.connect_retry = 3
+            neighbor.timers.hold_time = 3
+            neighbor.timers.keepalive_interval = 1
+
+            return dev
+
+        raise UnsupportedDevice()
+
+
+actor EbgpCustomerTransform(path, update_oper: proc(?y_2_oper.stratoweave_rfs__rfs__ebgp_customer_entry)->None, dev: swdev.DeviceMgr):
+    # eBGP customer neighbor: a single-hop PE<->CE peer in the VRF network-instance.
+    _subs = gdata.SubscriptionManager(dev.tree_provider(), str(path))
+    var debug: bool = False
+    var _addr: ?str = None
+    var _vrf: ?str = None
+
+    def declare():
+        want: set[gdata.Delivery] = set()
+        modset = dev.get_modules().0
+        addr = _addr
+        vrf = _vrf
+        if addr is not None and vrf is not None and "srl_nokia-system" in modset:
+            dst = srl25_oper.dst(on_srl_state)
+            nb = srl25_oper.subs.network_instance.entry(vrf).protocols.bgp.neighbor.entry(addr)
+            period = 1.0 if debug else 2.0
+            specs: set[gdata.SubscriptionSpec] = { nb.session_state.subscribe(period=period) }
+            if debug:
+                specs.add(nb.last_event.subscribe(period=1.0))
+                specs.add(nb.established_transitions.subscribe(period=1.0))
+                specs.add(nb.timers.negotiated_hold_time.subscribe(period=1.0))
+                specs.add(nb.received_messages.last_notification_error_code.subscribe(period=1.0))
+                specs.add(nb.sent_messages.last_notification_error_code.subscribe(period=1.0))
+            want.add(dst.deliver(specs))
+        elif addr is not None and vrf is not None and "Cisco-IOS-XR-um-hostname-cfg" in modset:
+            dst = xr25_oper.dst(on_xr_state)
+            nb = xr25_oper.subs.bgp.instances.instance.entry("default").instance_active.vrfs.vrf.entry(vrf).neighbors.neighbor.entry(addr)
+            period = 1.0 if debug else 2.0
+            specs: set[gdata.SubscriptionSpec] = { nb.connection_state.subscribe(period=period) }
+            if debug:
+                specs.add(nb.reset_reason.subscribe(period=1.0))
+                specs.add(nb.hold_time.subscribe(period=1.0))
+                specs.add(nb.last_notify_error_code.subscribe(period=1.0))
+                specs.add(nb.last_notify_error_subcode.subscribe(period=1.0))
+            want.add(dst.deliver(specs))
+        _subs.declare(want)
+
+    def on_srl_state(root: ?srl25_oper_root, err: ?Exception):
+        if err is not None:
+            print("EbgpCustomerTransform subscription error: {err}", err=True)
+            return
+        addr = _addr
+        vrf = _vrf
+        s = BgpNeighborStats()
+        if root is not None and addr is not None and vrf is not None:
+            s = _read_srl_bgp(root, vrf, addr)
+        publish(s)
+
+    def on_xr_state(root: ?xr25_oper_root, err: ?Exception):
+        if err is not None:
+            print("EbgpCustomerTransform subscription error: {err}", err=True)
+            return
+        addr = _addr
+        vrf = _vrf
+        s = BgpNeighborStats()
+        if root is not None and addr is not None and vrf is not None:
+            s = _read_xr_bgp(root, vrf, addr)
+        publish(s)
+
+    def publish(s: BgpNeighborStats):
+        # Each delivery carries the full selected tree, so rebuild oper from it.
+        oper = base.EbgpCustomer.new_state(path)
+        ss = s.session_state
+        new_debug = ss is not None and ss != "established"
+        st = oper.state
+        st.session_state = ss
+        st.debug_active = new_debug
+        if new_debug:
+            # Detail metrics are exposed only while debug is active.
+            st.last_event = s.last_event
+            st.established_transitions = s.established_transitions
+            st.negotiated_hold_time = s.negotiated_hold_time
+            st.last_notification = s.last_notification
+        if new_debug != debug:
+            debug = new_debug
+            declare()
+        update_oper(oper)
+
+    def on_conf(conf: y_2.stratoweave_rfs__rfs__ebgp_customer_entry):
+        _addr = conf.address
+        _vrf = conf.vrf
+        declare()
+
+    def shutdown():
+        pass

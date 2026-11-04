@@ -1,0 +1,1452 @@
+import base64
+import json
+import std.xml as xml
+import yang.adata as yadata
+import yang.gdata as ygdata
+import yang.xml as yxml
+import yang.xpath as yxpath
+from yang.identityref import Identityref, PartialIdentityref
+from yang.pattern import YangPattern
+from yang.schema import *
+from yang.type import Decimal, Ranges
+
+# == This file is generated ==
+
+
+
+
+_identities: list[DIdentity] = []
+
+
+SRC_DNODE_CHILD_1: DList = DList(module='netinfra-inter', namespace='http://example.com/netinfra-inter', prefix='netinfra-inter', name='router', key=['name'], config=True, min_elements=0, ordered_by='system', exts=[
+        DExt(module='stratoweave', namespace='http://stratoweave.org/yang/stratoweave', prefix='sw', name='transform', arg='sorespo.inter.Router', exts=[])
+    ], children=[
+    DLeaf(module='netinfra-inter', namespace='http://example.com/netinfra-inter', prefix='netinfra-inter', name='name', config=True, is_key=True, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
+    DLeaf(module='netinfra-inter', namespace='http://example.com/netinfra-inter', prefix='netinfra-inter', name='id', config=True, description='router id', is_key=False, mandatory=True, type=DTypeIntegerUnsigned(name='uint32', description=None, reference=None, units=None, exts=[], builtin_type='uint32', default=None, ranges=Ranges([(0, 4294967295)]))),
+    DLeaf(module='netinfra-inter', namespace='http://example.com/netinfra-inter', prefix='netinfra-inter', name='type', config=True, is_key=False, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
+    DLeaf(module='netinfra-inter', namespace='http://example.com/netinfra-inter', prefix='netinfra-inter', name='role', config=True, is_key=False, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
+    DLeaf(module='netinfra-inter', namespace='http://example.com/netinfra-inter', prefix='netinfra-inter', name='mock', config=True, default='false', is_key=False, mandatory=False, type=DTypeBoolean(name='boolean', description=None, reference=None, units=None, exts=[], builtin_type='boolean', default=None)),
+    DLeaf(module='netinfra-inter', namespace='http://example.com/netinfra-inter', prefix='netinfra-inter', name='approval-required', config=True, default='false', is_key=False, mandatory=False, type=DTypeBoolean(name='boolean', description=None, reference=None, units=None, exts=[], builtin_type='boolean', default=None)),
+    DContainer(module='netinfra-inter', namespace='http://example.com/netinfra-inter', prefix='netinfra-inter', name='feature-flags', config=True, presence=False, children=[
+        DLeaf(module='netinfra-inter', namespace='http://example.com/netinfra-inter', prefix='netinfra-inter', name='runtime-schema-fetch', config=True, default='false', is_key=False, mandatory=False, type=DTypeBoolean(name='boolean', description=None, reference=None, units=None, exts=[], builtin_type='boolean', default=None))
+    ]),
+    DContainer(module='netinfra-inter', namespace='http://example.com/netinfra-inter', prefix='netinfra-inter', name='base-config', config=True, presence=False, children=[
+        DLeaf(module='netinfra-inter', namespace='http://example.com/netinfra-inter', prefix='netinfra-inter', name='asn', config=True, is_key=False, mandatory=True, type=DTypeIntegerUnsigned(name='inet:as-number', description='The as-number type represents autonomous system numbers\nwhich identify an Autonomous System (AS).  An AS is a set\nof routers under a single technical administration, using\nan interior gateway protocol and common metrics to route\npackets within the AS, and using an exterior gateway\nprotocol to route packets to other ASes.  IANA maintains\nthe AS number space and has delegated large parts to the\nregional registries.\n\nAutonomous system numbers were originally limited to 16\nbits.  BGP extensions have enlarged the autonomous system\nnumber space to 32 bits.  This type therefore uses an uint32\nbase type without a range restriction in order to support\na larger autonomous system number space.\n\nIn the value set and its semantics, this type is equivalent\nto the InetAutonomousSystemNumber textual convention of\nthe SMIv2.', reference='RFC 1930: Guidelines for creation, selection, and registration\n          of an Autonomous System (AS)\nRFC 4271: A Border Gateway Protocol 4 (BGP-4)\nRFC 4001: Textual Conventions for Internet Network Addresses\nRFC 6793: BGP Support for Four-Octet Autonomous System (AS)\n          Number Space', units=None, exts=[], builtin_type='uint32', default=None, ranges=Ranges([(0, 4294967295)]))),
+        DLeaf(module='netinfra-inter', namespace='http://example.com/netinfra-inter', prefix='netinfra-inter', name='ipv4-address', config=True, is_key=False, mandatory=True, type=DTypeString(name='inet:ipv4-address', description='The ipv4-address type represents an IPv4 address in\ndotted-quad notation.  The IPv4 address may include a zone\nindex, separated by a % sign.\n\nThe zone index is used to disambiguate identical address\nvalues.  For link-local addresses, the zone index will\ntypically be the interface index number or the name of an\ninterface.  If the zone index is not present, the default\nzone of the device will be used.\n\nThe canonical format for the zone index is the numerical\nformat', reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[YangPattern(yang_regex='(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.){{3}}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(%[\\p{{N}}\\p{{L}}]+)?', pcre='^((([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.){{3}}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(%[\\p{{N}}\\p{{L}}]+)?)$', invert=False)])),
+        DLeaf(module='netinfra-inter', namespace='http://example.com/netinfra-inter', prefix='netinfra-inter', name='ipv6-address', config=True, is_key=False, mandatory=True, type=DTypeString(name='inet:ipv6-address', description='The ipv6-address type represents an IPv6 address in full,\nmixed, shortened, and shortened-mixed notation.  The IPv6\naddress may include a zone index, separated by a % sign.\n\nThe zone index is used to disambiguate identical address\nvalues.  For link-local addresses, the zone index will\ntypically be the interface index number or the name of an\ninterface.  If the zone index is not present, the default\nzone of the device will be used.\n\nThe canonical format of IPv6 addresses uses the textual\nrepresentation defined in Section 4 of RFC 5952.  The\ncanonical format for the zone index is the numerical\nformat as described in Section 11.2 of RFC 4007.', reference='RFC 4291: IP Version 6 Addressing Architecture\nRFC 4007: IPv6 Scoped Address Architecture\nRFC 5952: A Recommendation for IPv6 Address Text\n          Representation', units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[YangPattern(yang_regex='((:|[0-9a-fA-F]{{0,4}}):)([0-9a-fA-F]{{0,4}}:){{0,5}}((([0-9a-fA-F]{{0,4}}:)?(:|[0-9a-fA-F]{{0,4}}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\\.){{3}}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))(%[\\p{{N}}\\p{{L}}]+)?', pcre='^(((:|[0-9a-fA-F]{{0,4}}):)([0-9a-fA-F]{{0,4}}:){{0,5}}((([0-9a-fA-F]{{0,4}}:)?(:|[0-9a-fA-F]{{0,4}}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\\.){{3}}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))(%[\\p{{N}}\\p{{L}}]+)?)$', invert=False), YangPattern(yang_regex='(([^:]+:){{6}}(([^:]+:[^:]+)|(.*\\..*)))|((([^:]+:)*[^:]+)?::(([^:]+:)*[^:]+)?)(%.+)?', pcre='^((([^\\:]+:){{6}}(([^\\:]+:[^\\:]+)|(.*\\..*)))|((([^\\:]+:)*[^\\:]+)?::(([^\\:]+:)*[^\\:]+)?)(%.+)?)$', invert=False)]))
+    ]),
+    DList(module='netinfra-inter', namespace='http://example.com/netinfra-inter', prefix='netinfra-inter', name='l3vpn-vrf', key=['vpn-id'], config=True, min_elements=0, ordered_by='system', children=[
+        DLeaf(module='netinfra-inter', namespace='http://example.com/netinfra-inter', prefix='netinfra-inter', name='vpn-id', config=True, is_key=True, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
+        DLeafList(module='netinfra-inter', namespace='http://example.com/netinfra-inter', prefix='netinfra-inter', name='ebgp-customer-address', config=True, min_elements=0, ordered_by='system', type=DTypeUnion(name='inet:ip-address', description='The ip-address type represents an IP address and is IP\nversion neutral.  The format of the textual representation\nimplies the IP version.  This type supports scoped addresses\nby allowing zone identifiers in the address format.', reference='RFC 4007: IPv6 Scoped Address Architecture', units=None, exts=[], builtin_type='union', default=None, types=[DTypeString(name='inet:ipv4-address', description='The ipv4-address type represents an IPv4 address in\ndotted-quad notation.  The IPv4 address may include a zone\nindex, separated by a % sign.\n\nThe zone index is used to disambiguate identical address\nvalues.  For link-local addresses, the zone index will\ntypically be the interface index number or the name of an\ninterface.  If the zone index is not present, the default\nzone of the device will be used.\n\nThe canonical format for the zone index is the numerical\nformat', reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[YangPattern(yang_regex='(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.){{3}}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(%[\\p{{N}}\\p{{L}}]+)?', pcre='^((([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.){{3}}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(%[\\p{{N}}\\p{{L}}]+)?)$', invert=False)]), DTypeString(name='inet:ipv6-address', description='The ipv6-address type represents an IPv6 address in full,\nmixed, shortened, and shortened-mixed notation.  The IPv6\naddress may include a zone index, separated by a % sign.\n\nThe zone index is used to disambiguate identical address\nvalues.  For link-local addresses, the zone index will\ntypically be the interface index number or the name of an\ninterface.  If the zone index is not present, the default\nzone of the device will be used.\n\nThe canonical format of IPv6 addresses uses the textual\nrepresentation defined in Section 4 of RFC 5952.  The\ncanonical format for the zone index is the numerical\nformat as described in Section 11.2 of RFC 4007.', reference='RFC 4291: IP Version 6 Addressing Architecture\nRFC 4007: IPv6 Scoped Address Architecture\nRFC 5952: A Recommendation for IPv6 Address Text\n          Representation', units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[YangPattern(yang_regex='((:|[0-9a-fA-F]{{0,4}}):)([0-9a-fA-F]{{0,4}}:){{0,5}}((([0-9a-fA-F]{{0,4}}:)?(:|[0-9a-fA-F]{{0,4}}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\\.){{3}}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))(%[\\p{{N}}\\p{{L}}]+)?', pcre='^(((:|[0-9a-fA-F]{{0,4}}):)([0-9a-fA-F]{{0,4}}:){{0,5}}((([0-9a-fA-F]{{0,4}}:)?(:|[0-9a-fA-F]{{0,4}}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\\.){{3}}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))(%[\\p{{N}}\\p{{L}}]+)?)$', invert=False), YangPattern(yang_regex='(([^:]+:){{6}}(([^:]+:[^:]+)|(.*\\..*)))|((([^:]+:)*[^:]+)?::(([^:]+:)*[^:]+)?)(%.+)?', pcre='^((([^\\:]+:){{6}}(([^\\:]+:[^\\:]+)|(.*\\..*)))|((([^\\:]+:)*[^\\:]+)?::(([^\\:]+:)*[^\\:]+)?)(%.+)?)$', invert=False)])]))
+    ])
+])
+
+SRC_DNODE_CHILD_2: DList = DList(module='netinfra-inter', namespace='http://example.com/netinfra-inter', prefix='netinfra-inter', name='backbone-link', key=[
+'left-router',
+'left-interface',
+'right-router',
+'right-interface'
+    ], config=True, min_elements=0, ordered_by='system', exts=[
+        DExt(module='stratoweave', namespace='http://stratoweave.org/yang/stratoweave', prefix='sw', name='transform', arg='sorespo.inter.BBLink', exts=[])
+    ], children=[
+    DLeaf(module='netinfra-inter', namespace='http://example.com/netinfra-inter', prefix='netinfra-inter', name='left-router', config=True, is_key=True, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
+    DLeaf(module='netinfra-inter', namespace='http://example.com/netinfra-inter', prefix='netinfra-inter', name='left-interface', config=True, is_key=True, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
+    DLeaf(module='netinfra-inter', namespace='http://example.com/netinfra-inter', prefix='netinfra-inter', name='right-router', config=True, is_key=True, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
+    DLeaf(module='netinfra-inter', namespace='http://example.com/netinfra-inter', prefix='netinfra-inter', name='right-interface', config=True, is_key=True, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[]))
+])
+
+SRC_DNODE_CHILD_3: DList = DList(module='netinfra-inter', namespace='http://example.com/netinfra-inter', prefix='netinfra-inter', name='ibgp-fullmesh', key=['asn'], config=True, min_elements=0, ordered_by='system', exts=[
+        DExt(module='stratoweave', namespace='http://stratoweave.org/yang/stratoweave', prefix='sw', name='transform', arg='sorespo.inter.IbgpFullmesh', exts=[])
+    ], children=[
+    DLeaf(module='netinfra-inter', namespace='http://example.com/netinfra-inter', prefix='netinfra-inter', name='asn', config=True, is_key=True, mandatory=False, type=DTypeIntegerUnsigned(name='inet:as-number', description='The as-number type represents autonomous system numbers\nwhich identify an Autonomous System (AS).  An AS is a set\nof routers under a single technical administration, using\nan interior gateway protocol and common metrics to route\npackets within the AS, and using an exterior gateway\nprotocol to route packets to other ASes.  IANA maintains\nthe AS number space and has delegated large parts to the\nregional registries.\n\nAutonomous system numbers were originally limited to 16\nbits.  BGP extensions have enlarged the autonomous system\nnumber space to 32 bits.  This type therefore uses an uint32\nbase type without a range restriction in order to support\na larger autonomous system number space.\n\nIn the value set and its semantics, this type is equivalent\nto the InetAutonomousSystemNumber textual convention of\nthe SMIv2.', reference='RFC 1930: Guidelines for creation, selection, and registration\n          of an Autonomous System (AS)\nRFC 4271: A Border Gateway Protocol 4 (BGP-4)\nRFC 4001: Textual Conventions for Internet Network Addresses\nRFC 6793: BGP Support for Four-Octet Autonomous System (AS)\n          Number Space', units=None, exts=[], builtin_type='uint32', default=None, ranges=Ranges([(0, 4294967295)]))),
+    DLeaf(module='netinfra-inter', namespace='http://example.com/netinfra-inter', prefix='netinfra-inter', name='authentication-key', config=True, is_key=False, mandatory=True, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
+    DList(module='netinfra-inter', namespace='http://example.com/netinfra-inter', prefix='netinfra-inter', name='router', key=['name'], config=True, min_elements=0, ordered_by='system', children=[
+        DLeaf(module='netinfra-inter', namespace='http://example.com/netinfra-inter', prefix='netinfra-inter', name='name', config=True, is_key=True, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
+        DLeaf(module='netinfra-inter', namespace='http://example.com/netinfra-inter', prefix='netinfra-inter', name='ipv4-address', config=True, is_key=False, mandatory=True, type=DTypeString(name='inet:ipv4-address', description='The ipv4-address type represents an IPv4 address in\ndotted-quad notation.  The IPv4 address may include a zone\nindex, separated by a % sign.\n\nThe zone index is used to disambiguate identical address\nvalues.  For link-local addresses, the zone index will\ntypically be the interface index number or the name of an\ninterface.  If the zone index is not present, the default\nzone of the device will be used.\n\nThe canonical format for the zone index is the numerical\nformat', reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[YangPattern(yang_regex='(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.){{3}}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(%[\\p{{N}}\\p{{L}}]+)?', pcre='^((([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.){{3}}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(%[\\p{{N}}\\p{{L}}]+)?)$', invert=False)]))
+    ])
+])
+
+SRC_DNODE_CHILD_0: DContainer = DContainer(module='netinfra-inter', namespace='http://example.com/netinfra-inter', prefix='netinfra-inter', name='netinfra', config=True, description='Network infrastructure', presence=False, children=[SRC_DNODE_CHILD_1, SRC_DNODE_CHILD_2, SRC_DNODE_CHILD_3])
+
+SRC_DNODE_CHILD_4: DContainer = DContainer(module='l3vpn-inter', namespace='http://example.com/l3vpn-inter', prefix='l3vpn-inter', name='l3vpns', config=True, description='L3VPN', presence=False, children=[
+    DList(module='l3vpn-inter', namespace='http://example.com/l3vpn-inter', prefix='l3vpn-inter', name='l3vpn', key=['name'], config=True, min_elements=0, ordered_by='system', exts=[
+            DExt(module='stratoweave', namespace='http://stratoweave.org/yang/stratoweave', prefix='sw', name='transform', arg='sorespo.inter.L3Vpn', exts=[])
+        ], children=[
+        DLeaf(module='l3vpn-inter', namespace='http://example.com/l3vpn-inter', prefix='l3vpn-inter', name='name', config=True, is_key=True, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
+        DLeaf(module='l3vpn-inter', namespace='http://example.com/l3vpn-inter', prefix='l3vpn-inter', name='description', config=True, is_key=False, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
+        DList(module='l3vpn-inter', namespace='http://example.com/l3vpn-inter', prefix='l3vpn-inter', name='endpoint', key=[
+'device',
+'interface'
+            ], config=True, min_elements=0, ordered_by='system', children=[
+            DLeaf(module='l3vpn-inter', namespace='http://example.com/l3vpn-inter', prefix='l3vpn-inter', name='device', config=True, is_key=True, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
+            DLeaf(module='l3vpn-inter', namespace='http://example.com/l3vpn-inter', prefix='l3vpn-inter', name='interface', config=True, is_key=True, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
+            DLeaf(module='l3vpn-inter', namespace='http://example.com/l3vpn-inter', prefix='l3vpn-inter', name='site', config=True, is_key=False, mandatory=True, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
+            DLeaf(module='l3vpn-inter', namespace='http://example.com/l3vpn-inter', prefix='l3vpn-inter', name='site-network-access', config=True, is_key=False, mandatory=True, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
+            DLeaf(module='l3vpn-inter', namespace='http://example.com/l3vpn-inter', prefix='l3vpn-inter', name='provider-ipv4-address', config=True, is_key=False, mandatory=True, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
+            DLeaf(module='l3vpn-inter', namespace='http://example.com/l3vpn-inter', prefix='l3vpn-inter', name='customer-ipv4-address', config=True, is_key=False, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
+            DLeaf(module='l3vpn-inter', namespace='http://example.com/l3vpn-inter', prefix='l3vpn-inter', name='ipv4-prefix-length', config=True, is_key=False, mandatory=True, type=DTypeIntegerUnsigned(name='uint8', description=None, reference=None, units=None, exts=[], builtin_type='uint8', default=None, ranges=Ranges([(0, 32)]))),
+            DContainer(module='l3vpn-inter', namespace='http://example.com/l3vpn-inter', prefix='l3vpn-inter', name='bgp', config=True, presence=True, children=[
+                DLeaf(module='l3vpn-inter', namespace='http://example.com/l3vpn-inter', prefix='l3vpn-inter', name='as-number', config=True, is_key=False, mandatory=True, type=DTypeIntegerUnsigned(name='uint32', description=None, reference=None, units=None, exts=[], builtin_type='uint32', default=None, ranges=Ranges([(0, 4294967295)]))),
+                DLeaf(module='l3vpn-inter', namespace='http://example.com/l3vpn-inter', prefix='l3vpn-inter', name='authentication-key', config=True, is_key=False, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[]))
+            ])
+        ])
+    ])
+])
+
+SRC_DNODE: DRoot = DRoot(
+    children=[SRC_DNODE_CHILD_0, SRC_DNODE_CHILD_4],
+    identities=[],
+    rpcs=[],
+    module_metadata={'urn:ietf:params:xml:ns:yang:ietf-inet-types':('ietf-inet-types', '2013-07-15', [], False), 'http://stratoweave.org/yang/stratoweave':('stratoweave', '2026-04-01', [], False), 'http://example.com/netinfra-inter':('netinfra-inter', '2019-01-01', [], True), 'http://example.com/l3vpn-inter':('l3vpn-inter', '2019-01-01', [], True)},
+)
+
+SRC_YANG_0: str = r"""module l3vpn-inter {
+  yang-version "1.1";
+  namespace "http://example.com/l3vpn-inter";
+  prefix "l3vpn-inter";
+  description "L3VPN intermediate";
+  revision 2019-01-01 {
+    description "test revision";
+    reference "ref1";
+  }
+  import stratoweave {
+    prefix sw;
+  }
+
+  container l3vpns {
+    description "L3VPN";
+    list l3vpn {
+      key name;
+
+      sw:transform sorespo.inter.L3Vpn;
+
+      leaf name {
+        type string;
+      }
+      leaf description {
+        type string;
+      }
+      list endpoint {
+        key "device interface";
+
+        leaf device {
+          type string;
+        }
+        leaf interface {
+          type string;
+        }
+        leaf site {
+          type string;
+          mandatory true;
+        }
+        leaf site-network-access {
+          type string;
+          mandatory true;
+        }
+        leaf provider-ipv4-address {
+          type string;
+          mandatory true;
+        }
+        leaf customer-ipv4-address {
+          type string;
+        }
+        leaf ipv4-prefix-length {
+          type uint8 {
+            range "0..32";
+          }
+          mandatory true;
+        }
+        container bgp {
+          presence "BGP enabled";
+          leaf as-number {
+            type uint32;
+            mandatory true;
+          }
+          leaf authentication-key {
+            type string;
+          }
+        }
+        container state {
+          config false;
+          description
+            "eBGP customer session telemetry, lifted from the RFS ebgp-customer
+             entry. debug-active reflects the per-neighbor escalation.";
+          leaf session-state {
+            type enumeration {
+              enum idle;
+              enum connect;
+              enum active;
+              enum opensent;
+              enum openconfirm;
+              enum established;
+            }
+          }
+          leaf last-event { type string; }
+          leaf established-transitions { type uint64; }
+          leaf debug-active { type boolean; }
+          leaf negotiated-hold-time { type uint64; }
+          leaf last-notification { type string; }
+        }
+      }
+    }
+  }
+}
+"""
+
+SRC_YANG_1: str = r"""module netinfra-inter {
+  yang-version "1.1";
+  namespace "http://example.com/netinfra-inter";
+  prefix "netinfra-inter";
+  description "Network Infrastructure intermediate";
+  revision 2019-01-01 {
+    description "test revision";
+    reference "ref1";
+  }
+  import ietf-inet-types {
+    prefix inet;
+  }
+  import stratoweave {
+    prefix sw;
+  }
+
+  container netinfra {
+    description "Network infrastructure";
+    list router {
+      key name;
+
+      sw:transform sorespo.inter.Router;
+
+      leaf name {
+        type string;
+      }
+      leaf id {
+        type uint32;
+        description "router id";
+        mandatory true;
+      }
+      leaf type {
+        type string;
+      }
+      leaf role {
+        type string;
+      }
+      leaf mock {
+        type boolean;
+        default false;
+      }
+      leaf approval-required {
+        type boolean;
+        default false;
+      }
+      container feature-flags {
+        leaf runtime-schema-fetch {
+          type boolean;
+          default false;
+        }
+      }
+      container base-config {
+        leaf asn {
+          type inet:as-number;
+          mandatory true;
+        }
+        // Allocated to the router in the CFS layer
+        leaf ipv4-address {
+          type inet:ipv4-address;
+          mandatory true;
+        }
+        // Allocated to the router in the CFS layer
+        leaf ipv6-address {
+          type inet:ipv6-address;
+          mandatory true;
+        }
+      }
+      // This list contains vpn-id entries written from the CFS layer.
+      // We use it in the "inter" layer to relay the router (/netinfra/router) parameters
+      // to the the "rfs" layer tranforms: rfs.Vrf and rfs.EbgpCustomer need the router id and asn.
+      // The data for these transforms is part of the L3VPN transform stack so these
+      // are written to from the inter.L3Vpn transform primarily.
+      // But, we want to avoid having the router id and asn in the L3VPN CFS model!
+      // By writing to this list from the cfs.L3VpnSite we can "register" an VPN instance
+      // on this router. Then in the inter.Router transform we can read the router id and asn
+      // from the inputs and write them to the rfs.Vrf and rfs.EbgpCustomer transforms.
+      list l3vpn-vrf {
+        key "vpn-id";
+        leaf vpn-id {
+          type string;
+        }
+        leaf-list ebgp-customer-address {
+          type inet:ip-address;
+        }
+      }
+    }
+
+    list backbone-link {
+      key "left-router left-interface right-router right-interface";
+
+      sw:transform sorespo.inter.BBLink;
+
+      leaf left-router {
+        type string;
+      }
+      leaf left-interface {
+        type string;
+      }
+      leaf right-router {
+        type string;
+      }
+      leaf right-interface {
+        type string;
+      }
+
+      container state {
+        config false;
+        description
+          "Combined oper-state of the two endpoints, lifted from the RFS
+           backbone-interface entries: up only when both endpoints are up,
+           down if either is down, unknown when either is unavailable.";
+        leaf link-status {
+          type enumeration {
+            enum up;
+            enum down;
+            enum unknown;
+          }
+        }
+      }
+    }
+
+    list ibgp-fullmesh {
+      key "asn";
+      leaf asn {
+        type inet:as-number;
+      }
+      leaf authentication-key {
+        type string;
+        mandatory true;
+      }
+
+      sw:transform sorespo.inter.IbgpFullmesh;
+
+      list router {
+        key "name";
+        leaf name {
+          type string;
+        }
+        leaf ipv4-address {
+          type inet:ipv4-address;
+          mandatory true;
+        }
+      }
+    }
+  }
+}
+"""
+
+SRC_YANG_2: str = r"""module stratoweave {
+  yang-version "1.1";
+  namespace "http://stratoweave.org/yang/stratoweave";
+  prefix "sw";
+
+  description
+    "This module defines Stratoweave YANG extensions.";
+
+  revision 2026-04-01;
+
+  extension device {
+    description
+      "Used internally in the list defining the device manager model.";
+  }
+  extension device-config {
+    description
+      "Used internally in the list defining the device configuration store.";
+  }
+  extension transform {
+    description
+      "Used in a list or container defining a transform model. Takes as an
+      argument the fully qualified name of the type implementing the transform
+      function in user code. Makes the code generator create the base type in
+      app.layers.base_X.";
+    argument "function";
+  }
+  extension rfs-transform {
+    description
+      "Used in a list or container defining an RFS transform model. Takes as an
+      argument the fully qualified name of the type implementing the RFS
+      transform function in user code. Makes the code generator create the base
+      type in app.layers.base_X.";
+    argument "function";
+  }
+  extension dynstate {
+    description
+      "Used in the dynstate container of a transform model. Enriches the
+      transform function inputs with an additional read-only structure. This
+      subtree is accessible for writes to the transform actor for async
+      (environmental) updates.";
+  }
+  extension memory {
+    description
+      "Used in the memory container of a transform model. Enriches the transform
+      function inputs with an additional read-only structure. The transform
+      function may update this subtree by returning new data.";
+  }
+  extension link {
+    description
+      "Declares a link demand from this transform towards another (linked)
+      transform. The argument is a tag that identifies the link. On a leafref
+      leaf, the link target is derived from the leafref path. On other nodes,
+      a nested sw:path substatement provides the target path.";
+    argument "tag";
+  }
+  extension path {
+    description
+      "Substatement of sw:link that provides an explicit absolute schema path
+      to the linked transform target.";
+    argument "path";
+  }
+  extension direct-output {
+    description
+      "Substatement of sw:transform that enables a transform to generate output
+      whenever it chooses, wrapped in a transaction of its own.";
+  }
+}"""
+
+SRC_YANG_3: str = r"""module ietf-inet-types {
+
+  namespace "urn:ietf:params:xml:ns:yang:ietf-inet-types";
+  prefix "inet";
+
+  organization
+   "IETF NETMOD (NETCONF Data Modeling Language) Working Group";
+
+  contact
+   "WG Web:   <http://tools.ietf.org/wg/netmod/>
+    WG List:  <mailto:netmod@ietf.org>
+
+    WG Chair: David Kessens
+              <mailto:david.kessens@nsn.com>
+
+    WG Chair: Juergen Schoenwaelder
+              <mailto:j.schoenwaelder@jacobs-university.de>
+
+    Editor:   Juergen Schoenwaelder
+              <mailto:j.schoenwaelder@jacobs-university.de>";
+
+  description
+   "This module contains a collection of generally useful derived
+    YANG data types for Internet addresses and related things.
+
+    Copyright (c) 2013 IETF Trust and the persons identified as
+    authors of the code.  All rights reserved.
+
+    Redistribution and use in source and binary forms, with or
+    without modification, is permitted pursuant to, and subject
+    to the license terms contained in, the Simplified BSD License
+    set forth in Section 4.c of the IETF Trust's Legal Provisions
+    Relating to IETF Documents
+    (http://trustee.ietf.org/license-info).
+
+    This version of this YANG module is part of RFC 6991; see
+    the RFC itself for full legal notices.";
+
+  revision 2013-07-15 {
+    description
+     "This revision adds the following new data types:
+      - ip-address-no-zone
+      - ipv4-address-no-zone
+      - ipv6-address-no-zone";
+    reference
+     "RFC 6991: Common YANG Data Types";
+  }
+
+  revision 2010-09-24 {
+    description
+     "Initial revision.";
+    reference
+     "RFC 6021: Common YANG Data Types";
+  }
+
+  /*** collection of types related to protocol fields ***/
+
+  typedef ip-version {
+    type enumeration {
+      enum unknown {
+        value "0";
+        description
+         "An unknown or unspecified version of the Internet
+          protocol.";
+      }
+      enum ipv4 {
+        value "1";
+        description
+         "The IPv4 protocol as defined in RFC 791.";
+      }
+      enum ipv6 {
+        value "2";
+        description
+         "The IPv6 protocol as defined in RFC 2460.";
+      }
+    }
+    description
+     "This value represents the version of the IP protocol.
+
+      In the value set and its semantics, this type is equivalent
+      to the InetVersion textual convention of the SMIv2.";
+    reference
+     "RFC  791: Internet Protocol
+      RFC 2460: Internet Protocol, Version 6 (IPv6) Specification
+      RFC 4001: Textual Conventions for Internet Network Addresses";
+  }
+
+  typedef dscp {
+    type uint8 {
+      range "0..63";
+    }
+    description
+     "The dscp type represents a Differentiated Services Code Point
+      that may be used for marking packets in a traffic stream.
+      In the value set and its semantics, this type is equivalent
+      to the Dscp textual convention of the SMIv2.";
+    reference
+     "RFC 3289: Management Information Base for the Differentiated
+                Services Architecture
+      RFC 2474: Definition of the Differentiated Services Field
+                (DS Field) in the IPv4 and IPv6 Headers
+      RFC 2780: IANA Allocation Guidelines For Values In
+                the Internet Protocol and Related Headers";
+  }
+
+  typedef ipv6-flow-label {
+    type uint32 {
+      range "0..1048575";
+    }
+    description
+     "The ipv6-flow-label type represents the flow identifier or Flow
+      Label in an IPv6 packet header that may be used to
+      discriminate traffic flows.
+
+      In the value set and its semantics, this type is equivalent
+      to the IPv6FlowLabel textual convention of the SMIv2.";
+    reference
+     "RFC 3595: Textual Conventions for IPv6 Flow Label
+      RFC 2460: Internet Protocol, Version 6 (IPv6) Specification";
+  }
+
+  typedef port-number {
+    type uint16 {
+      range "0..65535";
+    }
+    description
+     "The port-number type represents a 16-bit port number of an
+      Internet transport-layer protocol such as UDP, TCP, DCCP, or
+      SCTP.  Port numbers are assigned by IANA.  A current list of
+      all assignments is available from <http://www.iana.org/>.
+
+      Note that the port number value zero is reserved by IANA.  In
+      situations where the value zero does not make sense, it can
+      be excluded by subtyping the port-number type.
+      In the value set and its semantics, this type is equivalent
+      to the InetPortNumber textual convention of the SMIv2.";
+    reference
+     "RFC  768: User Datagram Protocol
+      RFC  793: Transmission Control Protocol
+      RFC 4960: Stream Control Transmission Protocol
+      RFC 4340: Datagram Congestion Control Protocol (DCCP)
+      RFC 4001: Textual Conventions for Internet Network Addresses";
+  }
+
+  /*** collection of types related to autonomous systems ***/
+
+  typedef as-number {
+    type uint32;
+    description
+     "The as-number type represents autonomous system numbers
+      which identify an Autonomous System (AS).  An AS is a set
+      of routers under a single technical administration, using
+      an interior gateway protocol and common metrics to route
+      packets within the AS, and using an exterior gateway
+      protocol to route packets to other ASes.  IANA maintains
+      the AS number space and has delegated large parts to the
+      regional registries.
+
+      Autonomous system numbers were originally limited to 16
+      bits.  BGP extensions have enlarged the autonomous system
+      number space to 32 bits.  This type therefore uses an uint32
+      base type without a range restriction in order to support
+      a larger autonomous system number space.
+
+      In the value set and its semantics, this type is equivalent
+      to the InetAutonomousSystemNumber textual convention of
+      the SMIv2.";
+    reference
+     "RFC 1930: Guidelines for creation, selection, and registration
+                of an Autonomous System (AS)
+      RFC 4271: A Border Gateway Protocol 4 (BGP-4)
+      RFC 4001: Textual Conventions for Internet Network Addresses
+      RFC 6793: BGP Support for Four-Octet Autonomous System (AS)
+                Number Space";
+  }
+
+  /*** collection of types related to IP addresses and hostnames ***/
+
+  typedef ip-address {
+    type union {
+      type inet:ipv4-address;
+      type inet:ipv6-address;
+    }
+    description
+     "The ip-address type represents an IP address and is IP
+      version neutral.  The format of the textual representation
+      implies the IP version.  This type supports scoped addresses
+      by allowing zone identifiers in the address format.";
+    reference
+     "RFC 4007: IPv6 Scoped Address Architecture";
+  }
+
+  typedef ipv4-address {
+    type string {
+      pattern
+        '(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}'
+      +  '([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])'
+      + '(%[\p{N}\p{L}]+)?';
+    }
+    description
+      "The ipv4-address type represents an IPv4 address in
+       dotted-quad notation.  The IPv4 address may include a zone
+       index, separated by a % sign.
+
+       The zone index is used to disambiguate identical address
+       values.  For link-local addresses, the zone index will
+       typically be the interface index number or the name of an
+       interface.  If the zone index is not present, the default
+       zone of the device will be used.
+
+       The canonical format for the zone index is the numerical
+       format";
+  }
+
+  typedef ipv6-address {
+    type string {
+      pattern '((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}'
+            + '((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|'
+            + '(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}'
+            + '(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))'
+            + '(%[\p{N}\p{L}]+)?';
+      pattern '(([^:]+:){6}(([^:]+:[^:]+)|(.*\..*)))|'
+            + '((([^:]+:)*[^:]+)?::(([^:]+:)*[^:]+)?)'
+            + '(%.+)?';
+    }
+    description
+     "The ipv6-address type represents an IPv6 address in full,
+      mixed, shortened, and shortened-mixed notation.  The IPv6
+      address may include a zone index, separated by a % sign.
+
+      The zone index is used to disambiguate identical address
+      values.  For link-local addresses, the zone index will
+      typically be the interface index number or the name of an
+      interface.  If the zone index is not present, the default
+      zone of the device will be used.
+
+      The canonical format of IPv6 addresses uses the textual
+      representation defined in Section 4 of RFC 5952.  The
+      canonical format for the zone index is the numerical
+      format as described in Section 11.2 of RFC 4007.";
+    reference
+     "RFC 4291: IP Version 6 Addressing Architecture
+      RFC 4007: IPv6 Scoped Address Architecture
+      RFC 5952: A Recommendation for IPv6 Address Text
+                Representation";
+  }
+
+  typedef ip-address-no-zone {
+    type union {
+      type inet:ipv4-address-no-zone;
+      type inet:ipv6-address-no-zone;
+    }
+    description
+     "The ip-address-no-zone type represents an IP address and is
+      IP version neutral.  The format of the textual representation
+      implies the IP version.  This type does not support scoped
+      addresses since it does not allow zone identifiers in the
+      address format.";
+    reference
+     "RFC 4007: IPv6 Scoped Address Architecture";
+  }
+
+  typedef ipv4-address-no-zone {
+    type inet:ipv4-address {
+      pattern '[0-9\.]*';
+    }
+    description
+      "An IPv4 address without a zone index.  This type, derived from
+       ipv4-address, may be used in situations where the zone is
+       known from the context and hence no zone index is needed.";
+  }
+
+  typedef ipv6-address-no-zone {
+    type inet:ipv6-address {
+      pattern '[0-9a-fA-F:\.]*';
+    }
+    description
+      "An IPv6 address without a zone index.  This type, derived from
+       ipv6-address, may be used in situations where the zone is
+       known from the context and hence no zone index is needed.";
+    reference
+     "RFC 4291: IP Version 6 Addressing Architecture
+      RFC 4007: IPv6 Scoped Address Architecture
+      RFC 5952: A Recommendation for IPv6 Address Text
+                Representation";
+  }
+
+  typedef ip-prefix {
+    type union {
+      type inet:ipv4-prefix;
+      type inet:ipv6-prefix;
+    }
+    description
+     "The ip-prefix type represents an IP prefix and is IP
+      version neutral.  The format of the textual representations
+      implies the IP version.";
+  }
+
+  typedef ipv4-prefix {
+    type string {
+      pattern
+         '(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\.){3}'
+       +  '([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])'
+       + '/(([0-9])|([1-2][0-9])|(3[0-2]))';
+    }
+    description
+     "The ipv4-prefix type represents an IPv4 address prefix.
+      The prefix length is given by the number following the
+      slash character and must be less than or equal to 32.
+
+      A prefix length value of n corresponds to an IP address
+      mask that has n contiguous 1-bits from the most
+      significant bit (MSB) and all other bits set to 0.
+
+      The canonical format of an IPv4 prefix has all bits of
+      the IPv4 address set to zero that are not part of the
+      IPv4 prefix.";
+  }
+
+  typedef ipv6-prefix {
+    type string {
+      pattern '((:|[0-9a-fA-F]{0,4}):)([0-9a-fA-F]{0,4}:){0,5}'
+            + '((([0-9a-fA-F]{0,4}:)?(:|[0-9a-fA-F]{0,4}))|'
+            + '(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\.){3}'
+            + '(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))'
+            + '(/(([0-9])|([0-9]{2})|(1[0-1][0-9])|(12[0-8])))';
+      pattern '(([^:]+:){6}(([^:]+:[^:]+)|(.*\..*)))|'
+            + '((([^:]+:)*[^:]+)?::(([^:]+:)*[^:]+)?)'
+            + '(/.+)';
+    }
+
+    description
+     "The ipv6-prefix type represents an IPv6 address prefix.
+      The prefix length is given by the number following the
+      slash character and must be less than or equal to 128.
+
+      A prefix length value of n corresponds to an IP address
+      mask that has n contiguous 1-bits from the most
+      significant bit (MSB) and all other bits set to 0.
+
+      The IPv6 address should have all bits that do not belong
+      to the prefix set to zero.
+
+      The canonical format of an IPv6 prefix has all bits of
+      the IPv6 address set to zero that are not part of the
+      IPv6 prefix.  Furthermore, the IPv6 address is represented
+      as defined in Section 4 of RFC 5952.";
+    reference
+     "RFC 5952: A Recommendation for IPv6 Address Text
+                Representation";
+  }
+
+  /*** collection of domain name and URI types ***/
+
+  typedef domain-name {
+    type string {
+      pattern
+        '((([a-zA-Z0-9_]([a-zA-Z0-9\-_]){0,61})?[a-zA-Z0-9]\.)*'
+      + '([a-zA-Z0-9_]([a-zA-Z0-9\-_]){0,61})?[a-zA-Z0-9]\.?)'
+      + '|\.';
+      length "1..253";
+    }
+    description
+     "The domain-name type represents a DNS domain name.  The
+      name SHOULD be fully qualified whenever possible.
+
+      Internet domain names are only loosely specified.  Section
+      3.5 of RFC 1034 recommends a syntax (modified in Section
+      2.1 of RFC 1123).  The pattern above is intended to allow
+      for current practice in domain name use, and some possible
+      future expansion.  It is designed to hold various types of
+      domain names, including names used for A or AAAA records
+      (host names) and other records, such as SRV records.  Note
+      that Internet host names have a stricter syntax (described
+      in RFC 952) than the DNS recommendations in RFCs 1034 and
+      1123, and that systems that want to store host names in
+      schema nodes using the domain-name type are recommended to
+      adhere to this stricter standard to ensure interoperability.
+
+      The encoding of DNS names in the DNS protocol is limited
+      to 255 characters.  Since the encoding consists of labels
+      prefixed by a length bytes and there is a trailing NULL
+      byte, only 253 characters can appear in the textual dotted
+      notation.
+
+      The description clause of schema nodes using the domain-name
+      type MUST describe when and how these names are resolved to
+      IP addresses.  Note that the resolution of a domain-name value
+      may require to query multiple DNS records (e.g., A for IPv4
+      and AAAA for IPv6).  The order of the resolution process and
+      which DNS record takes precedence can either be defined
+      explicitly or may depend on the configuration of the
+      resolver.
+
+      Domain-name values use the US-ASCII encoding.  Their canonical
+      format uses lowercase US-ASCII characters.  Internationalized
+      domain names MUST be A-labels as per RFC 5890.";
+    reference
+     "RFC  952: DoD Internet Host Table Specification
+      RFC 1034: Domain Names - Concepts and Facilities
+      RFC 1123: Requirements for Internet Hosts -- Application
+                and Support
+      RFC 2782: A DNS RR for specifying the location of services
+                (DNS SRV)
+      RFC 5890: Internationalized Domain Names in Applications
+                (IDNA): Definitions and Document Framework";
+  }
+
+  typedef host {
+    type union {
+      type inet:ip-address;
+      type inet:domain-name;
+    }
+    description
+     "The host type represents either an IP address or a DNS
+      domain name.";
+  }
+
+  typedef uri {
+    type string;
+    description
+     "The uri type represents a Uniform Resource Identifier
+      (URI) as defined by STD 66.
+
+      Objects using the uri type MUST be in US-ASCII encoding,
+      and MUST be normalized as described by RFC 3986 Sections
+      6.2.1, 6.2.2.1, and 6.2.2.2.  All unnecessary
+      percent-encoding is removed, and all case-insensitive
+      characters are set to lowercase except for hexadecimal
+      digits, which are normalized to uppercase as described in
+      Section 6.2.2.1.
+
+      The purpose of this normalization is to help provide
+      unique URIs.  Note that this normalization is not
+      sufficient to provide uniqueness.  Two URIs that are
+      textually distinct after this normalization may still be
+      equivalent.
+
+      Objects using the uri type may restrict the schemes that
+      they permit.  For example, 'data:' and 'urn:' schemes
+      might not be appropriate.
+
+      A zero-length URI is not a valid URI.  This can be used to
+      express 'URI absent' where required.
+
+      In the value set and its semantics, this type is equivalent
+      to the Uri SMIv2 textual convention defined in RFC 5017.";
+    reference
+     "RFC 3986: Uniform Resource Identifier (URI): Generic Syntax
+      RFC 3305: Report from the Joint W3C/IETF URI Planning Interest
+                Group: Uniform Resource Identifiers (URIs), URLs,
+                and Uniform Resource Names (URNs): Clarifications
+                and Recommendations
+      RFC 5017: MIB Textual Conventions for Uniform Resource
+                Identifiers (URIs)";
+  }
+
+}
+"""
+
+pure def src_yang() -> list[str]:
+    return [
+        SRC_YANG_0,
+        SRC_YANG_1,
+        SRC_YANG_2,
+        SRC_YANG_3,
+    ]
+
+
+NS_l3vpn_inter: str = 'http://example.com/l3vpn-inter'
+NS_netinfra_inter: str = 'http://example.com/netinfra-inter'
+NS_stratoweave: str = 'http://stratoweave.org/yang/stratoweave'
+NS_ietf_inet_types: str = 'urn:ietf:params:xml:ns:yang:ietf-inet-types'
+
+
+_breaker1: None = None
+class netinfra_inter__netinfra__router__feature_flags(yadata.MNode):
+    runtime_schema_fetch: bool
+
+    mut def __init__(self, runtime_schema_fetch: ?bool=None) -> None:
+        self.runtime_schema_fetch = runtime_schema_fetch if runtime_schema_fetch is not None else False
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=False, root_path=['netinfra-inter:netinfra', 'router', 'feature-flags'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> netinfra_inter__netinfra__router__feature_flags:
+        if n is not None:
+            return netinfra_inter__netinfra__router__feature_flags(runtime_schema_fetch=n.get_opt_bool(ygdata.Id(NS_netinfra_inter, 'runtime-schema-fetch')))
+        return netinfra_inter__netinfra__router__feature_flags()
+
+    mut def copy(self) -> netinfra_inter__netinfra__router__feature_flags:
+        """Create a deep copy of this adata object"""
+        return netinfra_inter__netinfra__router__feature_flags.from_gdata(self.to_gdata())
+
+
+_breaker2: None = None
+class netinfra_inter__netinfra__router__base_config(yadata.MNode):
+    asn: u64
+    ipv4_address: str
+    ipv6_address: str
+
+    mut def __init__(self, asn: u64, ipv4_address: str, ipv6_address: str) -> None:
+        self.asn = asn
+        self.ipv4_address = ipv4_address
+        self.ipv6_address = ipv6_address
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=False, root_path=['netinfra-inter:netinfra', 'router', 'base-config'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> netinfra_inter__netinfra__router__base_config:
+        if n is not None:
+            return netinfra_inter__netinfra__router__base_config(asn=n.get_u64(ygdata.Id(NS_netinfra_inter, 'asn')), ipv4_address=n.get_str(ygdata.Id(NS_netinfra_inter, 'ipv4-address')), ipv6_address=n.get_str(ygdata.Id(NS_netinfra_inter, 'ipv6-address')))
+        raise ValueError('Missing required subtree netinfra_inter__netinfra__router__base_config')
+
+    mut def copy(self) -> netinfra_inter__netinfra__router__base_config:
+        """Create a deep copy of this adata object"""
+        return netinfra_inter__netinfra__router__base_config.from_gdata(self.to_gdata())
+
+
+_breaker3: None = None
+class netinfra_inter__netinfra__router__l3vpn_vrf_entry(yadata.MNode):
+    vpn_id: str
+    ebgp_customer_address: list[str]
+
+    mut def __init__(self, vpn_id: str, ebgp_customer_address: ?list[str]=None) -> None:
+        self.vpn_id = vpn_id
+        self.ebgp_customer_address = ebgp_customer_address if ebgp_customer_address is not None else []
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=False, root_path=['netinfra-inter:netinfra', 'router', 'l3vpn-vrf'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ygdata.Node) -> netinfra_inter__netinfra__router__l3vpn_vrf_entry:
+        return netinfra_inter__netinfra__router__l3vpn_vrf_entry(vpn_id=n.get_str(ygdata.Id(NS_netinfra_inter, 'vpn-id')), ebgp_customer_address=n.get_opt_strs(ygdata.Id(NS_netinfra_inter, 'ebgp-customer-address')))
+
+    mut def copy(self) -> netinfra_inter__netinfra__router__l3vpn_vrf_entry:
+        """Create a deep copy of this adata object"""
+        return netinfra_inter__netinfra__router__l3vpn_vrf_entry.from_gdata(self.to_gdata())
+
+_breaker4: None = None
+class netinfra_inter__netinfra__router__l3vpn_vrf(yadata.MKeyedList[str, netinfra_inter__netinfra__router__l3vpn_vrf_entry]):
+    mut def __init__(self, elements: list[netinfra_inter__netinfra__router__l3vpn_vrf_entry]=[]) -> None:
+        yadata.MKeyedList.__init__(self, lambda e: e.vpn_id, elements)
+
+    mut def create(self, key: str) -> netinfra_inter__netinfra__router__l3vpn_vrf_entry:
+        e = self.get(key)
+        if e is not None:
+            return e
+        vpn_id = key
+        res = netinfra_inter__netinfra__router__l3vpn_vrf_entry(vpn_id=vpn_id)
+        self._append(res)
+        return res
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.List) -> list[netinfra_inter__netinfra__router__l3vpn_vrf_entry]:
+        if n is not None:
+            return [netinfra_inter__netinfra__router__l3vpn_vrf_entry.from_gdata(e) for e in n.entries()]
+        return []
+
+    mut def copy(self) -> netinfra_inter__netinfra__router__l3vpn_vrf:
+        """Create a deep copy of this list object"""
+        # Copy each element in the list
+        copied_elements = []
+        for e in self:
+            ce = e.copy()
+            if ce is not None:
+                copied_elements.append(ce)
+        return netinfra_inter__netinfra__router__l3vpn_vrf(elements=copied_elements)
+
+
+_breaker5: None = None
+class netinfra_inter__netinfra__router_entry(yadata.MNode):
+    name: str
+    id: u64
+    type: ?str
+    role: ?str
+    mock: bool
+    approval_required: bool
+    feature_flags: netinfra_inter__netinfra__router__feature_flags
+    base_config: netinfra_inter__netinfra__router__base_config
+    l3vpn_vrf: netinfra_inter__netinfra__router__l3vpn_vrf
+
+    mut def __init__(self, name: str, id: u64, base_config: netinfra_inter__netinfra__router__base_config, type: ?str=None, role: ?str=None, mock: ?bool=None, approval_required: ?bool=None, feature_flags: ?netinfra_inter__netinfra__router__feature_flags=None, l3vpn_vrf: list[netinfra_inter__netinfra__router__l3vpn_vrf_entry]=[]) -> None:
+        self.name = name
+        self.id = id
+        self.type = type
+        self.role = role
+        self.mock = mock if mock is not None else False
+        self.approval_required = approval_required if approval_required is not None else False
+        self.feature_flags = feature_flags if feature_flags is not None else netinfra_inter__netinfra__router__feature_flags()
+        self.base_config = base_config
+        self.l3vpn_vrf = netinfra_inter__netinfra__router__l3vpn_vrf(elements=l3vpn_vrf)
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=False, root_path=['netinfra-inter:netinfra', 'router'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ygdata.Node) -> netinfra_inter__netinfra__router_entry:
+        return netinfra_inter__netinfra__router_entry(name=n.get_str(ygdata.Id(NS_netinfra_inter, 'name')), id=n.get_u64(ygdata.Id(NS_netinfra_inter, 'id')), type=n.get_opt_str(ygdata.Id(NS_netinfra_inter, 'type')), role=n.get_opt_str(ygdata.Id(NS_netinfra_inter, 'role')), mock=n.get_opt_bool(ygdata.Id(NS_netinfra_inter, 'mock')), approval_required=n.get_opt_bool(ygdata.Id(NS_netinfra_inter, 'approval-required')), feature_flags=netinfra_inter__netinfra__router__feature_flags.from_gdata(n.get_opt_cnt(ygdata.Id(NS_netinfra_inter, 'feature-flags'))), base_config=netinfra_inter__netinfra__router__base_config.from_gdata(n.get_cnt(ygdata.Id(NS_netinfra_inter, 'base-config'))), l3vpn_vrf=netinfra_inter__netinfra__router__l3vpn_vrf.from_gdata(n.get_opt_list(ygdata.Id(NS_netinfra_inter, 'l3vpn-vrf'))))
+
+    mut def copy(self) -> netinfra_inter__netinfra__router_entry:
+        """Create a deep copy of this adata object"""
+        return netinfra_inter__netinfra__router_entry.from_gdata(self.to_gdata())
+
+_breaker6: None = None
+class netinfra_inter__netinfra__router(yadata.MKeyedList[str, netinfra_inter__netinfra__router_entry]):
+    mut def __init__(self, elements: list[netinfra_inter__netinfra__router_entry]=[]) -> None:
+        yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
+
+    mut def create(self, key: str, id: u64, base_config: netinfra_inter__netinfra__router__base_config, type: ?str=None, role: ?str=None, mock: ?bool=None, approval_required: ?bool=None) -> netinfra_inter__netinfra__router_entry:
+        e = self.get(key)
+        if e is not None:
+            e.id = id
+            e.base_config = base_config
+            if type is not None:
+                e.type = type
+            if role is not None:
+                e.role = role
+            if mock is not None:
+                e.mock = mock
+            if approval_required is not None:
+                e.approval_required = approval_required
+            return e
+        name = key
+        res = netinfra_inter__netinfra__router_entry(name=name, id=id, base_config=base_config, type=type, role=role, mock=mock, approval_required=approval_required)
+        self._append(res)
+        return res
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.List) -> list[netinfra_inter__netinfra__router_entry]:
+        if n is not None:
+            return [netinfra_inter__netinfra__router_entry.from_gdata(e) for e in n.entries()]
+        return []
+
+    mut def copy(self) -> netinfra_inter__netinfra__router:
+        """Create a deep copy of this list object"""
+        # Copy each element in the list
+        copied_elements = []
+        for e in self:
+            ce = e.copy()
+            if ce is not None:
+                copied_elements.append(ce)
+        return netinfra_inter__netinfra__router(elements=copied_elements)
+
+
+_breaker7: None = None
+class netinfra_inter__netinfra__backbone_link_entry(yadata.MNode):
+    left_router: str
+    left_interface: str
+    right_router: str
+    right_interface: str
+
+    mut def __init__(self, left_router: str, left_interface: str, right_router: str, right_interface: str) -> None:
+        self.left_router = left_router
+        self.left_interface = left_interface
+        self.right_router = right_router
+        self.right_interface = right_interface
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=False, root_path=['netinfra-inter:netinfra', 'backbone-link'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ygdata.Node) -> netinfra_inter__netinfra__backbone_link_entry:
+        return netinfra_inter__netinfra__backbone_link_entry(left_router=n.get_str(ygdata.Id(NS_netinfra_inter, 'left-router')), left_interface=n.get_str(ygdata.Id(NS_netinfra_inter, 'left-interface')), right_router=n.get_str(ygdata.Id(NS_netinfra_inter, 'right-router')), right_interface=n.get_str(ygdata.Id(NS_netinfra_inter, 'right-interface')))
+
+    mut def copy(self) -> netinfra_inter__netinfra__backbone_link_entry:
+        """Create a deep copy of this adata object"""
+        return netinfra_inter__netinfra__backbone_link_entry.from_gdata(self.to_gdata())
+
+_breaker8: None = None
+class netinfra_inter__netinfra__backbone_link(yadata.MKeyedList[(left_router: str, left_interface: str, right_router: str, right_interface: str), netinfra_inter__netinfra__backbone_link_entry]):
+    mut def __init__(self, elements: list[netinfra_inter__netinfra__backbone_link_entry]=[]) -> None:
+        yadata.MKeyedList.__init__(self, lambda e: (left_router=e.left_router, left_interface=e.left_interface, right_router=e.right_router, right_interface=e.right_interface), elements)
+
+    mut def create(self, key: (left_router: str, left_interface: str, right_router: str, right_interface: str)) -> netinfra_inter__netinfra__backbone_link_entry:
+        e = self.get(key)
+        if e is not None:
+            return e
+        (left_router=left_router, left_interface=left_interface, right_router=right_router, right_interface=right_interface) = key
+        res = netinfra_inter__netinfra__backbone_link_entry(left_router=left_router, left_interface=left_interface, right_router=right_router, right_interface=right_interface)
+        self._append(res)
+        return res
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.List) -> list[netinfra_inter__netinfra__backbone_link_entry]:
+        if n is not None:
+            return [netinfra_inter__netinfra__backbone_link_entry.from_gdata(e) for e in n.entries()]
+        return []
+
+    mut def copy(self) -> netinfra_inter__netinfra__backbone_link:
+        """Create a deep copy of this list object"""
+        # Copy each element in the list
+        copied_elements = []
+        for e in self:
+            ce = e.copy()
+            if ce is not None:
+                copied_elements.append(ce)
+        return netinfra_inter__netinfra__backbone_link(elements=copied_elements)
+
+
+_breaker9: None = None
+class netinfra_inter__netinfra__ibgp_fullmesh__router_entry(yadata.MNode):
+    name: str
+    ipv4_address: str
+
+    mut def __init__(self, name: str, ipv4_address: str) -> None:
+        self.name = name
+        self.ipv4_address = ipv4_address
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=False, root_path=['netinfra-inter:netinfra', 'ibgp-fullmesh', 'router'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ygdata.Node) -> netinfra_inter__netinfra__ibgp_fullmesh__router_entry:
+        return netinfra_inter__netinfra__ibgp_fullmesh__router_entry(name=n.get_str(ygdata.Id(NS_netinfra_inter, 'name')), ipv4_address=n.get_str(ygdata.Id(NS_netinfra_inter, 'ipv4-address')))
+
+    mut def copy(self) -> netinfra_inter__netinfra__ibgp_fullmesh__router_entry:
+        """Create a deep copy of this adata object"""
+        return netinfra_inter__netinfra__ibgp_fullmesh__router_entry.from_gdata(self.to_gdata())
+
+_breaker10: None = None
+class netinfra_inter__netinfra__ibgp_fullmesh__router(yadata.MKeyedList[str, netinfra_inter__netinfra__ibgp_fullmesh__router_entry]):
+    mut def __init__(self, elements: list[netinfra_inter__netinfra__ibgp_fullmesh__router_entry]=[]) -> None:
+        yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
+
+    mut def create(self, key: str, ipv4_address: str) -> netinfra_inter__netinfra__ibgp_fullmesh__router_entry:
+        e = self.get(key)
+        if e is not None:
+            e.ipv4_address = ipv4_address
+            return e
+        name = key
+        res = netinfra_inter__netinfra__ibgp_fullmesh__router_entry(name=name, ipv4_address=ipv4_address)
+        self._append(res)
+        return res
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.List) -> list[netinfra_inter__netinfra__ibgp_fullmesh__router_entry]:
+        if n is not None:
+            return [netinfra_inter__netinfra__ibgp_fullmesh__router_entry.from_gdata(e) for e in n.entries()]
+        return []
+
+    mut def copy(self) -> netinfra_inter__netinfra__ibgp_fullmesh__router:
+        """Create a deep copy of this list object"""
+        # Copy each element in the list
+        copied_elements = []
+        for e in self:
+            ce = e.copy()
+            if ce is not None:
+                copied_elements.append(ce)
+        return netinfra_inter__netinfra__ibgp_fullmesh__router(elements=copied_elements)
+
+
+_breaker11: None = None
+class netinfra_inter__netinfra__ibgp_fullmesh_entry(yadata.MNode):
+    asn: u64
+    authentication_key: str
+    router: netinfra_inter__netinfra__ibgp_fullmesh__router
+
+    mut def __init__(self, asn: u64, authentication_key: str, router: list[netinfra_inter__netinfra__ibgp_fullmesh__router_entry]=[]) -> None:
+        self.asn = asn
+        self.authentication_key = authentication_key
+        self.router = netinfra_inter__netinfra__ibgp_fullmesh__router(elements=router)
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=False, root_path=['netinfra-inter:netinfra', 'ibgp-fullmesh'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ygdata.Node) -> netinfra_inter__netinfra__ibgp_fullmesh_entry:
+        return netinfra_inter__netinfra__ibgp_fullmesh_entry(asn=n.get_u64(ygdata.Id(NS_netinfra_inter, 'asn')), authentication_key=n.get_str(ygdata.Id(NS_netinfra_inter, 'authentication-key')), router=netinfra_inter__netinfra__ibgp_fullmesh__router.from_gdata(n.get_opt_list(ygdata.Id(NS_netinfra_inter, 'router'))))
+
+    mut def copy(self) -> netinfra_inter__netinfra__ibgp_fullmesh_entry:
+        """Create a deep copy of this adata object"""
+        return netinfra_inter__netinfra__ibgp_fullmesh_entry.from_gdata(self.to_gdata())
+
+_breaker12: None = None
+class netinfra_inter__netinfra__ibgp_fullmesh(yadata.MKeyedList[u64, netinfra_inter__netinfra__ibgp_fullmesh_entry]):
+    mut def __init__(self, elements: list[netinfra_inter__netinfra__ibgp_fullmesh_entry]=[]) -> None:
+        yadata.MKeyedList.__init__(self, lambda e: e.asn, elements)
+
+    mut def create(self, key: u64, authentication_key: str) -> netinfra_inter__netinfra__ibgp_fullmesh_entry:
+        e = self.get(key)
+        if e is not None:
+            e.authentication_key = authentication_key
+            return e
+        asn = key
+        res = netinfra_inter__netinfra__ibgp_fullmesh_entry(asn=asn, authentication_key=authentication_key)
+        self._append(res)
+        return res
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.List) -> list[netinfra_inter__netinfra__ibgp_fullmesh_entry]:
+        if n is not None:
+            return [netinfra_inter__netinfra__ibgp_fullmesh_entry.from_gdata(e) for e in n.entries()]
+        return []
+
+    mut def copy(self) -> netinfra_inter__netinfra__ibgp_fullmesh:
+        """Create a deep copy of this list object"""
+        # Copy each element in the list
+        copied_elements = []
+        for e in self:
+            ce = e.copy()
+            if ce is not None:
+                copied_elements.append(ce)
+        return netinfra_inter__netinfra__ibgp_fullmesh(elements=copied_elements)
+
+
+_breaker13: None = None
+class netinfra_inter__netinfra(yadata.MNode):
+    router: netinfra_inter__netinfra__router
+    backbone_link: netinfra_inter__netinfra__backbone_link
+    ibgp_fullmesh: netinfra_inter__netinfra__ibgp_fullmesh
+
+    mut def __init__(self, router: list[netinfra_inter__netinfra__router_entry]=[], backbone_link: list[netinfra_inter__netinfra__backbone_link_entry]=[], ibgp_fullmesh: list[netinfra_inter__netinfra__ibgp_fullmesh_entry]=[]) -> None:
+        self.router = netinfra_inter__netinfra__router(elements=router)
+        self.backbone_link = netinfra_inter__netinfra__backbone_link(elements=backbone_link)
+        self.ibgp_fullmesh = netinfra_inter__netinfra__ibgp_fullmesh(elements=ibgp_fullmesh)
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=False, root_path=['netinfra-inter:netinfra'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> netinfra_inter__netinfra:
+        if n is not None:
+            return netinfra_inter__netinfra(router=netinfra_inter__netinfra__router.from_gdata(n.get_opt_list(ygdata.Id(NS_netinfra_inter, 'router'))), backbone_link=netinfra_inter__netinfra__backbone_link.from_gdata(n.get_opt_list(ygdata.Id(NS_netinfra_inter, 'backbone-link'))), ibgp_fullmesh=netinfra_inter__netinfra__ibgp_fullmesh.from_gdata(n.get_opt_list(ygdata.Id(NS_netinfra_inter, 'ibgp-fullmesh'))))
+        return netinfra_inter__netinfra()
+
+    mut def copy(self) -> netinfra_inter__netinfra:
+        """Create a deep copy of this adata object"""
+        return netinfra_inter__netinfra.from_gdata(self.to_gdata())
+
+
+_breaker14: None = None
+class l3vpn_inter__l3vpns__l3vpn__endpoint__bgp(yadata.MNode):
+    as_number: u64
+    authentication_key: ?str
+
+    mut def __init__(self, as_number: u64, authentication_key: ?str=None) -> None:
+        self.as_number = as_number
+        self.authentication_key = authentication_key
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=False, root_path=['l3vpn-inter:l3vpns', 'l3vpn', 'endpoint', 'bgp'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> ?l3vpn_inter__l3vpns__l3vpn__endpoint__bgp:
+        if n is not None:
+            return l3vpn_inter__l3vpns__l3vpn__endpoint__bgp(as_number=n.get_u64(ygdata.Id(NS_l3vpn_inter, 'as-number')), authentication_key=n.get_opt_str(ygdata.Id(NS_l3vpn_inter, 'authentication-key')))
+        return None
+
+    mut def copy(self) -> l3vpn_inter__l3vpns__l3vpn__endpoint__bgp:
+        """Create a deep copy of this adata object"""
+        ad = l3vpn_inter__l3vpns__l3vpn__endpoint__bgp.from_gdata(self.to_gdata())
+        if ad is not None:
+            return ad
+        raise Exception('Unreachable in l3vpn_inter__l3vpns__l3vpn__endpoint__bgp.copy()')
+
+
+_breaker15: None = None
+class l3vpn_inter__l3vpns__l3vpn__endpoint_entry(yadata.MNode):
+    device: str
+    interface: str
+    site: str
+    site_network_access: str
+    provider_ipv4_address: str
+    customer_ipv4_address: ?str
+    ipv4_prefix_length: u64
+    bgp: ?l3vpn_inter__l3vpns__l3vpn__endpoint__bgp
+
+    mut def __init__(self, device: str, interface: str, site: str, site_network_access: str, provider_ipv4_address: str, ipv4_prefix_length: u64, customer_ipv4_address: ?str=None, bgp: ?l3vpn_inter__l3vpns__l3vpn__endpoint__bgp=None) -> None:
+        self.device = device
+        self.interface = interface
+        self.site = site
+        self.site_network_access = site_network_access
+        self.provider_ipv4_address = provider_ipv4_address
+        self.customer_ipv4_address = customer_ipv4_address
+        self.ipv4_prefix_length = ipv4_prefix_length
+        self.bgp = bgp
+
+    mut def create_bgp(self, as_number: u64, authentication_key: ?str=None) -> l3vpn_inter__l3vpns__l3vpn__endpoint__bgp:
+        existing = self.bgp
+        if existing is not None:
+            existing.as_number = as_number
+            if authentication_key is not None:
+                existing.authentication_key = authentication_key
+            return existing
+        res = l3vpn_inter__l3vpns__l3vpn__endpoint__bgp(as_number=as_number, authentication_key=authentication_key)
+        self.bgp = res
+        return res
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=False, root_path=['l3vpn-inter:l3vpns', 'l3vpn', 'endpoint'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ygdata.Node) -> l3vpn_inter__l3vpns__l3vpn__endpoint_entry:
+        return l3vpn_inter__l3vpns__l3vpn__endpoint_entry(device=n.get_str(ygdata.Id(NS_l3vpn_inter, 'device')), interface=n.get_str(ygdata.Id(NS_l3vpn_inter, 'interface')), site=n.get_str(ygdata.Id(NS_l3vpn_inter, 'site')), site_network_access=n.get_str(ygdata.Id(NS_l3vpn_inter, 'site-network-access')), provider_ipv4_address=n.get_str(ygdata.Id(NS_l3vpn_inter, 'provider-ipv4-address')), customer_ipv4_address=n.get_opt_str(ygdata.Id(NS_l3vpn_inter, 'customer-ipv4-address')), ipv4_prefix_length=n.get_u64(ygdata.Id(NS_l3vpn_inter, 'ipv4-prefix-length')), bgp=l3vpn_inter__l3vpns__l3vpn__endpoint__bgp.from_gdata(n.get_opt_cnt(ygdata.Id(NS_l3vpn_inter, 'bgp'))))
+
+    mut def copy(self) -> l3vpn_inter__l3vpns__l3vpn__endpoint_entry:
+        """Create a deep copy of this adata object"""
+        return l3vpn_inter__l3vpns__l3vpn__endpoint_entry.from_gdata(self.to_gdata())
+
+_breaker16: None = None
+class l3vpn_inter__l3vpns__l3vpn__endpoint(yadata.MKeyedList[(device: str, interface: str), l3vpn_inter__l3vpns__l3vpn__endpoint_entry]):
+    mut def __init__(self, elements: list[l3vpn_inter__l3vpns__l3vpn__endpoint_entry]=[]) -> None:
+        yadata.MKeyedList.__init__(self, lambda e: (device=e.device, interface=e.interface), elements)
+
+    mut def create(self, key: (device: str, interface: str), site: str, site_network_access: str, provider_ipv4_address: str, ipv4_prefix_length: u64, customer_ipv4_address: ?str=None) -> l3vpn_inter__l3vpns__l3vpn__endpoint_entry:
+        e = self.get(key)
+        if e is not None:
+            e.site = site
+            e.site_network_access = site_network_access
+            e.provider_ipv4_address = provider_ipv4_address
+            e.ipv4_prefix_length = ipv4_prefix_length
+            if customer_ipv4_address is not None:
+                e.customer_ipv4_address = customer_ipv4_address
+            return e
+        (device=device, interface=interface) = key
+        res = l3vpn_inter__l3vpns__l3vpn__endpoint_entry(device=device, interface=interface, site=site, site_network_access=site_network_access, provider_ipv4_address=provider_ipv4_address, ipv4_prefix_length=ipv4_prefix_length, customer_ipv4_address=customer_ipv4_address)
+        self._append(res)
+        return res
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.List) -> list[l3vpn_inter__l3vpns__l3vpn__endpoint_entry]:
+        if n is not None:
+            return [l3vpn_inter__l3vpns__l3vpn__endpoint_entry.from_gdata(e) for e in n.entries()]
+        return []
+
+    mut def copy(self) -> l3vpn_inter__l3vpns__l3vpn__endpoint:
+        """Create a deep copy of this list object"""
+        # Copy each element in the list
+        copied_elements = []
+        for e in self:
+            ce = e.copy()
+            if ce is not None:
+                copied_elements.append(ce)
+        return l3vpn_inter__l3vpns__l3vpn__endpoint(elements=copied_elements)
+
+
+_breaker17: None = None
+class l3vpn_inter__l3vpns__l3vpn_entry(yadata.MNode):
+    name: str
+    description: ?str
+    endpoint: l3vpn_inter__l3vpns__l3vpn__endpoint
+
+    mut def __init__(self, name: str, description: ?str=None, endpoint: list[l3vpn_inter__l3vpns__l3vpn__endpoint_entry]=[]) -> None:
+        self.name = name
+        self.description = description
+        self.endpoint = l3vpn_inter__l3vpns__l3vpn__endpoint(elements=endpoint)
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=False, root_path=['l3vpn-inter:l3vpns', 'l3vpn'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ygdata.Node) -> l3vpn_inter__l3vpns__l3vpn_entry:
+        return l3vpn_inter__l3vpns__l3vpn_entry(name=n.get_str(ygdata.Id(NS_l3vpn_inter, 'name')), description=n.get_opt_str(ygdata.Id(NS_l3vpn_inter, 'description')), endpoint=l3vpn_inter__l3vpns__l3vpn__endpoint.from_gdata(n.get_opt_list(ygdata.Id(NS_l3vpn_inter, 'endpoint'))))
+
+    mut def copy(self) -> l3vpn_inter__l3vpns__l3vpn_entry:
+        """Create a deep copy of this adata object"""
+        return l3vpn_inter__l3vpns__l3vpn_entry.from_gdata(self.to_gdata())
+
+_breaker18: None = None
+class l3vpn_inter__l3vpns__l3vpn(yadata.MKeyedList[str, l3vpn_inter__l3vpns__l3vpn_entry]):
+    mut def __init__(self, elements: list[l3vpn_inter__l3vpns__l3vpn_entry]=[]) -> None:
+        yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
+
+    mut def create(self, key: str, description: ?str=None) -> l3vpn_inter__l3vpns__l3vpn_entry:
+        e = self.get(key)
+        if e is not None:
+            if description is not None:
+                e.description = description
+            return e
+        name = key
+        res = l3vpn_inter__l3vpns__l3vpn_entry(name=name, description=description)
+        self._append(res)
+        return res
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.List) -> list[l3vpn_inter__l3vpns__l3vpn_entry]:
+        if n is not None:
+            return [l3vpn_inter__l3vpns__l3vpn_entry.from_gdata(e) for e in n.entries()]
+        return []
+
+    mut def copy(self) -> l3vpn_inter__l3vpns__l3vpn:
+        """Create a deep copy of this list object"""
+        # Copy each element in the list
+        copied_elements = []
+        for e in self:
+            ce = e.copy()
+            if ce is not None:
+                copied_elements.append(ce)
+        return l3vpn_inter__l3vpns__l3vpn(elements=copied_elements)
+
+
+_breaker19: None = None
+class l3vpn_inter__l3vpns(yadata.MNode):
+    l3vpn: l3vpn_inter__l3vpns__l3vpn
+
+    mut def __init__(self, l3vpn: list[l3vpn_inter__l3vpns__l3vpn_entry]=[]) -> None:
+        self.l3vpn = l3vpn_inter__l3vpns__l3vpn(elements=l3vpn)
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=False, root_path=['l3vpn-inter:l3vpns'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> l3vpn_inter__l3vpns:
+        if n is not None:
+            return l3vpn_inter__l3vpns(l3vpn=l3vpn_inter__l3vpns__l3vpn.from_gdata(n.get_opt_list(ygdata.Id(NS_l3vpn_inter, 'l3vpn'))))
+        return l3vpn_inter__l3vpns()
+
+    mut def copy(self) -> l3vpn_inter__l3vpns:
+        """Create a deep copy of this adata object"""
+        return l3vpn_inter__l3vpns.from_gdata(self.to_gdata())
+
+
+_breaker20: None = None
+class root(yadata.MNode):
+    netinfra: netinfra_inter__netinfra
+    l3vpns: l3vpn_inter__l3vpns
+
+    mut def __init__(self, netinfra: ?netinfra_inter__netinfra=None, l3vpns: ?l3vpn_inter__l3vpns=None) -> None:
+        self.netinfra = netinfra if netinfra is not None else netinfra_inter__netinfra()
+        self.l3vpns = l3vpns if l3vpns is not None else l3vpn_inter__l3vpns()
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=False, prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> root:
+        if n is not None:
+            return root(netinfra=netinfra_inter__netinfra.from_gdata(n.get_opt_cnt(ygdata.Id(NS_netinfra_inter, 'netinfra'))), l3vpns=l3vpn_inter__l3vpns.from_gdata(n.get_opt_cnt(ygdata.Id(NS_l3vpn_inter, 'l3vpns'))))
+        return root()
+
+    mut def copy(self) -> root:
+        """Create a deep copy of this adata object"""
+        return root.from_gdata(self.to_gdata())
+
+
+actor rpc_root(tp: ygdata.TreeProvider):
+    pass
+

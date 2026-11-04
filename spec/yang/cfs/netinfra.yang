@@ -1,0 +1,115 @@
+module netinfra {
+  yang-version "1.1";
+  namespace "http://example.com/netinfra";
+  prefix "netinfra";
+  description "Network Infrastructure";
+  revision 2019-01-01 {
+    description "test revision";
+    reference "ref1";
+  }
+  import ietf-inet-types {
+    prefix inet;
+  }
+  import stratoweave {
+    prefix sw;
+  }
+  import ietf-yang-tmf-map {
+    prefix tmf;
+  }
+
+  container netinfra {
+    description "Network infrastructure";
+    list router {
+      description "Network Infrastructure Router";
+      key name;
+
+      sw:transform sorespo.cfs.Router;
+      tmf:cfs-service "Router";
+      sw:link global {
+        sw:path /netinfra:netinfra/netinfra:global-settings;
+      }
+
+      leaf name {
+        type string;
+      }
+      leaf id {
+        type uint32;
+        description "router id";
+        mandatory true;
+      }
+      leaf type {
+        type string;
+        mandatory true;
+      }
+      leaf role {
+        type string;
+      }
+      leaf asn {
+        type inet:as-number;
+        mandatory true;
+      }
+      leaf mock {
+        type boolean;
+        default false;
+      }
+      leaf approval-required {
+        type boolean;
+        default false;
+      }
+      container feature-flags {
+        leaf runtime-schema-fetch {
+          type boolean;
+          default false;
+        }
+      }
+    }
+
+    list backbone-link {
+      key "left-router left-interface right-router right-interface";
+
+      sw:transform sorespo.cfs.BBLink;
+      tmf:cfs-service "Backbone Link";
+
+      leaf left-router {
+        type string;
+      }
+      leaf left-interface {
+        type string;
+      }
+      leaf right-router {
+        type string;
+      }
+      leaf right-interface {
+        type string;
+      }
+
+      container state {
+        config false;
+        description
+          "Combined oper-state of the link, lifted from the underlying RFS
+           backbone-interface entries: up only when both endpoints are up,
+           down if either is down, unknown when either is unavailable.";
+        leaf link-status {
+          type enumeration {
+            enum up;
+            enum down;
+            enum unknown;
+          }
+        }
+      }
+    }
+
+    container global-settings {
+      sw:transform sorespo.cfs.GlobalSettings;
+      description
+        "Network-wide settings shared across all routers.";
+      leaf ibgp-authentication-key {
+        type string;
+        mandatory true;
+        description
+          "Shared iBGP authentication key applied to every router's
+           iBGP full-mesh neighbors.";
+      }
+    }
+  }
+}

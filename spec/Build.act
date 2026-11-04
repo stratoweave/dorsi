@@ -1,0 +1,16 @@
+name = "sorespo_gen"
+fingerprint = 0xcb43a968b1316986
+dependencies = {
+    "stratoweave": (
+        repo_url="https://github.com/stratoweave/stratoweave",
+        url="https://github.com/stratoweave/stratoweave/archive/eeb8ea3a1bf6034ad429da7a9f06df51b0859be1.zip",
+        hash="N-V-__8AAMnipwCLYhtbJxfX0VzE9sJy6t3dCh7bbeAQH2eu"
+    ),
+    "tmf": (
+        follows="stratoweave.actmf"
+    ),
+    "yang": (
+        follows="stratoweave.yang"
+    )
+}
+zig_dependencies = {}

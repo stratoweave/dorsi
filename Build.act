@@ -1,0 +1,24 @@
+name = "sorespo"
+fingerprint = 0x9221cfef6ab1263c
+dependencies = {
+    "rtrsecrets": (
+        repo_url="https://github.com/stratoweave/rtrsecrets.git",
+        url="https://github.com/stratoweave/rtrsecrets/archive/a8bdd0c0c95f8cd4fca127b4542d4bceb66b01e7.zip",
+        hash="N-V-__8AAJVvAACW9_ppVgv42fp7QhCFMXXrnldaTT56lav2"
+    ),
+    "spec": (
+        path="spec"
+    ),
+    "stratoweave": (
+        follows="spec.stratoweave"
+    ),
+    "timeseries": (
+        repo_url="https://github.com/stratoweave/timeseries",
+        url="https://github.com/stratoweave/timeseries/archive/61e0da9753285e2677173a316cf28cb243292b38.zip",
+        hash="N-V-__8AAAUlAACtZkFcqozk8OGOfg8WsuqymxfDJtVwIjEA"
+    ),
+    "yang": (
+        follows="stratoweave.yang"
+    )
+}
+zig_dependencies = {}
