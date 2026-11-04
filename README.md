@@ -17,7 +17,7 @@ can use it to learn about network automation (development) or use it as a solid
 foundation for your own network automation system design.
 
 <p align="center">
-  <img src="docs/images/StratoWeaveSorepoCombined.png" alt="The relationship between the StratoWeave automation platform and the SORESPO service provider L3VPN service implementation" width="800"/>
+  <img src="docs/images/StratoWeaveSorepoCombined.png" alt="The relationship between the StratoWeave automation platform and the SORESPO network service implementation" width="800"/>
 </p>
 
 ## Getting Started
@@ -32,17 +32,16 @@ the two branches relate and how to contribute.
 
 ## SORESPO Services
 
-Today, SORESPO delivers an **IP core network, offering Layer 3 VPN services**.
-The Customer Facing Service (CFS) model is an implementation of the IETF's
-*YANG Data Model for L3VPN Service Delivery* defined in [RFC8299](https://datatracker.ietf.org/doc/rfc8299/).
+Today, SORESPO delivers an **IP core network**. The Customer Facing Service
+(CFS) model is `netinfra` (see `spec/yang/cfs/netinfra.yang`), which describes
+the routers, the backbone links between them and the network-wide settings of
+the IP core.
 
-L3VPN was chosen as a good service to start out with as it is a common, well
-understood and overall useful service-provider use-case. But the StratoWeave
-platform is capable of implementing almost any automation use-case for any
-domain. Over time, we expect to deliver more services as part of SORESPO. But
-we will likewise deliver other reference implementations for many additional
-use-cases. With these reference implementations we aim to make service
-automation with StratoWeave as simple as possible.
+The StratoWeave platform is capable of implementing almost any automation
+use-case for any domain. Over time, we expect to deliver more services as part
+of SORESPO. But we will likewise deliver other reference implementations for
+many additional use-cases. With these reference implementations we aim to make
+service automation with StratoWeave as simple as possible.
 
 ### Service Automation Layering
 

@@ -55,13 +55,13 @@ acton test
 
 `src/sorespo/discovery/rfs_discovery.act` is the device-normalization stage. It
 detects the device type once per input device, extracts base config, backbone
-interfaces, iBGP neighbors, VRFs, VRF interfaces, and eBGP customers, then writes
+interfaces, and iBGP neighbors, then writes
 them into an RFS root. `discover_rfs_root(...)` returns the typed RFS tree;
 `discover_rfs(...)` returns the same data as gdata for the test rig.
 
 `src/sorespo/discovery/cfs_discovery.act` is the service-aggregation stage. It
 calls `discover_rfs_root(...)`, iterates over `rfs_root.rfs`, creates CFS routers,
-aggregates backbone links, builds L3VPN service entries, and writes global iBGP
+aggregates backbone links, and writes global iBGP
 settings.
 
 When adding discovery support, keep device-specific reads inside the common RFS
