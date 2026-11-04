@@ -40,28 +40,6 @@
           </ipv4>
         </interface>
         <interface>
-          <interface-name>GigabitEthernet0/0/0/3</interface-name>
-          <description>Customer access port</description>
-        </interface>
-        <interface>
-          <interface-name>GigabitEthernet0/0/0/3.100</interface-name>
-          <description>Customer VPN access SITE-2 [SNA-2-1] in VPN acme-65501</description>
-          <encapsulation xmlns="http://cisco.com/ns/yang/Cisco-IOS-XR-um-l2-ethernet-cfg">
-            <dot1q>
-              <vlan-id>100</vlan-id>
-            </dot1q>
-          </encapsulation>
-          <ipv4>
-            <addresses xmlns="http://cisco.com/ns/yang/Cisco-IOS-XR-um-if-ip-address-cfg">
-              <address>
-                <address>10.202.1.1</address>
-                <netmask>255.255.255.252</netmask>
-              </address>
-            </addresses>
-          </ipv4>
-          <vrf xmlns="http://cisco.com/ns/yang/Cisco-IOS-XR-um-if-vrf-cfg">acme-65501</vrf>
-        </interface>
-        <interface>
           <interface-name>Loopback0</interface-name>
           <ipv4>
             <addresses xmlns="http://cisco.com/ns/yang/Cisco-IOS-XR-um-if-ip-address-cfg">
@@ -149,48 +127,6 @@
                 </use>
               </neighbor>
             </neighbors>
-            <vrfs>
-              <vrf>
-                <vrf-name>acme-65501</vrf-name>
-                <address-families>
-                  <address-family>
-                    <af-name>ipv4-unicast</af-name>
-                  </address-family>
-                </address-families>
-                <neighbors>
-                  <neighbor>
-                    <address>10.202.1.2</address>
-                    <address-families>
-                      <address-family>
-                        <af-name>ipv4-unicast</af-name>
-                        <as-override/>
-                        <route-policy>
-                          <in>ACCEPT</in>
-                          <out>ACCEPT</out>
-                        </route-policy>
-                      </address-family>
-                    </address-families>
-                    <description>Customer eBGP SITE-2 [SNA-2-1] in VPN acme-65501 to 10.202.1.2</description>
-                    <password>
-                      <encrypted>045A080B0A6C4E491954081347</encrypted>
-                    </password>
-                    <remote-as>65501</remote-as>
-                    <timers>
-                      <holdtime>
-                        <holdtime-number>3</holdtime-number>
-                      </holdtime>
-                      <keepalive-interval>1</keepalive-interval>
-                    </timers>
-                  </neighbor>
-                </neighbors>
-                <rd>
-                  <two-byte-as>
-                    <asn2-index>655012</asn2-index>
-                    <two-byte-as-number>65001</two-byte-as-number>
-                  </two-byte-as>
-                </rd>
-              </vrf>
-            </vrfs>
           </as>
         </bgp>
       </router>
@@ -292,37 +228,4 @@ end-policy
           </route-policy>
         </route-policies>
       </routing-policy>
-      <vrfs xmlns="http://cisco.com/ns/yang/Cisco-IOS-XR-um-vrf-cfg">
-        <vrf>
-          <vrf-name>acme-65501</vrf-name>
-          <address-family>
-            <ipv4>
-              <unicast>
-                <export xmlns="http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-bgp-cfg">
-                  <route-target>
-                    <two-byte-as-route-targets>
-                      <two-byte-as-route-target>
-                        <two-byte-as-number>65001</two-byte-as-number>
-                        <asn2-index>65501</asn2-index>
-                        <stitching>disable</stitching>
-                      </two-byte-as-route-target>
-                    </two-byte-as-route-targets>
-                  </route-target>
-                </export>
-                <import xmlns="http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-bgp-cfg">
-                  <route-target>
-                    <two-byte-as-route-targets>
-                      <two-byte-as-route-target>
-                        <two-byte-as-number>65001</two-byte-as-number>
-                        <asn2-index>65501</asn2-index>
-                        <stitching>disable</stitching>
-                      </two-byte-as-route-target>
-                    </two-byte-as-route-targets>
-                  </route-target>
-                </import>
-              </unicast>
-            </ipv4>
-          </address-family>
-        </vrf>
-      </vrfs>
 </data>

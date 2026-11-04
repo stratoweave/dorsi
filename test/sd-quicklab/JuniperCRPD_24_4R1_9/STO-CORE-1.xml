@@ -44,22 +44,6 @@
       </unit>
     </interface>
     <interface>
-      <name>eth4</name>
-      <description>Customer VPN access SITE-3 [SNA-3-1] in VPN acme-65501</description>
-      <unit>
-        <name>100</name>
-        <description>Customer VPN access SITE-3 [SNA-3-1] in VPN acme-65501</description>
-        <family>
-          <inet>
-            <address>
-              <name>10.203.1.1/30</name>
-            </address>
-          </inet>
-        </family>
-        <vlan-id>100</vlan-id>
-      </unit>
-    </interface>
-    <interface>
       <name>lo0</name>
       <description>ROLE: edge</description>
       <unit>
@@ -185,38 +169,6 @@
       </interface>
     </mpls>
   </protocols>
-  <routing-instances>
-    <instance>
-      <name>acme-65501</name>
-      <instance-type>vrf</instance-type>
-      <interface>
-        <name>eth4.100</name>
-      </interface>
-      <protocols>
-        <bgp>
-          <group>
-            <name>customer</name>
-            <neighbor>
-              <name>10.203.1.2</name>
-              <as-override/>
-              <authentication-key>$9$4TaJDkqf36AoJ5Q3npuhSrlWxaJGk.57-.P</authentication-key>
-              <description>Customer eBGP SITE-3 [SNA-3-1] in VPN acme-65501 to 10.203.1.2</description>
-              <hold-time>3</hold-time>
-              <peer-as>65501</peer-as>
-            </neighbor>
-            <passive/>
-          </group>
-        </bgp>
-      </protocols>
-      <route-distinguisher>
-        <rd-type>65001:655013</rd-type>
-      </route-distinguisher>
-      <vrf-table-label/>
-      <vrf-target>
-        <community>target:65001:65501</community>
-      </vrf-target>
-    </instance>
-  </routing-instances>
   <routing-options>
     <autonomous-system>
       <as-number>65001</as-number>

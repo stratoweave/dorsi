@@ -74,76 +74,23 @@ SRC_DNODE_CHILD_5: DList = DList(module='junos-conf-root', namespace='http://yan
 
 SRC_DNODE_CHILD_4: DContainer = DContainer(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='interfaces', config=True, description='Interface configuration', presence=False, children=[SRC_DNODE_CHILD_5])
 
-SRC_DNODE_CHILD_14: DLeaf = DLeaf(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='name', config=True, description='Routing instance name', is_key=True, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[]))
-
-SRC_DNODE_CHILD_15: DLeaf = DLeaf(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='instance-type', config=True, description='Type of routing instance', is_key=False, mandatory=False, type=DTypeEnum(name='enumeration', description=None, reference=None, units=None, exts=[], builtin_type='enumeration', default=None, name_to_val={'mac-vrf':0, 'virtual-switch':1, 'forwarding':2, 'no-forwarding':3, 'l2vpn':4, 'vpls':5, 'virtual-router':6, 'l2backhaul-vpn':7, 'mpls-internet-multicast':8, 'evpn':9, 'mpls-forwarding':10, 'evpn-vpws':11, 'vrf':12}))
-
-SRC_DNODE_CHILD_16: DContainer = DContainer(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='protocols', config=True, description='Routing protocol configuration', presence=False, children=[
-    DContainer(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='bgp', config=True, description='BGP options', presence=False, children=[
-        DList(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='group', key=['name'], config=True, description='Define a peer group', min_elements=0, ordered_by='user', children=[
-            DLeaf(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='name', config=True, description='Group name', is_key=True, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
-            DLeaf(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='passive', config=True, description='Do not send open messages to a peer', is_key=False, mandatory=False, type=DTypeEmpty(name='empty', description=None, reference=None, units=None, exts=[], builtin_type='empty', default=None)),
-            DLeafList(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='import', config=True, description='Import policy', min_elements=0, ordered_by='user', type=DTypeString(name='jt:policy-algebra', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
-            DLeafList(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='export', config=True, description='Export policy', min_elements=0, ordered_by='user', type=DTypeString(name='jt:policy-algebra', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
-            DList(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='neighbor', key=['name'], config=True, description='Configure a neighbor', min_elements=0, ordered_by='user', children=[
-                DLeaf(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='name', config=True, is_key=True, mandatory=False, type=DTypeString(name='jt:ipaddr-scoped', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
-                DLeaf(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='description', config=True, description='Text description', is_key=False, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=Ranges([(1, 255)]), patterns=[])),
-                DContainer(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='multihop', config=True, description='Configure an EBGP multihop session', presence=True, children=[
-                    DLeaf(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='ttl', config=True, description='TTL value for the session', is_key=False, mandatory=False, type=DTypeUnion(name='union', description=None, reference=None, units=None, exts=[], builtin_type='union', default=None, types=[DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[YangPattern(yang_regex='<.*>|$.*', pcre='^(<.*>|\\$.*)$', invert=False)]), DTypeIntegerUnsigned(name='uint8', description=None, reference=None, units=None, exts=[], builtin_type='uint8', default=None, ranges=Ranges([(1, 255)]))])),
-                    DLeaf(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='no-nexthop-change', config=True, description='Do not change next hop to self in advertisements', is_key=False, mandatory=False, type=DTypeEmpty(name='empty', description=None, reference=None, units=None, exts=[], builtin_type='empty', default=None))
-                ]),
-                DLeaf(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='hold-time', config=True, description='Hold time used when negotiating with a peer', is_key=False, mandatory=False, type=DTypeUnion(name='union', description=None, reference=None, units=None, exts=[], builtin_type='union', default=None, types=[DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[YangPattern(yang_regex='<.*>|$.*', pcre='^(<.*>|\\$.*)$', invert=False)]), DTypeIntegerUnsigned(name='uint32', description=None, reference=None, units=None, exts=[], builtin_type='uint32', default=None, ranges=Ranges([(0, 65535)]))])),
-                DLeaf(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='authentication-key', config=True, description='MD5 authentication key', is_key=False, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=Ranges([(1, 126)]), patterns=[])),
-                DLeaf(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='authentication-algorithm', config=True, description='Authentication algorithm name', is_key=False, mandatory=False, type=DTypeEnum(name='enumeration', description=None, reference=None, units=None, exts=[], builtin_type='enumeration', default=None, name_to_val={'md5':0, 'hmac-sha-1-96':1, 'aes-128-cmac-96':2, 'ao':3})),
-                DLeaf(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='peer-as', config=True, description=" Autonomous system number in plain number or 'higher 16bits'.'Lower 16 bits' (asdot notation) format", is_key=False, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
-                DLeaf(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='as-override', config=True, description='Replace neighbor AS number with our AS number', is_key=False, mandatory=False, type=DTypeEmpty(name='empty', description=None, reference=None, units=None, exts=[], builtin_type='empty', default=None))
-            ])
-        ])
-    ])
-])
-
-SRC_DNODE_CHILD_17: DList = DList(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='interface', key=['name'], config=True, description='Interface name for this routing instance', min_elements=0, ordered_by='system', children=[
-    DLeaf(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='name', config=True, is_key=True, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
-    DLeaf(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='any', config=True, description='Interface used for both unicast and multicast traffic', is_key=False, mandatory=False, type=DTypeEmpty(name='empty', description=None, reference=None, units=None, exts=[], builtin_type='empty', default=None)),
-    DLeaf(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='unicast', config=True, description='Interface used for unicast traffic only', is_key=False, mandatory=False, type=DTypeEmpty(name='empty', description=None, reference=None, units=None, exts=[], builtin_type='empty', default=None)),
-    DLeaf(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='multicast', config=True, description='Interface used for multicast traffic only', is_key=False, mandatory=False, type=DTypeEmpty(name='empty', description=None, reference=None, units=None, exts=[], builtin_type='empty', default=None)),
-    DLeaf(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='primary', config=True, description='Preferred multicast vt interface for the routing-instance', is_key=False, mandatory=False, type=DTypeEmpty(name='empty', description=None, reference=None, units=None, exts=[], builtin_type='empty', default=None))
-])
-
-SRC_DNODE_CHILD_18: DContainer = DContainer(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='route-distinguisher', config=True, description='Route distinguisher for this instance', presence=False, children=[
-    DLeaf(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='rd-type', config=True, description="Number in (16 bit:32 bit) or (32 bit 'L':16 bit) or (IP address:16 bit) format", is_key=False, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[]))
-])
-
-SRC_DNODE_CHILD_19: DContainer = DContainer(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='vrf-target', config=True, description='VRF target community configuration', presence=False, children=[
-    DLeaf(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='community', config=True, description='Target community to use in import and export', is_key=False, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
-    DLeaf(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='import', config=True, description='Target community to use when filtering on import', is_key=False, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
-    DLeaf(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='export', config=True, description='Target community to use when marking routes on export', is_key=False, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
-    DLeaf(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='auto', config=True, description='Auto derive import and export target community from BGP AS & L2', is_key=False, mandatory=False, type=DTypeEmpty(name='empty', description=None, reference=None, units=None, exts=[], builtin_type='empty', default=None))
-])
-
-SRC_DNODE_CHILD_20: DContainer = DContainer(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='vrf-table-label', config=True, description='Advertise a single VPN label for all routes in the VRF', presence=True)
-
-SRC_DNODE_CHILD_13: DList = DList(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='instance', key=['name'], config=True, min_elements=0, ordered_by='system', children=[SRC_DNODE_CHILD_14, SRC_DNODE_CHILD_15, SRC_DNODE_CHILD_16, SRC_DNODE_CHILD_17, SRC_DNODE_CHILD_18, SRC_DNODE_CHILD_19, SRC_DNODE_CHILD_20])
-
-SRC_DNODE_CHILD_12: DContainer = DContainer(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='routing-instances', config=True, description='Routing instance configuration', presence=False, children=[SRC_DNODE_CHILD_13])
-
-SRC_DNODE_CHILD_21: DContainer = DContainer(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='routing-options', config=True, description='Protocol-independent routing option configuration', presence=False, children=[
+SRC_DNODE_CHILD_12: DContainer = DContainer(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='routing-options', config=True, description='Protocol-independent routing option configuration', presence=False, children=[
     DContainer(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='autonomous-system', config=True, description='Autonomous system number', presence=False, children=[
         DLeaf(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='as-number', config=True, description=" Autonomous system number in plain number or 'higher 16bits'.'Lower 16 bits' (asdot notation) format", is_key=False, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[]))
     ])
 ])
 
-SRC_DNODE_CHILD_25: DLeaf = DLeaf(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='name', config=True, description='Group name', is_key=True, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[]))
+SRC_DNODE_CHILD_16: DLeaf = DLeaf(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='name', config=True, description='Group name', is_key=True, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[]))
 
-SRC_DNODE_CHILD_26: DLeaf = DLeaf(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='type', config=True, description='Type of peer group', is_key=False, mandatory=False, type=DTypeEnum(name='enumeration', description=None, reference=None, units=None, exts=[], builtin_type='enumeration', default=None, name_to_val={'internal':0, 'external':1}))
+SRC_DNODE_CHILD_17: DLeaf = DLeaf(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='type', config=True, description='Type of peer group', is_key=False, mandatory=False, type=DTypeEnum(name='enumeration', description=None, reference=None, units=None, exts=[], builtin_type='enumeration', default=None, name_to_val={'internal':0, 'external':1}))
 
-SRC_DNODE_CHILD_27: DLeaf = DLeaf(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='description', config=True, description='Text description', is_key=False, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=Ranges([(1, 255)]), patterns=[]))
+SRC_DNODE_CHILD_18: DLeaf = DLeaf(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='description', config=True, description='Text description', is_key=False, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=Ranges([(1, 255)]), patterns=[]))
 
-SRC_DNODE_CHILD_28: DLeaf = DLeaf(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='local-address', config=True, description='Address of local end of BGP session', is_key=False, mandatory=False, type=DTypeString(name='jt:ipaddr', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[]))
+SRC_DNODE_CHILD_19: DLeaf = DLeaf(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='local-address', config=True, description='Address of local end of BGP session', is_key=False, mandatory=False, type=DTypeString(name='jt:ipaddr', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[]))
 
-SRC_DNODE_CHILD_29: DLeaf = DLeaf(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='hold-time', config=True, description='Hold time used when negotiating with a peer', is_key=False, mandatory=False, type=DTypeUnion(name='union', description=None, reference=None, units=None, exts=[], builtin_type='union', default=None, types=[DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[YangPattern(yang_regex='<.*>|$.*', pcre='^(<.*>|\\$.*)$', invert=False)]), DTypeIntegerUnsigned(name='uint32', description=None, reference=None, units=None, exts=[], builtin_type='uint32', default=None, ranges=Ranges([(0, 65535)]))]))
+SRC_DNODE_CHILD_20: DLeaf = DLeaf(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='hold-time', config=True, description='Hold time used when negotiating with a peer', is_key=False, mandatory=False, type=DTypeUnion(name='union', description=None, reference=None, units=None, exts=[], builtin_type='union', default=None, types=[DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[YangPattern(yang_regex='<.*>|$.*', pcre='^(<.*>|\\$.*)$', invert=False)]), DTypeIntegerUnsigned(name='uint32', description=None, reference=None, units=None, exts=[], builtin_type='uint32', default=None, ranges=Ranges([(0, 65535)]))]))
 
-SRC_DNODE_CHILD_30: DContainer = DContainer(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='family', config=True, description='Protocol family for NLRIs in updates', presence=False, children=[
+SRC_DNODE_CHILD_21: DContainer = DContainer(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='family', config=True, description='Protocol family for NLRIs in updates', presence=False, children=[
     DContainer(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='inet-vpn', config=True, description='IPv4 Layer 3 VPN NLRI parameters', presence=False, children=[
         DContainer(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='unicast', config=True, description='Include unicast NLRI', presence=True)
     ]),
@@ -156,31 +103,31 @@ SRC_DNODE_CHILD_30: DContainer = DContainer(module='junos-conf-root', namespace=
     DContainer(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='route-target', config=True, description='Route target NLRI used for VPN route filtering', presence=True)
 ])
 
-SRC_DNODE_CHILD_31: DLeaf = DLeaf(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='authentication-key', config=True, description='MD5 authentication key', is_key=False, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=Ranges([(1, 126)]), patterns=[]))
+SRC_DNODE_CHILD_22: DLeaf = DLeaf(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='authentication-key', config=True, description='MD5 authentication key', is_key=False, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=Ranges([(1, 126)]), patterns=[]))
 
-SRC_DNODE_CHILD_32: DLeaf = DLeaf(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='authentication-algorithm', config=True, description='Authentication algorithm name', is_key=False, mandatory=False, type=DTypeEnum(name='enumeration', description=None, reference=None, units=None, exts=[], builtin_type='enumeration', default=None, name_to_val={'md5':0, 'hmac-sha-1-96':1, 'aes-128-cmac-96':2, 'ao':3}))
+SRC_DNODE_CHILD_23: DLeaf = DLeaf(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='authentication-algorithm', config=True, description='Authentication algorithm name', is_key=False, mandatory=False, type=DTypeEnum(name='enumeration', description=None, reference=None, units=None, exts=[], builtin_type='enumeration', default=None, name_to_val={'md5':0, 'hmac-sha-1-96':1, 'aes-128-cmac-96':2, 'ao':3}))
 
-SRC_DNODE_CHILD_33: DLeaf = DLeaf(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='tcpao-auth-mismatch', config=True, description='Continue without TCP-AO if any one TCP endpoint does not have TCP-AO configured', is_key=False, mandatory=False, type=DTypeEnum(name='enumeration', description=None, reference=None, units=None, exts=[], builtin_type='enumeration', default=None, name_to_val={'allow-without-tcpao':0}))
+SRC_DNODE_CHILD_24: DLeaf = DLeaf(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='tcpao-auth-mismatch', config=True, description='Continue without TCP-AO if any one TCP endpoint does not have TCP-AO configured', is_key=False, mandatory=False, type=DTypeEnum(name='enumeration', description=None, reference=None, units=None, exts=[], builtin_type='enumeration', default=None, name_to_val={'allow-without-tcpao':0}))
 
-SRC_DNODE_CHILD_34: DLeaf = DLeaf(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='authentication-key-chain', config=True, description='Key chain name', is_key=False, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=Ranges([(1, 128)]), patterns=[]))
+SRC_DNODE_CHILD_25: DLeaf = DLeaf(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='authentication-key-chain', config=True, description='Key chain name', is_key=False, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=Ranges([(1, 128)]), patterns=[]))
 
-SRC_DNODE_CHILD_35: DLeafList = DLeafList(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='export', config=True, description='Export policy', min_elements=0, ordered_by='user', type=DTypeString(name='jt:policy-algebra', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[]))
+SRC_DNODE_CHILD_26: DLeafList = DLeafList(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='export', config=True, description='Export policy', min_elements=0, ordered_by='user', type=DTypeString(name='jt:policy-algebra', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[]))
 
-SRC_DNODE_CHILD_36: DLeaf = DLeaf(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='tcp-mss', config=True, description='Maximum TCP segment size', is_key=False, mandatory=False, type=DTypeUnion(name='union', description=None, reference=None, units=None, exts=[], builtin_type='union', default=None, types=[DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[YangPattern(yang_regex='<.*>|$.*', pcre='^(<.*>|\\$.*)$', invert=False)]), DTypeIntegerUnsigned(name='uint32', description=None, reference=None, units=None, exts=[], builtin_type='uint32', default=None, ranges=Ranges([(1, 4096)]))]))
+SRC_DNODE_CHILD_27: DLeaf = DLeaf(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='tcp-mss', config=True, description='Maximum TCP segment size', is_key=False, mandatory=False, type=DTypeUnion(name='union', description=None, reference=None, units=None, exts=[], builtin_type='union', default=None, types=[DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[YangPattern(yang_regex='<.*>|$.*', pcre='^(<.*>|\\$.*)$', invert=False)]), DTypeIntegerUnsigned(name='uint32', description=None, reference=None, units=None, exts=[], builtin_type='uint32', default=None, ranges=Ranges([(1, 4096)]))]))
 
-SRC_DNODE_CHILD_37: DList = DList(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='neighbor', key=['name'], config=True, description='Configure a neighbor', min_elements=0, ordered_by='system', children=[
+SRC_DNODE_CHILD_28: DList = DList(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='neighbor', key=['name'], config=True, description='Configure a neighbor', min_elements=0, ordered_by='system', children=[
     DLeaf(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='name', config=True, is_key=True, mandatory=False, type=DTypeString(name='jt:ipaddr-scoped', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
     DLeaf(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='description', config=True, description='Text description', is_key=False, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=Ranges([(1, 255)]), patterns=[])),
     DLeaf(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='passive', config=True, description='Do not send open messages to a peer', is_key=False, mandatory=False, type=DTypeEmpty(name='empty', description=None, reference=None, units=None, exts=[], builtin_type='empty', default=None))
 ])
 
-SRC_DNODE_CHILD_24: DList = DList(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='group', key=['name'], config=True, description='Define a peer group', min_elements=0, ordered_by='user', children=[SRC_DNODE_CHILD_25, SRC_DNODE_CHILD_26, SRC_DNODE_CHILD_27, SRC_DNODE_CHILD_28, SRC_DNODE_CHILD_29, SRC_DNODE_CHILD_30, SRC_DNODE_CHILD_31, SRC_DNODE_CHILD_32, SRC_DNODE_CHILD_33, SRC_DNODE_CHILD_34, SRC_DNODE_CHILD_35, SRC_DNODE_CHILD_36, SRC_DNODE_CHILD_37])
+SRC_DNODE_CHILD_15: DList = DList(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='group', key=['name'], config=True, description='Define a peer group', min_elements=0, ordered_by='user', children=[SRC_DNODE_CHILD_16, SRC_DNODE_CHILD_17, SRC_DNODE_CHILD_18, SRC_DNODE_CHILD_19, SRC_DNODE_CHILD_20, SRC_DNODE_CHILD_21, SRC_DNODE_CHILD_22, SRC_DNODE_CHILD_23, SRC_DNODE_CHILD_24, SRC_DNODE_CHILD_25, SRC_DNODE_CHILD_26, SRC_DNODE_CHILD_27, SRC_DNODE_CHILD_28])
 
-SRC_DNODE_CHILD_38: DLeaf = DLeaf(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='log-updown', config=True, description='Log a message for peer state transitions', is_key=False, mandatory=False, type=DTypeEmpty(name='empty', description=None, reference=None, units=None, exts=[], builtin_type='empty', default=None))
+SRC_DNODE_CHILD_29: DLeaf = DLeaf(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='log-updown', config=True, description='Log a message for peer state transitions', is_key=False, mandatory=False, type=DTypeEmpty(name='empty', description=None, reference=None, units=None, exts=[], builtin_type='empty', default=None))
 
-SRC_DNODE_CHILD_23: DContainer = DContainer(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='bgp', config=True, description='BGP options', presence=False, children=[SRC_DNODE_CHILD_24, SRC_DNODE_CHILD_38])
+SRC_DNODE_CHILD_14: DContainer = DContainer(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='bgp', config=True, description='BGP options', presence=False, children=[SRC_DNODE_CHILD_15, SRC_DNODE_CHILD_29])
 
-SRC_DNODE_CHILD_40: DList = DList(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='interface', key=['name'], config=True, description='Interface configuration', min_elements=0, ordered_by='system', children=[
+SRC_DNODE_CHILD_31: DList = DList(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='interface', key=['name'], config=True, description='Interface configuration', min_elements=0, ordered_by='system', children=[
     DLeaf(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='name', config=True, description='Interface name', is_key=True, mandatory=False, type=DTypeUnion(name='union', description=None, reference=None, units=None, exts=[], builtin_type='union', default=None, types=[DTypeString(name='jt:interface-name', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[]), DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[YangPattern(yang_regex='<.*>|$.*', pcre='^(<.*>|\\$.*)$', invert=False)])])),
     DContainer(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='ldp-synchronization', config=True, description='Advertise maximum metric until LDP is operational', presence=True, children=[
         DLeaf(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='disable', config=True, description='Disable LDP synchronization', is_key=False, mandatory=False, type=DTypeEmpty(name='empty', description=None, reference=None, units=None, exts=[], builtin_type='empty', default=None)),
@@ -202,7 +149,7 @@ SRC_DNODE_CHILD_40: DList = DList(module='junos-conf-root', namespace='http://ya
     ])
 ])
 
-SRC_DNODE_CHILD_41: DList = DList(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='level', key=['name'], config=True, description='Configure global level attributes', min_elements=0, ordered_by='user', children=[
+SRC_DNODE_CHILD_32: DList = DList(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='level', key=['name'], config=True, description='Configure global level attributes', min_elements=0, ordered_by='user', children=[
     DLeaf(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='name', config=True, description='IS-IS level number', is_key=True, mandatory=False, type=DTypeUnion(name='union', description=None, reference=None, units=None, exts=[], builtin_type='union', default=None, types=[DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[YangPattern(yang_regex='<.*>|$.*', pcre='^(<.*>|\\$.*)$', invert=False)]), DTypeIntegerUnsigned(name='uint32', description=None, reference=None, units=None, exts=[], builtin_type='uint32', default=None, ranges=Ranges([(1, 2)]))])),
     DLeaf(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='disable', config=True, description='Disable IS-IS on this level', is_key=False, mandatory=False, type=DTypeEmpty(name='empty', description=None, reference=None, units=None, exts=[], builtin_type='empty', default=None)),
     DLeaf(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='authentication-key', config=True, description='Authentication key (password)', is_key=False, mandatory=False, type=DTypeString(name='jt:unreadable', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
@@ -213,11 +160,11 @@ SRC_DNODE_CHILD_41: DList = DList(module='junos-conf-root', namespace='http://ya
     DLeaf(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='wide-metrics-only', config=True, description='Generate wide metrics only', is_key=False, mandatory=False, type=DTypeEmpty(name='empty', description=None, reference=None, units=None, exts=[], builtin_type='empty', default=None))
 ])
 
-SRC_DNODE_CHILD_42: DLeaf = DLeaf(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='lsp-lifetime', config=True, description='Lifetime of LSPs', is_key=False, mandatory=False, type=DTypeUnion(name='union', description=None, reference=None, units=None, exts=[], builtin_type='union', default=None, types=[DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[YangPattern(yang_regex='<.*>|$.*', pcre='^(<.*>|\\$.*)$', invert=False)]), DTypeIntegerUnsigned(name='uint32', description=None, reference=None, units=None, exts=[], builtin_type='uint32', default=None, ranges=Ranges([(350, 65535)]))]), units='seconds')
+SRC_DNODE_CHILD_33: DLeaf = DLeaf(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='lsp-lifetime', config=True, description='Lifetime of LSPs', is_key=False, mandatory=False, type=DTypeUnion(name='union', description=None, reference=None, units=None, exts=[], builtin_type='union', default=None, types=[DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[YangPattern(yang_regex='<.*>|$.*', pcre='^(<.*>|\\$.*)$', invert=False)]), DTypeIntegerUnsigned(name='uint32', description=None, reference=None, units=None, exts=[], builtin_type='uint32', default=None, ranges=Ranges([(350, 65535)]))]), units='seconds')
 
-SRC_DNODE_CHILD_39: DContainer = DContainer(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='isis', config=True, description='IS-IS options', presence=False, children=[SRC_DNODE_CHILD_40, SRC_DNODE_CHILD_41, SRC_DNODE_CHILD_42])
+SRC_DNODE_CHILD_30: DContainer = DContainer(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='isis', config=True, description='IS-IS options', presence=False, children=[SRC_DNODE_CHILD_31, SRC_DNODE_CHILD_32, SRC_DNODE_CHILD_33])
 
-SRC_DNODE_CHILD_43: DContainer = DContainer(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='ldp', config=True, description='LDP options', presence=False, children=[
+SRC_DNODE_CHILD_34: DContainer = DContainer(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='ldp', config=True, description='LDP options', presence=False, children=[
     DLeaf(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='preference', config=True, description='Route preference', is_key=False, mandatory=False, type=DTypeUnion(name='union', description=None, reference=None, units=None, exts=[], builtin_type='union', default=None, types=[DTypeIntegerUnsigned(name='uint32', description=None, reference=None, units=None, exts=[], builtin_type='uint32', default=None, ranges=Ranges([(0, 4294967295)])), DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[YangPattern(yang_regex='<.*>|$.*', pcre='^(<.*>|\\$.*)$', invert=False)])])),
     DContainer(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='transport-address', config=True, description='Address used for TCP sessions', presence=False, children=[
         DLeaf(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='router-id', config=True, description='Use router ID for TCP connections', is_key=False, mandatory=False, type=DTypeEmpty(name='empty', description=None, reference=None, units=None, exts=[], builtin_type='empty', default=None)),
@@ -237,7 +184,7 @@ SRC_DNODE_CHILD_43: DContainer = DContainer(module='junos-conf-root', namespace=
     ])
 ])
 
-SRC_DNODE_CHILD_44: DContainer = DContainer(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='mpls', config=True, description='Multiprotocol Label Switching options', presence=False, children=[
+SRC_DNODE_CHILD_35: DContainer = DContainer(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='mpls', config=True, description='Multiprotocol Label Switching options', presence=False, children=[
     DLeaf(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='no-propagate-ttl', config=True, description='Disable TTL propagation from IP to MPLS (on push) and MPLS to IP (on pop)', is_key=False, mandatory=False, type=DTypeEmpty(name='empty', description=None, reference=None, units=None, exts=[], builtin_type='empty', default=None)),
     DList(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='interface', key=['name'], config=True, description='MPLS interface options', min_elements=0, ordered_by='system', children=[
         DLeaf(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='name', config=True, description='Interface name', is_key=True, mandatory=False, type=DTypeUnion(name='union', description=None, reference=None, units=None, exts=[], builtin_type='union', default=None, types=[DTypeString(name='jt:interface-name', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[]), DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[YangPattern(yang_regex='<.*>|$.*', pcre='^(<.*>|\\$.*)$', invert=False)])])),
@@ -245,9 +192,9 @@ SRC_DNODE_CHILD_44: DContainer = DContainer(module='junos-conf-root', namespace=
     ])
 ])
 
-SRC_DNODE_CHILD_22: DContainer = DContainer(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='protocols', config=True, description='Routing protocol configuration', presence=False, children=[SRC_DNODE_CHILD_23, SRC_DNODE_CHILD_39, SRC_DNODE_CHILD_43, SRC_DNODE_CHILD_44])
+SRC_DNODE_CHILD_13: DContainer = DContainer(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='protocols', config=True, description='Routing protocol configuration', presence=False, children=[SRC_DNODE_CHILD_14, SRC_DNODE_CHILD_30, SRC_DNODE_CHILD_34, SRC_DNODE_CHILD_35])
 
-SRC_DNODE_CHILD_0: DContainer = DContainer(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='configuration', config=True, presence=False, children=[SRC_DNODE_CHILD_1, SRC_DNODE_CHILD_2, SRC_DNODE_CHILD_3, SRC_DNODE_CHILD_4, SRC_DNODE_CHILD_12, SRC_DNODE_CHILD_21, SRC_DNODE_CHILD_22])
+SRC_DNODE_CHILD_0: DContainer = DContainer(module='junos-conf-root', namespace='http://yang.juniper.net/junos/conf/root', prefix='jc', name='configuration', config=True, presence=False, children=[SRC_DNODE_CHILD_1, SRC_DNODE_CHILD_2, SRC_DNODE_CHILD_3, SRC_DNODE_CHILD_4, SRC_DNODE_CHILD_12, SRC_DNODE_CHILD_13])
 
 SRC_DNODE: DRoot = DRoot(
     children=[SRC_DNODE_CHILD_0],
@@ -75212,448 +75159,6 @@ class junos_conf_root__configuration__interfaces(yadata.MNode):
 
 
 _breaker19: None = None
-class junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group__neighbor__multihop(yadata.MNode):
-    ttl: ?atom
-    no_nexthop_change: ?bool
-
-    mut def __init__(self, ttl: ?atom=None, no_nexthop_change: ?bool=None) -> None:
-        self.ttl = ttl
-        self.no_nexthop_change = no_nexthop_change
-
-    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
-        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['junos-conf-root:configuration', 'routing-instances', 'instance', 'protocols', 'bgp', 'group', 'neighbor', 'multihop'], prev=prev)
-
-    @staticmethod
-    mut def from_gdata(n: ?ygdata.Node) -> ?junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group__neighbor__multihop:
-        if n is not None:
-            return junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group__neighbor__multihop(ttl=n.get_opt_atom(ygdata.Id(NS_junos_conf_root, 'ttl')), no_nexthop_change=n.get_opt_empty(ygdata.Id(NS_junos_conf_root, 'no-nexthop-change')))
-        return None
-
-    mut def copy(self) -> junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group__neighbor__multihop:
-        """Create a deep copy of this adata object"""
-        ad = junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group__neighbor__multihop.from_gdata(self.to_gdata())
-        if ad is not None:
-            return ad
-        raise Exception('Unreachable in junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group__neighbor__multihop.copy()')
-
-
-_breaker20: None = None
-class junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group__neighbor_entry(yadata.MNode):
-    name: str
-    description: ?str
-    multihop: ?junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group__neighbor__multihop
-    hold_time: ?atom
-    authentication_key: ?str
-    authentication_algorithm: ?str
-    peer_as: ?str
-    as_override: ?bool
-
-    mut def __init__(self, name: str, description: ?str=None, multihop: ?junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group__neighbor__multihop=None, hold_time: ?atom=None, authentication_key: ?str=None, authentication_algorithm: ?str=None, peer_as: ?str=None, as_override: ?bool=None) -> None:
-        self.name = name
-        self.description = description
-        self.multihop = multihop
-        self.hold_time = hold_time
-        self.authentication_key = authentication_key
-        self.authentication_algorithm = authentication_algorithm
-        self.peer_as = peer_as
-        self.as_override = as_override
-
-    mut def create_multihop(self, ttl: ?atom=None, no_nexthop_change: ?bool=None) -> junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group__neighbor__multihop:
-        existing = self.multihop
-        if existing is not None:
-            if ttl is not None:
-                existing.ttl = ttl
-            if no_nexthop_change is not None:
-                existing.no_nexthop_change = no_nexthop_change
-            return existing
-        res = junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group__neighbor__multihop(ttl=ttl, no_nexthop_change=no_nexthop_change)
-        self.multihop = res
-        return res
-
-    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
-        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['junos-conf-root:configuration', 'routing-instances', 'instance', 'protocols', 'bgp', 'group', 'neighbor'], prev=prev)
-
-    @staticmethod
-    mut def from_gdata(n: ygdata.Node) -> junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group__neighbor_entry:
-        return junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group__neighbor_entry(name=n.get_str(ygdata.Id(NS_junos_conf_root, 'name')), description=n.get_opt_str(ygdata.Id(NS_junos_conf_root, 'description')), multihop=junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group__neighbor__multihop.from_gdata(n.get_opt_cnt(ygdata.Id(NS_junos_conf_root, 'multihop'))), hold_time=n.get_opt_atom(ygdata.Id(NS_junos_conf_root, 'hold-time')), authentication_key=n.get_opt_str(ygdata.Id(NS_junos_conf_root, 'authentication-key')), authentication_algorithm=n.get_opt_str(ygdata.Id(NS_junos_conf_root, 'authentication-algorithm')), peer_as=n.get_opt_str(ygdata.Id(NS_junos_conf_root, 'peer-as')), as_override=n.get_opt_empty(ygdata.Id(NS_junos_conf_root, 'as-override')))
-
-    mut def copy(self) -> junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group__neighbor_entry:
-        """Create a deep copy of this adata object"""
-        return junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group__neighbor_entry.from_gdata(self.to_gdata())
-
-_breaker21: None = None
-class junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group__neighbor(yadata.MKeyedList[str, junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group__neighbor_entry]):
-    mut def __init__(self, elements: list[junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group__neighbor_entry]=[]) -> None:
-        yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
-
-    mut def create(self, key: str, description: ?str=None, hold_time: ?atom=None, authentication_key: ?str=None, authentication_algorithm: ?str=None, peer_as: ?str=None, as_override: ?bool=None) -> junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group__neighbor_entry:
-        e = self.get(key)
-        if e is not None:
-            if description is not None:
-                e.description = description
-            if hold_time is not None:
-                e.hold_time = hold_time
-            if authentication_key is not None:
-                e.authentication_key = authentication_key
-            if authentication_algorithm is not None:
-                e.authentication_algorithm = authentication_algorithm
-            if peer_as is not None:
-                e.peer_as = peer_as
-            if as_override is not None:
-                e.as_override = as_override
-            return e
-        name = key
-        res = junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group__neighbor_entry(name=name, description=description, hold_time=hold_time, authentication_key=authentication_key, authentication_algorithm=authentication_algorithm, peer_as=peer_as, as_override=as_override)
-        self._append(res)
-        return res
-
-    @staticmethod
-    mut def from_gdata(n: ?ygdata.List) -> list[junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group__neighbor_entry]:
-        if n is not None:
-            return [junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group__neighbor_entry.from_gdata(e) for e in n.entries()]
-        return []
-
-    mut def copy(self) -> junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group__neighbor:
-        """Create a deep copy of this list object"""
-        # Copy each element in the list
-        copied_elements = []
-        for e in self:
-            ce = e.copy()
-            if ce is not None:
-                copied_elements.append(ce)
-        return junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group__neighbor(elements=copied_elements)
-
-
-_breaker22: None = None
-class junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group_entry(yadata.MNode):
-    name: str
-    passive: ?bool
-    import: list[str]
-    export: list[str]
-    neighbor: junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group__neighbor
-
-    mut def __init__(self, name: str, passive: ?bool=None, import: ?list[str]=None, export: ?list[str]=None, neighbor: list[junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group__neighbor_entry]=[]) -> None:
-        self.name = name
-        self.passive = passive
-        self.import = import if import is not None else []
-        self.export = export if export is not None else []
-        self.neighbor = junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group__neighbor(elements=neighbor)
-
-    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
-        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['junos-conf-root:configuration', 'routing-instances', 'instance', 'protocols', 'bgp', 'group'], prev=prev)
-
-    @staticmethod
-    mut def from_gdata(n: ygdata.Node) -> junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group_entry:
-        return junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group_entry(name=n.get_str(ygdata.Id(NS_junos_conf_root, 'name')), passive=n.get_opt_empty(ygdata.Id(NS_junos_conf_root, 'passive')), import=n.get_opt_strs(ygdata.Id(NS_junos_conf_root, 'import')), export=n.get_opt_strs(ygdata.Id(NS_junos_conf_root, 'export')), neighbor=junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group__neighbor.from_gdata(n.get_opt_list(ygdata.Id(NS_junos_conf_root, 'neighbor'))))
-
-    mut def copy(self) -> junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group_entry:
-        """Create a deep copy of this adata object"""
-        return junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group_entry.from_gdata(self.to_gdata())
-
-_breaker23: None = None
-class junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group(yadata.MKeyedList[str, junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group_entry]):
-    mut def __init__(self, elements: list[junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group_entry]=[]) -> None:
-        yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
-
-    mut def create(self, key: str, passive: ?bool=None) -> junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group_entry:
-        e = self.get(key)
-        if e is not None:
-            if passive is not None:
-                e.passive = passive
-            return e
-        name = key
-        res = junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group_entry(name=name, passive=passive)
-        self._append(res)
-        return res
-
-    @staticmethod
-    mut def from_gdata(n: ?ygdata.List) -> list[junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group_entry]:
-        if n is not None:
-            return [junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group_entry.from_gdata(e) for e in n.entries()]
-        return []
-
-    mut def copy(self) -> junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group:
-        """Create a deep copy of this list object"""
-        # Copy each element in the list
-        copied_elements = []
-        for e in self:
-            ce = e.copy()
-            if ce is not None:
-                copied_elements.append(ce)
-        return junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group(elements=copied_elements)
-
-
-_breaker24: None = None
-class junos_conf_root__configuration__routing_instances__instance__protocols__bgp(yadata.MNode):
-    group: junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group
-
-    mut def __init__(self, group: list[junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group_entry]=[]) -> None:
-        self.group = junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group(elements=group)
-
-    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
-        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['junos-conf-root:configuration', 'routing-instances', 'instance', 'protocols', 'bgp'], prev=prev)
-
-    @staticmethod
-    mut def from_gdata(n: ?ygdata.Node) -> junos_conf_root__configuration__routing_instances__instance__protocols__bgp:
-        if n is not None:
-            return junos_conf_root__configuration__routing_instances__instance__protocols__bgp(group=junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group.from_gdata(n.get_opt_list(ygdata.Id(NS_junos_conf_root, 'group'))))
-        return junos_conf_root__configuration__routing_instances__instance__protocols__bgp()
-
-    mut def copy(self) -> junos_conf_root__configuration__routing_instances__instance__protocols__bgp:
-        """Create a deep copy of this adata object"""
-        return junos_conf_root__configuration__routing_instances__instance__protocols__bgp.from_gdata(self.to_gdata())
-
-
-_breaker25: None = None
-class junos_conf_root__configuration__routing_instances__instance__protocols(yadata.MNode):
-    bgp: junos_conf_root__configuration__routing_instances__instance__protocols__bgp
-
-    mut def __init__(self, bgp: ?junos_conf_root__configuration__routing_instances__instance__protocols__bgp=None) -> None:
-        self.bgp = bgp if bgp is not None else junos_conf_root__configuration__routing_instances__instance__protocols__bgp()
-
-    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
-        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['junos-conf-root:configuration', 'routing-instances', 'instance', 'protocols'], prev=prev)
-
-    @staticmethod
-    mut def from_gdata(n: ?ygdata.Node) -> junos_conf_root__configuration__routing_instances__instance__protocols:
-        if n is not None:
-            return junos_conf_root__configuration__routing_instances__instance__protocols(bgp=junos_conf_root__configuration__routing_instances__instance__protocols__bgp.from_gdata(n.get_opt_cnt(ygdata.Id(NS_junos_conf_root, 'bgp'))))
-        return junos_conf_root__configuration__routing_instances__instance__protocols()
-
-    mut def copy(self) -> junos_conf_root__configuration__routing_instances__instance__protocols:
-        """Create a deep copy of this adata object"""
-        return junos_conf_root__configuration__routing_instances__instance__protocols.from_gdata(self.to_gdata())
-
-
-_breaker26: None = None
-class junos_conf_root__configuration__routing_instances__instance__interface_entry(yadata.MNode):
-    name: str
-    any: ?bool
-    unicast: ?bool
-    multicast: ?bool
-    primary: ?bool
-
-    mut def __init__(self, name: str, any: ?bool=None, unicast: ?bool=None, multicast: ?bool=None, primary: ?bool=None) -> None:
-        self.name = name
-        self.any = any
-        self.unicast = unicast
-        self.multicast = multicast
-        self.primary = primary
-
-    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
-        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['junos-conf-root:configuration', 'routing-instances', 'instance', 'interface'], prev=prev)
-
-    @staticmethod
-    mut def from_gdata(n: ygdata.Node) -> junos_conf_root__configuration__routing_instances__instance__interface_entry:
-        return junos_conf_root__configuration__routing_instances__instance__interface_entry(name=n.get_str(ygdata.Id(NS_junos_conf_root, 'name')), any=n.get_opt_empty(ygdata.Id(NS_junos_conf_root, 'any')), unicast=n.get_opt_empty(ygdata.Id(NS_junos_conf_root, 'unicast')), multicast=n.get_opt_empty(ygdata.Id(NS_junos_conf_root, 'multicast')), primary=n.get_opt_empty(ygdata.Id(NS_junos_conf_root, 'primary')))
-
-    mut def copy(self) -> junos_conf_root__configuration__routing_instances__instance__interface_entry:
-        """Create a deep copy of this adata object"""
-        return junos_conf_root__configuration__routing_instances__instance__interface_entry.from_gdata(self.to_gdata())
-
-_breaker27: None = None
-class junos_conf_root__configuration__routing_instances__instance__interface(yadata.MKeyedList[str, junos_conf_root__configuration__routing_instances__instance__interface_entry]):
-    mut def __init__(self, elements: list[junos_conf_root__configuration__routing_instances__instance__interface_entry]=[]) -> None:
-        yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
-
-    mut def create(self, key: str, any: ?bool=None, unicast: ?bool=None, multicast: ?bool=None, primary: ?bool=None) -> junos_conf_root__configuration__routing_instances__instance__interface_entry:
-        e = self.get(key)
-        if e is not None:
-            if any is not None:
-                e.any = any
-            if unicast is not None:
-                e.unicast = unicast
-            if multicast is not None:
-                e.multicast = multicast
-            if primary is not None:
-                e.primary = primary
-            return e
-        name = key
-        res = junos_conf_root__configuration__routing_instances__instance__interface_entry(name=name, any=any, unicast=unicast, multicast=multicast, primary=primary)
-        self._append(res)
-        return res
-
-    @staticmethod
-    mut def from_gdata(n: ?ygdata.List) -> list[junos_conf_root__configuration__routing_instances__instance__interface_entry]:
-        if n is not None:
-            return [junos_conf_root__configuration__routing_instances__instance__interface_entry.from_gdata(e) for e in n.entries()]
-        return []
-
-    mut def copy(self) -> junos_conf_root__configuration__routing_instances__instance__interface:
-        """Create a deep copy of this list object"""
-        # Copy each element in the list
-        copied_elements = []
-        for e in self:
-            ce = e.copy()
-            if ce is not None:
-                copied_elements.append(ce)
-        return junos_conf_root__configuration__routing_instances__instance__interface(elements=copied_elements)
-
-
-_breaker28: None = None
-class junos_conf_root__configuration__routing_instances__instance__route_distinguisher(yadata.MNode):
-    rd_type: ?str
-
-    mut def __init__(self, rd_type: ?str=None) -> None:
-        self.rd_type = rd_type
-
-    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
-        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['junos-conf-root:configuration', 'routing-instances', 'instance', 'route-distinguisher'], prev=prev)
-
-    @staticmethod
-    mut def from_gdata(n: ?ygdata.Node) -> junos_conf_root__configuration__routing_instances__instance__route_distinguisher:
-        if n is not None:
-            return junos_conf_root__configuration__routing_instances__instance__route_distinguisher(rd_type=n.get_opt_str(ygdata.Id(NS_junos_conf_root, 'rd-type')))
-        return junos_conf_root__configuration__routing_instances__instance__route_distinguisher()
-
-    mut def copy(self) -> junos_conf_root__configuration__routing_instances__instance__route_distinguisher:
-        """Create a deep copy of this adata object"""
-        return junos_conf_root__configuration__routing_instances__instance__route_distinguisher.from_gdata(self.to_gdata())
-
-
-_breaker29: None = None
-class junos_conf_root__configuration__routing_instances__instance__vrf_target(yadata.MNode):
-    community: ?str
-    import: ?str
-    export: ?str
-    auto: ?bool
-
-    mut def __init__(self, community: ?str=None, import: ?str=None, export: ?str=None, auto: ?bool=None) -> None:
-        self.community = community
-        self.import = import
-        self.export = export
-        self.auto = auto
-
-    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
-        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['junos-conf-root:configuration', 'routing-instances', 'instance', 'vrf-target'], prev=prev)
-
-    @staticmethod
-    mut def from_gdata(n: ?ygdata.Node) -> junos_conf_root__configuration__routing_instances__instance__vrf_target:
-        if n is not None:
-            return junos_conf_root__configuration__routing_instances__instance__vrf_target(community=n.get_opt_str(ygdata.Id(NS_junos_conf_root, 'community')), import=n.get_opt_str(ygdata.Id(NS_junos_conf_root, 'import')), export=n.get_opt_str(ygdata.Id(NS_junos_conf_root, 'export')), auto=n.get_opt_empty(ygdata.Id(NS_junos_conf_root, 'auto')))
-        return junos_conf_root__configuration__routing_instances__instance__vrf_target()
-
-    mut def copy(self) -> junos_conf_root__configuration__routing_instances__instance__vrf_target:
-        """Create a deep copy of this adata object"""
-        return junos_conf_root__configuration__routing_instances__instance__vrf_target.from_gdata(self.to_gdata())
-
-
-_breaker30: None = None
-class junos_conf_root__configuration__routing_instances__instance__vrf_table_label(yadata.MNode):
-
-    mut def __init__(self) -> None:
-        pass
-
-    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
-        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['junos-conf-root:configuration', 'routing-instances', 'instance', 'vrf-table-label'], prev=prev)
-
-    @staticmethod
-    mut def from_gdata(n: ?ygdata.Node) -> ?junos_conf_root__configuration__routing_instances__instance__vrf_table_label:
-        if n is not None:
-            return junos_conf_root__configuration__routing_instances__instance__vrf_table_label()
-        return None
-
-    mut def copy(self) -> junos_conf_root__configuration__routing_instances__instance__vrf_table_label:
-        """Create a deep copy of this adata object"""
-        ad = junos_conf_root__configuration__routing_instances__instance__vrf_table_label.from_gdata(self.to_gdata())
-        if ad is not None:
-            return ad
-        raise Exception('Unreachable in junos_conf_root__configuration__routing_instances__instance__vrf_table_label.copy()')
-
-
-_breaker31: None = None
-class junos_conf_root__configuration__routing_instances__instance_entry(yadata.MNode):
-    name: str
-    instance_type: ?str
-    protocols: junos_conf_root__configuration__routing_instances__instance__protocols
-    interface: junos_conf_root__configuration__routing_instances__instance__interface
-    route_distinguisher: junos_conf_root__configuration__routing_instances__instance__route_distinguisher
-    vrf_target: junos_conf_root__configuration__routing_instances__instance__vrf_target
-    vrf_table_label: ?junos_conf_root__configuration__routing_instances__instance__vrf_table_label
-
-    mut def __init__(self, name: str, instance_type: ?str=None, protocols: ?junos_conf_root__configuration__routing_instances__instance__protocols=None, interface: list[junos_conf_root__configuration__routing_instances__instance__interface_entry]=[], route_distinguisher: ?junos_conf_root__configuration__routing_instances__instance__route_distinguisher=None, vrf_target: ?junos_conf_root__configuration__routing_instances__instance__vrf_target=None, vrf_table_label: ?junos_conf_root__configuration__routing_instances__instance__vrf_table_label=None) -> None:
-        self.name = name
-        self.instance_type = instance_type
-        self.protocols = protocols if protocols is not None else junos_conf_root__configuration__routing_instances__instance__protocols()
-        self.interface = junos_conf_root__configuration__routing_instances__instance__interface(elements=interface)
-        self.route_distinguisher = route_distinguisher if route_distinguisher is not None else junos_conf_root__configuration__routing_instances__instance__route_distinguisher()
-        self.vrf_target = vrf_target if vrf_target is not None else junos_conf_root__configuration__routing_instances__instance__vrf_target()
-        self.vrf_table_label = vrf_table_label
-
-    mut def create_vrf_table_label(self) -> junos_conf_root__configuration__routing_instances__instance__vrf_table_label:
-        existing = self.vrf_table_label
-        if existing is not None:
-            return existing
-        res = junos_conf_root__configuration__routing_instances__instance__vrf_table_label()
-        self.vrf_table_label = res
-        return res
-
-    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
-        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['junos-conf-root:configuration', 'routing-instances', 'instance'], prev=prev)
-
-    @staticmethod
-    mut def from_gdata(n: ygdata.Node) -> junos_conf_root__configuration__routing_instances__instance_entry:
-        return junos_conf_root__configuration__routing_instances__instance_entry(name=n.get_str(ygdata.Id(NS_junos_conf_root, 'name')), instance_type=n.get_opt_str(ygdata.Id(NS_junos_conf_root, 'instance-type')), protocols=junos_conf_root__configuration__routing_instances__instance__protocols.from_gdata(n.get_opt_cnt(ygdata.Id(NS_junos_conf_root, 'protocols'))), interface=junos_conf_root__configuration__routing_instances__instance__interface.from_gdata(n.get_opt_list(ygdata.Id(NS_junos_conf_root, 'interface'))), route_distinguisher=junos_conf_root__configuration__routing_instances__instance__route_distinguisher.from_gdata(n.get_opt_cnt(ygdata.Id(NS_junos_conf_root, 'route-distinguisher'))), vrf_target=junos_conf_root__configuration__routing_instances__instance__vrf_target.from_gdata(n.get_opt_cnt(ygdata.Id(NS_junos_conf_root, 'vrf-target'))), vrf_table_label=junos_conf_root__configuration__routing_instances__instance__vrf_table_label.from_gdata(n.get_opt_cnt(ygdata.Id(NS_junos_conf_root, 'vrf-table-label'))))
-
-    mut def copy(self) -> junos_conf_root__configuration__routing_instances__instance_entry:
-        """Create a deep copy of this adata object"""
-        return junos_conf_root__configuration__routing_instances__instance_entry.from_gdata(self.to_gdata())
-
-_breaker32: None = None
-class junos_conf_root__configuration__routing_instances__instance(yadata.MKeyedList[str, junos_conf_root__configuration__routing_instances__instance_entry]):
-    mut def __init__(self, elements: list[junos_conf_root__configuration__routing_instances__instance_entry]=[]) -> None:
-        yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
-
-    mut def create(self, key: str, instance_type: ?str=None) -> junos_conf_root__configuration__routing_instances__instance_entry:
-        e = self.get(key)
-        if e is not None:
-            if instance_type is not None:
-                e.instance_type = instance_type
-            return e
-        name = key
-        res = junos_conf_root__configuration__routing_instances__instance_entry(name=name, instance_type=instance_type)
-        self._append(res)
-        return res
-
-    @staticmethod
-    mut def from_gdata(n: ?ygdata.List) -> list[junos_conf_root__configuration__routing_instances__instance_entry]:
-        if n is not None:
-            return [junos_conf_root__configuration__routing_instances__instance_entry.from_gdata(e) for e in n.entries()]
-        return []
-
-    mut def copy(self) -> junos_conf_root__configuration__routing_instances__instance:
-        """Create a deep copy of this list object"""
-        # Copy each element in the list
-        copied_elements = []
-        for e in self:
-            ce = e.copy()
-            if ce is not None:
-                copied_elements.append(ce)
-        return junos_conf_root__configuration__routing_instances__instance(elements=copied_elements)
-
-
-_breaker33: None = None
-class junos_conf_root__configuration__routing_instances(yadata.MNode):
-    instance: junos_conf_root__configuration__routing_instances__instance
-
-    mut def __init__(self, instance: list[junos_conf_root__configuration__routing_instances__instance_entry]=[]) -> None:
-        self.instance = junos_conf_root__configuration__routing_instances__instance(elements=instance)
-
-    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
-        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['junos-conf-root:configuration', 'routing-instances'], prev=prev)
-
-    @staticmethod
-    mut def from_gdata(n: ?ygdata.Node) -> junos_conf_root__configuration__routing_instances:
-        if n is not None:
-            return junos_conf_root__configuration__routing_instances(instance=junos_conf_root__configuration__routing_instances__instance.from_gdata(n.get_opt_list(ygdata.Id(NS_junos_conf_root, 'instance'))))
-        return junos_conf_root__configuration__routing_instances()
-
-    mut def copy(self) -> junos_conf_root__configuration__routing_instances:
-        """Create a deep copy of this adata object"""
-        return junos_conf_root__configuration__routing_instances.from_gdata(self.to_gdata())
-
-
-_breaker34: None = None
 class junos_conf_root__configuration__routing_options__autonomous_system(yadata.MNode):
     as_number: ?str
 
@@ -75674,7 +75179,7 @@ class junos_conf_root__configuration__routing_options__autonomous_system(yadata.
         return junos_conf_root__configuration__routing_options__autonomous_system.from_gdata(self.to_gdata())
 
 
-_breaker35: None = None
+_breaker20: None = None
 class junos_conf_root__configuration__routing_options(yadata.MNode):
     autonomous_system: junos_conf_root__configuration__routing_options__autonomous_system
 
@@ -75695,7 +75200,7 @@ class junos_conf_root__configuration__routing_options(yadata.MNode):
         return junos_conf_root__configuration__routing_options.from_gdata(self.to_gdata())
 
 
-_breaker36: None = None
+_breaker21: None = None
 class junos_conf_root__configuration__protocols__bgp__group__family__inet_vpn__unicast(yadata.MNode):
 
     mut def __init__(self) -> None:
@@ -75718,7 +75223,7 @@ class junos_conf_root__configuration__protocols__bgp__group__family__inet_vpn__u
         raise Exception('Unreachable in junos_conf_root__configuration__protocols__bgp__group__family__inet_vpn__unicast.copy()')
 
 
-_breaker37: None = None
+_breaker22: None = None
 class junos_conf_root__configuration__protocols__bgp__group__family__inet_vpn(yadata.MNode):
     unicast: ?junos_conf_root__configuration__protocols__bgp__group__family__inet_vpn__unicast
 
@@ -75747,7 +75252,7 @@ class junos_conf_root__configuration__protocols__bgp__group__family__inet_vpn(ya
         return junos_conf_root__configuration__protocols__bgp__group__family__inet_vpn.from_gdata(self.to_gdata())
 
 
-_breaker38: None = None
+_breaker23: None = None
 class junos_conf_root__configuration__protocols__bgp__group__family__inet6_vpn__unicast(yadata.MNode):
 
     mut def __init__(self) -> None:
@@ -75770,7 +75275,7 @@ class junos_conf_root__configuration__protocols__bgp__group__family__inet6_vpn__
         raise Exception('Unreachable in junos_conf_root__configuration__protocols__bgp__group__family__inet6_vpn__unicast.copy()')
 
 
-_breaker39: None = None
+_breaker24: None = None
 class junos_conf_root__configuration__protocols__bgp__group__family__inet6_vpn(yadata.MNode):
     unicast: ?junos_conf_root__configuration__protocols__bgp__group__family__inet6_vpn__unicast
 
@@ -75799,7 +75304,7 @@ class junos_conf_root__configuration__protocols__bgp__group__family__inet6_vpn(y
         return junos_conf_root__configuration__protocols__bgp__group__family__inet6_vpn.from_gdata(self.to_gdata())
 
 
-_breaker40: None = None
+_breaker25: None = None
 class junos_conf_root__configuration__protocols__bgp__group__family__evpn__signaling(yadata.MNode):
 
     mut def __init__(self) -> None:
@@ -75822,7 +75327,7 @@ class junos_conf_root__configuration__protocols__bgp__group__family__evpn__signa
         raise Exception('Unreachable in junos_conf_root__configuration__protocols__bgp__group__family__evpn__signaling.copy()')
 
 
-_breaker41: None = None
+_breaker26: None = None
 class junos_conf_root__configuration__protocols__bgp__group__family__evpn(yadata.MNode):
     signaling: ?junos_conf_root__configuration__protocols__bgp__group__family__evpn__signaling
 
@@ -75851,7 +75356,7 @@ class junos_conf_root__configuration__protocols__bgp__group__family__evpn(yadata
         return junos_conf_root__configuration__protocols__bgp__group__family__evpn.from_gdata(self.to_gdata())
 
 
-_breaker42: None = None
+_breaker27: None = None
 class junos_conf_root__configuration__protocols__bgp__group__family__route_target(yadata.MNode):
 
     mut def __init__(self) -> None:
@@ -75874,7 +75379,7 @@ class junos_conf_root__configuration__protocols__bgp__group__family__route_targe
         raise Exception('Unreachable in junos_conf_root__configuration__protocols__bgp__group__family__route_target.copy()')
 
 
-_breaker43: None = None
+_breaker28: None = None
 class junos_conf_root__configuration__protocols__bgp__group__family(yadata.MNode):
     inet_vpn: junos_conf_root__configuration__protocols__bgp__group__family__inet_vpn
     inet6_vpn: junos_conf_root__configuration__protocols__bgp__group__family__inet6_vpn
@@ -75909,7 +75414,7 @@ class junos_conf_root__configuration__protocols__bgp__group__family(yadata.MNode
         return junos_conf_root__configuration__protocols__bgp__group__family.from_gdata(self.to_gdata())
 
 
-_breaker44: None = None
+_breaker29: None = None
 class junos_conf_root__configuration__protocols__bgp__group__neighbor_entry(yadata.MNode):
     name: str
     description: ?str
@@ -75931,7 +75436,7 @@ class junos_conf_root__configuration__protocols__bgp__group__neighbor_entry(yada
         """Create a deep copy of this adata object"""
         return junos_conf_root__configuration__protocols__bgp__group__neighbor_entry.from_gdata(self.to_gdata())
 
-_breaker45: None = None
+_breaker30: None = None
 class junos_conf_root__configuration__protocols__bgp__group__neighbor(yadata.MKeyedList[str, junos_conf_root__configuration__protocols__bgp__group__neighbor_entry]):
     mut def __init__(self, elements: list[junos_conf_root__configuration__protocols__bgp__group__neighbor_entry]=[]) -> None:
         yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
@@ -75966,7 +75471,7 @@ class junos_conf_root__configuration__protocols__bgp__group__neighbor(yadata.MKe
         return junos_conf_root__configuration__protocols__bgp__group__neighbor(elements=copied_elements)
 
 
-_breaker46: None = None
+_breaker31: None = None
 class junos_conf_root__configuration__protocols__bgp__group_entry(yadata.MNode):
     name: str
     type: ?str
@@ -76008,7 +75513,7 @@ class junos_conf_root__configuration__protocols__bgp__group_entry(yadata.MNode):
         """Create a deep copy of this adata object"""
         return junos_conf_root__configuration__protocols__bgp__group_entry.from_gdata(self.to_gdata())
 
-_breaker47: None = None
+_breaker32: None = None
 class junos_conf_root__configuration__protocols__bgp__group(yadata.MKeyedList[str, junos_conf_root__configuration__protocols__bgp__group_entry]):
     mut def __init__(self, elements: list[junos_conf_root__configuration__protocols__bgp__group_entry]=[]) -> None:
         yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
@@ -76057,7 +75562,7 @@ class junos_conf_root__configuration__protocols__bgp__group(yadata.MKeyedList[st
         return junos_conf_root__configuration__protocols__bgp__group(elements=copied_elements)
 
 
-_breaker48: None = None
+_breaker33: None = None
 class junos_conf_root__configuration__protocols__bgp(yadata.MNode):
     group: junos_conf_root__configuration__protocols__bgp__group
     log_updown: ?bool
@@ -76080,7 +75585,7 @@ class junos_conf_root__configuration__protocols__bgp(yadata.MNode):
         return junos_conf_root__configuration__protocols__bgp.from_gdata(self.to_gdata())
 
 
-_breaker49: None = None
+_breaker34: None = None
 class junos_conf_root__configuration__protocols__isis__interface__ldp_synchronization(yadata.MNode):
     disable: ?bool
     hold_time: ?atom
@@ -76106,7 +75611,7 @@ class junos_conf_root__configuration__protocols__isis__interface__ldp_synchroniz
         raise Exception('Unreachable in junos_conf_root__configuration__protocols__isis__interface__ldp_synchronization.copy()')
 
 
-_breaker50: None = None
+_breaker35: None = None
 class junos_conf_root__configuration__protocols__isis__interface__level_entry(yadata.MNode):
     name: atom
     disable: ?bool
@@ -76128,7 +75633,7 @@ class junos_conf_root__configuration__protocols__isis__interface__level_entry(ya
         """Create a deep copy of this adata object"""
         return junos_conf_root__configuration__protocols__isis__interface__level_entry.from_gdata(self.to_gdata())
 
-_breaker51: None = None
+_breaker36: None = None
 class junos_conf_root__configuration__protocols__isis__interface__level(yadata.MKeyedList[atom, junos_conf_root__configuration__protocols__isis__interface__level_entry]):
     mut def __init__(self, elements: list[junos_conf_root__configuration__protocols__isis__interface__level_entry]=[]) -> None:
         yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
@@ -76163,7 +75668,7 @@ class junos_conf_root__configuration__protocols__isis__interface__level(yadata.M
         return junos_conf_root__configuration__protocols__isis__interface__level(elements=copied_elements)
 
 
-_breaker52: None = None
+_breaker37: None = None
 class junos_conf_root__configuration__protocols__isis__interface__passive(yadata.MNode):
     remote_node_iso: ?str
     remote_node_id: ?str
@@ -76189,7 +75694,7 @@ class junos_conf_root__configuration__protocols__isis__interface__passive(yadata
         raise Exception('Unreachable in junos_conf_root__configuration__protocols__isis__interface__passive.copy()')
 
 
-_breaker53: None = None
+_breaker38: None = None
 class junos_conf_root__configuration__protocols__isis__interface__family_entry(yadata.MNode):
     name: str
 
@@ -76207,7 +75712,7 @@ class junos_conf_root__configuration__protocols__isis__interface__family_entry(y
         """Create a deep copy of this adata object"""
         return junos_conf_root__configuration__protocols__isis__interface__family_entry.from_gdata(self.to_gdata())
 
-_breaker54: None = None
+_breaker39: None = None
 class junos_conf_root__configuration__protocols__isis__interface__family(yadata.MKeyedList[str, junos_conf_root__configuration__protocols__isis__interface__family_entry]):
     mut def __init__(self, elements: list[junos_conf_root__configuration__protocols__isis__interface__family_entry]=[]) -> None:
         yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
@@ -76238,7 +75743,7 @@ class junos_conf_root__configuration__protocols__isis__interface__family(yadata.
         return junos_conf_root__configuration__protocols__isis__interface__family(elements=copied_elements)
 
 
-_breaker55: None = None
+_breaker40: None = None
 class junos_conf_root__configuration__protocols__isis__interface_entry(yadata.MNode):
     name: str
     ldp_synchronization: ?junos_conf_root__configuration__protocols__isis__interface__ldp_synchronization
@@ -76292,7 +75797,7 @@ class junos_conf_root__configuration__protocols__isis__interface_entry(yadata.MN
         """Create a deep copy of this adata object"""
         return junos_conf_root__configuration__protocols__isis__interface_entry.from_gdata(self.to_gdata())
 
-_breaker56: None = None
+_breaker41: None = None
 class junos_conf_root__configuration__protocols__isis__interface(yadata.MKeyedList[str, junos_conf_root__configuration__protocols__isis__interface_entry]):
     mut def __init__(self, elements: list[junos_conf_root__configuration__protocols__isis__interface_entry]=[]) -> None:
         yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
@@ -76327,7 +75832,7 @@ class junos_conf_root__configuration__protocols__isis__interface(yadata.MKeyedLi
         return junos_conf_root__configuration__protocols__isis__interface(elements=copied_elements)
 
 
-_breaker57: None = None
+_breaker42: None = None
 class junos_conf_root__configuration__protocols__isis__level_entry(yadata.MNode):
     name: atom
     disable: ?bool
@@ -76359,7 +75864,7 @@ class junos_conf_root__configuration__protocols__isis__level_entry(yadata.MNode)
         """Create a deep copy of this adata object"""
         return junos_conf_root__configuration__protocols__isis__level_entry.from_gdata(self.to_gdata())
 
-_breaker58: None = None
+_breaker43: None = None
 class junos_conf_root__configuration__protocols__isis__level(yadata.MKeyedList[atom, junos_conf_root__configuration__protocols__isis__level_entry]):
     mut def __init__(self, elements: list[junos_conf_root__configuration__protocols__isis__level_entry]=[]) -> None:
         yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
@@ -76404,7 +75909,7 @@ class junos_conf_root__configuration__protocols__isis__level(yadata.MKeyedList[a
         return junos_conf_root__configuration__protocols__isis__level(elements=copied_elements)
 
 
-_breaker59: None = None
+_breaker44: None = None
 class junos_conf_root__configuration__protocols__isis(yadata.MNode):
     interface: junos_conf_root__configuration__protocols__isis__interface
     level: junos_conf_root__configuration__protocols__isis__level
@@ -76429,7 +75934,7 @@ class junos_conf_root__configuration__protocols__isis(yadata.MNode):
         return junos_conf_root__configuration__protocols__isis.from_gdata(self.to_gdata())
 
 
-_breaker60: None = None
+_breaker45: None = None
 class junos_conf_root__configuration__protocols__ldp__transport_address(yadata.MNode):
     router_id: ?bool
     interface: ?bool
@@ -76454,7 +75959,7 @@ class junos_conf_root__configuration__protocols__ldp__transport_address(yadata.M
         return junos_conf_root__configuration__protocols__ldp__transport_address.from_gdata(self.to_gdata())
 
 
-_breaker61: None = None
+_breaker46: None = None
 class junos_conf_root__configuration__protocols__ldp__interface__transport_address(yadata.MNode):
     router_id: ?bool
     interface: ?bool
@@ -76479,7 +75984,7 @@ class junos_conf_root__configuration__protocols__ldp__interface__transport_addre
         return junos_conf_root__configuration__protocols__ldp__interface__transport_address.from_gdata(self.to_gdata())
 
 
-_breaker62: None = None
+_breaker47: None = None
 class junos_conf_root__configuration__protocols__ldp__interface_entry(yadata.MNode):
     name: str
     disable: ?bool
@@ -76505,7 +76010,7 @@ class junos_conf_root__configuration__protocols__ldp__interface_entry(yadata.MNo
         """Create a deep copy of this adata object"""
         return junos_conf_root__configuration__protocols__ldp__interface_entry.from_gdata(self.to_gdata())
 
-_breaker63: None = None
+_breaker48: None = None
 class junos_conf_root__configuration__protocols__ldp__interface(yadata.MKeyedList[str, junos_conf_root__configuration__protocols__ldp__interface_entry]):
     mut def __init__(self, elements: list[junos_conf_root__configuration__protocols__ldp__interface_entry]=[]) -> None:
         yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
@@ -76542,7 +76047,7 @@ class junos_conf_root__configuration__protocols__ldp__interface(yadata.MKeyedLis
         return junos_conf_root__configuration__protocols__ldp__interface(elements=copied_elements)
 
 
-_breaker64: None = None
+_breaker49: None = None
 class junos_conf_root__configuration__protocols__ldp(yadata.MNode):
     preference: ?atom
     transport_address: junos_conf_root__configuration__protocols__ldp__transport_address
@@ -76567,7 +76072,7 @@ class junos_conf_root__configuration__protocols__ldp(yadata.MNode):
         return junos_conf_root__configuration__protocols__ldp.from_gdata(self.to_gdata())
 
 
-_breaker65: None = None
+_breaker50: None = None
 class junos_conf_root__configuration__protocols__mpls__interface_entry(yadata.MNode):
     name: str
     disable: ?bool
@@ -76587,7 +76092,7 @@ class junos_conf_root__configuration__protocols__mpls__interface_entry(yadata.MN
         """Create a deep copy of this adata object"""
         return junos_conf_root__configuration__protocols__mpls__interface_entry.from_gdata(self.to_gdata())
 
-_breaker66: None = None
+_breaker51: None = None
 class junos_conf_root__configuration__protocols__mpls__interface(yadata.MKeyedList[str, junos_conf_root__configuration__protocols__mpls__interface_entry]):
     mut def __init__(self, elements: list[junos_conf_root__configuration__protocols__mpls__interface_entry]=[]) -> None:
         yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
@@ -76620,7 +76125,7 @@ class junos_conf_root__configuration__protocols__mpls__interface(yadata.MKeyedLi
         return junos_conf_root__configuration__protocols__mpls__interface(elements=copied_elements)
 
 
-_breaker67: None = None
+_breaker52: None = None
 class junos_conf_root__configuration__protocols__mpls(yadata.MNode):
     no_propagate_ttl: ?bool
     interface: junos_conf_root__configuration__protocols__mpls__interface
@@ -76643,7 +76148,7 @@ class junos_conf_root__configuration__protocols__mpls(yadata.MNode):
         return junos_conf_root__configuration__protocols__mpls.from_gdata(self.to_gdata())
 
 
-_breaker68: None = None
+_breaker53: None = None
 class junos_conf_root__configuration__protocols(yadata.MNode):
     bgp: junos_conf_root__configuration__protocols__bgp
     isis: junos_conf_root__configuration__protocols__isis
@@ -76670,22 +76175,20 @@ class junos_conf_root__configuration__protocols(yadata.MNode):
         return junos_conf_root__configuration__protocols.from_gdata(self.to_gdata())
 
 
-_breaker69: None = None
+_breaker54: None = None
 class junos_conf_root__configuration(yadata.MNode):
     rcsid: ?str
     version: ?str
     system: junos_conf_root__configuration__system
     interfaces: junos_conf_root__configuration__interfaces
-    routing_instances: junos_conf_root__configuration__routing_instances
     routing_options: junos_conf_root__configuration__routing_options
     protocols: junos_conf_root__configuration__protocols
 
-    mut def __init__(self, rcsid: ?str=None, version: ?str=None, system: ?junos_conf_root__configuration__system=None, interfaces: ?junos_conf_root__configuration__interfaces=None, routing_instances: ?junos_conf_root__configuration__routing_instances=None, routing_options: ?junos_conf_root__configuration__routing_options=None, protocols: ?junos_conf_root__configuration__protocols=None) -> None:
+    mut def __init__(self, rcsid: ?str=None, version: ?str=None, system: ?junos_conf_root__configuration__system=None, interfaces: ?junos_conf_root__configuration__interfaces=None, routing_options: ?junos_conf_root__configuration__routing_options=None, protocols: ?junos_conf_root__configuration__protocols=None) -> None:
         self.rcsid = rcsid
         self.version = version
         self.system = system if system is not None else junos_conf_root__configuration__system()
         self.interfaces = interfaces if interfaces is not None else junos_conf_root__configuration__interfaces()
-        self.routing_instances = routing_instances if routing_instances is not None else junos_conf_root__configuration__routing_instances()
         self.routing_options = routing_options if routing_options is not None else junos_conf_root__configuration__routing_options()
         self.protocols = protocols if protocols is not None else junos_conf_root__configuration__protocols()
 
@@ -76695,7 +76198,7 @@ class junos_conf_root__configuration(yadata.MNode):
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> junos_conf_root__configuration:
         if n is not None:
-            return junos_conf_root__configuration(rcsid=n.get_opt_str(ygdata.Id(NS_junos_conf_root, 'rcsid')), version=n.get_opt_str(ygdata.Id(NS_junos_conf_root, 'version')), system=junos_conf_root__configuration__system.from_gdata(n.get_opt_cnt(ygdata.Id(NS_junos_conf_root, 'system'))), interfaces=junos_conf_root__configuration__interfaces.from_gdata(n.get_opt_cnt(ygdata.Id(NS_junos_conf_root, 'interfaces'))), routing_instances=junos_conf_root__configuration__routing_instances.from_gdata(n.get_opt_cnt(ygdata.Id(NS_junos_conf_root, 'routing-instances'))), routing_options=junos_conf_root__configuration__routing_options.from_gdata(n.get_opt_cnt(ygdata.Id(NS_junos_conf_root, 'routing-options'))), protocols=junos_conf_root__configuration__protocols.from_gdata(n.get_opt_cnt(ygdata.Id(NS_junos_conf_root, 'protocols'))))
+            return junos_conf_root__configuration(rcsid=n.get_opt_str(ygdata.Id(NS_junos_conf_root, 'rcsid')), version=n.get_opt_str(ygdata.Id(NS_junos_conf_root, 'version')), system=junos_conf_root__configuration__system.from_gdata(n.get_opt_cnt(ygdata.Id(NS_junos_conf_root, 'system'))), interfaces=junos_conf_root__configuration__interfaces.from_gdata(n.get_opt_cnt(ygdata.Id(NS_junos_conf_root, 'interfaces'))), routing_options=junos_conf_root__configuration__routing_options.from_gdata(n.get_opt_cnt(ygdata.Id(NS_junos_conf_root, 'routing-options'))), protocols=junos_conf_root__configuration__protocols.from_gdata(n.get_opt_cnt(ygdata.Id(NS_junos_conf_root, 'protocols'))))
         return junos_conf_root__configuration()
 
     mut def copy(self) -> junos_conf_root__configuration:
@@ -76703,7 +76206,7 @@ class junos_conf_root__configuration(yadata.MNode):
         return junos_conf_root__configuration.from_gdata(self.to_gdata())
 
 
-_breaker70: None = None
+_breaker55: None = None
 class root(yadata.MNode):
     configuration: junos_conf_root__configuration
 
@@ -76750,7 +76253,7 @@ def _present(n: ?ygdata.Node) -> ?ygdata.Node:
             return n
     return None
 
-_breaker71: None = None
+_breaker56: None = None
 proc def junos_conf_root__configuration__system__services__netconf_deliver(cb: action(?junos_conf_root__configuration__system__services__netconf, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     inst: ?junos_conf_root__configuration__system__services__netconf = None
     if n is not None:
@@ -76786,7 +76289,7 @@ class junos_conf_root__configuration__system__services__netconf_subs(Subscriptio
         and an error."""
         return ygdata.Dst(lambda n, err: junos_conf_root__configuration__system__services__netconf_deliver(cb, n, err), root=self.filt())
 
-_breaker72: None = None
+_breaker57: None = None
 proc def junos_conf_root__configuration__system__services_deliver(cb: action(?junos_conf_root__configuration__system__services, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     inst: ?junos_conf_root__configuration__system__services = None
     if n is not None:
@@ -76819,7 +76322,7 @@ class junos_conf_root__configuration__system__services_subs(SubscriptionNode):
         and an error."""
         return ygdata.Dst(lambda n, err: junos_conf_root__configuration__system__services_deliver(cb, n, err), root=self.filt())
 
-_breaker73: None = None
+_breaker58: None = None
 proc def junos_conf_root__configuration__system_deliver(cb: action(?junos_conf_root__configuration__system, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     inst: ?junos_conf_root__configuration__system = None
     if n is not None:
@@ -76853,7 +76356,7 @@ class junos_conf_root__configuration__system_subs(SubscriptionNode):
         and an error."""
         return ygdata.Dst(lambda n, err: junos_conf_root__configuration__system_deliver(cb, n, err), root=self.filt())
 
-_breaker74: None = None
+_breaker59: None = None
 class junos_conf_root__configuration__interfaces__interface__unit__family__inet__address_entry_subs(SubscriptionNode):
     name: SubscriptionNode
 
@@ -76865,7 +76368,7 @@ class junos_conf_root__configuration__interfaces__interface__unit__family__inet_
         direct: list[SubscriptionNode] = [self.name]
         return direct
 
-_breaker75: None = None
+_breaker60: None = None
 proc def junos_conf_root__configuration__interfaces__interface__unit__family__inet__address_deliver(cb: action(?(interface_name: str, unit_name: str, address_name: str), ?junos_conf_root__configuration__interfaces__interface__unit__family__inet__address_entry, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(interface_name: str, unit_name: str, address_name: str) = None
     inst: ?junos_conf_root__configuration__interfaces__interface__unit__family__inet__address_entry = None
@@ -76910,7 +76413,7 @@ class junos_conf_root__configuration__interfaces__interface__unit__family__inet_
         direct: list[SubscriptionNode] = [self.name]
         return direct
 
-_breaker76: None = None
+_breaker61: None = None
 proc def junos_conf_root__configuration__interfaces__interface__unit__family__inet_deliver(cb: action(?(interface_name: str, unit_name: str), ?junos_conf_root__configuration__interfaces__interface__unit__family__inet, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(interface_name: str, unit_name: str) = None
     inst: ?junos_conf_root__configuration__interfaces__interface__unit__family__inet = None
@@ -76948,7 +76451,7 @@ class junos_conf_root__configuration__interfaces__interface__unit__family__inet_
         after a change or None when it is gone, and an error."""
         return ygdata.Dst(lambda n, err: junos_conf_root__configuration__interfaces__interface__unit__family__inet_deliver(cb, n, err), root=self.filt())
 
-_breaker77: None = None
+_breaker62: None = None
 class junos_conf_root__configuration__interfaces__interface__unit__family__inet6__address_entry_subs(SubscriptionNode):
     name: SubscriptionNode
 
@@ -76960,7 +76463,7 @@ class junos_conf_root__configuration__interfaces__interface__unit__family__inet6
         direct: list[SubscriptionNode] = [self.name]
         return direct
 
-_breaker78: None = None
+_breaker63: None = None
 proc def junos_conf_root__configuration__interfaces__interface__unit__family__inet6__address_deliver(cb: action(?(interface_name: str, unit_name: str, address_name: str), ?junos_conf_root__configuration__interfaces__interface__unit__family__inet6__address_entry, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(interface_name: str, unit_name: str, address_name: str) = None
     inst: ?junos_conf_root__configuration__interfaces__interface__unit__family__inet6__address_entry = None
@@ -77005,7 +76508,7 @@ class junos_conf_root__configuration__interfaces__interface__unit__family__inet6
         direct: list[SubscriptionNode] = [self.name]
         return direct
 
-_breaker79: None = None
+_breaker64: None = None
 proc def junos_conf_root__configuration__interfaces__interface__unit__family__inet6_deliver(cb: action(?(interface_name: str, unit_name: str), ?junos_conf_root__configuration__interfaces__interface__unit__family__inet6, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(interface_name: str, unit_name: str) = None
     inst: ?junos_conf_root__configuration__interfaces__interface__unit__family__inet6 = None
@@ -77043,7 +76546,7 @@ class junos_conf_root__configuration__interfaces__interface__unit__family__inet6
         after a change or None when it is gone, and an error."""
         return ygdata.Dst(lambda n, err: junos_conf_root__configuration__interfaces__interface__unit__family__inet6_deliver(cb, n, err), root=self.filt())
 
-_breaker80: None = None
+_breaker65: None = None
 class junos_conf_root__configuration__interfaces__interface__unit__family__iso__address_entry_subs(SubscriptionNode):
     name: SubscriptionNode
 
@@ -77055,7 +76558,7 @@ class junos_conf_root__configuration__interfaces__interface__unit__family__iso__
         direct: list[SubscriptionNode] = [self.name]
         return direct
 
-_breaker81: None = None
+_breaker66: None = None
 proc def junos_conf_root__configuration__interfaces__interface__unit__family__iso__address_deliver(cb: action(?(interface_name: str, unit_name: str, address_name: str), ?junos_conf_root__configuration__interfaces__interface__unit__family__iso__address_entry, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(interface_name: str, unit_name: str, address_name: str) = None
     inst: ?junos_conf_root__configuration__interfaces__interface__unit__family__iso__address_entry = None
@@ -77100,7 +76603,7 @@ class junos_conf_root__configuration__interfaces__interface__unit__family__iso__
         direct: list[SubscriptionNode] = [self.name]
         return direct
 
-_breaker82: None = None
+_breaker67: None = None
 proc def junos_conf_root__configuration__interfaces__interface__unit__family__iso_deliver(cb: action(?(interface_name: str, unit_name: str), ?junos_conf_root__configuration__interfaces__interface__unit__family__iso, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(interface_name: str, unit_name: str) = None
     inst: ?junos_conf_root__configuration__interfaces__interface__unit__family__iso = None
@@ -77138,7 +76641,7 @@ class junos_conf_root__configuration__interfaces__interface__unit__family__iso_s
         after a change or None when it is gone, and an error."""
         return ygdata.Dst(lambda n, err: junos_conf_root__configuration__interfaces__interface__unit__family__iso_deliver(cb, n, err), root=self.filt())
 
-_breaker83: None = None
+_breaker68: None = None
 proc def junos_conf_root__configuration__interfaces__interface__unit__family_deliver(cb: action(?(interface_name: str, unit_name: str), ?junos_conf_root__configuration__interfaces__interface__unit__family, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(interface_name: str, unit_name: str) = None
     inst: ?junos_conf_root__configuration__interfaces__interface__unit__family = None
@@ -77179,7 +76682,7 @@ class junos_conf_root__configuration__interfaces__interface__unit__family_subs(S
         after a change or None when it is gone, and an error."""
         return ygdata.Dst(lambda n, err: junos_conf_root__configuration__interfaces__interface__unit__family_deliver(cb, n, err), root=self.filt())
 
-_breaker84: None = None
+_breaker69: None = None
 class junos_conf_root__configuration__interfaces__interface__unit_entry_subs(SubscriptionNode):
     name: SubscriptionNode
     alias: SubscriptionNode
@@ -77205,7 +76708,7 @@ class junos_conf_root__configuration__interfaces__interface__unit_entry_subs(Sub
         direct: list[SubscriptionNode] = [self.name, self.alias, self.description, self.vlan_id, self.encapsulation, self.family, self.mtu, self.mac]
         return direct
 
-_breaker85: None = None
+_breaker70: None = None
 proc def junos_conf_root__configuration__interfaces__interface__unit_deliver(cb: action(?(interface_name: str, unit_name: str), ?junos_conf_root__configuration__interfaces__interface__unit_entry, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(interface_name: str, unit_name: str) = None
     inst: ?junos_conf_root__configuration__interfaces__interface__unit_entry = None
@@ -77261,7 +76764,7 @@ class junos_conf_root__configuration__interfaces__interface__unit_subs(Subscript
         direct: list[SubscriptionNode] = [self.name, self.alias, self.description, self.vlan_id, self.encapsulation, self.family, self.mtu, self.mac]
         return direct
 
-_breaker86: None = None
+_breaker71: None = None
 class junos_conf_root__configuration__interfaces__interface_entry_subs(SubscriptionNode):
     name: SubscriptionNode
     description: SubscriptionNode
@@ -77283,7 +76786,7 @@ class junos_conf_root__configuration__interfaces__interface_entry_subs(Subscript
         direct: list[SubscriptionNode] = [self.name, self.description, self.mtu, self.mac, self.native_vlan_id, self.unit]
         return direct
 
-_breaker87: None = None
+_breaker72: None = None
 proc def junos_conf_root__configuration__interfaces__interface_deliver(cb: action(?(interface_name: str), ?junos_conf_root__configuration__interfaces__interface_entry, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(interface_name: str) = None
     inst: ?junos_conf_root__configuration__interfaces__interface_entry = None
@@ -77334,7 +76837,7 @@ class junos_conf_root__configuration__interfaces__interface_subs(SubscriptionNod
         direct: list[SubscriptionNode] = [self.name, self.description, self.mtu, self.mac, self.native_vlan_id, self.unit]
         return direct
 
-_breaker88: None = None
+_breaker73: None = None
 proc def junos_conf_root__configuration__interfaces_deliver(cb: action(?junos_conf_root__configuration__interfaces, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     inst: ?junos_conf_root__configuration__interfaces = None
     if n is not None:
@@ -77366,570 +76869,7 @@ class junos_conf_root__configuration__interfaces_subs(SubscriptionNode):
         and an error."""
         return ygdata.Dst(lambda n, err: junos_conf_root__configuration__interfaces_deliver(cb, n, err), root=self.filt())
 
-_breaker89: None = None
-proc def junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group__neighbor__multihop_deliver(cb: action(?(instance_name: str, group_name: str, neighbor_name: str), ?junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group__neighbor__multihop, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
-    keys: ?(instance_name: str, group_name: str, neighbor_name: str) = None
-    inst: ?junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group__neighbor__multihop = None
-    if n is not None:
-        try:
-            c1 = _at(n, ygdata.Id(NS_junos_conf_root, 'configuration'))
-            c2 = _at(c1, ygdata.Id(NS_junos_conf_root, 'routing-instances'))
-            e3 = _one(_at(c2, ygdata.Id(NS_junos_conf_root, 'instance')), 'instance')
-            c4 = _at(e3, ygdata.Id(NS_junos_conf_root, 'protocols'))
-            c5 = _at(c4, ygdata.Id(NS_junos_conf_root, 'bgp'))
-            e6 = _one(_at(c5, ygdata.Id(NS_junos_conf_root, 'group')), 'group')
-            e7 = _one(_at(e6, ygdata.Id(NS_junos_conf_root, 'neighbor')), 'neighbor')
-            c8 = _at(e7, ygdata.Id(NS_junos_conf_root, 'multihop'))
-            keys = (instance_name=e3.get_str(ygdata.Id(NS_junos_conf_root, 'name')), group_name=e6.get_str(ygdata.Id(NS_junos_conf_root, 'name')), neighbor_name=e7.get_str(ygdata.Id(NS_junos_conf_root, 'name')))
-            here = _present(c8)
-            if here is not None:
-                inst = junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group__neighbor__multihop.from_gdata(here)
-        except Exception as e:
-            cb(None, None, e)
-            return
-    cb(keys, inst, err)
-
-class junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group__neighbor__multihop_subs(SubscriptionNode):
-    ttl: SubscriptionNode
-    no_nexthop_change: SubscriptionNode
-
-    pure def __init__(self, path: ?SubscriptionPath=None) -> None:
-        SubscriptionNode.__init__(self, path)
-        self.ttl = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_junos_conf_root, 'ttl'), parent=path))
-        self.no_nexthop_change = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_junos_conf_root, 'no-nexthop-change'), parent=path))
-
-    pure def _direct_children(self) -> list[SubscriptionNode]:
-        direct: list[SubscriptionNode] = [self.ttl, self.no_nexthop_change]
-        return direct
-
-    def dst(self, cb: action(?(instance_name: str, group_name: str, neighbor_name: str), ?junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group__neighbor__multihop, ?Exception) -> None) -> ygdata.Dst:
-        """A destination rooted here: cb gets, one instance at a time,
-        the keys of the lists on the way down, this container as it is
-        after a change or None when it is gone, and an error."""
-        return ygdata.Dst(lambda n, err: junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group__neighbor__multihop_deliver(cb, n, err), root=self.filt())
-
-_breaker90: None = None
-class junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group__neighbor_entry_subs(SubscriptionNode):
-    name: SubscriptionNode
-    description: SubscriptionNode
-    multihop: junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group__neighbor__multihop_subs
-    hold_time: SubscriptionNode
-    authentication_key: SubscriptionNode
-    authentication_algorithm: SubscriptionNode
-    peer_as: SubscriptionNode
-    as_override: SubscriptionNode
-
-    pure def __init__(self, path: ?SubscriptionPath=None) -> None:
-        SubscriptionNode.__init__(self, path)
-        self.name = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_junos_conf_root, 'name'), parent=path))
-        self.description = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_junos_conf_root, 'description'), parent=path))
-        self.multihop = junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group__neighbor__multihop_subs(SubscriptionPath(ygdata.Id(NS_junos_conf_root, 'multihop'), parent=path))
-        self.hold_time = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_junos_conf_root, 'hold-time'), parent=path))
-        self.authentication_key = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_junos_conf_root, 'authentication-key'), parent=path))
-        self.authentication_algorithm = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_junos_conf_root, 'authentication-algorithm'), parent=path))
-        self.peer_as = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_junos_conf_root, 'peer-as'), parent=path))
-        self.as_override = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_junos_conf_root, 'as-override'), parent=path))
-
-    pure def _direct_children(self) -> list[SubscriptionNode]:
-        direct: list[SubscriptionNode] = [self.name, self.description, self.multihop, self.hold_time, self.authentication_key, self.authentication_algorithm, self.peer_as, self.as_override]
-        return direct
-
-_breaker91: None = None
-proc def junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group__neighbor_deliver(cb: action(?(instance_name: str, group_name: str, neighbor_name: str), ?junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group__neighbor_entry, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
-    keys: ?(instance_name: str, group_name: str, neighbor_name: str) = None
-    inst: ?junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group__neighbor_entry = None
-    if n is not None:
-        try:
-            c1 = _at(n, ygdata.Id(NS_junos_conf_root, 'configuration'))
-            c2 = _at(c1, ygdata.Id(NS_junos_conf_root, 'routing-instances'))
-            e3 = _one(_at(c2, ygdata.Id(NS_junos_conf_root, 'instance')), 'instance')
-            c4 = _at(e3, ygdata.Id(NS_junos_conf_root, 'protocols'))
-            c5 = _at(c4, ygdata.Id(NS_junos_conf_root, 'bgp'))
-            e6 = _one(_at(c5, ygdata.Id(NS_junos_conf_root, 'group')), 'group')
-            e7 = _one(_at(e6, ygdata.Id(NS_junos_conf_root, 'neighbor')), 'neighbor')
-            keys = (instance_name=e3.get_str(ygdata.Id(NS_junos_conf_root, 'name')), group_name=e6.get_str(ygdata.Id(NS_junos_conf_root, 'name')), neighbor_name=e7.get_str(ygdata.Id(NS_junos_conf_root, 'name')))
-            here = _present(e7)
-            if here is not None:
-                inst = junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group__neighbor_entry.from_gdata(here)
-        except Exception as e:
-            cb(None, None, e)
-            return
-    cb(keys, inst, err)
-
-class junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group__neighbor_subs(SubscriptionNode):
-    name: SubscriptionNode
-    description: SubscriptionNode
-    multihop: junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group__neighbor__multihop_subs
-    hold_time: SubscriptionNode
-    authentication_key: SubscriptionNode
-    authentication_algorithm: SubscriptionNode
-    peer_as: SubscriptionNode
-    as_override: SubscriptionNode
-    pure def __init__(self, path: ?SubscriptionPath=None) -> None:
-        SubscriptionNode.__init__(self, path)
-        self.name = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_junos_conf_root, 'name'), parent=path))
-        self.description = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_junos_conf_root, 'description'), parent=path))
-        self.multihop = junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group__neighbor__multihop_subs(SubscriptionPath(ygdata.Id(NS_junos_conf_root, 'multihop'), parent=path))
-        self.hold_time = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_junos_conf_root, 'hold-time'), parent=path))
-        self.authentication_key = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_junos_conf_root, 'authentication-key'), parent=path))
-        self.authentication_algorithm = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_junos_conf_root, 'authentication-algorithm'), parent=path))
-        self.peer_as = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_junos_conf_root, 'peer-as'), parent=path))
-        self.as_override = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_junos_conf_root, 'as-override'), parent=path))
-
-    pure def entry(self, name: str) -> junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group__neighbor_entry_subs:
-        predicates = [
-            ygdata.FNode(ygdata.Id(NS_junos_conf_root, 'name'), value_match=name),
-        ]
-        base_path = self._path!.parent
-        return junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group__neighbor_entry_subs(SubscriptionPath(ygdata.Id(NS_junos_conf_root, 'neighbor'), predicates=predicates, parent=base_path))
-
-    def dst(self, cb: action(?(instance_name: str, group_name: str, neighbor_name: str), ?junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group__neighbor_entry, ?Exception) -> None) -> ygdata.Dst:
-        """A destination rooted here: cb gets, one instance at a time,
-        the keys of the lists on the way down, this entry as it is
-        after a change or None when it is gone, and an error."""
-        return ygdata.Dst(lambda n, err: junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group__neighbor_deliver(cb, n, err), root=self.filt())
-
-    pure def _direct_children(self) -> list[SubscriptionNode]:
-        direct: list[SubscriptionNode] = [self.name, self.description, self.multihop, self.hold_time, self.authentication_key, self.authentication_algorithm, self.peer_as, self.as_override]
-        return direct
-
-_breaker92: None = None
-class junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group_entry_subs(SubscriptionNode):
-    name: SubscriptionNode
-    passive: SubscriptionNode
-    import: SubscriptionNode
-    export: SubscriptionNode
-    neighbor: junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group__neighbor_subs
-
-    pure def __init__(self, path: ?SubscriptionPath=None) -> None:
-        SubscriptionNode.__init__(self, path)
-        self.name = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_junos_conf_root, 'name'), parent=path))
-        self.passive = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_junos_conf_root, 'passive'), parent=path))
-        self.import = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_junos_conf_root, 'import'), parent=path))
-        self.export = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_junos_conf_root, 'export'), parent=path))
-        self.neighbor = junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group__neighbor_subs(SubscriptionPath(ygdata.Id(NS_junos_conf_root, 'neighbor'), parent=path))
-
-    pure def _direct_children(self) -> list[SubscriptionNode]:
-        direct: list[SubscriptionNode] = [self.name, self.passive, self.import, self.export, self.neighbor]
-        return direct
-
-_breaker93: None = None
-proc def junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group_deliver(cb: action(?(instance_name: str, group_name: str), ?junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group_entry, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
-    keys: ?(instance_name: str, group_name: str) = None
-    inst: ?junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group_entry = None
-    if n is not None:
-        try:
-            c1 = _at(n, ygdata.Id(NS_junos_conf_root, 'configuration'))
-            c2 = _at(c1, ygdata.Id(NS_junos_conf_root, 'routing-instances'))
-            e3 = _one(_at(c2, ygdata.Id(NS_junos_conf_root, 'instance')), 'instance')
-            c4 = _at(e3, ygdata.Id(NS_junos_conf_root, 'protocols'))
-            c5 = _at(c4, ygdata.Id(NS_junos_conf_root, 'bgp'))
-            e6 = _one(_at(c5, ygdata.Id(NS_junos_conf_root, 'group')), 'group')
-            keys = (instance_name=e3.get_str(ygdata.Id(NS_junos_conf_root, 'name')), group_name=e6.get_str(ygdata.Id(NS_junos_conf_root, 'name')))
-            here = _present(e6)
-            if here is not None:
-                inst = junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group_entry.from_gdata(here)
-        except Exception as e:
-            cb(None, None, e)
-            return
-    cb(keys, inst, err)
-
-class junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group_subs(SubscriptionNode):
-    name: SubscriptionNode
-    passive: SubscriptionNode
-    import: SubscriptionNode
-    export: SubscriptionNode
-    neighbor: junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group__neighbor_subs
-    pure def __init__(self, path: ?SubscriptionPath=None) -> None:
-        SubscriptionNode.__init__(self, path)
-        self.name = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_junos_conf_root, 'name'), parent=path))
-        self.passive = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_junos_conf_root, 'passive'), parent=path))
-        self.import = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_junos_conf_root, 'import'), parent=path))
-        self.export = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_junos_conf_root, 'export'), parent=path))
-        self.neighbor = junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group__neighbor_subs(SubscriptionPath(ygdata.Id(NS_junos_conf_root, 'neighbor'), parent=path))
-
-    pure def entry(self, name: str) -> junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group_entry_subs:
-        predicates = [
-            ygdata.FNode(ygdata.Id(NS_junos_conf_root, 'name'), value_match=name),
-        ]
-        base_path = self._path!.parent
-        return junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group_entry_subs(SubscriptionPath(ygdata.Id(NS_junos_conf_root, 'group'), predicates=predicates, parent=base_path))
-
-    def dst(self, cb: action(?(instance_name: str, group_name: str), ?junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group_entry, ?Exception) -> None) -> ygdata.Dst:
-        """A destination rooted here: cb gets, one instance at a time,
-        the keys of the lists on the way down, this entry as it is
-        after a change or None when it is gone, and an error."""
-        return ygdata.Dst(lambda n, err: junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group_deliver(cb, n, err), root=self.filt())
-
-    pure def _direct_children(self) -> list[SubscriptionNode]:
-        direct: list[SubscriptionNode] = [self.name, self.passive, self.import, self.export, self.neighbor]
-        return direct
-
-_breaker94: None = None
-proc def junos_conf_root__configuration__routing_instances__instance__protocols__bgp_deliver(cb: action(?(instance_name: str), ?junos_conf_root__configuration__routing_instances__instance__protocols__bgp, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
-    keys: ?(instance_name: str) = None
-    inst: ?junos_conf_root__configuration__routing_instances__instance__protocols__bgp = None
-    if n is not None:
-        try:
-            c1 = _at(n, ygdata.Id(NS_junos_conf_root, 'configuration'))
-            c2 = _at(c1, ygdata.Id(NS_junos_conf_root, 'routing-instances'))
-            e3 = _one(_at(c2, ygdata.Id(NS_junos_conf_root, 'instance')), 'instance')
-            c4 = _at(e3, ygdata.Id(NS_junos_conf_root, 'protocols'))
-            c5 = _at(c4, ygdata.Id(NS_junos_conf_root, 'bgp'))
-            keys = (instance_name=e3.get_str(ygdata.Id(NS_junos_conf_root, 'name')))
-            here = _present(c5)
-            if here is not None:
-                inst = junos_conf_root__configuration__routing_instances__instance__protocols__bgp.from_gdata(here)
-        except Exception as e:
-            cb(None, None, e)
-            return
-    cb(keys, inst, err)
-
-class junos_conf_root__configuration__routing_instances__instance__protocols__bgp_subs(SubscriptionNode):
-    group: junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group_subs
-
-    pure def __init__(self, path: ?SubscriptionPath=None) -> None:
-        SubscriptionNode.__init__(self, path)
-        self.group = junos_conf_root__configuration__routing_instances__instance__protocols__bgp__group_subs(SubscriptionPath(ygdata.Id(NS_junos_conf_root, 'group'), parent=path))
-
-    pure def _direct_children(self) -> list[SubscriptionNode]:
-        direct: list[SubscriptionNode] = [self.group]
-        return direct
-
-    def dst(self, cb: action(?(instance_name: str), ?junos_conf_root__configuration__routing_instances__instance__protocols__bgp, ?Exception) -> None) -> ygdata.Dst:
-        """A destination rooted here: cb gets, one instance at a time,
-        the keys of the lists on the way down, this container as it is
-        after a change or None when it is gone, and an error."""
-        return ygdata.Dst(lambda n, err: junos_conf_root__configuration__routing_instances__instance__protocols__bgp_deliver(cb, n, err), root=self.filt())
-
-_breaker95: None = None
-proc def junos_conf_root__configuration__routing_instances__instance__protocols_deliver(cb: action(?(instance_name: str), ?junos_conf_root__configuration__routing_instances__instance__protocols, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
-    keys: ?(instance_name: str) = None
-    inst: ?junos_conf_root__configuration__routing_instances__instance__protocols = None
-    if n is not None:
-        try:
-            c1 = _at(n, ygdata.Id(NS_junos_conf_root, 'configuration'))
-            c2 = _at(c1, ygdata.Id(NS_junos_conf_root, 'routing-instances'))
-            e3 = _one(_at(c2, ygdata.Id(NS_junos_conf_root, 'instance')), 'instance')
-            c4 = _at(e3, ygdata.Id(NS_junos_conf_root, 'protocols'))
-            keys = (instance_name=e3.get_str(ygdata.Id(NS_junos_conf_root, 'name')))
-            here = _present(c4)
-            if here is not None:
-                inst = junos_conf_root__configuration__routing_instances__instance__protocols.from_gdata(here)
-        except Exception as e:
-            cb(None, None, e)
-            return
-    cb(keys, inst, err)
-
-class junos_conf_root__configuration__routing_instances__instance__protocols_subs(SubscriptionNode):
-    bgp: junos_conf_root__configuration__routing_instances__instance__protocols__bgp_subs
-
-    pure def __init__(self, path: ?SubscriptionPath=None) -> None:
-        SubscriptionNode.__init__(self, path)
-        self.bgp = junos_conf_root__configuration__routing_instances__instance__protocols__bgp_subs(SubscriptionPath(ygdata.Id(NS_junos_conf_root, 'bgp'), parent=path))
-
-    pure def _direct_children(self) -> list[SubscriptionNode]:
-        direct: list[SubscriptionNode] = [self.bgp]
-        return direct
-
-    def dst(self, cb: action(?(instance_name: str), ?junos_conf_root__configuration__routing_instances__instance__protocols, ?Exception) -> None) -> ygdata.Dst:
-        """A destination rooted here: cb gets, one instance at a time,
-        the keys of the lists on the way down, this container as it is
-        after a change or None when it is gone, and an error."""
-        return ygdata.Dst(lambda n, err: junos_conf_root__configuration__routing_instances__instance__protocols_deliver(cb, n, err), root=self.filt())
-
-_breaker96: None = None
-class junos_conf_root__configuration__routing_instances__instance__interface_entry_subs(SubscriptionNode):
-    name: SubscriptionNode
-    any: SubscriptionNode
-    unicast: SubscriptionNode
-    multicast: SubscriptionNode
-    primary: SubscriptionNode
-
-    pure def __init__(self, path: ?SubscriptionPath=None) -> None:
-        SubscriptionNode.__init__(self, path)
-        self.name = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_junos_conf_root, 'name'), parent=path))
-        self.any = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_junos_conf_root, 'any'), parent=path))
-        self.unicast = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_junos_conf_root, 'unicast'), parent=path))
-        self.multicast = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_junos_conf_root, 'multicast'), parent=path))
-        self.primary = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_junos_conf_root, 'primary'), parent=path))
-
-    pure def _direct_children(self) -> list[SubscriptionNode]:
-        direct: list[SubscriptionNode] = [self.name, self.any, self.unicast, self.multicast, self.primary]
-        return direct
-
-_breaker97: None = None
-proc def junos_conf_root__configuration__routing_instances__instance__interface_deliver(cb: action(?(instance_name: str, interface_name: str), ?junos_conf_root__configuration__routing_instances__instance__interface_entry, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
-    keys: ?(instance_name: str, interface_name: str) = None
-    inst: ?junos_conf_root__configuration__routing_instances__instance__interface_entry = None
-    if n is not None:
-        try:
-            c1 = _at(n, ygdata.Id(NS_junos_conf_root, 'configuration'))
-            c2 = _at(c1, ygdata.Id(NS_junos_conf_root, 'routing-instances'))
-            e3 = _one(_at(c2, ygdata.Id(NS_junos_conf_root, 'instance')), 'instance')
-            e4 = _one(_at(e3, ygdata.Id(NS_junos_conf_root, 'interface')), 'interface')
-            keys = (instance_name=e3.get_str(ygdata.Id(NS_junos_conf_root, 'name')), interface_name=e4.get_str(ygdata.Id(NS_junos_conf_root, 'name')))
-            here = _present(e4)
-            if here is not None:
-                inst = junos_conf_root__configuration__routing_instances__instance__interface_entry.from_gdata(here)
-        except Exception as e:
-            cb(None, None, e)
-            return
-    cb(keys, inst, err)
-
-class junos_conf_root__configuration__routing_instances__instance__interface_subs(SubscriptionNode):
-    name: SubscriptionNode
-    any: SubscriptionNode
-    unicast: SubscriptionNode
-    multicast: SubscriptionNode
-    primary: SubscriptionNode
-    pure def __init__(self, path: ?SubscriptionPath=None) -> None:
-        SubscriptionNode.__init__(self, path)
-        self.name = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_junos_conf_root, 'name'), parent=path))
-        self.any = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_junos_conf_root, 'any'), parent=path))
-        self.unicast = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_junos_conf_root, 'unicast'), parent=path))
-        self.multicast = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_junos_conf_root, 'multicast'), parent=path))
-        self.primary = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_junos_conf_root, 'primary'), parent=path))
-
-    pure def entry(self, name: str) -> junos_conf_root__configuration__routing_instances__instance__interface_entry_subs:
-        predicates = [
-            ygdata.FNode(ygdata.Id(NS_junos_conf_root, 'name'), value_match=name),
-        ]
-        base_path = self._path!.parent
-        return junos_conf_root__configuration__routing_instances__instance__interface_entry_subs(SubscriptionPath(ygdata.Id(NS_junos_conf_root, 'interface'), predicates=predicates, parent=base_path))
-
-    def dst(self, cb: action(?(instance_name: str, interface_name: str), ?junos_conf_root__configuration__routing_instances__instance__interface_entry, ?Exception) -> None) -> ygdata.Dst:
-        """A destination rooted here: cb gets, one instance at a time,
-        the keys of the lists on the way down, this entry as it is
-        after a change or None when it is gone, and an error."""
-        return ygdata.Dst(lambda n, err: junos_conf_root__configuration__routing_instances__instance__interface_deliver(cb, n, err), root=self.filt())
-
-    pure def _direct_children(self) -> list[SubscriptionNode]:
-        direct: list[SubscriptionNode] = [self.name, self.any, self.unicast, self.multicast, self.primary]
-        return direct
-
-_breaker98: None = None
-proc def junos_conf_root__configuration__routing_instances__instance__route_distinguisher_deliver(cb: action(?(instance_name: str), ?junos_conf_root__configuration__routing_instances__instance__route_distinguisher, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
-    keys: ?(instance_name: str) = None
-    inst: ?junos_conf_root__configuration__routing_instances__instance__route_distinguisher = None
-    if n is not None:
-        try:
-            c1 = _at(n, ygdata.Id(NS_junos_conf_root, 'configuration'))
-            c2 = _at(c1, ygdata.Id(NS_junos_conf_root, 'routing-instances'))
-            e3 = _one(_at(c2, ygdata.Id(NS_junos_conf_root, 'instance')), 'instance')
-            c4 = _at(e3, ygdata.Id(NS_junos_conf_root, 'route-distinguisher'))
-            keys = (instance_name=e3.get_str(ygdata.Id(NS_junos_conf_root, 'name')))
-            here = _present(c4)
-            if here is not None:
-                inst = junos_conf_root__configuration__routing_instances__instance__route_distinguisher.from_gdata(here)
-        except Exception as e:
-            cb(None, None, e)
-            return
-    cb(keys, inst, err)
-
-class junos_conf_root__configuration__routing_instances__instance__route_distinguisher_subs(SubscriptionNode):
-    rd_type: SubscriptionNode
-
-    pure def __init__(self, path: ?SubscriptionPath=None) -> None:
-        SubscriptionNode.__init__(self, path)
-        self.rd_type = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_junos_conf_root, 'rd-type'), parent=path))
-
-    pure def _direct_children(self) -> list[SubscriptionNode]:
-        direct: list[SubscriptionNode] = [self.rd_type]
-        return direct
-
-    def dst(self, cb: action(?(instance_name: str), ?junos_conf_root__configuration__routing_instances__instance__route_distinguisher, ?Exception) -> None) -> ygdata.Dst:
-        """A destination rooted here: cb gets, one instance at a time,
-        the keys of the lists on the way down, this container as it is
-        after a change or None when it is gone, and an error."""
-        return ygdata.Dst(lambda n, err: junos_conf_root__configuration__routing_instances__instance__route_distinguisher_deliver(cb, n, err), root=self.filt())
-
-_breaker99: None = None
-proc def junos_conf_root__configuration__routing_instances__instance__vrf_target_deliver(cb: action(?(instance_name: str), ?junos_conf_root__configuration__routing_instances__instance__vrf_target, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
-    keys: ?(instance_name: str) = None
-    inst: ?junos_conf_root__configuration__routing_instances__instance__vrf_target = None
-    if n is not None:
-        try:
-            c1 = _at(n, ygdata.Id(NS_junos_conf_root, 'configuration'))
-            c2 = _at(c1, ygdata.Id(NS_junos_conf_root, 'routing-instances'))
-            e3 = _one(_at(c2, ygdata.Id(NS_junos_conf_root, 'instance')), 'instance')
-            c4 = _at(e3, ygdata.Id(NS_junos_conf_root, 'vrf-target'))
-            keys = (instance_name=e3.get_str(ygdata.Id(NS_junos_conf_root, 'name')))
-            here = _present(c4)
-            if here is not None:
-                inst = junos_conf_root__configuration__routing_instances__instance__vrf_target.from_gdata(here)
-        except Exception as e:
-            cb(None, None, e)
-            return
-    cb(keys, inst, err)
-
-class junos_conf_root__configuration__routing_instances__instance__vrf_target_subs(SubscriptionNode):
-    community: SubscriptionNode
-    import: SubscriptionNode
-    export: SubscriptionNode
-    auto: SubscriptionNode
-
-    pure def __init__(self, path: ?SubscriptionPath=None) -> None:
-        SubscriptionNode.__init__(self, path)
-        self.community = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_junos_conf_root, 'community'), parent=path))
-        self.import = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_junos_conf_root, 'import'), parent=path))
-        self.export = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_junos_conf_root, 'export'), parent=path))
-        self.auto = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_junos_conf_root, 'auto'), parent=path))
-
-    pure def _direct_children(self) -> list[SubscriptionNode]:
-        direct: list[SubscriptionNode] = [self.community, self.import, self.export, self.auto]
-        return direct
-
-    def dst(self, cb: action(?(instance_name: str), ?junos_conf_root__configuration__routing_instances__instance__vrf_target, ?Exception) -> None) -> ygdata.Dst:
-        """A destination rooted here: cb gets, one instance at a time,
-        the keys of the lists on the way down, this container as it is
-        after a change or None when it is gone, and an error."""
-        return ygdata.Dst(lambda n, err: junos_conf_root__configuration__routing_instances__instance__vrf_target_deliver(cb, n, err), root=self.filt())
-
-_breaker100: None = None
-proc def junos_conf_root__configuration__routing_instances__instance__vrf_table_label_deliver(cb: action(?(instance_name: str), ?junos_conf_root__configuration__routing_instances__instance__vrf_table_label, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
-    keys: ?(instance_name: str) = None
-    inst: ?junos_conf_root__configuration__routing_instances__instance__vrf_table_label = None
-    if n is not None:
-        try:
-            c1 = _at(n, ygdata.Id(NS_junos_conf_root, 'configuration'))
-            c2 = _at(c1, ygdata.Id(NS_junos_conf_root, 'routing-instances'))
-            e3 = _one(_at(c2, ygdata.Id(NS_junos_conf_root, 'instance')), 'instance')
-            c4 = _at(e3, ygdata.Id(NS_junos_conf_root, 'vrf-table-label'))
-            keys = (instance_name=e3.get_str(ygdata.Id(NS_junos_conf_root, 'name')))
-            here = _present(c4)
-            if here is not None:
-                inst = junos_conf_root__configuration__routing_instances__instance__vrf_table_label.from_gdata(here)
-        except Exception as e:
-            cb(None, None, e)
-            return
-    cb(keys, inst, err)
-
-class junos_conf_root__configuration__routing_instances__instance__vrf_table_label_subs(SubscriptionNode):
-
-    pure def __init__(self, path: ?SubscriptionPath=None) -> None:
-        SubscriptionNode.__init__(self, path)
-
-    pure def _direct_children(self) -> list[SubscriptionNode]:
-        direct: list[SubscriptionNode] = []
-        return direct
-
-    def dst(self, cb: action(?(instance_name: str), ?junos_conf_root__configuration__routing_instances__instance__vrf_table_label, ?Exception) -> None) -> ygdata.Dst:
-        """A destination rooted here: cb gets, one instance at a time,
-        the keys of the lists on the way down, this container as it is
-        after a change or None when it is gone, and an error."""
-        return ygdata.Dst(lambda n, err: junos_conf_root__configuration__routing_instances__instance__vrf_table_label_deliver(cb, n, err), root=self.filt())
-
-_breaker101: None = None
-class junos_conf_root__configuration__routing_instances__instance_entry_subs(SubscriptionNode):
-    name: SubscriptionNode
-    instance_type: SubscriptionNode
-    protocols: junos_conf_root__configuration__routing_instances__instance__protocols_subs
-    interface: junos_conf_root__configuration__routing_instances__instance__interface_subs
-    route_distinguisher: junos_conf_root__configuration__routing_instances__instance__route_distinguisher_subs
-    vrf_target: junos_conf_root__configuration__routing_instances__instance__vrf_target_subs
-    vrf_table_label: junos_conf_root__configuration__routing_instances__instance__vrf_table_label_subs
-
-    pure def __init__(self, path: ?SubscriptionPath=None) -> None:
-        SubscriptionNode.__init__(self, path)
-        self.name = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_junos_conf_root, 'name'), parent=path))
-        self.instance_type = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_junos_conf_root, 'instance-type'), parent=path))
-        self.protocols = junos_conf_root__configuration__routing_instances__instance__protocols_subs(SubscriptionPath(ygdata.Id(NS_junos_conf_root, 'protocols'), parent=path))
-        self.interface = junos_conf_root__configuration__routing_instances__instance__interface_subs(SubscriptionPath(ygdata.Id(NS_junos_conf_root, 'interface'), parent=path))
-        self.route_distinguisher = junos_conf_root__configuration__routing_instances__instance__route_distinguisher_subs(SubscriptionPath(ygdata.Id(NS_junos_conf_root, 'route-distinguisher'), parent=path))
-        self.vrf_target = junos_conf_root__configuration__routing_instances__instance__vrf_target_subs(SubscriptionPath(ygdata.Id(NS_junos_conf_root, 'vrf-target'), parent=path))
-        self.vrf_table_label = junos_conf_root__configuration__routing_instances__instance__vrf_table_label_subs(SubscriptionPath(ygdata.Id(NS_junos_conf_root, 'vrf-table-label'), parent=path))
-
-    pure def _direct_children(self) -> list[SubscriptionNode]:
-        direct: list[SubscriptionNode] = [self.name, self.instance_type, self.protocols, self.interface, self.route_distinguisher, self.vrf_target, self.vrf_table_label]
-        return direct
-
-_breaker102: None = None
-proc def junos_conf_root__configuration__routing_instances__instance_deliver(cb: action(?(instance_name: str), ?junos_conf_root__configuration__routing_instances__instance_entry, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
-    keys: ?(instance_name: str) = None
-    inst: ?junos_conf_root__configuration__routing_instances__instance_entry = None
-    if n is not None:
-        try:
-            c1 = _at(n, ygdata.Id(NS_junos_conf_root, 'configuration'))
-            c2 = _at(c1, ygdata.Id(NS_junos_conf_root, 'routing-instances'))
-            e3 = _one(_at(c2, ygdata.Id(NS_junos_conf_root, 'instance')), 'instance')
-            keys = (instance_name=e3.get_str(ygdata.Id(NS_junos_conf_root, 'name')))
-            here = _present(e3)
-            if here is not None:
-                inst = junos_conf_root__configuration__routing_instances__instance_entry.from_gdata(here)
-        except Exception as e:
-            cb(None, None, e)
-            return
-    cb(keys, inst, err)
-
-class junos_conf_root__configuration__routing_instances__instance_subs(SubscriptionNode):
-    name: SubscriptionNode
-    instance_type: SubscriptionNode
-    protocols: junos_conf_root__configuration__routing_instances__instance__protocols_subs
-    interface: junos_conf_root__configuration__routing_instances__instance__interface_subs
-    route_distinguisher: junos_conf_root__configuration__routing_instances__instance__route_distinguisher_subs
-    vrf_target: junos_conf_root__configuration__routing_instances__instance__vrf_target_subs
-    vrf_table_label: junos_conf_root__configuration__routing_instances__instance__vrf_table_label_subs
-    pure def __init__(self, path: ?SubscriptionPath=None) -> None:
-        SubscriptionNode.__init__(self, path)
-        self.name = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_junos_conf_root, 'name'), parent=path))
-        self.instance_type = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_junos_conf_root, 'instance-type'), parent=path))
-        self.protocols = junos_conf_root__configuration__routing_instances__instance__protocols_subs(SubscriptionPath(ygdata.Id(NS_junos_conf_root, 'protocols'), parent=path))
-        self.interface = junos_conf_root__configuration__routing_instances__instance__interface_subs(SubscriptionPath(ygdata.Id(NS_junos_conf_root, 'interface'), parent=path))
-        self.route_distinguisher = junos_conf_root__configuration__routing_instances__instance__route_distinguisher_subs(SubscriptionPath(ygdata.Id(NS_junos_conf_root, 'route-distinguisher'), parent=path))
-        self.vrf_target = junos_conf_root__configuration__routing_instances__instance__vrf_target_subs(SubscriptionPath(ygdata.Id(NS_junos_conf_root, 'vrf-target'), parent=path))
-        self.vrf_table_label = junos_conf_root__configuration__routing_instances__instance__vrf_table_label_subs(SubscriptionPath(ygdata.Id(NS_junos_conf_root, 'vrf-table-label'), parent=path))
-
-    pure def entry(self, name: str) -> junos_conf_root__configuration__routing_instances__instance_entry_subs:
-        predicates = [
-            ygdata.FNode(ygdata.Id(NS_junos_conf_root, 'name'), value_match=name),
-        ]
-        base_path = self._path!.parent
-        return junos_conf_root__configuration__routing_instances__instance_entry_subs(SubscriptionPath(ygdata.Id(NS_junos_conf_root, 'instance'), predicates=predicates, parent=base_path))
-
-    def dst(self, cb: action(?(instance_name: str), ?junos_conf_root__configuration__routing_instances__instance_entry, ?Exception) -> None) -> ygdata.Dst:
-        """A destination rooted here: cb gets, one instance at a time,
-        the keys of the lists on the way down, this entry as it is
-        after a change or None when it is gone, and an error."""
-        return ygdata.Dst(lambda n, err: junos_conf_root__configuration__routing_instances__instance_deliver(cb, n, err), root=self.filt())
-
-    pure def _direct_children(self) -> list[SubscriptionNode]:
-        direct: list[SubscriptionNode] = [self.name, self.instance_type, self.protocols, self.interface, self.route_distinguisher, self.vrf_target, self.vrf_table_label]
-        return direct
-
-_breaker103: None = None
-proc def junos_conf_root__configuration__routing_instances_deliver(cb: action(?junos_conf_root__configuration__routing_instances, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
-    inst: ?junos_conf_root__configuration__routing_instances = None
-    if n is not None:
-        try:
-            c1 = _at(n, ygdata.Id(NS_junos_conf_root, 'configuration'))
-            c2 = _at(c1, ygdata.Id(NS_junos_conf_root, 'routing-instances'))
-            here = _present(c2)
-            if here is not None:
-                inst = junos_conf_root__configuration__routing_instances.from_gdata(here)
-        except Exception as e:
-            cb(None, e)
-            return
-    cb(inst, err)
-
-class junos_conf_root__configuration__routing_instances_subs(SubscriptionNode):
-    instance: junos_conf_root__configuration__routing_instances__instance_subs
-
-    pure def __init__(self, path: ?SubscriptionPath=None) -> None:
-        SubscriptionNode.__init__(self, path)
-        self.instance = junos_conf_root__configuration__routing_instances__instance_subs(SubscriptionPath(ygdata.Id(NS_junos_conf_root, 'instance'), parent=path))
-
-    pure def _direct_children(self) -> list[SubscriptionNode]:
-        direct: list[SubscriptionNode] = [self.instance]
-        return direct
-
-    def dst(self, cb: action(?junos_conf_root__configuration__routing_instances, ?Exception) -> None) -> ygdata.Dst:
-        """A destination rooted here: cb gets, one instance at a time,
-        this container as it is after a change or None when it is gone,
-        and an error."""
-        return ygdata.Dst(lambda n, err: junos_conf_root__configuration__routing_instances_deliver(cb, n, err), root=self.filt())
-
-_breaker104: None = None
+_breaker74: None = None
 proc def junos_conf_root__configuration__routing_options__autonomous_system_deliver(cb: action(?junos_conf_root__configuration__routing_options__autonomous_system, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     inst: ?junos_conf_root__configuration__routing_options__autonomous_system = None
     if n is not None:
@@ -77962,7 +76902,7 @@ class junos_conf_root__configuration__routing_options__autonomous_system_subs(Su
         and an error."""
         return ygdata.Dst(lambda n, err: junos_conf_root__configuration__routing_options__autonomous_system_deliver(cb, n, err), root=self.filt())
 
-_breaker105: None = None
+_breaker75: None = None
 proc def junos_conf_root__configuration__routing_options_deliver(cb: action(?junos_conf_root__configuration__routing_options, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     inst: ?junos_conf_root__configuration__routing_options = None
     if n is not None:
@@ -77994,7 +76934,7 @@ class junos_conf_root__configuration__routing_options_subs(SubscriptionNode):
         and an error."""
         return ygdata.Dst(lambda n, err: junos_conf_root__configuration__routing_options_deliver(cb, n, err), root=self.filt())
 
-_breaker106: None = None
+_breaker76: None = None
 proc def junos_conf_root__configuration__protocols__bgp__group__family__inet_vpn__unicast_deliver(cb: action(?(group_name: str), ?junos_conf_root__configuration__protocols__bgp__group__family__inet_vpn__unicast, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(group_name: str) = None
     inst: ?junos_conf_root__configuration__protocols__bgp__group__family__inet_vpn__unicast = None
@@ -78031,7 +76971,7 @@ class junos_conf_root__configuration__protocols__bgp__group__family__inet_vpn__u
         after a change or None when it is gone, and an error."""
         return ygdata.Dst(lambda n, err: junos_conf_root__configuration__protocols__bgp__group__family__inet_vpn__unicast_deliver(cb, n, err), root=self.filt())
 
-_breaker107: None = None
+_breaker77: None = None
 proc def junos_conf_root__configuration__protocols__bgp__group__family__inet_vpn_deliver(cb: action(?(group_name: str), ?junos_conf_root__configuration__protocols__bgp__group__family__inet_vpn, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(group_name: str) = None
     inst: ?junos_conf_root__configuration__protocols__bgp__group__family__inet_vpn = None
@@ -78069,7 +77009,7 @@ class junos_conf_root__configuration__protocols__bgp__group__family__inet_vpn_su
         after a change or None when it is gone, and an error."""
         return ygdata.Dst(lambda n, err: junos_conf_root__configuration__protocols__bgp__group__family__inet_vpn_deliver(cb, n, err), root=self.filt())
 
-_breaker108: None = None
+_breaker78: None = None
 proc def junos_conf_root__configuration__protocols__bgp__group__family__inet6_vpn__unicast_deliver(cb: action(?(group_name: str), ?junos_conf_root__configuration__protocols__bgp__group__family__inet6_vpn__unicast, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(group_name: str) = None
     inst: ?junos_conf_root__configuration__protocols__bgp__group__family__inet6_vpn__unicast = None
@@ -78106,7 +77046,7 @@ class junos_conf_root__configuration__protocols__bgp__group__family__inet6_vpn__
         after a change or None when it is gone, and an error."""
         return ygdata.Dst(lambda n, err: junos_conf_root__configuration__protocols__bgp__group__family__inet6_vpn__unicast_deliver(cb, n, err), root=self.filt())
 
-_breaker109: None = None
+_breaker79: None = None
 proc def junos_conf_root__configuration__protocols__bgp__group__family__inet6_vpn_deliver(cb: action(?(group_name: str), ?junos_conf_root__configuration__protocols__bgp__group__family__inet6_vpn, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(group_name: str) = None
     inst: ?junos_conf_root__configuration__protocols__bgp__group__family__inet6_vpn = None
@@ -78144,7 +77084,7 @@ class junos_conf_root__configuration__protocols__bgp__group__family__inet6_vpn_s
         after a change or None when it is gone, and an error."""
         return ygdata.Dst(lambda n, err: junos_conf_root__configuration__protocols__bgp__group__family__inet6_vpn_deliver(cb, n, err), root=self.filt())
 
-_breaker110: None = None
+_breaker80: None = None
 proc def junos_conf_root__configuration__protocols__bgp__group__family__evpn__signaling_deliver(cb: action(?(group_name: str), ?junos_conf_root__configuration__protocols__bgp__group__family__evpn__signaling, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(group_name: str) = None
     inst: ?junos_conf_root__configuration__protocols__bgp__group__family__evpn__signaling = None
@@ -78181,7 +77121,7 @@ class junos_conf_root__configuration__protocols__bgp__group__family__evpn__signa
         after a change or None when it is gone, and an error."""
         return ygdata.Dst(lambda n, err: junos_conf_root__configuration__protocols__bgp__group__family__evpn__signaling_deliver(cb, n, err), root=self.filt())
 
-_breaker111: None = None
+_breaker81: None = None
 proc def junos_conf_root__configuration__protocols__bgp__group__family__evpn_deliver(cb: action(?(group_name: str), ?junos_conf_root__configuration__protocols__bgp__group__family__evpn, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(group_name: str) = None
     inst: ?junos_conf_root__configuration__protocols__bgp__group__family__evpn = None
@@ -78219,7 +77159,7 @@ class junos_conf_root__configuration__protocols__bgp__group__family__evpn_subs(S
         after a change or None when it is gone, and an error."""
         return ygdata.Dst(lambda n, err: junos_conf_root__configuration__protocols__bgp__group__family__evpn_deliver(cb, n, err), root=self.filt())
 
-_breaker112: None = None
+_breaker82: None = None
 proc def junos_conf_root__configuration__protocols__bgp__group__family__route_target_deliver(cb: action(?(group_name: str), ?junos_conf_root__configuration__protocols__bgp__group__family__route_target, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(group_name: str) = None
     inst: ?junos_conf_root__configuration__protocols__bgp__group__family__route_target = None
@@ -78255,7 +77195,7 @@ class junos_conf_root__configuration__protocols__bgp__group__family__route_targe
         after a change or None when it is gone, and an error."""
         return ygdata.Dst(lambda n, err: junos_conf_root__configuration__protocols__bgp__group__family__route_target_deliver(cb, n, err), root=self.filt())
 
-_breaker113: None = None
+_breaker83: None = None
 proc def junos_conf_root__configuration__protocols__bgp__group__family_deliver(cb: action(?(group_name: str), ?junos_conf_root__configuration__protocols__bgp__group__family, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(group_name: str) = None
     inst: ?junos_conf_root__configuration__protocols__bgp__group__family = None
@@ -78298,7 +77238,7 @@ class junos_conf_root__configuration__protocols__bgp__group__family_subs(Subscri
         after a change or None when it is gone, and an error."""
         return ygdata.Dst(lambda n, err: junos_conf_root__configuration__protocols__bgp__group__family_deliver(cb, n, err), root=self.filt())
 
-_breaker114: None = None
+_breaker84: None = None
 class junos_conf_root__configuration__protocols__bgp__group__neighbor_entry_subs(SubscriptionNode):
     name: SubscriptionNode
     description: SubscriptionNode
@@ -78314,7 +77254,7 @@ class junos_conf_root__configuration__protocols__bgp__group__neighbor_entry_subs
         direct: list[SubscriptionNode] = [self.name, self.description, self.passive]
         return direct
 
-_breaker115: None = None
+_breaker85: None = None
 proc def junos_conf_root__configuration__protocols__bgp__group__neighbor_deliver(cb: action(?(group_name: str, neighbor_name: str), ?junos_conf_root__configuration__protocols__bgp__group__neighbor_entry, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(group_name: str, neighbor_name: str) = None
     inst: ?junos_conf_root__configuration__protocols__bgp__group__neighbor_entry = None
@@ -78361,7 +77301,7 @@ class junos_conf_root__configuration__protocols__bgp__group__neighbor_subs(Subsc
         direct: list[SubscriptionNode] = [self.name, self.description, self.passive]
         return direct
 
-_breaker116: None = None
+_breaker86: None = None
 class junos_conf_root__configuration__protocols__bgp__group_entry_subs(SubscriptionNode):
     name: SubscriptionNode
     type: SubscriptionNode
@@ -78397,7 +77337,7 @@ class junos_conf_root__configuration__protocols__bgp__group_entry_subs(Subscript
         direct: list[SubscriptionNode] = [self.name, self.type, self.description, self.local_address, self.hold_time, self.family, self.authentication_key, self.authentication_algorithm, self.tcpao_auth_mismatch, self.authentication_key_chain, self.export, self.tcp_mss, self.neighbor]
         return direct
 
-_breaker117: None = None
+_breaker87: None = None
 proc def junos_conf_root__configuration__protocols__bgp__group_deliver(cb: action(?(group_name: str), ?junos_conf_root__configuration__protocols__bgp__group_entry, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(group_name: str) = None
     inst: ?junos_conf_root__configuration__protocols__bgp__group_entry = None
@@ -78463,7 +77403,7 @@ class junos_conf_root__configuration__protocols__bgp__group_subs(SubscriptionNod
         direct: list[SubscriptionNode] = [self.name, self.type, self.description, self.local_address, self.hold_time, self.family, self.authentication_key, self.authentication_algorithm, self.tcpao_auth_mismatch, self.authentication_key_chain, self.export, self.tcp_mss, self.neighbor]
         return direct
 
-_breaker118: None = None
+_breaker88: None = None
 proc def junos_conf_root__configuration__protocols__bgp_deliver(cb: action(?junos_conf_root__configuration__protocols__bgp, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     inst: ?junos_conf_root__configuration__protocols__bgp = None
     if n is not None:
@@ -78498,7 +77438,7 @@ class junos_conf_root__configuration__protocols__bgp_subs(SubscriptionNode):
         and an error."""
         return ygdata.Dst(lambda n, err: junos_conf_root__configuration__protocols__bgp_deliver(cb, n, err), root=self.filt())
 
-_breaker119: None = None
+_breaker89: None = None
 proc def junos_conf_root__configuration__protocols__isis__interface__ldp_synchronization_deliver(cb: action(?(interface_name: str), ?junos_conf_root__configuration__protocols__isis__interface__ldp_synchronization, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(interface_name: str) = None
     inst: ?junos_conf_root__configuration__protocols__isis__interface__ldp_synchronization = None
@@ -78537,7 +77477,7 @@ class junos_conf_root__configuration__protocols__isis__interface__ldp_synchroniz
         after a change or None when it is gone, and an error."""
         return ygdata.Dst(lambda n, err: junos_conf_root__configuration__protocols__isis__interface__ldp_synchronization_deliver(cb, n, err), root=self.filt())
 
-_breaker120: None = None
+_breaker90: None = None
 class junos_conf_root__configuration__protocols__isis__interface__level_entry_subs(SubscriptionNode):
     name: SubscriptionNode
     disable: SubscriptionNode
@@ -78553,7 +77493,7 @@ class junos_conf_root__configuration__protocols__isis__interface__level_entry_su
         direct: list[SubscriptionNode] = [self.name, self.disable, self.metric]
         return direct
 
-_breaker121: None = None
+_breaker91: None = None
 proc def junos_conf_root__configuration__protocols__isis__interface__level_deliver(cb: action(?(interface_name: str, level_name: atom), ?junos_conf_root__configuration__protocols__isis__interface__level_entry, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(interface_name: str, level_name: atom) = None
     inst: ?junos_conf_root__configuration__protocols__isis__interface__level_entry = None
@@ -78600,7 +77540,7 @@ class junos_conf_root__configuration__protocols__isis__interface__level_subs(Sub
         direct: list[SubscriptionNode] = [self.name, self.disable, self.metric]
         return direct
 
-_breaker122: None = None
+_breaker92: None = None
 proc def junos_conf_root__configuration__protocols__isis__interface__passive_deliver(cb: action(?(interface_name: str), ?junos_conf_root__configuration__protocols__isis__interface__passive, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(interface_name: str) = None
     inst: ?junos_conf_root__configuration__protocols__isis__interface__passive = None
@@ -78639,7 +77579,7 @@ class junos_conf_root__configuration__protocols__isis__interface__passive_subs(S
         after a change or None when it is gone, and an error."""
         return ygdata.Dst(lambda n, err: junos_conf_root__configuration__protocols__isis__interface__passive_deliver(cb, n, err), root=self.filt())
 
-_breaker123: None = None
+_breaker93: None = None
 class junos_conf_root__configuration__protocols__isis__interface__family_entry_subs(SubscriptionNode):
     name: SubscriptionNode
 
@@ -78651,7 +77591,7 @@ class junos_conf_root__configuration__protocols__isis__interface__family_entry_s
         direct: list[SubscriptionNode] = [self.name]
         return direct
 
-_breaker124: None = None
+_breaker94: None = None
 proc def junos_conf_root__configuration__protocols__isis__interface__family_deliver(cb: action(?(interface_name: str, family_name: str), ?junos_conf_root__configuration__protocols__isis__interface__family_entry, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(interface_name: str, family_name: str) = None
     inst: ?junos_conf_root__configuration__protocols__isis__interface__family_entry = None
@@ -78694,7 +77634,7 @@ class junos_conf_root__configuration__protocols__isis__interface__family_subs(Su
         direct: list[SubscriptionNode] = [self.name]
         return direct
 
-_breaker125: None = None
+_breaker95: None = None
 class junos_conf_root__configuration__protocols__isis__interface_entry_subs(SubscriptionNode):
     name: SubscriptionNode
     ldp_synchronization: junos_conf_root__configuration__protocols__isis__interface__ldp_synchronization_subs
@@ -78718,7 +77658,7 @@ class junos_conf_root__configuration__protocols__isis__interface_entry_subs(Subs
         direct: list[SubscriptionNode] = [self.name, self.ldp_synchronization, self.level, self.lsp_interval, self.point_to_point, self.passive, self.family]
         return direct
 
-_breaker126: None = None
+_breaker96: None = None
 proc def junos_conf_root__configuration__protocols__isis__interface_deliver(cb: action(?(interface_name: str), ?junos_conf_root__configuration__protocols__isis__interface_entry, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(interface_name: str) = None
     inst: ?junos_conf_root__configuration__protocols__isis__interface_entry = None
@@ -78772,7 +77712,7 @@ class junos_conf_root__configuration__protocols__isis__interface_subs(Subscripti
         direct: list[SubscriptionNode] = [self.name, self.ldp_synchronization, self.level, self.lsp_interval, self.point_to_point, self.passive, self.family]
         return direct
 
-_breaker127: None = None
+_breaker97: None = None
 class junos_conf_root__configuration__protocols__isis__level_entry_subs(SubscriptionNode):
     name: SubscriptionNode
     disable: SubscriptionNode
@@ -78798,7 +77738,7 @@ class junos_conf_root__configuration__protocols__isis__level_entry_subs(Subscrip
         direct: list[SubscriptionNode] = [self.name, self.disable, self.authentication_key, self.authentication_type, self.no_hello_authentication, self.no_csnp_authentication, self.no_psnp_authentication, self.wide_metrics_only]
         return direct
 
-_breaker128: None = None
+_breaker98: None = None
 proc def junos_conf_root__configuration__protocols__isis__level_deliver(cb: action(?(level_name: atom), ?junos_conf_root__configuration__protocols__isis__level_entry, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(level_name: atom) = None
     inst: ?junos_conf_root__configuration__protocols__isis__level_entry = None
@@ -78854,7 +77794,7 @@ class junos_conf_root__configuration__protocols__isis__level_subs(SubscriptionNo
         direct: list[SubscriptionNode] = [self.name, self.disable, self.authentication_key, self.authentication_type, self.no_hello_authentication, self.no_csnp_authentication, self.no_psnp_authentication, self.wide_metrics_only]
         return direct
 
-_breaker129: None = None
+_breaker99: None = None
 proc def junos_conf_root__configuration__protocols__isis_deliver(cb: action(?junos_conf_root__configuration__protocols__isis, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     inst: ?junos_conf_root__configuration__protocols__isis = None
     if n is not None:
@@ -78891,7 +77831,7 @@ class junos_conf_root__configuration__protocols__isis_subs(SubscriptionNode):
         and an error."""
         return ygdata.Dst(lambda n, err: junos_conf_root__configuration__protocols__isis_deliver(cb, n, err), root=self.filt())
 
-_breaker130: None = None
+_breaker100: None = None
 proc def junos_conf_root__configuration__protocols__ldp__transport_address_deliver(cb: action(?junos_conf_root__configuration__protocols__ldp__transport_address, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     inst: ?junos_conf_root__configuration__protocols__ldp__transport_address = None
     if n is not None:
@@ -78929,7 +77869,7 @@ class junos_conf_root__configuration__protocols__ldp__transport_address_subs(Sub
         and an error."""
         return ygdata.Dst(lambda n, err: junos_conf_root__configuration__protocols__ldp__transport_address_deliver(cb, n, err), root=self.filt())
 
-_breaker131: None = None
+_breaker101: None = None
 proc def junos_conf_root__configuration__protocols__ldp__interface__transport_address_deliver(cb: action(?(interface_name: str), ?junos_conf_root__configuration__protocols__ldp__interface__transport_address, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(interface_name: str) = None
     inst: ?junos_conf_root__configuration__protocols__ldp__interface__transport_address = None
@@ -78970,7 +77910,7 @@ class junos_conf_root__configuration__protocols__ldp__interface__transport_addre
         after a change or None when it is gone, and an error."""
         return ygdata.Dst(lambda n, err: junos_conf_root__configuration__protocols__ldp__interface__transport_address_deliver(cb, n, err), root=self.filt())
 
-_breaker132: None = None
+_breaker102: None = None
 class junos_conf_root__configuration__protocols__ldp__interface_entry_subs(SubscriptionNode):
     name: SubscriptionNode
     disable: SubscriptionNode
@@ -78990,7 +77930,7 @@ class junos_conf_root__configuration__protocols__ldp__interface_entry_subs(Subsc
         direct: list[SubscriptionNode] = [self.name, self.disable, self.hello_interval, self.hold_time, self.transport_address]
         return direct
 
-_breaker133: None = None
+_breaker103: None = None
 proc def junos_conf_root__configuration__protocols__ldp__interface_deliver(cb: action(?(interface_name: str), ?junos_conf_root__configuration__protocols__ldp__interface_entry, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(interface_name: str) = None
     inst: ?junos_conf_root__configuration__protocols__ldp__interface_entry = None
@@ -79040,7 +77980,7 @@ class junos_conf_root__configuration__protocols__ldp__interface_subs(Subscriptio
         direct: list[SubscriptionNode] = [self.name, self.disable, self.hello_interval, self.hold_time, self.transport_address]
         return direct
 
-_breaker134: None = None
+_breaker104: None = None
 proc def junos_conf_root__configuration__protocols__ldp_deliver(cb: action(?junos_conf_root__configuration__protocols__ldp, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     inst: ?junos_conf_root__configuration__protocols__ldp = None
     if n is not None:
@@ -79077,7 +78017,7 @@ class junos_conf_root__configuration__protocols__ldp_subs(SubscriptionNode):
         and an error."""
         return ygdata.Dst(lambda n, err: junos_conf_root__configuration__protocols__ldp_deliver(cb, n, err), root=self.filt())
 
-_breaker135: None = None
+_breaker105: None = None
 class junos_conf_root__configuration__protocols__mpls__interface_entry_subs(SubscriptionNode):
     name: SubscriptionNode
     disable: SubscriptionNode
@@ -79091,7 +78031,7 @@ class junos_conf_root__configuration__protocols__mpls__interface_entry_subs(Subs
         direct: list[SubscriptionNode] = [self.name, self.disable]
         return direct
 
-_breaker136: None = None
+_breaker106: None = None
 proc def junos_conf_root__configuration__protocols__mpls__interface_deliver(cb: action(?(interface_name: str), ?junos_conf_root__configuration__protocols__mpls__interface_entry, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(interface_name: str) = None
     inst: ?junos_conf_root__configuration__protocols__mpls__interface_entry = None
@@ -79135,7 +78075,7 @@ class junos_conf_root__configuration__protocols__mpls__interface_subs(Subscripti
         direct: list[SubscriptionNode] = [self.name, self.disable]
         return direct
 
-_breaker137: None = None
+_breaker107: None = None
 proc def junos_conf_root__configuration__protocols__mpls_deliver(cb: action(?junos_conf_root__configuration__protocols__mpls, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     inst: ?junos_conf_root__configuration__protocols__mpls = None
     if n is not None:
@@ -79170,7 +78110,7 @@ class junos_conf_root__configuration__protocols__mpls_subs(SubscriptionNode):
         and an error."""
         return ygdata.Dst(lambda n, err: junos_conf_root__configuration__protocols__mpls_deliver(cb, n, err), root=self.filt())
 
-_breaker138: None = None
+_breaker108: None = None
 proc def junos_conf_root__configuration__protocols_deliver(cb: action(?junos_conf_root__configuration__protocols, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     inst: ?junos_conf_root__configuration__protocols = None
     if n is not None:
@@ -79208,7 +78148,7 @@ class junos_conf_root__configuration__protocols_subs(SubscriptionNode):
         and an error."""
         return ygdata.Dst(lambda n, err: junos_conf_root__configuration__protocols_deliver(cb, n, err), root=self.filt())
 
-_breaker139: None = None
+_breaker109: None = None
 proc def junos_conf_root__configuration_deliver(cb: action(?junos_conf_root__configuration, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     inst: ?junos_conf_root__configuration = None
     if n is not None:
@@ -79227,7 +78167,6 @@ class junos_conf_root__configuration_subs(SubscriptionNode):
     version: SubscriptionNode
     system: junos_conf_root__configuration__system_subs
     interfaces: junos_conf_root__configuration__interfaces_subs
-    routing_instances: junos_conf_root__configuration__routing_instances_subs
     routing_options: junos_conf_root__configuration__routing_options_subs
     protocols: junos_conf_root__configuration__protocols_subs
 
@@ -79237,12 +78176,11 @@ class junos_conf_root__configuration_subs(SubscriptionNode):
         self.version = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_junos_conf_root, 'version'), parent=path))
         self.system = junos_conf_root__configuration__system_subs(SubscriptionPath(ygdata.Id(NS_junos_conf_root, 'system'), parent=path))
         self.interfaces = junos_conf_root__configuration__interfaces_subs(SubscriptionPath(ygdata.Id(NS_junos_conf_root, 'interfaces'), parent=path))
-        self.routing_instances = junos_conf_root__configuration__routing_instances_subs(SubscriptionPath(ygdata.Id(NS_junos_conf_root, 'routing-instances'), parent=path))
         self.routing_options = junos_conf_root__configuration__routing_options_subs(SubscriptionPath(ygdata.Id(NS_junos_conf_root, 'routing-options'), parent=path))
         self.protocols = junos_conf_root__configuration__protocols_subs(SubscriptionPath(ygdata.Id(NS_junos_conf_root, 'protocols'), parent=path))
 
     pure def _direct_children(self) -> list[SubscriptionNode]:
-        direct: list[SubscriptionNode] = [self.rcsid, self.version, self.system, self.interfaces, self.routing_instances, self.routing_options, self.protocols]
+        direct: list[SubscriptionNode] = [self.rcsid, self.version, self.system, self.interfaces, self.routing_options, self.protocols]
         return direct
 
     def dst(self, cb: action(?junos_conf_root__configuration, ?Exception) -> None) -> ygdata.Dst:
@@ -79251,7 +78189,7 @@ class junos_conf_root__configuration_subs(SubscriptionNode):
         and an error."""
         return ygdata.Dst(lambda n, err: junos_conf_root__configuration_deliver(cb, n, err), root=self.filt())
 
-_breaker140: None = None
+_breaker110: None = None
 class root_subs(SubscriptionNode):
     configuration: junos_conf_root__configuration_subs
 
