@@ -137,7 +137,6 @@ wait: $(addprefix platform-wait-,$(ROUTERS_XR) $(ROUTERS_CRPD) $(ROUTERS_SRL))
 .PHONY: copy
 copy:
 	docker cp ../../out/bin/sorespo $(TESTENV)-sweave:/sorespo
-	docker cp l3vpn-svc.xml $(TESTENV)-sweave:/l3vpn-svc.xml
 	docker cp netinfra.xml $(TESTENV)-sweave:/netinfra.xml
 
 .PHONY: run
@@ -152,19 +151,17 @@ endif
 
 .PHONY: run-and-configure
 run-and-configure:
-	docker exec $(INTERACTIVE) $(TESTENV)-sweave /sorespo $(EXIT_ON_DONE) netinfra.xml l3vpn-svc.xml --rts-bt-dbg
+	docker exec $(INTERACTIVE) $(TESTENV)-sweave /sorespo $(EXIT_ON_DONE) netinfra.xml --rts-bt-dbg
 
 .PHONY: configure
 configure:
 	$(MAKE) send-config-wait FILE="netinfra.xml"
-	$(MAKE) send-config-wait FILE="l3vpn-svc.xml"
 
 .PHONY: configure-tmf640
 configure-tmf640:
 	settings=$$(jq -c '{"netinfra:global-settings": .["netinfra:netinfra"]["global-settings"]}' netinfra.json); \
 	curl -f -k -sS -X PUT -H "Content-Type: application/yang-data+json" -d "$$settings" $(STRATOWEAVE_API_ORIGIN)/restconf/data/netinfra:netinfra/global-settings
 	$(MAKE) send-config-tmf640-stream FILE="netinfra.json" FILTER="../common/netinfra-to-tmf640.jq"
-	$(MAKE) send-config-tmf640-stream FILE="l3vpn-svc.json" FILTER="../common/l3vpn-svc-to-tmf640.jq"
 
 
 .PHONY: tutorial
@@ -307,8 +304,8 @@ $(addprefix resync-,$(ROUTERS_XR) $(ROUTERS_CRPD) $(ROUTERS_SRL)):
 delete-config:
 	curl -f -X DELETE $(STRATOWEAVE_API_ORIGIN)/restconf/data/netinfra:netinfra/router=STO-CORE-1
 
-.PHONY: $(addprefix cli-,$(ROUTERS_XR) $(ROUTERS_CRPD) $(ROUTERS_SRL) $(ROUTERS_FRR))
-$(addprefix cli-,$(ROUTERS_XR) $(ROUTERS_CRPD) $(ROUTERS_SRL) $(ROUTERS_FRR)): cli-%: platform-cli-%
+.PHONY: $(addprefix cli-,$(ROUTERS_XR) $(ROUTERS_CRPD) $(ROUTERS_SRL))
+$(addprefix cli-,$(ROUTERS_XR) $(ROUTERS_CRPD) $(ROUTERS_SRL)): cli-%: platform-cli-%
 
 .PHONY: $(addprefix get-dev-config-,$(ROUTERS_XR) $(ROUTERS_CRPD) $(ROUTERS_SRL))
 $(addprefix get-dev-config-,$(ROUTERS_XR) $(ROUTERS_CRPD) $(ROUTERS_SRL)):

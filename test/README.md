@@ -8,7 +8,7 @@ with IS-IS, iBGP, MPLS and LDP
 * [Cisco IOS XRd](https://www.cisco.com/site/us/en/products/networking/sdwan-routers/ios-xrd/index.html)
 with IS-IS, iBGP, MPLS and LDP
 * [Nokia SR Linux](https://www.nokia.com/ip-networks/service-router-linux-NOS/)
-with IS-IS, iBGP, VXLAN and BGP-EVPN
+with IS-IS and iBGP
 
 This repository contains [Containerlab](https://containerlab.dev/)-based
 labs/development environments for each of these vendor options which you can
@@ -16,12 +16,12 @@ run:
 * **[quicklab](quicklab/README.md)** has a combination of Cisco IOS XRd and
   Juniper cRPD core routers
   * This lab is an example of a true multi-vendor IP transport network.
-* **[quicklab-crpd](quicklab-crpd/README.md)** uses Juniper cRPD for the core &
-  CPE routers
+* **[quicklab-crpd](quicklab-crpd/README.md)** uses Juniper cRPD for the core
+  routers
   * This lab is fully functional on Apple Silicon, making it ideal for local
     development on Mac.
 * **[quicklab-srl](quicklab-srl/README.md)** has a combination of Nokia SR
-  Linux core routers and [FRRouting](https://frrouting.org/) CPEs
+  Linux core routers
   * This lab uses nothing but freely accessible software.
 * **[quicklab-notconf](quicklab-notconf/README.md)** runs NOTCONF which
   simulates Cisco IOS XRd and  Juniper cRPD
