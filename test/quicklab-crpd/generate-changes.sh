@@ -2,9 +2,9 @@
 # Generate config changes for testing the approval queue
 
 if [ -z "$STRATOWEAVE_API_ORIGIN" ]; then
-    port=$(docker port sorespo-quicklab-crpd-sweave 80/tcp 2>/dev/null | sed -n 's/.*:\([0-9][0-9]*\)$/\1/p' | head -n 1)
+    port=$(docker port dorsi-quicklab-crpd-sweave 80/tcp 2>/dev/null | sed -n 's/.*:\([0-9][0-9]*\)$/\1/p' | head -n 1)
     if [ -z "$port" ]; then
-        echo "Error: sorespo-quicklab-crpd-sweave is not running or port 80 is not published; start the lab first or export STRATOWEAVE_API_ORIGIN" >&2
+        echo "Error: dorsi-quicklab-crpd-sweave is not running or port 80 is not published; start the lab first or export STRATOWEAVE_API_ORIGIN" >&2
         exit 1
     fi
     STRATOWEAVE_API_ORIGIN="http://localhost:$port"

@@ -1,4 +1,4 @@
-TESTENV=sorespo-quicklab
+TESTENV=dorsi-quicklab
 
 ROUTERS_XR=ams-core-1 fra-core-1
 ROUTERS_CRPD=sto-core-1 lju-core-1

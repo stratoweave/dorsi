@@ -1,7 +1,7 @@
 build-sweave-image:
-	docker build --build-arg http_proxy=$(http_proxy) --build-arg https_proxy=$(https_proxy) -t sorespo-sweave-base -f ../common/Dockerfile.sweave .
+	docker build --build-arg http_proxy=$(http_proxy) --build-arg https_proxy=$(https_proxy) -t dorsi-sweave-base -f ../common/Dockerfile.sweave .
 
-# The sweave container publishes the sorespo HTTP port 80 (APIs + embedded
+# The sweave container publishes the dorsi HTTP port 80 (APIs + embedded
 # Web UI) on 127.0.0.1:$(WEBUI_PORT) (see the `ports:` in each
 # *.clab.yml). Discover the actual host port at parse time so port overrides
 # keep working.
@@ -32,9 +32,9 @@ licenses/%:
 
 .PHONY: start
 start: build-sweave-image
-	$(CLAB_BIN) deploy --topo $(TESTENV:sorespo-%=%).clab.yml --log-level debug --reconfigure
+	$(CLAB_BIN) deploy --topo $(TESTENV:dorsi-%=%).clab.yml --log-level debug --reconfigure
 	@$(MAKE) --no-print-directory api-url
-	@echo "SORESPO Web UI: http://localhost:$(WEBUI_PORT)"
+	@echo "DORSI Web UI: http://localhost:$(WEBUI_PORT)"
 
 WEBUI_HOST ?= 127.0.0.1
 # Vite dev server port. The embedded UI already occupies WEBUI_PORT.
@@ -128,7 +128,7 @@ stop-dev-webui:
 
 .PHONY: stop
 stop:
-	$(CLAB_BIN) destroy --topo $(TESTENV:sorespo-%=%).clab.yml --log-level debug
+	$(CLAB_BIN) destroy --topo $(TESTENV:dorsi-%=%).clab.yml --log-level debug
 
 .PHONY: wait $(addprefix wait-,$(ROUTERS_XR) $(ROUTERS_CRPD) $(ROUTERS_SRL))
 WAIT?=60
@@ -136,12 +136,12 @@ wait: $(addprefix platform-wait-,$(ROUTERS_XR) $(ROUTERS_CRPD) $(ROUTERS_SRL))
 
 .PHONY: copy
 copy:
-	docker cp ../../out/bin/sorespo $(TESTENV)-sweave:/sorespo
+	docker cp ../../out/bin/dorsi $(TESTENV)-sweave:/dorsi
 	docker cp netinfra.xml $(TESTENV)-sweave:/netinfra.xml
 
 .PHONY: run
 run:
-	docker exec $(INTERACTIVE) $(TESTENV)-sweave /sorespo --rts-bt-dbg
+	docker exec $(INTERACTIVE) $(TESTENV)-sweave /dorsi --rts-bt-dbg
 
 ifndef CI
 INTERACTIVE=-it
@@ -151,7 +151,7 @@ endif
 
 .PHONY: run-and-configure
 run-and-configure:
-	docker exec $(INTERACTIVE) $(TESTENV)-sweave /sorespo $(EXIT_ON_DONE) netinfra.xml --rts-bt-dbg
+	docker exec $(INTERACTIVE) $(TESTENV)-sweave /dorsi $(EXIT_ON_DONE) netinfra.xml --rts-bt-dbg
 
 .PHONY: configure
 configure:

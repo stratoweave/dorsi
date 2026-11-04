@@ -1,7 +1,7 @@
-# SORESPO Tests
+# DORSI Tests
 
 ## Quick Labs
-SORESPO's service stack is designed to be vendor-neutral. At this time the
+DORSI's service stack is designed to be vendor-neutral. At this time the
 following vendor & IP tansport options are supported:
 * [Juniper cRPD](https://www.juniper.net/documentation/product/us/en/crpd/)
 with IS-IS, iBGP, MPLS and LDP

@@ -8,7 +8,7 @@ interfaces (YANG models) of those vendors.
 
 NOTCONF has neither a dataplane nor a management plane, so there are no actual
 links between the routers in this lab. The backbone links below exist only as
-SORESPO configuration input.
+DORSI configuration input.
 
 ## Backbone links
 
