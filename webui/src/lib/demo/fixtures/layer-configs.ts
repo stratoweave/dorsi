@@ -16,7 +16,7 @@ interface LayerContext {
   routers: { name: string; id: number }[];
 }
 
-const LAYER1_XML = `<intermediate xmlns="urn:sorespo:inter">
+const LAYER1_XML = `<intermediate xmlns="urn:dorsi:inter">
   <router>
     <name>AMS-CORE-1</name>
     <loopback>10.0.0.1</loopback>
@@ -68,7 +68,7 @@ const LAYER1_ADATA = `intermediate {
     router LJU-CORE-1 { loopback: 10.0.0.4, ibgp-peers: [10.0.0.1, 10.0.0.2, 10.0.0.3] }
 }`;
 
-const LAYER2_XML = `<rfs xmlns="urn:sorespo:rfs">
+const LAYER2_XML = `<rfs xmlns="urn:dorsi:rfs">
   <device>
     <name>AMS-CORE-1</name>
     <service><type>base-router</type><instance>AMS-CORE-1</instance></service>
@@ -132,7 +132,7 @@ const LAYER2_ADATA = `rfs {
 }`;
 
 const LAYER0_XML = `<data>
-  <netinfra xmlns="urn:sorespo:netinfra">
+  <netinfra xmlns="urn:dorsi:netinfra">
     <global-settings>
       <ibgp-authentication-key>ibgp-authentication-key</ibgp-authentication-key>
     </global-settings>

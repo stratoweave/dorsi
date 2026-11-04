@@ -4,7 +4,7 @@ export const TOUR_STEPS: TourStep[] = [
   {
     route: '/',
     title: 'Welcome to the StratoWeave web UI',
-    body: 'This is a fully interactive demo of the SORESPO web UI running on simulated data in your browser — nothing here touches a real network. Click Next for a quick lap around the system, or skip and explore freely.'
+    body: 'This is a fully interactive demo of the DORSI web UI running on simulated data in your browser — nothing here touches a real network. Click Next for a quick lap around the system, or skip and explore freely.'
   },
   {
     route: '/',

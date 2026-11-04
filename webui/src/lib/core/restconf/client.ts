@@ -15,7 +15,7 @@ function normalizePath(path: string): string {
 
 function encodeListKeyPart(value: string): string {
   // The raw request path reaches the backend without decoding (both when the
-  // UI is served by the sorespo binary and through the vite dev proxy), so
+  // UI is served by the dorsi binary and through the vite dev proxy), so
   // list keys need exactly the single percent-encoding RFC 8040 prescribes.
   return encodeURIComponent(value.trim());
 }
