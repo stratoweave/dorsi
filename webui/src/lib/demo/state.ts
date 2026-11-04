@@ -1,7 +1,6 @@
 import type { NetinfraBackboneLinkApi, NetinfraRouterApi } from '$lib/core/topology/model';
 
 import { makeDeviceStaticInfo, type DemoDeviceStaticInfo } from '$lib/demo/fixtures/devices';
-import { L3VPN_SITES, L3VPN_VPN_SERVICES } from '$lib/demo/fixtures/l3vpn';
 import {
   NETINFRA_BACKBONE_LINKS,
   NETINFRA_GLOBAL_SETTINGS,
@@ -34,8 +33,6 @@ export interface DemoState {
   globalSettings: Record<string, unknown>;
   routers: NetinfraRouterApi[];
   backboneLinks: NetinfraBackboneLinkApi[];
-  vpnServices: Record<string, any>[];
-  sites: Record<string, any>[];
   devices: Record<string, DemoDeviceState>;
   counters: { queueId: number; tid: number };
 }
@@ -47,8 +44,6 @@ function materialize(): DemoState {
     globalSettings: structuredClone(NETINFRA_GLOBAL_SETTINGS),
     routers: structuredClone(NETINFRA_ROUTERS),
     backboneLinks: structuredClone(NETINFRA_BACKBONE_LINKS),
-    vpnServices: structuredClone(L3VPN_VPN_SERVICES),
-    sites: structuredClone(L3VPN_SITES),
     devices: {},
     counters: { queueId: 240, tid: 195 }
   };

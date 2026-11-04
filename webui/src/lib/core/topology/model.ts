@@ -1,5 +1,3 @@
-import { normalizeIdentity } from '$lib/core/restconf/identity';
-import { getSites as getL3VpnSites } from '$lib/modules/l3vpn-site/parse';
 import { parseNetinfraRouter } from '$lib/modules/netinfra-router/parse';
 
 export interface NetinfraRouterApi {
@@ -30,50 +28,6 @@ export interface NetinfraPayload {
   };
 }
 
-interface L3VpnSiteAccessApi {
-  'site-network-access-id'?: string;
-  bearer?: {
-    'bearer-reference'?: string;
-  };
-  'vpn-attachment'?: {
-    'vpn-id'?: string;
-  };
-}
-
-interface L3VpnBgpSessionApi {
-  'site-network-access'?: string;
-  'session-state'?: string;
-  'debug-active'?: boolean;
-  'last-event'?: string;
-  'established-transitions'?: number;
-  'negotiated-hold-time'?: number;
-  'last-notification'?: string;
-}
-
-export interface L3VpnSiteApi {
-  'site-id'?: string;
-  management?: {
-    type?: string;
-  };
-  'site-network-accesses'?: {
-    'site-network-access'?: L3VpnSiteAccessApi[];
-  };
-  'sorespo-ietf-l3vpn-svc:bgp-sessions'?: {
-    'bgp-session'?: L3VpnBgpSessionApi[];
-  };
-}
-
-export interface L3VpnSitesPayload {
-  'ietf-l3vpn-svc:sites'?: {
-    site?: L3VpnSiteApi[];
-  };
-  'ietf-l3vpn-svc:l3vpn-svc'?: {
-    sites?: {
-      site?: L3VpnSiteApi[];
-    };
-  };
-}
-
 interface TopologyLinkLabel {
   x: number;
   y: number;
@@ -100,26 +54,6 @@ export interface TopologyLink {
   geometry: TopologyLinkGeometry | null;
 }
 
-type BgpSessionStatus = 'established' | 'down' | 'unknown';
-
-export interface TopologySiteAttachment {
-  key: string;
-  siteId: string;
-  routerName: string;
-  routerHint: string;
-  vpnIds: string[];
-  accessIds: string[];
-  managementType: string;
-  /** Combined eBGP session status across this attachment's accesses. */
-  bgpStatus: BgpSessionStatus;
-  /** True if any of this attachment's eBGP sessions is in escalated debug mode. */
-  bgpDebugActive: boolean;
-  /** Representative raw session-state for display (e.g. "connect"); null if no session. */
-  bgpSessionState: string | null;
-  x: number;
-  y: number;
-}
-
 export interface TopologyRouter {
   name: string;
   id: number | null;
@@ -130,7 +64,6 @@ export interface TopologyRouter {
   x: number;
   y: number;
   angle: number;
-  attachments: TopologySiteAttachment[];
 }
 
 export interface TopologyGraph {
@@ -138,24 +71,9 @@ export interface TopologyGraph {
   height: number;
   routers: TopologyRouter[];
   links: TopologyLink[];
-  orphanSiteAttachments: TopologySiteAttachment[];
-}
-
-interface SiteAttachmentGroup {
-  siteId: string;
-  routerHint: string;
-  accessIds: Set<string>;
-  vpnIds: Set<string>;
-  managementType: string;
-  bgpStatus: BgpSessionStatus;
-  bgpDebugActive: boolean;
-  bgpSessionState: string | null;
 }
 
 export const TOPOLOGY_ROUTER_RADIUS = 42;
-export const TOPOLOGY_SITE_CARD_WIDTH = 154;
-export const TOPOLOGY_SITE_CARD_HEIGHT = 58;
-const TOPOLOGY_SITE_CARD_GAP = 28;
 export const TOPOLOGY_LINK_LABEL_HEIGHT = 56;
 const TOPOLOGY_LINK_LABEL_MIN_WIDTH = 140;
 const TOPOLOGY_LINK_LABEL_MAX_WIDTH = 260;
@@ -167,18 +85,6 @@ export function parseLinkStatus(value: unknown): LinkStatus {
   return 'unknown';
 }
 
-/** Map a BGP neighbor session-state to a simple up/down/unknown status. */
-function bgpSessionStatus(state: string | undefined | null): BgpSessionStatus {
-  if (!state) return 'unknown';
-  return state === 'established' ? 'established' : 'down';
-}
-
-function mergeBgpStatus(cur: BgpSessionStatus, next: BgpSessionStatus): BgpSessionStatus {
-  if (cur === 'down' || next === 'down') return 'down';
-  if (cur === 'established' || next === 'established') return 'established';
-  return 'unknown';
-}
-
 function getRouters(payload: NetinfraPayload | null | undefined): NetinfraRouterApi[] {
   return Array.isArray(payload?.['netinfra:netinfra']?.router) ? payload['netinfra:netinfra']!.router! : [];
 }
@@ -187,96 +93,6 @@ function getLinks(payload: NetinfraPayload | null | undefined): NetinfraBackbone
   return Array.isArray(payload?.['netinfra:netinfra']?.['backbone-link'])
     ? payload['netinfra:netinfra']!['backbone-link']!
     : [];
-}
-
-function getRouterHint(access: L3VpnSiteAccessApi): string {
-  const reference = String(access?.bearer?.['bearer-reference'] ?? '').trim();
-
-  if (!reference) {
-    return '';
-  }
-
-  const [routerHint] = reference.split(',');
-  return routerHint?.trim() ?? '';
-}
-
-function buildSiteAttachmentGroups(sites: L3VpnSiteApi[]): SiteAttachmentGroup[] {
-  const groups = new Map<string, SiteAttachmentGroup>();
-
-  for (const site of sites) {
-    const siteId = String(site?.['site-id'] ?? '').trim();
-    if (!siteId) {
-      continue;
-    }
-
-    const managementType = normalizeIdentity(site?.management?.type) || 'unknown';
-    const accesses = Array.isArray(site?.['site-network-accesses']?.['site-network-access'])
-      ? site['site-network-accesses']!['site-network-access']!
-      : [];
-
-    // Lifted eBGP session telemetry, keyed by site-network-access id.
-    const sessions = new Map<string, L3VpnBgpSessionApi>();
-    const sessionList = Array.isArray(site?.['sorespo-ietf-l3vpn-svc:bgp-sessions']?.['bgp-session'])
-      ? site['sorespo-ietf-l3vpn-svc:bgp-sessions']!['bgp-session']!
-      : [];
-    for (const session of sessionList) {
-      const sna = String(session?.['site-network-access'] ?? '').trim();
-      if (sna) {
-        sessions.set(sna, session);
-      }
-    }
-
-    const ensureGroup = (routerHint: string): SiteAttachmentGroup => {
-      const key = `${siteId}::${routerHint}`;
-      if (!groups.has(key)) {
-        groups.set(key, {
-          siteId,
-          routerHint,
-          accessIds: new Set<string>(),
-          vpnIds: new Set<string>(),
-          managementType,
-          bgpStatus: 'unknown',
-          bgpDebugActive: false,
-          bgpSessionState: null
-        });
-      }
-      return groups.get(key)!;
-    };
-
-    if (accesses.length === 0) {
-      ensureGroup('');
-      continue;
-    }
-
-    for (const access of accesses) {
-      const group = ensureGroup(getRouterHint(access));
-      const accessId = String(access?.['site-network-access-id'] ?? '').trim();
-      const vpnId = String(access?.['vpn-attachment']?.['vpn-id'] ?? '').trim();
-
-      if (accessId) {
-        group.accessIds.add(accessId);
-      }
-
-      if (vpnId) {
-        group.vpnIds.add(vpnId);
-      }
-
-      const session = accessId ? sessions.get(accessId) : undefined;
-      if (session) {
-        const status = bgpSessionStatus(session['session-state']);
-        group.bgpStatus = mergeBgpStatus(group.bgpStatus, status);
-        if (session['debug-active']) {
-          group.bgpDebugActive = true;
-        }
-        // Prefer a non-established raw state for the tooltip; otherwise keep the first seen.
-        if (status === 'down' || group.bgpSessionState === null) {
-          group.bgpSessionState = String(session['session-state'] ?? '') || group.bgpSessionState;
-        }
-      }
-    }
-  }
-
-  return Array.from(groups.values());
 }
 
 const LINK_LABEL_CHAR_WIDTH = 7;
@@ -416,15 +232,6 @@ function getGraphBounds(routers: TopologyRouter[], links: TopologyLink[]): {
 
   for (const router of routers) {
     includeBox(router.x, router.y, getRouterHalfWidth(router), TOPOLOGY_ROUTER_RADIUS + 18);
-
-    for (const attachment of router.attachments) {
-      includeBox(
-        attachment.x,
-        attachment.y,
-        TOPOLOGY_SITE_CARD_WIDTH / 2,
-        TOPOLOGY_SITE_CARD_HEIGHT / 2
-      );
-    }
   }
 
   for (const link of links) {
@@ -500,10 +307,7 @@ function shiftLinkGeometry(
   };
 }
 
-export function buildTopologyGraph(
-  netinfraPayload: NetinfraPayload,
-  l3vpnSitesPayload: L3VpnSitesPayload | null = null
-): TopologyGraph {
+export function buildTopologyGraph(netinfraPayload: NetinfraPayload): TopologyGraph {
   const routerApis = getRouters(netinfraPayload).filter((router) => String(router?.name ?? '').trim());
   const bareLinks = getLinks(netinfraPayload)
     .filter((link) => String(link?.['left-router'] ?? '').trim() && String(link?.['right-router'] ?? '').trim())
@@ -529,74 +333,11 @@ export function buildTopologyGraph(
       approvalRequired: draft.approvalRequired,
       x: positions[index]?.x ?? 0,
       y: positions[index]?.y ?? 0,
-      angle: positions[index]?.angle ?? -Math.PI / 2,
-      attachments: []
+      angle: positions[index]?.angle ?? -Math.PI / 2
     };
   });
 
   const routerMap = new Map(routers.map((router) => [router.name, router]));
-  const orphanSiteAttachments: TopologySiteAttachment[] = [];
-
-  // getSites walks untyped JSON; the topology model owns the wire shape it expects.
-  const attachmentGroups = buildSiteAttachmentGroups(
-    getL3VpnSites(l3vpnSitesPayload) as L3VpnSiteApi[]
-  );
-
-  for (const group of attachmentGroups) {
-    const attachment: TopologySiteAttachment = {
-      key: `${group.siteId}::${group.routerHint}`,
-      siteId: group.siteId,
-      routerName: group.routerHint,
-      routerHint: group.routerHint,
-      vpnIds: Array.from(group.vpnIds).sort(),
-      accessIds: Array.from(group.accessIds).sort(),
-      managementType: group.managementType,
-      bgpStatus: group.bgpStatus,
-      bgpDebugActive: group.bgpDebugActive,
-      bgpSessionState: group.bgpSessionState,
-      x: 0,
-      y: 0
-    };
-
-    const router = group.routerHint ? routerMap.get(group.routerHint) : null;
-
-    if (!router) {
-      orphanSiteAttachments.push(attachment);
-      continue;
-    }
-
-    router.attachments = [...router.attachments, attachment];
-  }
-
-  for (const router of routers) {
-    router.attachments.sort((left, right) => left.siteId.localeCompare(right.siteId));
-
-    const radialX = Math.cos(router.angle);
-    const radialY = Math.sin(router.angle);
-    const tangentX = -Math.sin(router.angle);
-    const tangentY = Math.cos(router.angle);
-    const radialExtent =
-      Math.abs(radialX) * (TOPOLOGY_SITE_CARD_WIDTH / 2) +
-      Math.abs(radialY) * (TOPOLOGY_SITE_CARD_HEIGHT / 2);
-    const tangentExtent =
-      Math.abs(tangentX) * (TOPOLOGY_SITE_CARD_WIDTH / 2) +
-      Math.abs(tangentY) * (TOPOLOGY_SITE_CARD_HEIGHT / 2);
-    const baseDistance = TOPOLOGY_ROUTER_RADIUS + radialExtent + TOPOLOGY_SITE_CARD_GAP;
-    const spacing = Math.max(TOPOLOGY_SITE_CARD_HEIGHT + 14, tangentExtent * 2 + 12);
-    const baseX = router.x + radialX * baseDistance;
-    const baseY = router.y + radialY * baseDistance;
-
-    router.attachments = router.attachments.map((attachment, index, items) => {
-      const offset = (index - (items.length - 1) / 2) * spacing;
-      return {
-        ...attachment,
-        x: baseX + tangentX * offset,
-        y: baseY + tangentY * offset
-      };
-    });
-  }
-
-  orphanSiteAttachments.sort((left, right) => left.siteId.localeCompare(right.siteId));
 
   // Label placement depends on pre-shift coordinates (see getLinkLabelPosition),
   // so geometry is computed once here and shifted together with the routers.
@@ -611,12 +352,7 @@ export function buildTopologyGraph(
   const shiftedRouters = routers.map((router) => ({
     ...router,
     x: router.x + shiftX,
-    y: router.y + shiftY,
-    attachments: router.attachments.map((attachment) => ({
-      ...attachment,
-      x: attachment.x + shiftX,
-      y: attachment.y + shiftY
-    }))
+    y: router.y + shiftY
   }));
   const shiftedLinks = links.map((link) => ({
     ...link,
@@ -629,7 +365,6 @@ export function buildTopologyGraph(
     width,
     height,
     routers: shiftedRouters,
-    links: shiftedLinks,
-    orphanSiteAttachments
+    links: shiftedLinks
   };
 }

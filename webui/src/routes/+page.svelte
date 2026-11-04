@@ -18,7 +18,7 @@
   import { appHref } from '$lib/core/util/nav';
   import { startPolling } from '$lib/core/util/poll';
 
-  import type { L3VpnSitesPayload, NetinfraPayload, TopologyGraph } from '$lib/core/topology/model';
+  import type { NetinfraPayload, TopologyGraph } from '$lib/core/topology/model';
 
   const modules = listServiceModules();
 
@@ -39,7 +39,7 @@
   let linksUp = $derived(topologyGraph?.links.filter((link) => link.linkStatus === 'up').length ?? 0);
   let linksDown = $derived(topologyGraph?.links.filter((link) => link.linkStatus === 'down').length ?? 0);
   let linksTotal = $derived(topologyGraph?.links.length ?? 0);
-  let sitesCount = $derived(serviceCounts['l3vpn-site'] ?? null);
+  let routersCount = $derived(serviceCounts['netinfra-router'] ?? null);
 
   async function loadDevices(): Promise<void> {
     try {
@@ -65,9 +65,8 @@
       }
       topologyNote = '';
 
-      const [netinfraResult, sitesResult] = await Promise.allSettled([
-        restconfGetJson<NetinfraPayload>('data/netinfra:netinfra'),
-        restconfGetJson<L3VpnSitesPayload>('data/ietf-l3vpn-svc:l3vpn-svc/sites')
+      const [netinfraResult] = await Promise.allSettled([
+        restconfGetJson<NetinfraPayload>('data/netinfra:netinfra')
       ]);
       if (!topologyRequest.isCurrent(token)) return;
 
@@ -85,16 +84,7 @@
       }
 
       topologyError = '';
-      topologyGraph = buildTopologyGraph(
-        netinfraResult.value,
-        sitesResult.status === 'fulfilled' ? sitesResult.value : null
-      );
-
-      if (sitesResult.status !== 'fulfilled') {
-        topologyNote = sitesResult.reason instanceof Error
-          ? `L3VPN overlay unavailable: ${sitesResult.reason.message}`
-          : 'L3VPN overlay unavailable.';
-      }
+      topologyGraph = buildTopologyGraph(netinfraResult.value);
     } finally {
       if (topologyRequest.isCurrent(token)) loadingTopology = false;
     }
@@ -186,10 +176,10 @@
       loading={loadingTopology}
     />
     <StatTile
-      label="L3VPN sites"
-      value={sitesCount}
-      hint={countLabel(serviceCounts['l3vpn-vpn-service'], 'VPN services')}
-      href="/services/l3vpn-site"
+      label="Routers"
+      value={routersCount}
+      hint={countLabel(routersCount, 'Routers')}
+      href="/services/netinfra-router"
       loading={loadingCounts}
     />
   </section>

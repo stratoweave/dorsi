@@ -10,7 +10,7 @@ export const TOUR_STEPS: TourStep[] = [
     route: '/',
     target: 'topology',
     title: 'Live network topology',
-    body: 'The dashboard draws the network straight from the netinfra service model: core routers, backbone links with live link status, and the customer sites attached to them. It refreshes every few seconds to pick up state changes.'
+    body: 'The dashboard draws the network straight from the netinfra service model: core routers and backbone links with live link status. It refreshes every few seconds to pick up state changes.'
   },
   {
     route: '/',
@@ -22,7 +22,7 @@ export const TOUR_STEPS: TourStep[] = [
     route: '/',
     target: 'service-cards',
     title: 'Service modules',
-    body: 'Entry points for editing the service layer: routers, backbone links, VPN services, and customer sites. Each card maps to a YANG-backed RESTCONF list.'
+    body: 'Entry points for editing the service layer: routers and backbone links. Each card maps to a YANG-backed RESTCONF list.'
   },
   {
     route: '/devices',
@@ -79,22 +79,16 @@ export const TOUR_STEPS: TourStep[] = [
     body: 'Watch intent become device config: from CFS (what you asked for) through the intermediate and RFS layers down to per-device configuration — in XML, JSON, or AData.'
   },
   {
-    route: '/services/l3vpn-site',
+    route: '/services/netinfra-router',
     target: 'service-list',
-    title: 'L3VPN sites',
-    body: 'The customer sites of the L3VPN services, straight from RESTCONF. Their attachments carry live eBGP session state into the topology. Open one to edit it, clone it as a starting point for a new site, or remove it.'
+    title: 'Routers',
+    body: 'The routers of the netinfra service, straight from RESTCONF. Open one to edit it, clone it as a starting point for a new router, or remove it.'
   },
   {
-    route: '/services/l3vpn-site/SITE-3',
-    target: 'site-monitoring',
-    title: 'Reactive site monitoring',
-    body: 'SITE-3 has an impaired eBGP session. SORESPO normally watches only session state; when the neighbor leaves Established it escalates collection and surfaces the detailed event, transition, timer, and notification data shown here.'
-  },
-  {
-    route: '/services/l3vpn-site/new',
+    route: '/services/netinfra-router/new',
     target: 'workspace-editor',
     title: 'The service workspace',
-    body: 'A guided editor with local validation and a live payload preview. Saving PUTs the entry to RESTCONF — and queues the rendered configuration for the site’s router.'
+    body: 'A guided editor with local validation and a live payload preview. Saving PUTs the entry to RESTCONF — and queues the rendered configuration for the router.'
   },
   {
     route: '/global-settings',

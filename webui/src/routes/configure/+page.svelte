@@ -180,8 +180,8 @@
       ondragleave={handleDragLeave}
       ondrop={handleDrop}
       placeholder={format === 'xml'
-        ? '<l3vpn-svc xmlns="urn:ietf:params:xml:ns:yang:ietf-l3vpn-svc">\n  ...\n</l3vpn-svc>'
-        : '{\n  "ietf-l3vpn-svc:l3vpn-svc": {\n    ...\n  }\n}'}
+        ? '<netinfra xmlns="http://example.com/netinfra">\n  ...\n</netinfra>'
+        : '{\n  "netinfra:netinfra": {\n    ...\n  }\n}'}
       spellcheck="false"
       autocapitalize="off"
       autocomplete="off"
