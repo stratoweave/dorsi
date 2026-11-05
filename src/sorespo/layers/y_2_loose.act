@@ -149,41 +149,7 @@ SRC_DNODE_CHILD_18: DList = DList(module='sorespo-rfs', namespace='http://exampl
     DLeaf(module='sorespo-rfs', namespace='http://example.com/sorespo-rfs', prefix='sorespo-rfs', name='ibgp-authentication-key', config=True, is_key=False, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[]))
 ])
 
-SRC_DNODE_CHILD_19: DList = DList(module='sorespo-rfs', namespace='http://example.com/sorespo-rfs', prefix='sorespo-rfs', name='vrf', key=['name'], config=True, min_elements=0, ordered_by='system', exts=[
-        DExt(module='stratoweave', namespace='http://stratoweave.org/yang/stratoweave', prefix='sw', name='rfs-transform', arg='sorespo.rfs.Vrf', exts=[])
-    ], children=[
-    DLeaf(module='sorespo-rfs', namespace='http://example.com/sorespo-rfs', prefix='sorespo-rfs', name='name', config=True, is_key=True, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
-    DLeaf(module='sorespo-rfs', namespace='http://example.com/sorespo-rfs', prefix='sorespo-rfs', name='description', config=True, is_key=False, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
-    DLeaf(module='sorespo-rfs', namespace='http://example.com/sorespo-rfs', prefix='sorespo-rfs', name='id', config=True, is_key=False, mandatory=True, type=DTypeIntegerUnsigned(name='uint32', description=None, reference=None, units=None, exts=[], builtin_type='uint32', default=None, ranges=Ranges([(0, 4294967295)]))),
-    DLeaf(module='sorespo-rfs', namespace='http://example.com/sorespo-rfs', prefix='sorespo-rfs', name='router-id', config=True, is_key=False, mandatory=True, type=DTypeIntegerUnsigned(name='uint32', description=None, reference=None, units=None, exts=[], builtin_type='uint32', default=None, ranges=Ranges([(0, 4294967295)]))),
-    DLeaf(module='sorespo-rfs', namespace='http://example.com/sorespo-rfs', prefix='sorespo-rfs', name='asn', config=True, is_key=False, mandatory=True, type=DTypeIntegerUnsigned(name='inet:as-number', description='The as-number type represents autonomous system numbers\nwhich identify an Autonomous System (AS).  An AS is a set\nof routers under a single technical administration, using\nan interior gateway protocol and common metrics to route\npackets within the AS, and using an exterior gateway\nprotocol to route packets to other ASes.  IANA maintains\nthe AS number space and has delegated large parts to the\nregional registries.\n\nAutonomous system numbers were originally limited to 16\nbits.  BGP extensions have enlarged the autonomous system\nnumber space to 32 bits.  This type therefore uses an uint32\nbase type without a range restriction in order to support\na larger autonomous system number space.\n\nIn the value set and its semantics, this type is equivalent\nto the InetAutonomousSystemNumber textual convention of\nthe SMIv2.', reference='RFC 1930: Guidelines for creation, selection, and registration\n          of an Autonomous System (AS)\nRFC 4271: A Border Gateway Protocol 4 (BGP-4)\nRFC 4001: Textual Conventions for Internet Network Addresses\nRFC 6793: BGP Support for Four-Octet Autonomous System (AS)\n          Number Space', units=None, exts=[], builtin_type='uint32', default=None, ranges=Ranges([(0, 4294967295)])))
-])
-
-SRC_DNODE_CHILD_20: DList = DList(module='sorespo-rfs', namespace='http://example.com/sorespo-rfs', prefix='sorespo-rfs', name='vrf-interface', key=['name'], config=True, min_elements=0, ordered_by='system', exts=[
-        DExt(module='stratoweave', namespace='http://stratoweave.org/yang/stratoweave', prefix='sw', name='rfs-transform', arg='sorespo.rfs.VrfInterface', exts=[])
-    ], children=[
-    DLeaf(module='sorespo-rfs', namespace='http://example.com/sorespo-rfs', prefix='sorespo-rfs', name='name', config=True, is_key=True, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
-    DLeaf(module='sorespo-rfs', namespace='http://example.com/sorespo-rfs', prefix='sorespo-rfs', name='description', config=True, is_key=False, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
-    DLeaf(module='sorespo-rfs', namespace='http://example.com/sorespo-rfs', prefix='sorespo-rfs', name='vrf', config=True, description='VRF name', is_key=False, mandatory=True, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
-    DLeaf(module='sorespo-rfs', namespace='http://example.com/sorespo-rfs', prefix='sorespo-rfs', name='ipv4-address', config=True, is_key=False, mandatory=False, type=DTypeString(name='inet:ipv4-address', description='The ipv4-address type represents an IPv4 address in\ndotted-quad notation.  The IPv4 address may include a zone\nindex, separated by a % sign.\n\nThe zone index is used to disambiguate identical address\nvalues.  For link-local addresses, the zone index will\ntypically be the interface index number or the name of an\ninterface.  If the zone index is not present, the default\nzone of the device will be used.\n\nThe canonical format for the zone index is the numerical\nformat', reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[YangPattern(yang_regex='(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.){{3}}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(%[\\p{{N}}\\p{{L}}]+)?', pcre='^((([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.){{3}}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(%[\\p{{N}}\\p{{L}}]+)?)$', invert=False)])),
-    DLeaf(module='sorespo-rfs', namespace='http://example.com/sorespo-rfs', prefix='sorespo-rfs', name='ipv4-prefix-length', config=True, default='30', is_key=False, mandatory=False, type=DTypeIntegerUnsigned(name='uint8', description=None, reference=None, units=None, exts=[], builtin_type='uint8', default=None, ranges=Ranges([(1, 31)])))
-])
-
-SRC_DNODE_CHILD_21: DList = DList(module='sorespo-rfs', namespace='http://example.com/sorespo-rfs', prefix='sorespo-rfs', name='ebgp-customer', key=[
-'vrf',
-'address'
-    ], config=True, min_elements=0, ordered_by='system', exts=[
-        DExt(module='stratoweave', namespace='http://stratoweave.org/yang/stratoweave', prefix='sw', name='rfs-transform', arg='sorespo.rfs.EbgpCustomer', exts=[])
-    ], children=[
-    DLeaf(module='sorespo-rfs', namespace='http://example.com/sorespo-rfs', prefix='sorespo-rfs', name='vrf', config=True, is_key=True, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
-    DLeaf(module='sorespo-rfs', namespace='http://example.com/sorespo-rfs', prefix='sorespo-rfs', name='address', config=True, is_key=True, mandatory=False, type=DTypeUnion(name='inet:ip-address', description='The ip-address type represents an IP address and is IP\nversion neutral.  The format of the textual representation\nimplies the IP version.  This type supports scoped addresses\nby allowing zone identifiers in the address format.', reference='RFC 4007: IPv6 Scoped Address Architecture', units=None, exts=[], builtin_type='union', default=None, types=[DTypeString(name='inet:ipv4-address', description='The ipv4-address type represents an IPv4 address in\ndotted-quad notation.  The IPv4 address may include a zone\nindex, separated by a % sign.\n\nThe zone index is used to disambiguate identical address\nvalues.  For link-local addresses, the zone index will\ntypically be the interface index number or the name of an\ninterface.  If the zone index is not present, the default\nzone of the device will be used.\n\nThe canonical format for the zone index is the numerical\nformat', reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[YangPattern(yang_regex='(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.){{3}}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(%[\\p{{N}}\\p{{L}}]+)?', pcre='^((([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.){{3}}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(%[\\p{{N}}\\p{{L}}]+)?)$', invert=False)]), DTypeString(name='inet:ipv6-address', description='The ipv6-address type represents an IPv6 address in full,\nmixed, shortened, and shortened-mixed notation.  The IPv6\naddress may include a zone index, separated by a % sign.\n\nThe zone index is used to disambiguate identical address\nvalues.  For link-local addresses, the zone index will\ntypically be the interface index number or the name of an\ninterface.  If the zone index is not present, the default\nzone of the device will be used.\n\nThe canonical format of IPv6 addresses uses the textual\nrepresentation defined in Section 4 of RFC 5952.  The\ncanonical format for the zone index is the numerical\nformat as described in Section 11.2 of RFC 4007.', reference='RFC 4291: IP Version 6 Addressing Architecture\nRFC 4007: IPv6 Scoped Address Architecture\nRFC 5952: A Recommendation for IPv6 Address Text\n          Representation', units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[YangPattern(yang_regex='((:|[0-9a-fA-F]{{0,4}}):)([0-9a-fA-F]{{0,4}}:){{0,5}}((([0-9a-fA-F]{{0,4}}:)?(:|[0-9a-fA-F]{{0,4}}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\\.){{3}}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))(%[\\p{{N}}\\p{{L}}]+)?', pcre='^(((:|[0-9a-fA-F]{{0,4}}):)([0-9a-fA-F]{{0,4}}:){{0,5}}((([0-9a-fA-F]{{0,4}}:)?(:|[0-9a-fA-F]{{0,4}}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\\.){{3}}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))(%[\\p{{N}}\\p{{L}}]+)?)$', invert=False), YangPattern(yang_regex='(([^:]+:){{6}}(([^:]+:[^:]+)|(.*\\..*)))|((([^:]+:)*[^:]+)?::(([^:]+:)*[^:]+)?)(%.+)?', pcre='^((([^\\:]+:){{6}}(([^\\:]+:[^\\:]+)|(.*\\..*)))|((([^\\:]+:)*[^\\:]+)?::(([^\\:]+:)*[^\\:]+)?)(%.+)?)$', invert=False)])])),
-    DLeaf(module='sorespo-rfs', namespace='http://example.com/sorespo-rfs', prefix='sorespo-rfs', name='local-asn', config=True, is_key=False, mandatory=True, type=DTypeIntegerUnsigned(name='uint32', description=None, reference=None, units=None, exts=[], builtin_type='uint32', default=None, ranges=Ranges([(0, 4294967295)]))),
-    DLeaf(module='sorespo-rfs', namespace='http://example.com/sorespo-rfs', prefix='sorespo-rfs', name='peer-asn', config=True, is_key=False, mandatory=True, type=DTypeIntegerUnsigned(name='uint32', description=None, reference=None, units=None, exts=[], builtin_type='uint32', default=None, ranges=Ranges([(0, 4294967295)]))),
-    DLeaf(module='sorespo-rfs', namespace='http://example.com/sorespo-rfs', prefix='sorespo-rfs', name='description', config=True, is_key=False, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
-    DLeaf(module='sorespo-rfs', namespace='http://example.com/sorespo-rfs', prefix='sorespo-rfs', name='authentication-key', config=True, description='Optional eBGP session authentication key (MD5/TCP-AO). Absent when\nthe customer session has no authentication configured.', is_key=False, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[]))
-])
-
-SRC_DNODE_CHILD_14: DList = DList(module='stratoweave-rfs', namespace='http://stratoweave.org/yang/stratoweave-rfs', prefix='sw-rfs', name='rfs', key=['name'], config=True, min_elements=0, ordered_by='system', children=[SRC_DNODE_CHILD_15, SRC_DNODE_CHILD_16, SRC_DNODE_CHILD_17, SRC_DNODE_CHILD_18, SRC_DNODE_CHILD_19, SRC_DNODE_CHILD_20, SRC_DNODE_CHILD_21])
+SRC_DNODE_CHILD_14: DList = DList(module='stratoweave-rfs', namespace='http://stratoweave.org/yang/stratoweave-rfs', prefix='sw-rfs', name='rfs', key=['name'], config=True, min_elements=0, ordered_by='system', children=[SRC_DNODE_CHILD_15, SRC_DNODE_CHILD_16, SRC_DNODE_CHILD_17, SRC_DNODE_CHILD_18])
 
 SRC_DNODE: DRoot = DRoot(
     children=[SRC_DNODE_CHILD_0, SRC_DNODE_CHILD_14],
@@ -313,107 +279,6 @@ SRC_YANG_0: str = r"""module sorespo-rfs {
             type string;
           }
         }
-
-        list vrf {
-          key name;
-          sw:rfs-transform sorespo.rfs.Vrf;
-          leaf name {
-            type string;
-          }
-          leaf description {
-            type string;
-          }
-          // TODO: compute RD in the layer above and use as key?!
-          leaf id {
-            type uint32;
-            mandatory true;
-          }
-          leaf router-id {
-            type uint32;
-            mandatory true;
-          }
-          leaf asn {
-            type inet:as-number;
-            mandatory true;
-          }
-        }
-
-        list vrf-interface {
-            key "name";
-            sw:rfs-transform sorespo.rfs.VrfInterface;
-            leaf name {
-                type string;
-            }
-            leaf description {
-                type string;
-            }
-            leaf vrf {
-                type string;
-                description
-                    "VRF name";
-                mandatory true;
-            }
-            leaf ipv4-address {
-                type inet:ipv4-address;
-            }
-            leaf ipv4-prefix-length {
-                type uint8 {
-                    range "1..31";
-                }
-                default "30";
-            }
-        }
-
-    list ebgp-customer {
-      key "vrf address";
-      sw:rfs-transform sorespo.rfs.EbgpCustomer;
-      leaf vrf {
-        type string;
-      }
-      leaf address {
-        type inet:ip-address;
-      }
-      leaf local-asn {
-        type uint32;
-        mandatory true;
-      }
-      leaf peer-asn {
-        type uint32;
-        mandatory true;
-      }
-      leaf description {
-        type string;
-      }
-      leaf authentication-key {
-        type string;
-        description
-          "Optional eBGP session authentication key (MD5/TCP-AO). Absent when
-           the customer session has no authentication configured.";
-      }
-
-      container state {
-        config false;
-        description
-          "eBGP customer neighbor session telemetry. The base set is always
-           collected; the escalated detail is collected only while debug-active
-           (session down or flapping).";
-        leaf session-state {
-          type enumeration {
-            enum idle;
-            enum connect;
-            enum active;
-            enum opensent;
-            enum openconfirm;
-            enum established;
-          }
-        }
-        leaf last-event { type string; }
-        leaf established-transitions { type uint64; }
-        leaf debug-active { type boolean; }
-        leaf negotiated-hold-time { type uint64; }
-        leaf last-notification { type string; }
-      }
-    }
   }
 }
 """
@@ -3155,233 +3020,30 @@ class stratoweave_rfs__rfs__ibgp_neighbor(yadata.MKeyedList[str, stratoweave_rfs
 
 
 _breaker28: None = None
-class stratoweave_rfs__rfs__vrf_entry(yadata.MNode):
-    name: str
-    description: ?str
-    id: ?u64
-    router_id: ?u64
-    asn: ?u64
-
-    mut def __init__(self, name: str, description: ?str=None, id: ?u64=None, router_id: ?u64=None, asn: ?u64=None) -> None:
-        self.name = name
-        self.description = description
-        self.id = id
-        self.router_id = router_id
-        self.asn = asn
-
-    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
-        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['stratoweave-rfs:rfs', 'sorespo-rfs:vrf'], prev=prev)
-
-    @staticmethod
-    mut def from_gdata(n: ygdata.Node) -> stratoweave_rfs__rfs__vrf_entry:
-        return stratoweave_rfs__rfs__vrf_entry(name=n.get_str(ygdata.Id(NS_sorespo_rfs, 'name')), description=n.get_opt_str(ygdata.Id(NS_sorespo_rfs, 'description')), id=n.get_opt_u64(ygdata.Id(NS_sorespo_rfs, 'id')), router_id=n.get_opt_u64(ygdata.Id(NS_sorespo_rfs, 'router-id')), asn=n.get_opt_u64(ygdata.Id(NS_sorespo_rfs, 'asn')))
-
-    mut def copy(self) -> stratoweave_rfs__rfs__vrf_entry:
-        """Create a deep copy of this adata object"""
-        return stratoweave_rfs__rfs__vrf_entry.from_gdata(self.to_gdata())
-
-_breaker29: None = None
-class stratoweave_rfs__rfs__vrf(yadata.MKeyedList[str, stratoweave_rfs__rfs__vrf_entry]):
-    mut def __init__(self, elements: list[stratoweave_rfs__rfs__vrf_entry]=[]) -> None:
-        yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
-
-    mut def create(self, key: str, description: ?str=None, id: ?u64=None, router_id: ?u64=None, asn: ?u64=None) -> stratoweave_rfs__rfs__vrf_entry:
-        e = self.get(key)
-        if e is not None:
-            if description is not None:
-                e.description = description
-            if id is not None:
-                e.id = id
-            if router_id is not None:
-                e.router_id = router_id
-            if asn is not None:
-                e.asn = asn
-            return e
-        name = key
-        res = stratoweave_rfs__rfs__vrf_entry(name=name, description=description, id=id, router_id=router_id, asn=asn)
-        self._append(res)
-        return res
-
-    @staticmethod
-    mut def from_gdata(n: ?ygdata.List) -> list[stratoweave_rfs__rfs__vrf_entry]:
-        if n is not None:
-            return [stratoweave_rfs__rfs__vrf_entry.from_gdata(e) for e in n.entries()]
-        return []
-
-    mut def copy(self) -> stratoweave_rfs__rfs__vrf:
-        """Create a deep copy of this list object"""
-        # Copy each element in the list
-        copied_elements = []
-        for e in self:
-            ce = e.copy()
-            if ce is not None:
-                copied_elements.append(ce)
-        return stratoweave_rfs__rfs__vrf(elements=copied_elements)
-
-
-_breaker30: None = None
-class stratoweave_rfs__rfs__vrf_interface_entry(yadata.MNode):
-    name: str
-    description: ?str
-    vrf: ?str
-    ipv4_address: ?str
-    ipv4_prefix_length: ?u64
-
-    mut def __init__(self, name: str, description: ?str=None, vrf: ?str=None, ipv4_address: ?str=None, ipv4_prefix_length: ?u64=None) -> None:
-        self.name = name
-        self.description = description
-        self.vrf = vrf
-        self.ipv4_address = ipv4_address
-        self.ipv4_prefix_length = ipv4_prefix_length
-
-    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
-        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['stratoweave-rfs:rfs', 'sorespo-rfs:vrf-interface'], prev=prev)
-
-    @staticmethod
-    mut def from_gdata(n: ygdata.Node) -> stratoweave_rfs__rfs__vrf_interface_entry:
-        return stratoweave_rfs__rfs__vrf_interface_entry(name=n.get_str(ygdata.Id(NS_sorespo_rfs, 'name')), description=n.get_opt_str(ygdata.Id(NS_sorespo_rfs, 'description')), vrf=n.get_opt_str(ygdata.Id(NS_sorespo_rfs, 'vrf')), ipv4_address=n.get_opt_str(ygdata.Id(NS_sorespo_rfs, 'ipv4-address')), ipv4_prefix_length=n.get_opt_u64(ygdata.Id(NS_sorespo_rfs, 'ipv4-prefix-length')))
-
-    mut def copy(self) -> stratoweave_rfs__rfs__vrf_interface_entry:
-        """Create a deep copy of this adata object"""
-        return stratoweave_rfs__rfs__vrf_interface_entry.from_gdata(self.to_gdata())
-
-_breaker31: None = None
-class stratoweave_rfs__rfs__vrf_interface(yadata.MKeyedList[str, stratoweave_rfs__rfs__vrf_interface_entry]):
-    mut def __init__(self, elements: list[stratoweave_rfs__rfs__vrf_interface_entry]=[]) -> None:
-        yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
-
-    mut def create(self, key: str, description: ?str=None, vrf: ?str=None, ipv4_address: ?str=None, ipv4_prefix_length: ?u64=None) -> stratoweave_rfs__rfs__vrf_interface_entry:
-        e = self.get(key)
-        if e is not None:
-            if description is not None:
-                e.description = description
-            if vrf is not None:
-                e.vrf = vrf
-            if ipv4_address is not None:
-                e.ipv4_address = ipv4_address
-            if ipv4_prefix_length is not None:
-                e.ipv4_prefix_length = ipv4_prefix_length
-            return e
-        name = key
-        res = stratoweave_rfs__rfs__vrf_interface_entry(name=name, description=description, vrf=vrf, ipv4_address=ipv4_address, ipv4_prefix_length=ipv4_prefix_length)
-        self._append(res)
-        return res
-
-    @staticmethod
-    mut def from_gdata(n: ?ygdata.List) -> list[stratoweave_rfs__rfs__vrf_interface_entry]:
-        if n is not None:
-            return [stratoweave_rfs__rfs__vrf_interface_entry.from_gdata(e) for e in n.entries()]
-        return []
-
-    mut def copy(self) -> stratoweave_rfs__rfs__vrf_interface:
-        """Create a deep copy of this list object"""
-        # Copy each element in the list
-        copied_elements = []
-        for e in self:
-            ce = e.copy()
-            if ce is not None:
-                copied_elements.append(ce)
-        return stratoweave_rfs__rfs__vrf_interface(elements=copied_elements)
-
-
-_breaker32: None = None
-class stratoweave_rfs__rfs__ebgp_customer_entry(yadata.MNode):
-    vrf: str
-    address: str
-    local_asn: ?u64
-    peer_asn: ?u64
-    description: ?str
-    authentication_key: ?str
-
-    mut def __init__(self, vrf: str, address: str, local_asn: ?u64=None, peer_asn: ?u64=None, description: ?str=None, authentication_key: ?str=None) -> None:
-        self.vrf = vrf
-        self.address = address
-        self.local_asn = local_asn
-        self.peer_asn = peer_asn
-        self.description = description
-        self.authentication_key = authentication_key
-
-    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
-        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['stratoweave-rfs:rfs', 'sorespo-rfs:ebgp-customer'], prev=prev)
-
-    @staticmethod
-    mut def from_gdata(n: ygdata.Node) -> stratoweave_rfs__rfs__ebgp_customer_entry:
-        return stratoweave_rfs__rfs__ebgp_customer_entry(vrf=n.get_str(ygdata.Id(NS_sorespo_rfs, 'vrf')), address=n.get_str(ygdata.Id(NS_sorespo_rfs, 'address')), local_asn=n.get_opt_u64(ygdata.Id(NS_sorespo_rfs, 'local-asn')), peer_asn=n.get_opt_u64(ygdata.Id(NS_sorespo_rfs, 'peer-asn')), description=n.get_opt_str(ygdata.Id(NS_sorespo_rfs, 'description')), authentication_key=n.get_opt_str(ygdata.Id(NS_sorespo_rfs, 'authentication-key')))
-
-    mut def copy(self) -> stratoweave_rfs__rfs__ebgp_customer_entry:
-        """Create a deep copy of this adata object"""
-        return stratoweave_rfs__rfs__ebgp_customer_entry.from_gdata(self.to_gdata())
-
-_breaker33: None = None
-class stratoweave_rfs__rfs__ebgp_customer(yadata.MKeyedList[(vrf: str, address: str), stratoweave_rfs__rfs__ebgp_customer_entry]):
-    mut def __init__(self, elements: list[stratoweave_rfs__rfs__ebgp_customer_entry]=[]) -> None:
-        yadata.MKeyedList.__init__(self, lambda e: (vrf=e.vrf, address=e.address), elements)
-
-    mut def create(self, key: (vrf: str, address: str), local_asn: ?u64=None, peer_asn: ?u64=None, description: ?str=None, authentication_key: ?str=None) -> stratoweave_rfs__rfs__ebgp_customer_entry:
-        e = self.get(key)
-        if e is not None:
-            if local_asn is not None:
-                e.local_asn = local_asn
-            if peer_asn is not None:
-                e.peer_asn = peer_asn
-            if description is not None:
-                e.description = description
-            if authentication_key is not None:
-                e.authentication_key = authentication_key
-            return e
-        (vrf=vrf, address=address) = key
-        res = stratoweave_rfs__rfs__ebgp_customer_entry(vrf=vrf, address=address, local_asn=local_asn, peer_asn=peer_asn, description=description, authentication_key=authentication_key)
-        self._append(res)
-        return res
-
-    @staticmethod
-    mut def from_gdata(n: ?ygdata.List) -> list[stratoweave_rfs__rfs__ebgp_customer_entry]:
-        if n is not None:
-            return [stratoweave_rfs__rfs__ebgp_customer_entry.from_gdata(e) for e in n.entries()]
-        return []
-
-    mut def copy(self) -> stratoweave_rfs__rfs__ebgp_customer:
-        """Create a deep copy of this list object"""
-        # Copy each element in the list
-        copied_elements = []
-        for e in self:
-            ce = e.copy()
-            if ce is not None:
-                copied_elements.append(ce)
-        return stratoweave_rfs__rfs__ebgp_customer(elements=copied_elements)
-
-
-_breaker34: None = None
 class stratoweave_rfs__rfs_entry(yadata.MNode):
     name: str
     base_config: stratoweave_rfs__rfs__base_config
     backbone_interface: stratoweave_rfs__rfs__backbone_interface
     ibgp_neighbor: stratoweave_rfs__rfs__ibgp_neighbor
-    vrf: stratoweave_rfs__rfs__vrf
-    vrf_interface: stratoweave_rfs__rfs__vrf_interface
-    ebgp_customer: stratoweave_rfs__rfs__ebgp_customer
 
-    mut def __init__(self, name: str, base_config: ?stratoweave_rfs__rfs__base_config=None, backbone_interface: list[stratoweave_rfs__rfs__backbone_interface_entry]=[], ibgp_neighbor: list[stratoweave_rfs__rfs__ibgp_neighbor_entry]=[], vrf: list[stratoweave_rfs__rfs__vrf_entry]=[], vrf_interface: list[stratoweave_rfs__rfs__vrf_interface_entry]=[], ebgp_customer: list[stratoweave_rfs__rfs__ebgp_customer_entry]=[]) -> None:
+    mut def __init__(self, name: str, base_config: ?stratoweave_rfs__rfs__base_config=None, backbone_interface: list[stratoweave_rfs__rfs__backbone_interface_entry]=[], ibgp_neighbor: list[stratoweave_rfs__rfs__ibgp_neighbor_entry]=[]) -> None:
         self.name = name
         self.base_config = base_config if base_config is not None else stratoweave_rfs__rfs__base_config()
         self.backbone_interface = stratoweave_rfs__rfs__backbone_interface(elements=backbone_interface)
         self.ibgp_neighbor = stratoweave_rfs__rfs__ibgp_neighbor(elements=ibgp_neighbor)
-        self.vrf = stratoweave_rfs__rfs__vrf(elements=vrf)
-        self.vrf_interface = stratoweave_rfs__rfs__vrf_interface(elements=vrf_interface)
-        self.ebgp_customer = stratoweave_rfs__rfs__ebgp_customer(elements=ebgp_customer)
 
     mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
         return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['stratoweave-rfs:rfs'], prev=prev)
 
     @staticmethod
     mut def from_gdata(n: ygdata.Node) -> stratoweave_rfs__rfs_entry:
-        return stratoweave_rfs__rfs_entry(name=n.get_str(ygdata.Id(NS_stratoweave_rfs, 'name')), base_config=stratoweave_rfs__rfs__base_config.from_gdata(n.get_opt_cnt(ygdata.Id(NS_sorespo_rfs, 'base-config'))), backbone_interface=stratoweave_rfs__rfs__backbone_interface.from_gdata(n.get_opt_list(ygdata.Id(NS_sorespo_rfs, 'backbone-interface'))), ibgp_neighbor=stratoweave_rfs__rfs__ibgp_neighbor.from_gdata(n.get_opt_list(ygdata.Id(NS_sorespo_rfs, 'ibgp-neighbor'))), vrf=stratoweave_rfs__rfs__vrf.from_gdata(n.get_opt_list(ygdata.Id(NS_sorespo_rfs, 'vrf'))), vrf_interface=stratoweave_rfs__rfs__vrf_interface.from_gdata(n.get_opt_list(ygdata.Id(NS_sorespo_rfs, 'vrf-interface'))), ebgp_customer=stratoweave_rfs__rfs__ebgp_customer.from_gdata(n.get_opt_list(ygdata.Id(NS_sorespo_rfs, 'ebgp-customer'))))
+        return stratoweave_rfs__rfs_entry(name=n.get_str(ygdata.Id(NS_stratoweave_rfs, 'name')), base_config=stratoweave_rfs__rfs__base_config.from_gdata(n.get_opt_cnt(ygdata.Id(NS_sorespo_rfs, 'base-config'))), backbone_interface=stratoweave_rfs__rfs__backbone_interface.from_gdata(n.get_opt_list(ygdata.Id(NS_sorespo_rfs, 'backbone-interface'))), ibgp_neighbor=stratoweave_rfs__rfs__ibgp_neighbor.from_gdata(n.get_opt_list(ygdata.Id(NS_sorespo_rfs, 'ibgp-neighbor'))))
 
     mut def copy(self) -> stratoweave_rfs__rfs_entry:
         """Create a deep copy of this adata object"""
         return stratoweave_rfs__rfs_entry.from_gdata(self.to_gdata())
 
-_breaker35: None = None
+_breaker29: None = None
 class stratoweave_rfs__rfs(yadata.MKeyedList[str, stratoweave_rfs__rfs_entry]):
     mut def __init__(self, elements: list[stratoweave_rfs__rfs_entry]=[]) -> None:
         yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
@@ -3412,7 +3074,7 @@ class stratoweave_rfs__rfs(yadata.MKeyedList[str, stratoweave_rfs__rfs_entry]):
         return stratoweave_rfs__rfs(elements=copied_elements)
 
 
-_breaker36: None = None
+_breaker30: None = None
 class root(yadata.MNode):
     device: stratoweave_rfs__device
     rfs: stratoweave_rfs__rfs

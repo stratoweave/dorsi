@@ -1,49 +1,21 @@
 # Quicklab NOTCONF
 
-This lab contains four core routers. Two of the PE routers are Juniper cRPD,
-the other two are Cisco IOS XRd. Or ... that's what StratoWeave will think when
-it connects to these devices which are actually NOTCONF devices simulating the
-northbound interfaces (YANG models) of those vendors.
+This lab contains four core routers. Two of the routers (ams-core-1, fra-core-1)
+are simulated Cisco IOS XRd, the other two (sto-core-1, lju-core-1) are
+simulated Juniper cRPD. That is what StratoWeave will think when it connects to
+these devices, which are actually NOTCONF devices simulating the northbound
+interfaces (YANG models) of those vendors.
 
-NOTCONF does not have a dataplane, nor management plane. Therefor there are no
-actual CPEs in this lab (but the SORESPO CFS input is still structured as if
-there were).
-```
-+-------------------+                                                                     +-------------------+   
-|      cust-1       |                                                                     |      cust-3       |   
-|    10.200.1.1     |                                                                     |    10.200.1.3     |   
-|  (Cisco IOS XRd)  |                                                                     |  (Cisco IOS XRd)  |   
-+----+--------------+                                                                     +--+----------------+   
-     |Gi0/0/0/0.100                                                                          |Gi0/0/0/0.100       
-     |                                                                                       |                    
-     +-------------------+                                                                   |                    
-                         |                                                                   |                    
-                         |Gi0/0/0/2.100                                                      |                    
-                      +--+----------------+                          +-------------------+   |                    
-                      |    ams-core-1     |Gi0/0/0/1                 |    sto-core-1     |   |                    
-                      |     10.0.0.1      +--------------------------+     10.0.0.3      +---+                    
-                      |  (Cisco IOS XRd)  |                      eth1|  (Juniper cRPD)   |eth4.100                
-                      +--+----------------+                          +--+--------------+-+                        
-                         |Gi0/0/0/0                                     |eth2      eth3|                          
-                         |                                              |              |                          
-                         |                                              |              |                          
-                         |                                              |              |                          
-                         |                           +------------------+              |                          
-                         |                           |                                 |                          
-                         |                           |                                 |                          
-                         |                           |                                 |                          
-                         |                           |                                 |                          
-                         |Gi0/0/0/1                  |                             eth2|                          
-                      +--+----------------+Gi0/0/0/2 |               +-----------------+-+                        
-                      |    fra-core-1     +----------+               |    lju-core-1     |                        
-                      |     10.0.0.2      |Gi0/0/0/3             eth1|     10.0.0.4      |                        
-                      |  (Cisco IOS XRd)  +--------------------------+   (Juniper cRPD)  |                        
-                      +---+---------------+                          +--------+----------+                        
-                          |Gi0/0/0/4.100                                      |eth3.100                           
-                          |                                                   |                                   
- +-------------------+    |                                                   |              +-------------------+
- |      cust-2       |    |                                                   |              |      cust-44      |
- |    10.200.1.2     +----+                                                   |Gi0/0/0/0.100 |    10.200.1.4     |
- |  (Cisco IOS XRd)  |Gi0/0/0/0.100                                           +--------------+  (Cisco IOS XRd)  |
- +-------------------+                                                                       +-------------------+
- ```
+NOTCONF has neither a dataplane nor a management plane, so there are no actual
+links between the routers in this lab. The backbone links below exist only as
+SORESPO configuration input.
+
+## Backbone links
+
+| Router A | Interface | Router B | Interface |
+|---|---|---|---|
+| ams-core-1 | `Gi0/0/0/0` | fra-core-1 | `Gi0/0/0/0` |
+| ams-core-1 | `Gi0/0/0/1` | sto-core-1 | `eth1` |
+| fra-core-1 | `Gi0/0/0/1` | sto-core-1 | `eth2` |
+| fra-core-1 | `Gi0/0/0/2` | lju-core-1 | `eth1` |
+| sto-core-1 | `eth3` | lju-core-1 | `eth2` |

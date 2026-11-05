@@ -4,55 +4,6 @@
 
 const XC = 'xmlns:xc="urn:ietf:params:xml:ns:netconf:base:1.0"';
 
-export function vrfAddDiff(
-  vpnId: string,
-  iface: string,
-  providerAddress: string,
-  prefixLength: number,
-  asn: number
-): string {
-  return `<config ${XC}>
-  <interface xmlns="urn:nokia.com:srlinux:chassis:interfaces">
-    <name>${iface.split('.')[0]}</name>
-    <subinterface>
-      <index>${iface.split('.')[1] ?? '0'}</index>
-      <ipv4>
-        <address>
-          <ip-prefix>${providerAddress}/${prefixLength}</ip-prefix>
-        </address>
-      </ipv4>
-    </subinterface>
-  </interface>
-  <network-instance xmlns="urn:nokia.com:srlinux:net-inst:network-instance">
-    <name>${vpnId}</name>
-    <type>ip-vrf</type>
-    <interface>
-      <name>${iface}</name>
-    </interface>
-    <protocols>
-      <bgp>
-        <autonomous-system>${asn}</autonomous-system>
-        <group>
-          <group-name>customer</group-name>
-          <peer-as>${asn}</peer-as>
-        </group>
-      </bgp>
-    </protocols>
-  </network-instance>
-</config>`;
-}
-
-export function vrfRemoveDiff(vpnId: string, iface: string): string {
-  return `<config ${XC}>
-  <network-instance xmlns="urn:nokia.com:srlinux:net-inst:network-instance" xc:operation="remove">
-    <name>${vpnId}</name>
-    <interface>
-      <name>${iface}</name>
-    </interface>
-  </network-instance>
-</config>`;
-}
-
 export function interfaceDescriptionDiff(iface: string, description: string): string {
   return `<config ${XC}>
   <interface xmlns="urn:nokia.com:srlinux:chassis:interfaces">

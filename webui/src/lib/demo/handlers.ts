@@ -12,9 +12,7 @@ import {
   baseRouterDiff,
   bgpAuthKeyDiff,
   genericApplyDiff,
-  subinterfaceRemoveDiff,
-  vrfAddDiff,
-  vrfRemoveDiff
+  subinterfaceRemoveDiff
 } from '$lib/demo/fixtures/diffs';
 import { layerConfigText } from '$lib/demo/fixtures/layer-configs';
 import {
@@ -76,13 +74,6 @@ function netinfraTree(state: DemoState): Record<string, unknown> {
   };
 }
 
-function l3vpnTree(state: DemoState): Record<string, unknown> {
-  return {
-    'vpn-services': { 'vpn-service': state.vpnServices },
-    sites: { site: state.sites }
-  };
-}
-
 function routerId(state: DemoState, name: string): number {
   const entry = state.routers.find((router) => router.name === name);
   return entry?.id ?? 9;
@@ -90,46 +81,6 @@ function routerId(state: DemoState, name: string): number {
 
 function managedRouters(state: DemoState): { name: string; id: number }[] {
   return Object.keys(state.devices).map((name) => ({ name, id: routerId(state, name) }));
-}
-
-// ── site helpers (derive queue diffs from an ietf-l3vpn-svc site entry) ──
-
-interface SiteFacts {
-  router: string;
-  iface: string;
-  vpnId: string;
-  providerAddress: string;
-  prefixLength: number;
-  asn: number;
-}
-
-function siteFacts(site: Record<string, any> | undefined): SiteFacts | null {
-  const access = site?.['site-network-accesses']?.['site-network-access']?.[0];
-  const bearer = String(access?.bearer?.['bearer-reference'] ?? '');
-  if (!bearer) return null;
-  const [router = '', iface = ''] = bearer.split(',').map((part: string) => part.trim());
-  const addresses = access?.['ip-connection']?.ipv4?.addresses;
-  const bgp = access?.['routing-protocols']?.['routing-protocol']?.[0]?.bgp;
-  return {
-    router,
-    iface: iface || 'ethernet-1/9.100',
-    vpnId: String(access?.['vpn-attachment']?.['vpn-id'] ?? 'l3vpn'),
-    providerAddress: String(addresses?.['provider-address'] ?? '10.209.1.1'),
-    prefixLength: Number(addresses?.['prefix-length'] ?? 30),
-    asn: Number(bgp?.['autonomous-system'] ?? 65500)
-  };
-}
-
-function enqueueSiteAdd(site: Record<string, any>): void {
-  const facts = siteFacts(site);
-  if (!facts) return;
-  enqueue(facts.router, vrfAddDiff(facts.vpnId, facts.iface, facts.providerAddress, facts.prefixLength, facts.asn));
-}
-
-function enqueueSiteRemove(site: Record<string, any> | undefined): void {
-  const facts = siteFacts(site);
-  if (!facts) return;
-  enqueue(facts.router, vrfRemoveDiff(facts.vpnId, facts.iface));
 }
 
 // ── entry extraction from RESTCONF PUT bodies ──
@@ -162,7 +113,7 @@ function linkKeyMatches(link: NetinfraBackboneLinkApi, key: string[]): boolean {
   );
 }
 
-// ── router / backbone-link / vpn / site / global-settings mutations ──
+// ── router / backbone-link / global-settings mutations ──
 
 function upsertRouter(entry: Record<string, any>): void {
   const state = getState();
@@ -213,32 +164,6 @@ function deleteBackboneLink(key: string[]): void {
   state.backboneLinks = state.backboneLinks.filter((link) => !linkKeyMatches(link, key));
   enqueue(key[0], subinterfaceRemoveDiff(key[1].split('.')[0], '0'));
   enqueue(key[2], subinterfaceRemoveDiff(key[3].split('.')[0], '0'));
-}
-
-function upsertListEntry(list: Record<string, any>[], keyLeaf: string, entry: Record<string, any>): void {
-  const key = String(entry[keyLeaf] ?? '');
-  const index = list.findIndex((item) => String(item[keyLeaf] ?? '') === key);
-  if (index === -1) {
-    list.push(entry);
-  } else {
-    list[index] = entry;
-  }
-}
-
-const SITE_BGP_SESSIONS_KEY = 'sorespo-ietf-l3vpn-svc:bgp-sessions';
-
-/** Apply site configuration without treating config-false BGP telemetry as writable. */
-function upsertSite(list: Record<string, any>[], entry: Record<string, any>): void {
-  const siteId = String(entry['site-id'] ?? '');
-  const existing = list.find((site) => String(site['site-id'] ?? '') === siteId);
-  const next = { ...entry };
-
-  delete next[SITE_BGP_SESSIONS_KEY];
-  if (existing?.[SITE_BGP_SESSIONS_KEY] !== undefined) {
-    next[SITE_BGP_SESSIONS_KEY] = existing[SITE_BGP_SESSIONS_KEY];
-  }
-
-  upsertListEntry(list, 'site-id', next);
 }
 
 // ── the RESTCONF branch (/restconf/...) ──
@@ -327,72 +252,6 @@ async function handleRestconf(
     return restconfNotFound(`unknown netinfra path /${segments.join('/')}`);
   }
 
-  if (top === 'ietf-l3vpn-svc:l3vpn-svc') {
-    const [collection, entrySegment] = rest;
-
-    if (collection === 'sites') {
-      if (!entrySegment) {
-        if (method === 'GET') return json({ 'ietf-l3vpn-svc:sites': { site: state.sites } });
-        return restconfNotFound(`unsupported ${method} on sites`);
-      }
-      if (entrySegment.startsWith('site=')) {
-        const siteId = decodeURIComponent(entrySegment.slice('site='.length));
-        const index = state.sites.findIndex((site) => String(site['site-id']) === siteId);
-        if (method === 'GET') {
-          return index === -1
-            ? restconfNotFound(`no site ${siteId}`)
-            : json({ 'ietf-l3vpn-svc:site': [state.sites[index]] });
-        }
-        if (method === 'PUT') {
-          const body = unwrapEntry(parseBody(init), 'ietf-l3vpn-svc:site');
-          if (body) {
-            upsertSite(state.sites, { ...body, 'site-id': body['site-id'] ?? siteId });
-            enqueueSiteAdd(body);
-          }
-          return empty();
-        }
-        if (method === 'DELETE') {
-          if (index === -1) return restconfNotFound(`no site ${siteId}`);
-          enqueueSiteRemove(state.sites[index]);
-          state.sites.splice(index, 1);
-          return empty();
-        }
-      }
-    }
-
-    if (collection === 'vpn-services') {
-      if (!entrySegment) {
-        if (method === 'GET') {
-          return json({ 'ietf-l3vpn-svc:vpn-services': { 'vpn-service': state.vpnServices } });
-        }
-        return restconfNotFound(`unsupported ${method} on vpn-services`);
-      }
-      if (entrySegment.startsWith('vpn-service=')) {
-        const vpnId = decodeURIComponent(entrySegment.slice('vpn-service='.length));
-        const index = state.vpnServices.findIndex((vpn) => String(vpn['vpn-id']) === vpnId);
-        if (method === 'GET') {
-          return index === -1
-            ? restconfNotFound(`no vpn-service ${vpnId}`)
-            : json({ 'ietf-l3vpn-svc:vpn-service': [state.vpnServices[index]] });
-        }
-        if (method === 'PUT') {
-          const body = unwrapEntry(parseBody(init), 'ietf-l3vpn-svc:vpn-service');
-          if (body) {
-            upsertListEntry(state.vpnServices, 'vpn-id', { ...body, 'vpn-id': body['vpn-id'] ?? vpnId });
-          }
-          return empty();
-        }
-        if (method === 'DELETE') {
-          if (index === -1) return restconfNotFound(`no vpn-service ${vpnId}`);
-          state.vpnServices.splice(index, 1);
-          return empty();
-        }
-      }
-    }
-
-    return restconfNotFound(`unknown l3vpn path /${segments.join('/')}`);
-  }
-
   return restconfNotFound(`unknown path /${segments.join('/')}`);
 }
 
@@ -402,19 +261,6 @@ function applyCfsPayload(init: RequestInit | undefined): void {
   const affected = new Set<string>();
 
   if (body && typeof body === 'object') {
-    const l3vpn = body['ietf-l3vpn-svc:l3vpn-svc'];
-    for (const vpn of l3vpn?.['vpn-services']?.['vpn-service'] ?? []) {
-      upsertListEntry(state.vpnServices, 'vpn-id', vpn);
-    }
-    for (const site of l3vpn?.sites?.site ?? []) {
-      upsertSite(state.sites, site);
-      const facts = siteFacts(site);
-      if (facts && state.devices[facts.router]) {
-        enqueueSiteAdd(site);
-        affected.add(facts.router);
-      }
-    }
-
     const netinfra = body['netinfra:netinfra'];
     for (const router of netinfra?.router ?? []) {
       upsertRouter(router);
@@ -528,7 +374,6 @@ async function handleOrchestron(
         : 'xml';
     const body = layerConfigText(layer, format, {
       netinfra: { 'netinfra:netinfra': netinfraTree(state) },
-      l3vpn: { 'ietf-l3vpn-svc:l3vpn-svc': l3vpnTree(state) },
       routers: managedRouters(state)
     });
     return text(body, acceptHeader || 'application/yang-data+xml');
