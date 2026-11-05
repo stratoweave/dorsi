@@ -59,28 +59,12 @@ end-policy
         <bgp>
           <as>
             <as-number>65001</as-number>
-            <address-families>
-              <address-family>
-                <af-name>vpnv4-unicast</af-name>
-              </address-family>
-              <address-family>
-                <af-name>vpnv6-unicast</af-name>
-              </address-family>
-            </address-families>
             <bgp>
               <router-id>10.0.0.1</router-id>
             </bgp>
             <neighbor-groups>
               <neighbor-group>
                 <neighbor-group-name>IPV4-IBGP</neighbor-group-name>
-                <address-families>
-                  <address-family>
-                    <af-name>vpnv4-unicast</af-name>
-                  </address-family>
-                  <address-family>
-                    <af-name>vpnv6-unicast</af-name>
-                  </address-family>
-                </address-families>
                 <password>
                   <encrypted>045209011F6C4D5B1D11001906020F053E222B267E3E270A</encrypted>
                 </password>
@@ -223,28 +207,12 @@ end-policy
         <bgp>
           <as>
             <as-number>65001</as-number>
-            <address-families>
-              <address-family>
-                <af-name>vpnv4-unicast</af-name>
-              </address-family>
-              <address-family>
-                <af-name>vpnv6-unicast</af-name>
-              </address-family>
-            </address-families>
             <bgp>
               <router-id>10.0.0.2</router-id>
             </bgp>
             <neighbor-groups>
               <neighbor-group>
                 <neighbor-group-name>IPV4-IBGP</neighbor-group-name>
-                <address-families>
-                  <address-family>
-                    <af-name>vpnv4-unicast</af-name>
-                  </address-family>
-                  <address-family>
-                    <af-name>vpnv6-unicast</af-name>
-                  </address-family>
-                </address-families>
                 <password>
                   <encrypted>045209011F6C4D5B1D11001906020F053E222B267E3E270A</encrypted>
                 </password>
@@ -357,15 +325,6 @@ end-policy
             <group>
               <name>IPV4-IBGP</name>
               <authentication-key>$9$4TaGiq.5/9pmfp0B1yr4aZGkP6/t1Ic36eWL7sYoJGDjq5Qn/Cumfu1RSledbs24Zmfz</authentication-key>
-              <family>
-                <inet-vpn>
-                  <unicast/>
-                </inet-vpn>
-                <inet6-vpn>
-                  <unicast/>
-                </inet6-vpn>
-                <route-target/>
-              </family>
               <hold-time>90</hold-time>
               <local-address>10.0.0.3</local-address>
               <neighbor>

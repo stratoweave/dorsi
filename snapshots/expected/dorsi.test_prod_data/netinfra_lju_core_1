@@ -39,15 +39,6 @@ LJU_CORE_1.configuration.protocols.bgp.log_updown = True
 # List /configuration/protocols/bgp/group element: 'IPV4-IBGP'
 group_element = LJU_CORE_1.configuration.protocols.bgp.group.create('IPV4-IBGP', type='internal', local_address='10.0.0.1', hold_time=u64(90), authentication_key='$9$4TaGiq.5/9pmfp0B1yr4aZGkP6/t1Ic36eWL7sYoJGDjq5Qn/Cumfu1RSledbs24Zmfz')
 
-# P-container: /configuration/protocols/bgp/group[name='IPV4-IBGP']/family/inet-vpn/unicast
-unicast = group_element.family.inet_vpn.create_unicast()
-
-# P-container: /configuration/protocols/bgp/group[name='IPV4-IBGP']/family/inet6-vpn/unicast
-unicast_2 = group_element.family.inet6_vpn.create_unicast()
-
-# P-container: /configuration/protocols/bgp/group[name='IPV4-IBGP']/family/route-target
-route_target = group_element.family.create_route_target()
-
 # Container: /configuration/protocols/isis
 LJU_CORE_1.configuration.protocols.isis.lsp_lifetime = u64(65535)
 

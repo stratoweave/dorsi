@@ -82,12 +82,7 @@ class BaseConfig(base.BaseConfig):
             bgp_as.bgp.router_id = i.ipv4_address
             # Create neighbor-group: IPV4-IBGP
             bgp_ng = bgp_as.neighbor_groups.neighbor_group.create("IPV4-IBGP", remote_as=i.asn, update_source="Loopback0")
-            bgp_ng.address_families.address_family.create("vpnv4-unicast")
-            bgp_ng.address_families.address_family.create("vpnv6-unicast")
             bgp_ng.password.encrypted = cisco_type7_encrypt(i.ibgp_authentication_key, 4)
-
-            bgp_as.address_families.address_family.create("vpnv4-unicast")
-            bgp_as.address_families.address_family.create("vpnv6-unicast")
 
             # Route policy ACCEPT
             rpl = """route-policy ACCEPT
@@ -128,9 +123,6 @@ end-policy
 
             # Create neighbor-group: IPV4-IBGP
             g1 = bgp.group.create("IPV4-IBGP", type="internal", local_address=i.ipv4_address, hold_time=90, authentication_key=junos_encrypt(i.ibgp_authentication_key, "4"))
-            g1.family.inet_vpn.create_unicast()
-            g1.family.inet6_vpn.create_unicast()
-            g1.family.create_route_target()
 
             return dev
             
@@ -164,7 +156,6 @@ end-policy
             # BGP global config
             bgp = ni.protocols.create_bgp(autonomous_system=i.asn, router_id=i.ipv4_address)
             bgp.afi_safi.create(srl25.srl_nokia_common_ipv4_unicast, admin_state="enable")
-            bgp.afi_safi.create(srl25.srl_nokia_common_evpn, admin_state="enable")
 
             # Create neighbor-group: IPV4-IBGP
             bgp.group.create("IPV4-IBGP", peer_as=i.asn)
