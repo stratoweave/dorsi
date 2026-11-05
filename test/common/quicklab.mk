@@ -130,9 +130,9 @@ stop-dev-webui:
 stop:
 	$(CLAB_BIN) destroy --topo $(TESTENV:dorsi-%=%).clab.yml --log-level debug
 
-.PHONY: wait $(addprefix wait-,$(ROUTERS_XR) $(ROUTERS_CRPD) $(ROUTERS_SRL))
+.PHONY: wait $(addprefix wait-,$(ROUTERS_XR) $(ROUTERS_CRPD))
 WAIT?=60
-wait: $(addprefix platform-wait-,$(ROUTERS_XR) $(ROUTERS_CRPD) $(ROUTERS_SRL))
+wait: $(addprefix platform-wait-,$(ROUTERS_XR) $(ROUTERS_CRPD))
 
 .PHONY: copy
 copy:
@@ -270,45 +270,45 @@ upper = $(shell printf '%s' "$(1)" | tr '[:lower:]' '[:upper:]')
 # "target" is the StratoWeave's intended configuration, i.e. the configuration
 # *we* want on the device. Note how this is not NMDA-speak for "intended
 # configuration" of the device itself.
-.PHONY: $(addprefix get-target-,$(ROUTERS_XR) $(ROUTERS_CRPD) $(ROUTERS_SRL))
-$(addprefix get-target-,$(ROUTERS_XR) $(ROUTERS_CRPD) $(ROUTERS_SRL)):
+.PHONY: $(addprefix get-target-,$(ROUTERS_XR) $(ROUTERS_CRPD))
+$(addprefix get-target-,$(ROUTERS_XR) $(ROUTERS_CRPD)):
 	@curl $(STRATOWEAVE_API_ORIGIN)/device/$(call upper,$(subst get-target-,,$@))/target?format=$(DEVICE_CONFIG_FORMAT)
 
-.PHONY: $(addprefix get-target-adata-,$(ROUTERS_XR) $(ROUTERS_CRPD) $(ROUTERS_SRL))
-$(addprefix get-target-adata-,$(ROUTERS_XR) $(ROUTERS_CRPD) $(ROUTERS_SRL)):
+.PHONY: $(addprefix get-target-adata-,$(ROUTERS_XR) $(ROUTERS_CRPD))
+$(addprefix get-target-adata-,$(ROUTERS_XR) $(ROUTERS_CRPD)):
 	@$(MAKE) DEVICE_CONFIG_FORMAT=adata $(subst adata-,,$@)
 
 # "running" is the currently running configuration on the device, which in
 # NMDA-speak is the "intended configuration".
-.PHONY: $(addprefix get-running-,$(ROUTERS_XR) $(ROUTERS_CRPD) $(ROUTERS_SRL))
-$(addprefix get-running-,$(ROUTERS_XR) $(ROUTERS_CRPD) $(ROUTERS_SRL)):
+.PHONY: $(addprefix get-running-,$(ROUTERS_XR) $(ROUTERS_CRPD))
+$(addprefix get-running-,$(ROUTERS_XR) $(ROUTERS_CRPD)):
 	@curl $(STRATOWEAVE_API_ORIGIN)/device/$(call upper,$(subst get-running-,,$@))/running?format=$(DEVICE_CONFIG_FORMAT)
 
-.PHONY: $(addprefix get-running-adata-,$(ROUTERS_XR) $(ROUTERS_CRPD) $(ROUTERS_SRL))
-$(addprefix get-running-adata-,$(ROUTERS_XR) $(ROUTERS_CRPD) $(ROUTERS_SRL)):
+.PHONY: $(addprefix get-running-adata-,$(ROUTERS_XR) $(ROUTERS_CRPD))
+$(addprefix get-running-adata-,$(ROUTERS_XR) $(ROUTERS_CRPD)):
 	@$(MAKE) DEVICE_CONFIG_FORMAT=adata $(subst adata-,,$@)
 
-.PHONY: $(addprefix get-diff-,$(ROUTERS_XR) $(ROUTERS_CRPD) $(ROUTERS_SRL))
-$(addprefix get-diff-,$(ROUTERS_XR) $(ROUTERS_CRPD) $(ROUTERS_SRL)):
+.PHONY: $(addprefix get-diff-,$(ROUTERS_XR) $(ROUTERS_CRPD))
+$(addprefix get-diff-,$(ROUTERS_XR) $(ROUTERS_CRPD)):
 	@curl $(STRATOWEAVE_API_ORIGIN)/device/$(call upper,$(subst get-diff-,,$@))/diff?format=$(DEVICE_CONFIG_FORMAT)
 
-.PHONY: $(addprefix get-diff-adata-,$(ROUTERS_XR) $(ROUTERS_CRPD) $(ROUTERS_SRL))
-$(addprefix get-diff-adata-,$(ROUTERS_XR) $(ROUTERS_CRPD) $(ROUTERS_SRL)):
+.PHONY: $(addprefix get-diff-adata-,$(ROUTERS_XR) $(ROUTERS_CRPD))
+$(addprefix get-diff-adata-,$(ROUTERS_XR) $(ROUTERS_CRPD)):
 	@$(MAKE) DEVICE_CONFIG_FORMAT=adata $(subst adata-,,$@)
 
-.PHONY: $(addprefix resync-,$(ROUTERS_XR) $(ROUTERS_CRPD) $(ROUTERS_SRL))
-$(addprefix resync-,$(ROUTERS_XR) $(ROUTERS_CRPD) $(ROUTERS_SRL)):
+.PHONY: $(addprefix resync-,$(ROUTERS_XR) $(ROUTERS_CRPD))
+$(addprefix resync-,$(ROUTERS_XR) $(ROUTERS_CRPD)):
 	@curl $(STRATOWEAVE_API_ORIGIN)/device/$(call upper,$(subst resync-,,$@))/resync
 
 .PHONY: delete-config
 delete-config:
 	curl -f -X DELETE $(STRATOWEAVE_API_ORIGIN)/restconf/data/netinfra:netinfra/router=STO-CORE-1
 
-.PHONY: $(addprefix cli-,$(ROUTERS_XR) $(ROUTERS_CRPD) $(ROUTERS_SRL))
-$(addprefix cli-,$(ROUTERS_XR) $(ROUTERS_CRPD) $(ROUTERS_SRL)): cli-%: platform-cli-%
+.PHONY: $(addprefix cli-,$(ROUTERS_XR) $(ROUTERS_CRPD))
+$(addprefix cli-,$(ROUTERS_XR) $(ROUTERS_CRPD)): cli-%: platform-cli-%
 
-.PHONY: $(addprefix get-dev-config-,$(ROUTERS_XR) $(ROUTERS_CRPD) $(ROUTERS_SRL))
-$(addprefix get-dev-config-,$(ROUTERS_XR) $(ROUTERS_CRPD) $(ROUTERS_SRL)):
+.PHONY: $(addprefix get-dev-config-,$(ROUTERS_XR) $(ROUTERS_CRPD))
+$(addprefix get-dev-config-,$(ROUTERS_XR) $(ROUTERS_CRPD)):
 	docker run $(INTERACTIVE) --rm --network container:$(TESTENV)-sweave ghcr.io/stratoweave/ncurl --host $(@:get-dev-config-%=%) --port 830 --username clab --password clab@123 get-config
 
 .PHONY: test-restconf-get
@@ -326,13 +326,13 @@ test-ping::
 
 .PHONY: test-get-config
 test-get-config:
-	$(MAKE) $(addprefix get-dev-config-,$(ROUTERS_XR) $(ROUTERS_CRPD) $(ROUTERS_SRL))
+	$(MAKE) $(addprefix get-dev-config-,$(ROUTERS_XR) $(ROUTERS_CRPD))
 
 .PHONY: save-logs
-save-logs: $(addprefix save-logs-,$(ROUTERS_XR) $(ROUTERS_CRPD) $(ROUTERS_SRL))
+save-logs: $(addprefix save-logs-,$(ROUTERS_XR) $(ROUTERS_CRPD))
 
-.PHONY: $(addprefix save-logs-,$(ROUTERS_XR) $(ROUTERS_CRPD) $(ROUTERS_SRL))
-$(addprefix save-logs-,$(ROUTERS_XR) $(ROUTERS_CRPD) $(ROUTERS_SRL)):
+.PHONY: $(addprefix save-logs-,$(ROUTERS_XR) $(ROUTERS_CRPD))
+$(addprefix save-logs-,$(ROUTERS_XR) $(ROUTERS_CRPD)):
 	mkdir -p logs
 	docker logs --timestamps $(TESTENV)-$(@:save-logs-%=%) > logs/$(@:save-logs-%=%)_docker.log 2>&1
 	$(MAKE) get-dev-config-$(@:save-logs-%=%) > logs/$(@:save-logs-%=%)_netconf.log || true

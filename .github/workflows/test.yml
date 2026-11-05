@@ -145,10 +145,10 @@ jobs:
           # linux-modules, so there is no need to install. We keep the install
           # step for backwards compatibility with 6.17, until all GitHub runners
           # are upgraded.
-          if ! sudo modprobe -a mpls_router mpls_gso vrf; then
+          if ! sudo modprobe -a mpls_router mpls_gso; then
             sudo apt-get update
             sudo apt-get install -qy linux-modules-extra-$(uname -r)
-            sudo modprobe -a mpls_router mpls_gso vrf
+            sudo modprobe -a mpls_router mpls_gso
           fi
       - name: "Check out repository code"
         uses: actions/checkout@v7

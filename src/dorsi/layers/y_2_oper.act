@@ -178,7 +178,7 @@ SRC_DNODE_CHILD_24: DList = DList(module='dorsi-rfs', namespace='http://example.
         DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='device', config=True, is_key=False, mandatory=True, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
         DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='interface', config=True, is_key=False, mandatory=True, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[]))
     ]),
-    DContainer(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='state', config=False, description='Operational state of the backbone interface, polled from\r\nthe device. oper-status is the interface oper-state.', presence=False, children=[
+    DContainer(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='state', config=False, description='Operational state of the backbone interface, polled from\nthe device. oper-status is the interface oper-state.', presence=False, children=[
         DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='oper-status', config=False, is_key=False, mandatory=False, type=DTypeEnum(name='enumeration', description=None, reference=None, units=None, exts=[], builtin_type='enumeration', default=None, name_to_val={'up':0, 'down':1, 'unknown':2}))
     ])
 ])

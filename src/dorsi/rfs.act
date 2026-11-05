@@ -26,6 +26,8 @@ from dorsi.devices.NokiaSRLinux_25_3_2_oper import root as srl25_oper_root
 
 CRPD = True
 
+# Part of the SR Linux AES1 encrypted-password format, so it must not follow the
+# sorespo -> dorsi rename: changing it would change every encrypted key on the devices.
 _SRL_AES1_SALT = b"\x01\x00sorespo!\x6f"
 
 def prefix_length_to_netmask(prefix_length):

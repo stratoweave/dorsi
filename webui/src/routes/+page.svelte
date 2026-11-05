@@ -134,12 +134,6 @@
       stopTopologyRefresh();
     };
   });
-
-  function countLabel(count: number | null | undefined, label: string): string {
-    if (count === null || count === undefined) return `— ${label.toLowerCase()}`;
-    const singular = label.replace(/s$/, '');
-    return `${count} ${(count === 1 ? singular : label).toLowerCase()}`;
-  }
 </script>
 
 <div class="overview">
@@ -178,7 +172,6 @@
     <StatTile
       label="Routers"
       value={routersCount}
-      hint={countLabel(routersCount, 'Routers')}
       href="/services/netinfra-router"
       loading={loadingCounts}
     />

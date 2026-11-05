@@ -80,7 +80,7 @@ following vendor & IP transport options are supported:
 * [Cisco IOS XRd](https://www.cisco.com/site/us/en/products/networking/sdwan-routers/ios-xrd/index.html)
   with IS-IS, iBGP, MPLS and LDP
 * [Nokia SR Linux](https://www.nokia.com/ip-networks/service-router-linux-NOS/)
-  with IS-IS, iBGP, VXLAN and BGP-EVPN
+  with IS-IS and iBGP (no lab environment or automated tests cover SR Linux at the moment)
 
 See our [lab documentation](test/README.md#quicklabs) on how run a
 lab/development environment for each of these options.
