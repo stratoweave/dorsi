@@ -1,28 +1,11 @@
-# SORESPO Tests
+# DORSI Tests
 
 ## Quick Labs
-SORESPO's service stack is designed to be vendor-neutral. At this time the
-following vendor & IP tansport options are supported:
-* [Juniper cRPD](https://www.juniper.net/documentation/product/us/en/crpd/)
-with IS-IS, iBGP, MPLS and LDP
-* [Cisco IOS XRd](https://www.cisco.com/site/us/en/products/networking/sdwan-routers/ios-xrd/index.html)
-with IS-IS, iBGP, MPLS and LDP
-* [Nokia SR Linux](https://www.nokia.com/ip-networks/service-router-linux-NOS/)
-with IS-IS and iBGP
-
 This repository contains [Containerlab](https://containerlab.dev/)-based
-labs/development environments for each of these vendor options which you can
-run:
+labs/development environments which you can run:
 * **[quicklab](quicklab/README.md)** has a combination of Cisco IOS XRd and
   Juniper cRPD core routers
   * This lab is an example of a true multi-vendor IP transport network.
-* **[quicklab-crpd](quicklab-crpd/README.md)** uses Juniper cRPD for the core
-  routers
-  * This lab is fully functional on Apple Silicon, making it ideal for local
-    development on Mac.
-* **[quicklab-srl](quicklab-srl/README.md)** has a combination of Nokia SR
-  Linux core routers
-  * This lab uses nothing but freely accessible software.
 * **[quicklab-notconf](quicklab-notconf/README.md)** runs NOTCONF which
   simulates Cisco IOS XRd and  Juniper cRPD
   * This lab requires very few resources and runs on 100% open source software.
@@ -30,12 +13,7 @@ run:
  ----
  *NOTE*: Obtaining Juniper cRPD and Cisco XRd requires an active vendor support
  contract, you will need to obtain the necessary images and licenses yourself.
- Nokia SR Linux is however freely available and therefor the main focus for our
- [tutorials](https://www.stratoweave.org/tutorials).
-
-*NOTE*: The Nokia SR Linux lab topology and router configurations were heavily
-inspired by [this](https://learn.srlinux.dev/tutorials/l3evpn/rt5-only) Nokia
-SR Linux tutorial.
+ Use `quicklab-notconf` if you do not have access to them.
 
 ### Network Device Container Images
 

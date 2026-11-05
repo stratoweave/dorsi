@@ -29,7 +29,7 @@ function contentVersion() {
   return hash.digest('hex').slice(0, 12);
 }
 
-// Every build is a static SPA. Normal builds are embedded into the sorespo
+// Every build is a static SPA. Normal builds are embedded into the dorsi
 // binary (make gen-webui) and served by the StratoWeave HTTP server with an
 // index.html fallback for client-routed pages. PUBLIC_DEMO=1
 // (`bun run build:demo`) builds the standalone demo: hash-routed so it can be

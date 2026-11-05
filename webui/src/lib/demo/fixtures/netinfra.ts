@@ -1,7 +1,7 @@
 import type { NetinfraBackboneLinkApi, NetinfraRouterApi } from '$lib/core/topology/model';
 
-// The demo network mirrors the quicklab-srl test environment
-// (test/quicklab-srl/netinfra.json): four Nokia SR Linux cores in a ring-ish
+// The demo network is modelled on a small SR Linux lab (formerly the
+// quicklab-srl test environment): four Nokia SR Linux cores in a ring-ish
 // mesh. AMS-CORE-1 requires manual approval so the config-queue story has a
 // device that holds changes; one monitored link is down for a red path on the
 // topology map.

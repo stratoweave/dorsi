@@ -19,7 +19,7 @@ module netinfra-inter {
     list router {
       key name;
 
-      sw:transform sorespo.inter.Router;
+      sw:transform dorsi.inter.Router;
 
       leaf name {
         type string;
@@ -70,7 +70,7 @@ module netinfra-inter {
     list backbone-link {
       key "left-router left-interface right-router right-interface";
 
-      sw:transform sorespo.inter.BBLink;
+      sw:transform dorsi.inter.BBLink;
 
       leaf left-router {
         type string;
@@ -111,7 +111,7 @@ module netinfra-inter {
         mandatory true;
       }
 
-      sw:transform sorespo.inter.IbgpFullmesh;
+      sw:transform dorsi.inter.IbgpFullmesh;
 
       list router {
         key "name";
