@@ -1,0 +1,156 @@
+module ip-fabric {
+  yang-version 1.1;
+  namespace "http://example.com/ip-fabric";
+  prefix ipf;
+
+  organization "StratoWeave";
+  description
+    "IP fabric underlay service model.";
+
+  revision 2026-11-06 {
+    description "Initial schema-only underlay service model.";
+  }
+
+  container ip-fabric {
+    description "IP fabric underlay service model.";
+    list fabric {
+      key name;
+      description
+        "A complete physical fabric.";
+      leaf name {
+        type string;
+      }
+
+      list switch {
+        key name;
+        min-elements 2;
+        description
+          "Fabric switch.";
+        leaf name {
+          type string;
+          description "Switch name.";
+        }
+        leaf type {
+          type string;
+          mandatory true;
+          description "Device type.";
+        }
+        leaf role {
+          type enumeration {
+            enum leaf;
+            enum spine;
+            enum super-spine;
+          }
+          mandatory true;
+        }
+        leaf pod {
+          when "../role!='super-spine'";
+          type string;
+          default "pod-1";
+          description "Pod membership; normally omitted for three-stage fabrics.";
+        }
+        leaf plane {
+          when "../../switch[role='super-spine'] and ../role!='leaf'";
+          type string;
+          default "plane-1";
+          description
+            "Five-stage spine or superspine plane. Every pod must have
+             a spine in each plane; every plane must have a superspine.";
+        }
+      }
+
+      list fabric-link {
+        key "lower-switch lower-port upper-switch upper-port";
+        min-elements 1;
+        unique "lower-switch lower-port";
+        unique "upper-switch upper-port";
+        must "(../switch[name=current()/lower-switch]/role='leaf' and
+                 ../switch[name=current()/upper-switch]/role='spine' and
+                 ../switch[name=current()/lower-switch]/pod =
+                 ../switch[name=current()/upper-switch]/pod) or
+              (../switch[name=current()/lower-switch]/role='spine' and
+                 ../switch[name=current()/upper-switch]/role='super-spine' and
+                 ../switch[name=current()/lower-switch]/plane =
+                 ../switch[name=current()/upper-switch]/plane)" {
+          error-message "Fabric links must join adjacent tiers in the same pod or plane.";
+        }
+        description
+          "One routed physical link.";
+        leaf lower-switch {
+          type leafref {
+            path "../../switch/name";
+          }
+        }
+        leaf lower-port {
+          type string;
+        }
+        leaf upper-switch {
+          type leafref {
+            path "../../switch/name";
+          }
+        }
+        leaf upper-port {
+          type string;
+        }
+      }
+
+      list server {
+        key name;
+        description
+          "Connectivity requirements for a server.";
+        leaf name {
+          type string;
+          description "Server name.";
+        }
+        container connectivity {
+          must "(profile='single-homed' and
+                   not(link[switch!=current()/link[1]/switch])) or
+                (profile='dual-homed' and
+                   link[switch!=current()/link[1]/switch] and
+                   not(link[switch!=current()/link[1]/switch and
+                     switch!=current()/link[switch!=current()/link[1]/switch][1]/switch]))" {
+            error-message "The profile requires links to exactly one or two distinct leaves.";
+          }
+          description
+            "Server connectivity profile.";
+          leaf profile {
+            type enumeration {
+              enum single-homed {
+                description
+                  "One leaf, with one or more NIC links. Leaf-failure
+                   survival is not required by this profile.";
+              }
+              enum dual-homed {
+                description
+                  "Two distinct leaves, with at least one NIC link to
+                   each. Default profile for highly available workloads;
+                   connectivity must survive the failure of either leaf.";
+              }
+            }
+            default dual-homed;
+          }
+          list link {
+            key "switch switch-port";
+            min-elements 1;
+            unique server-port;
+            must "../../../switch[name=current()/switch]/role='leaf'" {
+              error-message "Endpoint links must terminate on leaves.";
+            }
+            leaf switch {
+              type leafref {
+                path "../../../../switch/name";
+              }
+            }
+            leaf switch-port {
+              type string;
+            }
+            leaf server-port {
+              type string;
+              mandatory true;
+            }
+          }
+        }
+      }
+    }
+  }
+}
