@@ -19,9 +19,22 @@ def _add_switch(fabric: cfs_layer.ip_fabric__ip_fabric__fabric_entry, name: str,
 def _add_link(fabric: cfs_layer.ip_fabric__ip_fabric__fabric_entry, lower: str, lower_port: str, upper: str, upper_port: str):
     fabric.fabric_link.create((lower, lower_port, upper, upper_port))
 
+def _add_server(fabric: cfs_layer.ip_fabric__ip_fabric__fabric_entry, name: str, profile: str, links: list[(str, str, str)]):
+    conn = cfs_layer.ip_fabric__ip_fabric__fabric__server__connectivity(profile)
+    for switch, switch_port, server_port in links:
+        conn.link.create((switch, switch_port), server_port)
+    fabric.server.create(name, conn)
+
 def _empty_root():
     gs = cfs_layer.netinfra__netinfra__global_settings('ibgp-authentication-key')
     return cfs_layer.root(cfs_layer.netinfra__netinfra(gs))
+
+# Servers: two dual-homed to a pair of leaves, one single-homed. The same in
+# both topologies, which both have leaf1 to leaf3.
+def _add_servers(fabric: cfs_layer.ip_fabric__ip_fabric__fabric_entry):
+    _add_server(fabric, "server1", "dual-homed", [("leaf1", "ethernet-1/1", "eth1"), ("leaf2", "ethernet-1/1", "eth2")])
+    _add_server(fabric, "server2", "dual-homed", [("leaf2", "ethernet-1/2", "eth1"), ("leaf3", "ethernet-1/1", "eth2")])
+    _add_server(fabric, "server3", "single-homed", [("leaf3", "ethernet-1/2", "eth1")])
 
 # Three-stage Clos: three leaves, each connected to both spines.
 def three_stage():
@@ -35,6 +48,7 @@ def three_stage():
     for n, leaf in enumerate(["leaf1", "leaf2", "leaf3"]):
         _add_link(f, leaf, "ethernet-1/49", "spine1", "ethernet-1/{n + 1}")
         _add_link(f, leaf, "ethernet-1/50", "spine2", "ethernet-1/{n + 1}")
+    _add_servers(f)
     return root
 
 # Five-stage Clos: two pods, each with two leaves and one spine per plane.
@@ -62,6 +76,7 @@ def five_stage():
     _add_link(f, "spine3", "ethernet-1/31", "superspine1", "ethernet-1/2")
     _add_link(f, "spine2", "ethernet-1/31", "superspine2", "ethernet-1/1")
     _add_link(f, "spine4", "ethernet-1/31", "superspine2", "ethernet-1/2")
+    _add_servers(f)
     return root
 
 # TransformTester takes its snapshot as soon as the CFS commit completes. A

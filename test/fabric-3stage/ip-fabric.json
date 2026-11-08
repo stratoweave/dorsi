@@ -77,6 +77,57 @@
                         "upper-switch": "spine2",
                         "upper-port": "ethernet-1/3"
                     }
+                ],
+                "server": [
+                    {
+                        "name": "server1",
+                        "connectivity": {
+                            "profile": "dual-homed",
+                            "link": [
+                                {
+                                    "switch": "leaf1",
+                                    "switch-port": "ethernet-1/1",
+                                    "server-port": "eth1"
+                                },
+                                {
+                                    "switch": "leaf2",
+                                    "switch-port": "ethernet-1/1",
+                                    "server-port": "eth2"
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "name": "server2",
+                        "connectivity": {
+                            "profile": "dual-homed",
+                            "link": [
+                                {
+                                    "switch": "leaf2",
+                                    "switch-port": "ethernet-1/2",
+                                    "server-port": "eth1"
+                                },
+                                {
+                                    "switch": "leaf3",
+                                    "switch-port": "ethernet-1/1",
+                                    "server-port": "eth2"
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "name": "server3",
+                        "connectivity": {
+                            "profile": "single-homed",
+                            "link": [
+                                {
+                                    "switch": "leaf3",
+                                    "switch-port": "ethernet-1/2",
+                                    "server-port": "eth1"
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         ]

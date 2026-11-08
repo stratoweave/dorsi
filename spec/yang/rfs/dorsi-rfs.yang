@@ -161,6 +161,28 @@ module dorsi-rfs {
                 }
             }
         }
+        list server-port {
+            description
+                "Leaf port facing a server.";
+            key name;
+            sw:rfs-transform dorsi.rfs.ServerPort;
+            leaf name {
+                type string;
+            }
+            leaf server {
+                type string;
+                mandatory true;
+            }
+            leaf server-port {
+                type string;
+                mandatory true;
+            }
+            leaf profile {
+                description "Connectivity profile of the server.";
+                type string;
+                mandatory true;
+            }
+        }
         list ibgp-neighbor {
           key address;
           sw:rfs-transform dorsi.rfs.IbgpNeighbor;

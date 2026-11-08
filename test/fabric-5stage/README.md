@@ -24,6 +24,16 @@ switches and the links between them.
 | spine2 | `ethernet-1/31` | superspine2 | `ethernet-1/1` |
 | spine4 | `ethernet-1/31` | superspine2 | `ethernet-1/2` |
 
+## Servers
+
+| Server | Profile | Leaf | Port | Server port |
+|---|---|---|---|---|
+| server1 | dual-homed | leaf1 | `ethernet-1/1` | `eth1` |
+| server1 | dual-homed | leaf2 | `ethernet-1/1` | `eth2` |
+| server2 | dual-homed | leaf2 | `ethernet-1/2` | `eth1` |
+| server2 | dual-homed | leaf3 | `ethernet-1/1` | `eth2` |
+| server3 | single-homed | leaf3 | `ethernet-1/2` | `eth1` |
+
 ## Status
 
 The topology and data match the `fabric_three_stage` and `fabric_five_stage`

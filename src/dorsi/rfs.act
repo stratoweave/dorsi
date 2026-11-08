@@ -436,3 +436,19 @@ class FabricInterface(base.FabricInterface):
             return dev
 
         raise UnsupportedDevice()
+
+
+class ServerPort(base.ServerPort):
+    def transform(self, i, di):
+        print("RFS /rfs{{{di.name}}}/server-port transform running [{i.name}] <-> {i.server} [{i.server_port}] {i.profile}", err=True)
+        if_description = "Server {i.server} [{i.server_port}] ({i.profile})"
+
+        if "srl_nokia-system" in di.modules:
+            print("RFS /rfs{{{di.name}}}/server-port transform running [{i.name}] for Nokia SRLinux", err=True)
+            dev = srl25.root()
+            intf = dev.interface.create(i.name)
+            intf.description = if_description
+            intf.admin_state = "enable"
+            return dev
+
+        raise UnsupportedDevice()

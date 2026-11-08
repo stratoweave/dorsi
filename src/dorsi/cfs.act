@@ -185,6 +185,11 @@ class Fabric(base.Fabric):
             ui.bgp.peer_address = lower_addr
             ui.bgp.peer_asn = u64(lower_asn)
 
+        for server in i.server:
+            print("CFS fabric server", server.name, server.connectivity.profile)
+            for link in server.connectivity.link:
+                o.rfs.create(link.switch).server_port.create(link.switch_port, server=server.name, server_port=link.server_port, profile=server.connectivity.profile)
+
         return o
 
 

@@ -68,6 +68,49 @@
                 <upper-switch>spine2</upper-switch>
                 <upper-port>ethernet-1/3</upper-port>
             </fabric-link>
+            <server>
+                <name>server1</name>
+                <connectivity>
+                    <profile>dual-homed</profile>
+                    <link>
+                        <switch>leaf1</switch>
+                        <switch-port>ethernet-1/1</switch-port>
+                        <server-port>eth1</server-port>
+                    </link>
+                    <link>
+                        <switch>leaf2</switch>
+                        <switch-port>ethernet-1/1</switch-port>
+                        <server-port>eth2</server-port>
+                    </link>
+                </connectivity>
+            </server>
+            <server>
+                <name>server2</name>
+                <connectivity>
+                    <profile>dual-homed</profile>
+                    <link>
+                        <switch>leaf2</switch>
+                        <switch-port>ethernet-1/2</switch-port>
+                        <server-port>eth1</server-port>
+                    </link>
+                    <link>
+                        <switch>leaf3</switch>
+                        <switch-port>ethernet-1/1</switch-port>
+                        <server-port>eth2</server-port>
+                    </link>
+                </connectivity>
+            </server>
+            <server>
+                <name>server3</name>
+                <connectivity>
+                    <profile>single-homed</profile>
+                    <link>
+                        <switch>leaf3</switch>
+                        <switch-port>ethernet-1/2</switch-port>
+                        <server-port>eth1</server-port>
+                    </link>
+                </connectivity>
+            </server>
         </fabric>
     </ip-fabric>
 </data>

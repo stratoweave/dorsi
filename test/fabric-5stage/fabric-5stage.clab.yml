@@ -33,6 +33,18 @@ topology:
       kind: nokia_srlinux
     superspine2:
       kind: nokia_srlinux
+    server1:
+      kind: linux
+      image: ghcr.io/srl-labs/network-multitool
+      image-pull-policy: if-not-present
+    server2:
+      kind: linux
+      image: ghcr.io/srl-labs/network-multitool
+      image-pull-policy: if-not-present
+    server3:
+      kind: linux
+      image: ghcr.io/srl-labs/network-multitool
+      image-pull-policy: if-not-present
     sweave:
       kind: linux
       image: dorsi-sweave-base
@@ -55,3 +67,8 @@ topology:
     - endpoints: ["spine3:e1-31", "superspine1:e1-2"]
     - endpoints: ["spine2:e1-31", "superspine2:e1-1"]
     - endpoints: ["spine4:e1-31", "superspine2:e1-2"]
+    - endpoints: ["server1:eth1", "leaf1:e1-1"]
+    - endpoints: ["server1:eth2", "leaf2:e1-1"]
+    - endpoints: ["server2:eth1", "leaf2:e1-2"]
+    - endpoints: ["server2:eth2", "leaf3:e1-1"]
+    - endpoints: ["server3:eth1", "leaf3:e1-2"]
