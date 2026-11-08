@@ -79,8 +79,8 @@ bgp = network_instance_element.protocols.create_bgp(autonomous_system=u64(420000
 # List /network-instance[name='default']/protocols/bgp/afi-safi element: Identityref('ipv4-unicast', ns='urn:nokia.com:srlinux:general:common', mod='srl_nokia-common', pfx='srl_nokia-comm')
 afi_safi_element = bgp.afi_safi.create(Identityref('ipv4-unicast', ns='urn:nokia.com:srlinux:general:common', mod='srl_nokia-common', pfx='srl_nokia-comm'), admin_state='enable')
 
-# Container: /network-instance[name='default']/protocols/bgp/afi-safi[afi-safi-name='Identityref(\'ipv4-unicast\', ns=\'urn:nokia.com:srlinux:general:common\', mod=\'srl_nokia-common\', pfx=\'srl_nokia-comm\')']/multipath
-afi_safi_element.multipath.maximum_paths = u64(64)
+# Container: /network-instance[name='default']/protocols/bgp/afi-safi[afi-safi-name='Identityref(\'ipv4-unicast\', ns=\'urn:nokia.com:srlinux:general:common\', mod=\'srl_nokia-common\', pfx=\'srl_nokia-comm\')']/multipath/ebgp
+afi_safi_element.multipath.ebgp.maximum_paths = u64(64)
 
 # List /network-instance[name='default']/protocols/bgp/group element: 'fabric'
 group_element = bgp.group.create('fabric')
@@ -210,8 +210,8 @@ bgp = network_instance_element.protocols.create_bgp(autonomous_system=u64(420000
 # List /network-instance[name='default']/protocols/bgp/afi-safi element: Identityref('ipv4-unicast', ns='urn:nokia.com:srlinux:general:common', mod='srl_nokia-common', pfx='srl_nokia-comm')
 afi_safi_element = bgp.afi_safi.create(Identityref('ipv4-unicast', ns='urn:nokia.com:srlinux:general:common', mod='srl_nokia-common', pfx='srl_nokia-comm'), admin_state='enable')
 
-# Container: /network-instance[name='default']/protocols/bgp/afi-safi[afi-safi-name='Identityref(\'ipv4-unicast\', ns=\'urn:nokia.com:srlinux:general:common\', mod=\'srl_nokia-common\', pfx=\'srl_nokia-comm\')']/multipath
-afi_safi_element.multipath.maximum_paths = u64(64)
+# Container: /network-instance[name='default']/protocols/bgp/afi-safi[afi-safi-name='Identityref(\'ipv4-unicast\', ns=\'urn:nokia.com:srlinux:general:common\', mod=\'srl_nokia-common\', pfx=\'srl_nokia-comm\')']/multipath/ebgp
+afi_safi_element.multipath.ebgp.maximum_paths = u64(64)
 
 # List /network-instance[name='default']/protocols/bgp/group element: 'fabric'
 group_element = bgp.group.create('fabric')
@@ -341,8 +341,8 @@ bgp = network_instance_element.protocols.create_bgp(autonomous_system=u64(420000
 # List /network-instance[name='default']/protocols/bgp/afi-safi element: Identityref('ipv4-unicast', ns='urn:nokia.com:srlinux:general:common', mod='srl_nokia-common', pfx='srl_nokia-comm')
 afi_safi_element = bgp.afi_safi.create(Identityref('ipv4-unicast', ns='urn:nokia.com:srlinux:general:common', mod='srl_nokia-common', pfx='srl_nokia-comm'), admin_state='enable')
 
-# Container: /network-instance[name='default']/protocols/bgp/afi-safi[afi-safi-name='Identityref(\'ipv4-unicast\', ns=\'urn:nokia.com:srlinux:general:common\', mod=\'srl_nokia-common\', pfx=\'srl_nokia-comm\')']/multipath
-afi_safi_element.multipath.maximum_paths = u64(64)
+# Container: /network-instance[name='default']/protocols/bgp/afi-safi[afi-safi-name='Identityref(\'ipv4-unicast\', ns=\'urn:nokia.com:srlinux:general:common\', mod=\'srl_nokia-common\', pfx=\'srl_nokia-comm\')']/multipath/ebgp
+afi_safi_element.multipath.ebgp.maximum_paths = u64(64)
 
 # List /network-instance[name='default']/protocols/bgp/group element: 'fabric'
 group_element = bgp.group.create('fabric')
@@ -481,8 +481,8 @@ bgp = network_instance_element.protocols.create_bgp(autonomous_system=u64(420010
 # List /network-instance[name='default']/protocols/bgp/afi-safi element: Identityref('ipv4-unicast', ns='urn:nokia.com:srlinux:general:common', mod='srl_nokia-common', pfx='srl_nokia-comm')
 afi_safi_element = bgp.afi_safi.create(Identityref('ipv4-unicast', ns='urn:nokia.com:srlinux:general:common', mod='srl_nokia-common', pfx='srl_nokia-comm'), admin_state='enable')
 
-# Container: /network-instance[name='default']/protocols/bgp/afi-safi[afi-safi-name='Identityref(\'ipv4-unicast\', ns=\'urn:nokia.com:srlinux:general:common\', mod=\'srl_nokia-common\', pfx=\'srl_nokia-comm\')']/multipath
-afi_safi_element.multipath.maximum_paths = u64(64)
+# Container: /network-instance[name='default']/protocols/bgp/afi-safi[afi-safi-name='Identityref(\'ipv4-unicast\', ns=\'urn:nokia.com:srlinux:general:common\', mod=\'srl_nokia-common\', pfx=\'srl_nokia-comm\')']/multipath/ebgp
+afi_safi_element.multipath.ebgp.maximum_paths = u64(64)
 
 # List /network-instance[name='default']/protocols/bgp/group element: 'fabric'
 group_element = bgp.group.create('fabric')
@@ -624,8 +624,8 @@ bgp = network_instance_element.protocols.create_bgp(autonomous_system=u64(420010
 # List /network-instance[name='default']/protocols/bgp/afi-safi element: Identityref('ipv4-unicast', ns='urn:nokia.com:srlinux:general:common', mod='srl_nokia-common', pfx='srl_nokia-comm')
 afi_safi_element = bgp.afi_safi.create(Identityref('ipv4-unicast', ns='urn:nokia.com:srlinux:general:common', mod='srl_nokia-common', pfx='srl_nokia-comm'), admin_state='enable')
 
-# Container: /network-instance[name='default']/protocols/bgp/afi-safi[afi-safi-name='Identityref(\'ipv4-unicast\', ns=\'urn:nokia.com:srlinux:general:common\', mod=\'srl_nokia-common\', pfx=\'srl_nokia-comm\')']/multipath
-afi_safi_element.multipath.maximum_paths = u64(64)
+# Container: /network-instance[name='default']/protocols/bgp/afi-safi[afi-safi-name='Identityref(\'ipv4-unicast\', ns=\'urn:nokia.com:srlinux:general:common\', mod=\'srl_nokia-common\', pfx=\'srl_nokia-comm\')']/multipath/ebgp
+afi_safi_element.multipath.ebgp.maximum_paths = u64(64)
 
 # List /network-instance[name='default']/protocols/bgp/group element: 'fabric'
 group_element = bgp.group.create('fabric')

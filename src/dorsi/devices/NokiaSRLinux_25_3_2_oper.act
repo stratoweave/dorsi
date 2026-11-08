@@ -998,9 +998,13 @@ DMust(condition="not(. = 'link-state') or /srl_nokia-netinst:network-instance[sr
     DLeaf(module='srl_nokia-bgp', namespace='urn:nokia.com:srlinux:bgp:bgp', prefix='srl_nokia-bgp', name='admin-state', config=True, description='This leaf indicates whether the AFI-SAFI is enabled for the instance', default='disable', is_key=False, mandatory=False, type=DTypeEnum(name='srl_nokia-comm:admin-state', description='general admin-state option.', reference=None, units=None, exts=[], builtin_type='enumeration', default=None, name_to_val={'enable':1, 'disable':2})),
     DContainer(module='srl_nokia-bgp', namespace='urn:nokia.com:srlinux:bgp:bgp', prefix='srl_nokia-bgp', name='multipath', config=True, description='Options related to BGP multipath', presence=False, children=[
         DLeaf(module='srl_nokia-bgp', namespace='urn:nokia.com:srlinux:bgp:bgp', prefix='srl_nokia-bgp', name='allow-multiple-as', config=True, description='When set to true, BGP is allowed to build a multipath set using BGP routes with different neighbor AS (most recent AS in the AS_PATH)\n\nWhen set to false, BGP is only allowed to use non-best paths for ECMP if they meet the multipath criteria and they have the same neighbor AS as the best path', default='true', is_key=False, mandatory=False, type=DTypeBoolean(name='boolean', description=None, reference=None, units=None, exts=[], builtin_type='boolean', default=None)),
-        DLeaf(module='srl_nokia-bgp', namespace='urn:nokia.com:srlinux:bgp:bgp', prefix='srl_nokia-bgp', name='maximum-paths', config=True, description='The maximum number of BGP ECMP next-hops for BGP routes with an NLRI belonging to the address family of this configuration context', default='1', if_feature=[
-'srl_nokia-feat:bgp-multipath-maximum-paths'
-            ], is_key=False, mandatory=False, type=DTypeIntegerUnsigned(name='ip-ecmp', description='The supported range of ECMP values for IP routes.', reference=None, units=None, exts=[], builtin_type='uint32', default=None, ranges=Ranges([(1, 256)])))
+        DContainer(module='srl_nokia-bgp', namespace='urn:nokia.com:srlinux:bgp:bgp', prefix='srl_nokia-bgp', name='ebgp', config=True, description='Multipath configuration options that apply when the best path for the prefix was received from an EBGP peer', if_feature=[
+'srl_nokia-feat:bgp-peertype-maximum-paths or srl_nokia-feat:bgp-weighted-ecmp'
+            ], presence=False, children=[
+            DLeaf(module='srl_nokia-bgp', namespace='urn:nokia.com:srlinux:bgp:bgp', prefix='srl_nokia-bgp', name='maximum-paths', config=True, description='The maximum number of BGP ECMP next-hops for BGP routes with an NLRI belonging to the address family of this configuration context', default='1', if_feature=[
+'srl_nokia-feat:bgp-peertype-maximum-paths'
+                ], is_key=False, mandatory=False, type=DTypeIntegerUnsigned(name='ip-ecmp', description='The supported range of ECMP values for IP routes.', reference=None, units=None, exts=[], builtin_type='uint32', default=None, ranges=Ranges([(1, 256)])))
+        ])
     ])
 ])
 
@@ -34548,13 +34552,34 @@ class srl_nokia_network_instance__network_instance__protocols__isis(yadata.MNode
 
 
 _breaker24: None = None
-class srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi__multipath(yadata.MNode):
-    allow_multiple_as: ?bool
+class srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi__multipath__ebgp(yadata.MNode):
     maximum_paths: ?u64
 
-    mut def __init__(self, allow_multiple_as: ?bool=None, maximum_paths: ?u64=None) -> None:
-        self.allow_multiple_as = allow_multiple_as
+    mut def __init__(self, maximum_paths: ?u64=None) -> None:
         self.maximum_paths = maximum_paths
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['srl_nokia-network-instance:network-instance', 'protocols', 'srl_nokia-bgp:bgp', 'afi-safi', 'multipath', 'ebgp'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi__multipath__ebgp:
+        if n is not None:
+            return srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi__multipath__ebgp(maximum_paths=n.get_opt_u64(ygdata.Id(NS_srl_nokia_bgp, 'maximum-paths')))
+        return srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi__multipath__ebgp()
+
+    mut def copy(self) -> srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi__multipath__ebgp:
+        """Create a deep copy of this adata object"""
+        return srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi__multipath__ebgp.from_gdata(self.to_gdata())
+
+
+_breaker25: None = None
+class srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi__multipath(yadata.MNode):
+    allow_multiple_as: ?bool
+    ebgp: srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi__multipath__ebgp
+
+    mut def __init__(self, allow_multiple_as: ?bool=None, ebgp: ?srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi__multipath__ebgp=None) -> None:
+        self.allow_multiple_as = allow_multiple_as
+        self.ebgp = ebgp if ebgp is not None else srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi__multipath__ebgp()
 
     mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
         return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['srl_nokia-network-instance:network-instance', 'protocols', 'srl_nokia-bgp:bgp', 'afi-safi', 'multipath'], prev=prev)
@@ -34562,7 +34587,7 @@ class srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi__mu
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi__multipath:
         if n is not None:
-            return srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi__multipath(allow_multiple_as=n.get_opt_bool(ygdata.Id(NS_srl_nokia_bgp, 'allow-multiple-as')), maximum_paths=n.get_opt_u64(ygdata.Id(NS_srl_nokia_bgp, 'maximum-paths')))
+            return srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi__multipath(allow_multiple_as=n.get_opt_bool(ygdata.Id(NS_srl_nokia_bgp, 'allow-multiple-as')), ebgp=srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi__multipath__ebgp.from_gdata(n.get_opt_cnt(ygdata.Id(NS_srl_nokia_bgp, 'ebgp'))))
         return srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi__multipath()
 
     mut def copy(self) -> srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi__multipath:
@@ -34570,7 +34595,7 @@ class srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi__mu
         return srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi__multipath.from_gdata(self.to_gdata())
 
 
-_breaker25: None = None
+_breaker26: None = None
 class srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi_entry(yadata.MNode):
     afi_safi_name: Identityref
     admin_state: ?str
@@ -34592,7 +34617,7 @@ class srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi_ent
         """Create a deep copy of this adata object"""
         return srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi_entry.from_gdata(self.to_gdata())
 
-_breaker26: None = None
+_breaker27: None = None
 class srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi(yadata.MKeyedList[Identityref, srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi_entry]):
     mut def __init__(self, elements: list[srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi_entry]=[]) -> None:
         yadata.MKeyedList.__init__(self, lambda e: e.afi_safi_name, elements)
@@ -34625,7 +34650,7 @@ class srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi(yad
         return srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi(elements=copied_elements)
 
 
-_breaker27: None = None
+_breaker28: None = None
 class srl_nokia_network_instance__network_instance__protocols__bgp__group_entry(yadata.MNode):
     group_name: str
     export_policy: list[str]
@@ -34649,7 +34674,7 @@ class srl_nokia_network_instance__network_instance__protocols__bgp__group_entry(
         """Create a deep copy of this adata object"""
         return srl_nokia_network_instance__network_instance__protocols__bgp__group_entry.from_gdata(self.to_gdata())
 
-_breaker28: None = None
+_breaker29: None = None
 class srl_nokia_network_instance__network_instance__protocols__bgp__group(yadata.MKeyedList[str, srl_nokia_network_instance__network_instance__protocols__bgp__group_entry]):
     mut def __init__(self, elements: list[srl_nokia_network_instance__network_instance__protocols__bgp__group_entry]=[]) -> None:
         yadata.MKeyedList.__init__(self, lambda e: e.group_name, elements)
@@ -34682,7 +34707,7 @@ class srl_nokia_network_instance__network_instance__protocols__bgp__group(yadata
         return srl_nokia_network_instance__network_instance__protocols__bgp__group(elements=copied_elements)
 
 
-_breaker29: None = None
+_breaker30: None = None
 class srl_nokia_network_instance__network_instance__protocols__bgp__neighbor__authentication(yadata.MNode):
     password: ?str
 
@@ -34703,7 +34728,7 @@ class srl_nokia_network_instance__network_instance__protocols__bgp__neighbor__au
         return srl_nokia_network_instance__network_instance__protocols__bgp__neighbor__authentication.from_gdata(self.to_gdata())
 
 
-_breaker30: None = None
+_breaker31: None = None
 class srl_nokia_network_instance__network_instance__protocols__bgp__neighbor__timers(yadata.MNode):
     connect_retry: ?u64
     hold_time: ?u64
@@ -34728,7 +34753,7 @@ class srl_nokia_network_instance__network_instance__protocols__bgp__neighbor__ti
         return srl_nokia_network_instance__network_instance__protocols__bgp__neighbor__timers.from_gdata(self.to_gdata())
 
 
-_breaker31: None = None
+_breaker32: None = None
 class srl_nokia_network_instance__network_instance__protocols__bgp__neighbor_entry(yadata.MNode):
     peer_address: str
     admin_state: ?str
@@ -34758,7 +34783,7 @@ class srl_nokia_network_instance__network_instance__protocols__bgp__neighbor_ent
         """Create a deep copy of this adata object"""
         return srl_nokia_network_instance__network_instance__protocols__bgp__neighbor_entry.from_gdata(self.to_gdata())
 
-_breaker32: None = None
+_breaker33: None = None
 class srl_nokia_network_instance__network_instance__protocols__bgp__neighbor(yadata.MKeyedList[str, srl_nokia_network_instance__network_instance__protocols__bgp__neighbor_entry]):
     mut def __init__(self, elements: list[srl_nokia_network_instance__network_instance__protocols__bgp__neighbor_entry]=[]) -> None:
         yadata.MKeyedList.__init__(self, lambda e: e.peer_address, elements)
@@ -34797,7 +34822,7 @@ class srl_nokia_network_instance__network_instance__protocols__bgp__neighbor(yad
         return srl_nokia_network_instance__network_instance__protocols__bgp__neighbor(elements=copied_elements)
 
 
-_breaker33: None = None
+_breaker34: None = None
 class srl_nokia_network_instance__network_instance__protocols__bgp(yadata.MNode):
     autonomous_system: ?u64
     router_id: ?str
@@ -34829,7 +34854,7 @@ class srl_nokia_network_instance__network_instance__protocols__bgp(yadata.MNode)
         raise Exception('Unreachable in srl_nokia_network_instance__network_instance__protocols__bgp.copy()')
 
 
-_breaker34: None = None
+_breaker35: None = None
 class srl_nokia_network_instance__network_instance__protocols(yadata.MNode):
     isis: ?srl_nokia_network_instance__network_instance__protocols__isis
     bgp: ?srl_nokia_network_instance__network_instance__protocols__bgp
@@ -34872,7 +34897,7 @@ class srl_nokia_network_instance__network_instance__protocols(yadata.MNode):
         return srl_nokia_network_instance__network_instance__protocols.from_gdata(self.to_gdata())
 
 
-_breaker35: None = None
+_breaker36: None = None
 class srl_nokia_network_instance__network_instance_entry(yadata.MNode):
     name: str
     type: ?Identityref
@@ -34900,7 +34925,7 @@ class srl_nokia_network_instance__network_instance_entry(yadata.MNode):
         """Create a deep copy of this adata object"""
         return srl_nokia_network_instance__network_instance_entry.from_gdata(self.to_gdata())
 
-_breaker36: None = None
+_breaker37: None = None
 class srl_nokia_network_instance__network_instance(yadata.MKeyedList[str, srl_nokia_network_instance__network_instance_entry]):
     mut def __init__(self, elements: list[srl_nokia_network_instance__network_instance_entry]=[]) -> None:
         yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
@@ -34937,7 +34962,7 @@ class srl_nokia_network_instance__network_instance(yadata.MKeyedList[str, srl_no
         return srl_nokia_network_instance__network_instance(elements=copied_elements)
 
 
-_breaker37: None = None
+_breaker38: None = None
 class srl_nokia_routing_policy__routing_policy__prefix_set__prefix_entry(yadata.MNode):
     ip_prefix: str
     mask_length_range: str
@@ -34957,7 +34982,7 @@ class srl_nokia_routing_policy__routing_policy__prefix_set__prefix_entry(yadata.
         """Create a deep copy of this adata object"""
         return srl_nokia_routing_policy__routing_policy__prefix_set__prefix_entry.from_gdata(self.to_gdata())
 
-_breaker38: None = None
+_breaker39: None = None
 class srl_nokia_routing_policy__routing_policy__prefix_set__prefix(yadata.MKeyedList[(ip_prefix: str, mask_length_range: str), srl_nokia_routing_policy__routing_policy__prefix_set__prefix_entry]):
     mut def __init__(self, elements: list[srl_nokia_routing_policy__routing_policy__prefix_set__prefix_entry]=[]) -> None:
         yadata.MKeyedList.__init__(self, lambda e: (ip_prefix=e.ip_prefix, mask_length_range=e.mask_length_range), elements)
@@ -34988,7 +35013,7 @@ class srl_nokia_routing_policy__routing_policy__prefix_set__prefix(yadata.MKeyed
         return srl_nokia_routing_policy__routing_policy__prefix_set__prefix(elements=copied_elements)
 
 
-_breaker39: None = None
+_breaker40: None = None
 class srl_nokia_routing_policy__routing_policy__prefix_set_entry(yadata.MNode):
     name: str
     prefix: srl_nokia_routing_policy__routing_policy__prefix_set__prefix
@@ -35008,7 +35033,7 @@ class srl_nokia_routing_policy__routing_policy__prefix_set_entry(yadata.MNode):
         """Create a deep copy of this adata object"""
         return srl_nokia_routing_policy__routing_policy__prefix_set_entry.from_gdata(self.to_gdata())
 
-_breaker40: None = None
+_breaker41: None = None
 class srl_nokia_routing_policy__routing_policy__prefix_set(yadata.MKeyedList[str, srl_nokia_routing_policy__routing_policy__prefix_set_entry]):
     mut def __init__(self, elements: list[srl_nokia_routing_policy__routing_policy__prefix_set_entry]=[]) -> None:
         yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
@@ -35039,7 +35064,7 @@ class srl_nokia_routing_policy__routing_policy__prefix_set(yadata.MKeyedList[str
         return srl_nokia_routing_policy__routing_policy__prefix_set(elements=copied_elements)
 
 
-_breaker41: None = None
+_breaker42: None = None
 class srl_nokia_routing_policy__routing_policy__policy__statement__match__prefix(yadata.MNode):
     prefix_set: ?str
 
@@ -35060,7 +35085,7 @@ class srl_nokia_routing_policy__routing_policy__policy__statement__match__prefix
         return srl_nokia_routing_policy__routing_policy__policy__statement__match__prefix.from_gdata(self.to_gdata())
 
 
-_breaker42: None = None
+_breaker43: None = None
 class srl_nokia_routing_policy__routing_policy__policy__statement__match(yadata.MNode):
     prefix: srl_nokia_routing_policy__routing_policy__policy__statement__match__prefix
 
@@ -35081,7 +35106,7 @@ class srl_nokia_routing_policy__routing_policy__policy__statement__match(yadata.
         return srl_nokia_routing_policy__routing_policy__policy__statement__match.from_gdata(self.to_gdata())
 
 
-_breaker43: None = None
+_breaker44: None = None
 class srl_nokia_routing_policy__routing_policy__policy__statement__action(yadata.MNode):
     policy_result: ?str
 
@@ -35102,7 +35127,7 @@ class srl_nokia_routing_policy__routing_policy__policy__statement__action(yadata
         return srl_nokia_routing_policy__routing_policy__policy__statement__action.from_gdata(self.to_gdata())
 
 
-_breaker44: None = None
+_breaker45: None = None
 class srl_nokia_routing_policy__routing_policy__policy__statement_entry(yadata.MNode):
     name: str
     match: srl_nokia_routing_policy__routing_policy__policy__statement__match
@@ -35124,7 +35149,7 @@ class srl_nokia_routing_policy__routing_policy__policy__statement_entry(yadata.M
         """Create a deep copy of this adata object"""
         return srl_nokia_routing_policy__routing_policy__policy__statement_entry.from_gdata(self.to_gdata())
 
-_breaker45: None = None
+_breaker46: None = None
 class srl_nokia_routing_policy__routing_policy__policy__statement(yadata.MKeyedList[str, srl_nokia_routing_policy__routing_policy__policy__statement_entry]):
     mut def __init__(self, elements: list[srl_nokia_routing_policy__routing_policy__policy__statement_entry]=[]) -> None:
         yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
@@ -35155,7 +35180,7 @@ class srl_nokia_routing_policy__routing_policy__policy__statement(yadata.MKeyedL
         return srl_nokia_routing_policy__routing_policy__policy__statement(elements=copied_elements)
 
 
-_breaker46: None = None
+_breaker47: None = None
 class srl_nokia_routing_policy__routing_policy__policy_entry(yadata.MNode):
     name: str
     statement: srl_nokia_routing_policy__routing_policy__policy__statement
@@ -35175,7 +35200,7 @@ class srl_nokia_routing_policy__routing_policy__policy_entry(yadata.MNode):
         """Create a deep copy of this adata object"""
         return srl_nokia_routing_policy__routing_policy__policy_entry.from_gdata(self.to_gdata())
 
-_breaker47: None = None
+_breaker48: None = None
 class srl_nokia_routing_policy__routing_policy__policy(yadata.MKeyedList[str, srl_nokia_routing_policy__routing_policy__policy_entry]):
     mut def __init__(self, elements: list[srl_nokia_routing_policy__routing_policy__policy_entry]=[]) -> None:
         yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
@@ -35206,7 +35231,7 @@ class srl_nokia_routing_policy__routing_policy__policy(yadata.MKeyedList[str, sr
         return srl_nokia_routing_policy__routing_policy__policy(elements=copied_elements)
 
 
-_breaker48: None = None
+_breaker49: None = None
 class srl_nokia_routing_policy__routing_policy(yadata.MNode):
     prefix_set: srl_nokia_routing_policy__routing_policy__prefix_set
     policy: srl_nokia_routing_policy__routing_policy__policy
@@ -35229,7 +35254,7 @@ class srl_nokia_routing_policy__routing_policy(yadata.MNode):
         return srl_nokia_routing_policy__routing_policy.from_gdata(self.to_gdata())
 
 
-_breaker49: None = None
+_breaker50: None = None
 class root(yadata.MNode):
     system: srl_nokia_system__system
     interface: srl_nokia_interfaces__interface
@@ -35282,7 +35307,7 @@ def _present(n: ?ygdata.Node) -> ?ygdata.Node:
             return n
     return None
 
-_breaker50: None = None
+_breaker51: None = None
 proc def srl_nokia_system__system__name_deliver(cb: action(?srl_nokia_system__system__name, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     inst: ?srl_nokia_system__system__name = None
     if n is not None:
@@ -35314,7 +35339,7 @@ class srl_nokia_system__system__name_subs(SubscriptionNode):
         and an error."""
         return ygdata.Dst(lambda n, err: srl_nokia_system__system__name_deliver(cb, n, err), root=self.filt())
 
-_breaker51: None = None
+_breaker52: None = None
 proc def srl_nokia_system__system_deliver(cb: action(?srl_nokia_system__system, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     inst: ?srl_nokia_system__system = None
     if n is not None:
@@ -35345,7 +35370,7 @@ class srl_nokia_system__system_subs(SubscriptionNode):
         and an error."""
         return ygdata.Dst(lambda n, err: srl_nokia_system__system_deliver(cb, n, err), root=self.filt())
 
-_breaker52: None = None
+_breaker53: None = None
 class srl_nokia_interfaces__interface__subinterface__ipv4__address_entry_subs(SubscriptionNode):
     ip_prefix: SubscriptionNode
 
@@ -35357,7 +35382,7 @@ class srl_nokia_interfaces__interface__subinterface__ipv4__address_entry_subs(Su
         direct: list[SubscriptionNode] = [self.ip_prefix]
         return direct
 
-_breaker53: None = None
+_breaker54: None = None
 proc def srl_nokia_interfaces__interface__subinterface__ipv4__address_deliver(cb: action(?(interface_name: str, subinterface_index: u64, address_ip_prefix: str), ?srl_nokia_interfaces__interface__subinterface__ipv4__address_entry, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(interface_name: str, subinterface_index: u64, address_ip_prefix: str) = None
     inst: ?srl_nokia_interfaces__interface__subinterface__ipv4__address_entry = None
@@ -35399,7 +35424,7 @@ class srl_nokia_interfaces__interface__subinterface__ipv4__address_subs(Subscrip
         direct: list[SubscriptionNode] = [self.ip_prefix]
         return direct
 
-_breaker54: None = None
+_breaker55: None = None
 proc def srl_nokia_interfaces__interface__subinterface__ipv4_deliver(cb: action(?(interface_name: str, subinterface_index: u64), ?srl_nokia_interfaces__interface__subinterface__ipv4, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(interface_name: str, subinterface_index: u64) = None
     inst: ?srl_nokia_interfaces__interface__subinterface__ipv4 = None
@@ -35436,7 +35461,7 @@ class srl_nokia_interfaces__interface__subinterface__ipv4_subs(SubscriptionNode)
         after a change or None when it is gone, and an error."""
         return ygdata.Dst(lambda n, err: srl_nokia_interfaces__interface__subinterface__ipv4_deliver(cb, n, err), root=self.filt())
 
-_breaker55: None = None
+_breaker56: None = None
 proc def srl_nokia_interfaces__interface__subinterface__ipv6_deliver(cb: action(?(interface_name: str, subinterface_index: u64), ?srl_nokia_interfaces__interface__subinterface__ipv6, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(interface_name: str, subinterface_index: u64) = None
     inst: ?srl_nokia_interfaces__interface__subinterface__ipv6 = None
@@ -35471,7 +35496,7 @@ class srl_nokia_interfaces__interface__subinterface__ipv6_subs(SubscriptionNode)
         after a change or None when it is gone, and an error."""
         return ygdata.Dst(lambda n, err: srl_nokia_interfaces__interface__subinterface__ipv6_deliver(cb, n, err), root=self.filt())
 
-_breaker56: None = None
+_breaker57: None = None
 proc def srl_nokia_interfaces__interface__subinterface__vlan__encap__single_tagged_deliver(cb: action(?(interface_name: str, subinterface_index: u64), ?srl_nokia_interfaces__interface__subinterface__vlan__encap__single_tagged, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(interface_name: str, subinterface_index: u64) = None
     inst: ?srl_nokia_interfaces__interface__subinterface__vlan__encap__single_tagged = None
@@ -35508,7 +35533,7 @@ class srl_nokia_interfaces__interface__subinterface__vlan__encap__single_tagged_
         after a change or None when it is gone, and an error."""
         return ygdata.Dst(lambda n, err: srl_nokia_interfaces__interface__subinterface__vlan__encap__single_tagged_deliver(cb, n, err), root=self.filt())
 
-_breaker57: None = None
+_breaker58: None = None
 proc def srl_nokia_interfaces__interface__subinterface__vlan__encap_deliver(cb: action(?(interface_name: str, subinterface_index: u64), ?srl_nokia_interfaces__interface__subinterface__vlan__encap, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(interface_name: str, subinterface_index: u64) = None
     inst: ?srl_nokia_interfaces__interface__subinterface__vlan__encap = None
@@ -35544,7 +35569,7 @@ class srl_nokia_interfaces__interface__subinterface__vlan__encap_subs(Subscripti
         after a change or None when it is gone, and an error."""
         return ygdata.Dst(lambda n, err: srl_nokia_interfaces__interface__subinterface__vlan__encap_deliver(cb, n, err), root=self.filt())
 
-_breaker58: None = None
+_breaker59: None = None
 proc def srl_nokia_interfaces__interface__subinterface__vlan_deliver(cb: action(?(interface_name: str, subinterface_index: u64), ?srl_nokia_interfaces__interface__subinterface__vlan, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(interface_name: str, subinterface_index: u64) = None
     inst: ?srl_nokia_interfaces__interface__subinterface__vlan = None
@@ -35579,7 +35604,7 @@ class srl_nokia_interfaces__interface__subinterface__vlan_subs(SubscriptionNode)
         after a change or None when it is gone, and an error."""
         return ygdata.Dst(lambda n, err: srl_nokia_interfaces__interface__subinterface__vlan_deliver(cb, n, err), root=self.filt())
 
-_breaker59: None = None
+_breaker60: None = None
 class srl_nokia_interfaces__interface__subinterface_entry_subs(SubscriptionNode):
     index: SubscriptionNode
     description: SubscriptionNode
@@ -35601,7 +35626,7 @@ class srl_nokia_interfaces__interface__subinterface_entry_subs(SubscriptionNode)
         direct: list[SubscriptionNode] = [self.index, self.description, self.admin_state, self.ipv4, self.ipv6, self.vlan]
         return direct
 
-_breaker60: None = None
+_breaker61: None = None
 proc def srl_nokia_interfaces__interface__subinterface_deliver(cb: action(?(interface_name: str, subinterface_index: u64), ?srl_nokia_interfaces__interface__subinterface_entry, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(interface_name: str, subinterface_index: u64) = None
     inst: ?srl_nokia_interfaces__interface__subinterface_entry = None
@@ -35651,7 +35676,7 @@ class srl_nokia_interfaces__interface__subinterface_subs(SubscriptionNode):
         direct: list[SubscriptionNode] = [self.index, self.description, self.admin_state, self.ipv4, self.ipv6, self.vlan]
         return direct
 
-_breaker61: None = None
+_breaker62: None = None
 class srl_nokia_interfaces__interface_entry_subs(SubscriptionNode):
     name: SubscriptionNode
     description: SubscriptionNode
@@ -35673,7 +35698,7 @@ class srl_nokia_interfaces__interface_entry_subs(SubscriptionNode):
         direct: list[SubscriptionNode] = [self.name, self.description, self.admin_state, self.oper_state, self.subinterface, self.vlan_tagging]
         return direct
 
-_breaker62: None = None
+_breaker63: None = None
 proc def srl_nokia_interfaces__interface_deliver(cb: action(?(interface_name: str), ?srl_nokia_interfaces__interface_entry, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(interface_name: str) = None
     inst: ?srl_nokia_interfaces__interface_entry = None
@@ -35722,7 +35747,7 @@ class srl_nokia_interfaces__interface_subs(SubscriptionNode):
         direct: list[SubscriptionNode] = [self.name, self.description, self.admin_state, self.oper_state, self.subinterface, self.vlan_tagging]
         return direct
 
-_breaker63: None = None
+_breaker64: None = None
 class srl_nokia_network_instance__network_instance__interface_entry_subs(SubscriptionNode):
     name: SubscriptionNode
 
@@ -35734,7 +35759,7 @@ class srl_nokia_network_instance__network_instance__interface_entry_subs(Subscri
         direct: list[SubscriptionNode] = [self.name]
         return direct
 
-_breaker64: None = None
+_breaker65: None = None
 proc def srl_nokia_network_instance__network_instance__interface_deliver(cb: action(?(network_instance_name: str, interface_name: str), ?srl_nokia_network_instance__network_instance__interface_entry, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(network_instance_name: str, interface_name: str) = None
     inst: ?srl_nokia_network_instance__network_instance__interface_entry = None
@@ -35774,7 +35799,7 @@ class srl_nokia_network_instance__network_instance__interface_subs(SubscriptionN
         direct: list[SubscriptionNode] = [self.name]
         return direct
 
-_breaker65: None = None
+_breaker66: None = None
 proc def srl_nokia_network_instance__network_instance__protocols__isis__instance__ipv4_unicast_deliver(cb: action(?(network_instance_name: str, instance_name: str), ?srl_nokia_network_instance__network_instance__protocols__isis__instance__ipv4_unicast, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(network_instance_name: str, instance_name: str) = None
     inst: ?srl_nokia_network_instance__network_instance__protocols__isis__instance__ipv4_unicast = None
@@ -35811,7 +35836,7 @@ class srl_nokia_network_instance__network_instance__protocols__isis__instance__i
         after a change or None when it is gone, and an error."""
         return ygdata.Dst(lambda n, err: srl_nokia_network_instance__network_instance__protocols__isis__instance__ipv4_unicast_deliver(cb, n, err), root=self.filt())
 
-_breaker66: None = None
+_breaker67: None = None
 class srl_nokia_network_instance__network_instance__protocols__isis__instance__interface__level_entry_subs(SubscriptionNode):
     level_number: SubscriptionNode
     metric: SubscriptionNode
@@ -35825,7 +35850,7 @@ class srl_nokia_network_instance__network_instance__protocols__isis__instance__i
         direct: list[SubscriptionNode] = [self.level_number, self.metric]
         return direct
 
-_breaker67: None = None
+_breaker68: None = None
 proc def srl_nokia_network_instance__network_instance__protocols__isis__instance__interface__level_deliver(cb: action(?(network_instance_name: str, instance_name: str, interface_interface_name: str, level_level_number: u64), ?srl_nokia_network_instance__network_instance__protocols__isis__instance__interface__level_entry, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(network_instance_name: str, instance_name: str, interface_interface_name: str, level_level_number: u64) = None
     inst: ?srl_nokia_network_instance__network_instance__protocols__isis__instance__interface__level_entry = None
@@ -35871,7 +35896,7 @@ class srl_nokia_network_instance__network_instance__protocols__isis__instance__i
         direct: list[SubscriptionNode] = [self.level_number, self.metric]
         return direct
 
-_breaker68: None = None
+_breaker69: None = None
 class srl_nokia_network_instance__network_instance__protocols__isis__instance__interface_entry_subs(SubscriptionNode):
     interface_name: SubscriptionNode
     admin_state: SubscriptionNode
@@ -35891,7 +35916,7 @@ class srl_nokia_network_instance__network_instance__protocols__isis__instance__i
         direct: list[SubscriptionNode] = [self.interface_name, self.admin_state, self.circuit_type, self.passive, self.level]
         return direct
 
-_breaker69: None = None
+_breaker70: None = None
 proc def srl_nokia_network_instance__network_instance__protocols__isis__instance__interface_deliver(cb: action(?(network_instance_name: str, instance_name: str, interface_interface_name: str), ?srl_nokia_network_instance__network_instance__protocols__isis__instance__interface_entry, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(network_instance_name: str, instance_name: str, interface_interface_name: str) = None
     inst: ?srl_nokia_network_instance__network_instance__protocols__isis__instance__interface_entry = None
@@ -35942,7 +35967,7 @@ class srl_nokia_network_instance__network_instance__protocols__isis__instance__i
         direct: list[SubscriptionNode] = [self.interface_name, self.admin_state, self.circuit_type, self.passive, self.level]
         return direct
 
-_breaker70: None = None
+_breaker71: None = None
 class srl_nokia_network_instance__network_instance__protocols__isis__instance_entry_subs(SubscriptionNode):
     name: SubscriptionNode
     admin_state: SubscriptionNode
@@ -35964,7 +35989,7 @@ class srl_nokia_network_instance__network_instance__protocols__isis__instance_en
         direct: list[SubscriptionNode] = [self.name, self.admin_state, self.net, self.level_capability, self.ipv4_unicast, self.interface]
         return direct
 
-_breaker71: None = None
+_breaker72: None = None
 proc def srl_nokia_network_instance__network_instance__protocols__isis__instance_deliver(cb: action(?(network_instance_name: str, instance_name: str), ?srl_nokia_network_instance__network_instance__protocols__isis__instance_entry, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(network_instance_name: str, instance_name: str) = None
     inst: ?srl_nokia_network_instance__network_instance__protocols__isis__instance_entry = None
@@ -36016,7 +36041,7 @@ class srl_nokia_network_instance__network_instance__protocols__isis__instance_su
         direct: list[SubscriptionNode] = [self.name, self.admin_state, self.net, self.level_capability, self.ipv4_unicast, self.interface]
         return direct
 
-_breaker72: None = None
+_breaker73: None = None
 proc def srl_nokia_network_instance__network_instance__protocols__isis_deliver(cb: action(?(network_instance_name: str), ?srl_nokia_network_instance__network_instance__protocols__isis, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(network_instance_name: str) = None
     inst: ?srl_nokia_network_instance__network_instance__protocols__isis = None
@@ -36051,7 +36076,45 @@ class srl_nokia_network_instance__network_instance__protocols__isis_subs(Subscri
         after a change or None when it is gone, and an error."""
         return ygdata.Dst(lambda n, err: srl_nokia_network_instance__network_instance__protocols__isis_deliver(cb, n, err), root=self.filt())
 
-_breaker73: None = None
+_breaker74: None = None
+proc def srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi__multipath__ebgp_deliver(cb: action(?(network_instance_name: str, afi_safi_afi_safi_name: Identityref), ?srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi__multipath__ebgp, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
+    keys: ?(network_instance_name: str, afi_safi_afi_safi_name: Identityref) = None
+    inst: ?srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi__multipath__ebgp = None
+    if n is not None:
+        try:
+            e1 = _one(_at(n, ygdata.Id(NS_srl_nokia_network_instance, 'network-instance')), 'network-instance')
+            c2 = _at(e1, ygdata.Id(NS_srl_nokia_network_instance, 'protocols'))
+            c3 = _at(c2, ygdata.Id(NS_srl_nokia_bgp, 'bgp'))
+            e4 = _one(_at(c3, ygdata.Id(NS_srl_nokia_bgp, 'afi-safi')), 'afi-safi')
+            c5 = _at(e4, ygdata.Id(NS_srl_nokia_bgp, 'multipath'))
+            c6 = _at(c5, ygdata.Id(NS_srl_nokia_bgp, 'ebgp'))
+            keys = (network_instance_name=e1.get_str(ygdata.Id(NS_srl_nokia_network_instance, 'name')), afi_safi_afi_safi_name=e4.get_Identityref(ygdata.Id(NS_srl_nokia_bgp, 'afi-safi-name')))
+            here = _present(c6)
+            if here is not None:
+                inst = srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi__multipath__ebgp.from_gdata(here)
+        except Exception as e:
+            cb(None, None, e)
+            return
+    cb(keys, inst, err)
+
+class srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi__multipath__ebgp_subs(SubscriptionNode):
+    maximum_paths: SubscriptionNode
+
+    pure def __init__(self, path: ?SubscriptionPath=None) -> None:
+        SubscriptionNode.__init__(self, path)
+        self.maximum_paths = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_srl_nokia_bgp, 'maximum-paths'), parent=path))
+
+    pure def _direct_children(self) -> list[SubscriptionNode]:
+        direct: list[SubscriptionNode] = [self.maximum_paths]
+        return direct
+
+    def dst(self, cb: action(?(network_instance_name: str, afi_safi_afi_safi_name: Identityref), ?srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi__multipath__ebgp, ?Exception) -> None) -> ygdata.Dst:
+        """A destination rooted here: cb gets, one instance at a time,
+        the keys of the lists on the way down, this container as it is
+        after a change or None when it is gone, and an error."""
+        return ygdata.Dst(lambda n, err: srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi__multipath__ebgp_deliver(cb, n, err), root=self.filt())
+
+_breaker75: None = None
 proc def srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi__multipath_deliver(cb: action(?(network_instance_name: str, afi_safi_afi_safi_name: Identityref), ?srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi__multipath, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(network_instance_name: str, afi_safi_afi_safi_name: Identityref) = None
     inst: ?srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi__multipath = None
@@ -36073,15 +36136,15 @@ proc def srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi_
 
 class srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi__multipath_subs(SubscriptionNode):
     allow_multiple_as: SubscriptionNode
-    maximum_paths: SubscriptionNode
+    ebgp: srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi__multipath__ebgp_subs
 
     pure def __init__(self, path: ?SubscriptionPath=None) -> None:
         SubscriptionNode.__init__(self, path)
         self.allow_multiple_as = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_srl_nokia_bgp, 'allow-multiple-as'), parent=path))
-        self.maximum_paths = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_srl_nokia_bgp, 'maximum-paths'), parent=path))
+        self.ebgp = srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi__multipath__ebgp_subs(SubscriptionPath(ygdata.Id(NS_srl_nokia_bgp, 'ebgp'), parent=path))
 
     pure def _direct_children(self) -> list[SubscriptionNode]:
-        direct: list[SubscriptionNode] = [self.allow_multiple_as, self.maximum_paths]
+        direct: list[SubscriptionNode] = [self.allow_multiple_as, self.ebgp]
         return direct
 
     def dst(self, cb: action(?(network_instance_name: str, afi_safi_afi_safi_name: Identityref), ?srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi__multipath, ?Exception) -> None) -> ygdata.Dst:
@@ -36090,7 +36153,7 @@ class srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi__mu
         after a change or None when it is gone, and an error."""
         return ygdata.Dst(lambda n, err: srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi__multipath_deliver(cb, n, err), root=self.filt())
 
-_breaker74: None = None
+_breaker76: None = None
 class srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi_entry_subs(SubscriptionNode):
     afi_safi_name: SubscriptionNode
     admin_state: SubscriptionNode
@@ -36106,7 +36169,7 @@ class srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi_ent
         direct: list[SubscriptionNode] = [self.afi_safi_name, self.admin_state, self.multipath]
         return direct
 
-_breaker75: None = None
+_breaker77: None = None
 proc def srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi_deliver(cb: action(?(network_instance_name: str, afi_safi_afi_safi_name: Identityref), ?srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi_entry, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(network_instance_name: str, afi_safi_afi_safi_name: Identityref) = None
     inst: ?srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi_entry = None
@@ -36152,7 +36215,7 @@ class srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi_sub
         direct: list[SubscriptionNode] = [self.afi_safi_name, self.admin_state, self.multipath]
         return direct
 
-_breaker76: None = None
+_breaker78: None = None
 class srl_nokia_network_instance__network_instance__protocols__bgp__group_entry_subs(SubscriptionNode):
     group_name: SubscriptionNode
     export_policy: SubscriptionNode
@@ -36170,7 +36233,7 @@ class srl_nokia_network_instance__network_instance__protocols__bgp__group_entry_
         direct: list[SubscriptionNode] = [self.group_name, self.export_policy, self.import_policy, self.peer_as]
         return direct
 
-_breaker77: None = None
+_breaker79: None = None
 proc def srl_nokia_network_instance__network_instance__protocols__bgp__group_deliver(cb: action(?(network_instance_name: str, group_group_name: str), ?srl_nokia_network_instance__network_instance__protocols__bgp__group_entry, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(network_instance_name: str, group_group_name: str) = None
     inst: ?srl_nokia_network_instance__network_instance__protocols__bgp__group_entry = None
@@ -36218,7 +36281,7 @@ class srl_nokia_network_instance__network_instance__protocols__bgp__group_subs(S
         direct: list[SubscriptionNode] = [self.group_name, self.export_policy, self.import_policy, self.peer_as]
         return direct
 
-_breaker78: None = None
+_breaker80: None = None
 proc def srl_nokia_network_instance__network_instance__protocols__bgp__neighbor__authentication_deliver(cb: action(?(network_instance_name: str, neighbor_peer_address: str), ?srl_nokia_network_instance__network_instance__protocols__bgp__neighbor__authentication, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(network_instance_name: str, neighbor_peer_address: str) = None
     inst: ?srl_nokia_network_instance__network_instance__protocols__bgp__neighbor__authentication = None
@@ -36255,7 +36318,7 @@ class srl_nokia_network_instance__network_instance__protocols__bgp__neighbor__au
         after a change or None when it is gone, and an error."""
         return ygdata.Dst(lambda n, err: srl_nokia_network_instance__network_instance__protocols__bgp__neighbor__authentication_deliver(cb, n, err), root=self.filt())
 
-_breaker79: None = None
+_breaker81: None = None
 proc def srl_nokia_network_instance__network_instance__protocols__bgp__neighbor__timers_deliver(cb: action(?(network_instance_name: str, neighbor_peer_address: str), ?srl_nokia_network_instance__network_instance__protocols__bgp__neighbor__timers, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(network_instance_name: str, neighbor_peer_address: str) = None
     inst: ?srl_nokia_network_instance__network_instance__protocols__bgp__neighbor__timers = None
@@ -36296,7 +36359,7 @@ class srl_nokia_network_instance__network_instance__protocols__bgp__neighbor__ti
         after a change or None when it is gone, and an error."""
         return ygdata.Dst(lambda n, err: srl_nokia_network_instance__network_instance__protocols__bgp__neighbor__timers_deliver(cb, n, err), root=self.filt())
 
-_breaker80: None = None
+_breaker82: None = None
 class srl_nokia_network_instance__network_instance__protocols__bgp__neighbor_entry_subs(SubscriptionNode):
     peer_address: SubscriptionNode
     admin_state: SubscriptionNode
@@ -36320,7 +36383,7 @@ class srl_nokia_network_instance__network_instance__protocols__bgp__neighbor_ent
         direct: list[SubscriptionNode] = [self.peer_address, self.admin_state, self.description, self.peer_as, self.peer_group, self.authentication, self.timers]
         return direct
 
-_breaker81: None = None
+_breaker83: None = None
 proc def srl_nokia_network_instance__network_instance__protocols__bgp__neighbor_deliver(cb: action(?(network_instance_name: str, neighbor_peer_address: str), ?srl_nokia_network_instance__network_instance__protocols__bgp__neighbor_entry, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(network_instance_name: str, neighbor_peer_address: str) = None
     inst: ?srl_nokia_network_instance__network_instance__protocols__bgp__neighbor_entry = None
@@ -36374,7 +36437,7 @@ class srl_nokia_network_instance__network_instance__protocols__bgp__neighbor_sub
         direct: list[SubscriptionNode] = [self.peer_address, self.admin_state, self.description, self.peer_as, self.peer_group, self.authentication, self.timers]
         return direct
 
-_breaker82: None = None
+_breaker84: None = None
 proc def srl_nokia_network_instance__network_instance__protocols__bgp_deliver(cb: action(?(network_instance_name: str), ?srl_nokia_network_instance__network_instance__protocols__bgp, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(network_instance_name: str) = None
     inst: ?srl_nokia_network_instance__network_instance__protocols__bgp = None
@@ -36417,7 +36480,7 @@ class srl_nokia_network_instance__network_instance__protocols__bgp_subs(Subscrip
         after a change or None when it is gone, and an error."""
         return ygdata.Dst(lambda n, err: srl_nokia_network_instance__network_instance__protocols__bgp_deliver(cb, n, err), root=self.filt())
 
-_breaker83: None = None
+_breaker85: None = None
 proc def srl_nokia_network_instance__network_instance__protocols_deliver(cb: action(?(network_instance_name: str), ?srl_nokia_network_instance__network_instance__protocols, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(network_instance_name: str) = None
     inst: ?srl_nokia_network_instance__network_instance__protocols = None
@@ -36453,7 +36516,7 @@ class srl_nokia_network_instance__network_instance__protocols_subs(SubscriptionN
         after a change or None when it is gone, and an error."""
         return ygdata.Dst(lambda n, err: srl_nokia_network_instance__network_instance__protocols_deliver(cb, n, err), root=self.filt())
 
-_breaker84: None = None
+_breaker86: None = None
 class srl_nokia_network_instance__network_instance_entry_subs(SubscriptionNode):
     name: SubscriptionNode
     type: SubscriptionNode
@@ -36475,7 +36538,7 @@ class srl_nokia_network_instance__network_instance_entry_subs(SubscriptionNode):
         direct: list[SubscriptionNode] = [self.name, self.type, self.admin_state, self.description, self.interface, self.protocols]
         return direct
 
-_breaker85: None = None
+_breaker87: None = None
 proc def srl_nokia_network_instance__network_instance_deliver(cb: action(?(network_instance_name: str), ?srl_nokia_network_instance__network_instance_entry, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(network_instance_name: str) = None
     inst: ?srl_nokia_network_instance__network_instance_entry = None
@@ -36524,7 +36587,7 @@ class srl_nokia_network_instance__network_instance_subs(SubscriptionNode):
         direct: list[SubscriptionNode] = [self.name, self.type, self.admin_state, self.description, self.interface, self.protocols]
         return direct
 
-_breaker86: None = None
+_breaker88: None = None
 class srl_nokia_routing_policy__routing_policy__prefix_set__prefix_entry_subs(SubscriptionNode):
     ip_prefix: SubscriptionNode
     mask_length_range: SubscriptionNode
@@ -36538,7 +36601,7 @@ class srl_nokia_routing_policy__routing_policy__prefix_set__prefix_entry_subs(Su
         direct: list[SubscriptionNode] = [self.ip_prefix, self.mask_length_range]
         return direct
 
-_breaker87: None = None
+_breaker89: None = None
 proc def srl_nokia_routing_policy__routing_policy__prefix_set__prefix_deliver(cb: action(?(prefix_set_name: str, prefix_ip_prefix: str, prefix_mask_length_range: str), ?srl_nokia_routing_policy__routing_policy__prefix_set__prefix_entry, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(prefix_set_name: str, prefix_ip_prefix: str, prefix_mask_length_range: str) = None
     inst: ?srl_nokia_routing_policy__routing_policy__prefix_set__prefix_entry = None
@@ -36582,7 +36645,7 @@ class srl_nokia_routing_policy__routing_policy__prefix_set__prefix_subs(Subscrip
         direct: list[SubscriptionNode] = [self.ip_prefix, self.mask_length_range]
         return direct
 
-_breaker88: None = None
+_breaker90: None = None
 class srl_nokia_routing_policy__routing_policy__prefix_set_entry_subs(SubscriptionNode):
     name: SubscriptionNode
     prefix: srl_nokia_routing_policy__routing_policy__prefix_set__prefix_subs
@@ -36596,7 +36659,7 @@ class srl_nokia_routing_policy__routing_policy__prefix_set_entry_subs(Subscripti
         direct: list[SubscriptionNode] = [self.name, self.prefix]
         return direct
 
-_breaker89: None = None
+_breaker91: None = None
 proc def srl_nokia_routing_policy__routing_policy__prefix_set_deliver(cb: action(?(prefix_set_name: str), ?srl_nokia_routing_policy__routing_policy__prefix_set_entry, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(prefix_set_name: str) = None
     inst: ?srl_nokia_routing_policy__routing_policy__prefix_set_entry = None
@@ -36638,7 +36701,7 @@ class srl_nokia_routing_policy__routing_policy__prefix_set_subs(SubscriptionNode
         direct: list[SubscriptionNode] = [self.name, self.prefix]
         return direct
 
-_breaker90: None = None
+_breaker92: None = None
 proc def srl_nokia_routing_policy__routing_policy__policy__statement__match__prefix_deliver(cb: action(?(policy_name: str, statement_name: str), ?srl_nokia_routing_policy__routing_policy__policy__statement__match__prefix, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(policy_name: str, statement_name: str) = None
     inst: ?srl_nokia_routing_policy__routing_policy__policy__statement__match__prefix = None
@@ -36675,7 +36738,7 @@ class srl_nokia_routing_policy__routing_policy__policy__statement__match__prefix
         after a change or None when it is gone, and an error."""
         return ygdata.Dst(lambda n, err: srl_nokia_routing_policy__routing_policy__policy__statement__match__prefix_deliver(cb, n, err), root=self.filt())
 
-_breaker91: None = None
+_breaker93: None = None
 proc def srl_nokia_routing_policy__routing_policy__policy__statement__match_deliver(cb: action(?(policy_name: str, statement_name: str), ?srl_nokia_routing_policy__routing_policy__policy__statement__match, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(policy_name: str, statement_name: str) = None
     inst: ?srl_nokia_routing_policy__routing_policy__policy__statement__match = None
@@ -36711,7 +36774,7 @@ class srl_nokia_routing_policy__routing_policy__policy__statement__match_subs(Su
         after a change or None when it is gone, and an error."""
         return ygdata.Dst(lambda n, err: srl_nokia_routing_policy__routing_policy__policy__statement__match_deliver(cb, n, err), root=self.filt())
 
-_breaker92: None = None
+_breaker94: None = None
 proc def srl_nokia_routing_policy__routing_policy__policy__statement__action_deliver(cb: action(?(policy_name: str, statement_name: str), ?srl_nokia_routing_policy__routing_policy__policy__statement__action, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(policy_name: str, statement_name: str) = None
     inst: ?srl_nokia_routing_policy__routing_policy__policy__statement__action = None
@@ -36747,7 +36810,7 @@ class srl_nokia_routing_policy__routing_policy__policy__statement__action_subs(S
         after a change or None when it is gone, and an error."""
         return ygdata.Dst(lambda n, err: srl_nokia_routing_policy__routing_policy__policy__statement__action_deliver(cb, n, err), root=self.filt())
 
-_breaker93: None = None
+_breaker95: None = None
 class srl_nokia_routing_policy__routing_policy__policy__statement_entry_subs(SubscriptionNode):
     name: SubscriptionNode
     match: srl_nokia_routing_policy__routing_policy__policy__statement__match_subs
@@ -36763,7 +36826,7 @@ class srl_nokia_routing_policy__routing_policy__policy__statement_entry_subs(Sub
         direct: list[SubscriptionNode] = [self.name, self.match, self.action_]
         return direct
 
-_breaker94: None = None
+_breaker96: None = None
 proc def srl_nokia_routing_policy__routing_policy__policy__statement_deliver(cb: action(?(policy_name: str, statement_name: str), ?srl_nokia_routing_policy__routing_policy__policy__statement_entry, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(policy_name: str, statement_name: str) = None
     inst: ?srl_nokia_routing_policy__routing_policy__policy__statement_entry = None
@@ -36808,7 +36871,7 @@ class srl_nokia_routing_policy__routing_policy__policy__statement_subs(Subscript
         direct: list[SubscriptionNode] = [self.name, self.match, self.action_]
         return direct
 
-_breaker95: None = None
+_breaker97: None = None
 class srl_nokia_routing_policy__routing_policy__policy_entry_subs(SubscriptionNode):
     name: SubscriptionNode
     statement: srl_nokia_routing_policy__routing_policy__policy__statement_subs
@@ -36822,7 +36885,7 @@ class srl_nokia_routing_policy__routing_policy__policy_entry_subs(SubscriptionNo
         direct: list[SubscriptionNode] = [self.name, self.statement]
         return direct
 
-_breaker96: None = None
+_breaker98: None = None
 proc def srl_nokia_routing_policy__routing_policy__policy_deliver(cb: action(?(policy_name: str), ?srl_nokia_routing_policy__routing_policy__policy_entry, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(policy_name: str) = None
     inst: ?srl_nokia_routing_policy__routing_policy__policy_entry = None
@@ -36864,7 +36927,7 @@ class srl_nokia_routing_policy__routing_policy__policy_subs(SubscriptionNode):
         direct: list[SubscriptionNode] = [self.name, self.statement]
         return direct
 
-_breaker97: None = None
+_breaker99: None = None
 proc def srl_nokia_routing_policy__routing_policy_deliver(cb: action(?srl_nokia_routing_policy__routing_policy, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     inst: ?srl_nokia_routing_policy__routing_policy = None
     if n is not None:
@@ -36897,7 +36960,7 @@ class srl_nokia_routing_policy__routing_policy_subs(SubscriptionNode):
         and an error."""
         return ygdata.Dst(lambda n, err: srl_nokia_routing_policy__routing_policy_deliver(cb, n, err), root=self.filt())
 
-_breaker98: None = None
+_breaker100: None = None
 class root_subs(SubscriptionNode):
     system: srl_nokia_system__system_subs
     interface: srl_nokia_interfaces__interface_subs

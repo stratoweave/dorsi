@@ -388,7 +388,7 @@ class FabricBaseConfig(base.FabricBaseConfig):
             ni.interface.create("system0.0")
             bgp = ni.protocols.create_bgp(autonomous_system=i.asn, router_id=i.ipv4_address)
             af = bgp.afi_safi.create(srl25.srl_nokia_common_ipv4_unicast, admin_state="enable")
-            af.multipath.maximum_paths = u64(_FABRIC_ECMP_PATHS)
+            af.multipath.ebgp.maximum_paths = u64(_FABRIC_ECMP_PATHS)
             group = bgp.group.create(_FABRIC_GROUP)
             group.export_policy = [_FABRIC_EXPORT_POLICY]
             group.import_policy = [_FABRIC_IMPORT_POLICY]

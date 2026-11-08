@@ -216,7 +216,7 @@ actor main(env):
     "/srl_nokia-netinst:network-instance/protocols/bgp/group/peer-as",
     "/srl_nokia-netinst:network-instance/protocols/bgp/group/export-policy",
     "/srl_nokia-netinst:network-instance/protocols/bgp/group/import-policy",
-    "/srl_nokia-netinst:network-instance/protocols/bgp/afi-safi/multipath/maximum-paths",
+    "/srl_nokia-netinst:network-instance/protocols/bgp/afi-safi/multipath/ebgp/maximum-paths",
     "/srl_nokia-netinst:network-instance/protocols/bgp/afi-safi/multipath/allow-multiple-as",
     "/srl_rpol:routing-policy/prefix-set/name",
     "/srl_rpol:routing-policy/prefix-set/prefix/ip-prefix",

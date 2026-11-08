@@ -701,9 +701,13 @@ DMust(condition="not(. = 'link-state') or /srl_nokia-netinst:network-instance[sr
     DLeaf(module='srl_nokia-bgp', namespace='urn:nokia.com:srlinux:bgp:bgp', prefix='srl_nokia-bgp', name='admin-state', config=True, description='This leaf indicates whether the AFI-SAFI is enabled for the instance', default='disable', is_key=False, mandatory=False, type=DTypeEnum(name='srl_nokia-comm:admin-state', description='general admin-state option.', reference=None, units=None, exts=[], builtin_type='enumeration', default=None, name_to_val={'enable':1, 'disable':2})),
     DContainer(module='srl_nokia-bgp', namespace='urn:nokia.com:srlinux:bgp:bgp', prefix='srl_nokia-bgp', name='multipath', config=True, description='Options related to BGP multipath', presence=False, children=[
         DLeaf(module='srl_nokia-bgp', namespace='urn:nokia.com:srlinux:bgp:bgp', prefix='srl_nokia-bgp', name='allow-multiple-as', config=True, description='When set to true, BGP is allowed to build a multipath set using BGP routes with different neighbor AS (most recent AS in the AS_PATH)\n\nWhen set to false, BGP is only allowed to use non-best paths for ECMP if they meet the multipath criteria and they have the same neighbor AS as the best path', default='true', is_key=False, mandatory=False, type=DTypeBoolean(name='boolean', description=None, reference=None, units=None, exts=[], builtin_type='boolean', default=None)),
-        DLeaf(module='srl_nokia-bgp', namespace='urn:nokia.com:srlinux:bgp:bgp', prefix='srl_nokia-bgp', name='maximum-paths', config=True, description='The maximum number of BGP ECMP next-hops for BGP routes with an NLRI belonging to the address family of this configuration context', default='1', if_feature=[
-'srl_nokia-feat:bgp-multipath-maximum-paths'
-            ], is_key=False, mandatory=False, type=DTypeIntegerUnsigned(name='ip-ecmp', description='The supported range of ECMP values for IP routes.', reference=None, units=None, exts=[], builtin_type='uint32', default=None, ranges=Ranges([(1, 256)])))
+        DContainer(module='srl_nokia-bgp', namespace='urn:nokia.com:srlinux:bgp:bgp', prefix='srl_nokia-bgp', name='ebgp', config=True, description='Multipath configuration options that apply when the best path for the prefix was received from an EBGP peer', if_feature=[
+'srl_nokia-feat:bgp-peertype-maximum-paths or srl_nokia-feat:bgp-weighted-ecmp'
+            ], presence=False, children=[
+            DLeaf(module='srl_nokia-bgp', namespace='urn:nokia.com:srlinux:bgp:bgp', prefix='srl_nokia-bgp', name='maximum-paths', config=True, description='The maximum number of BGP ECMP next-hops for BGP routes with an NLRI belonging to the address family of this configuration context', default='1', if_feature=[
+'srl_nokia-feat:bgp-peertype-maximum-paths'
+                ], is_key=False, mandatory=False, type=DTypeIntegerUnsigned(name='ip-ecmp', description='The supported range of ECMP values for IP routes.', reference=None, units=None, exts=[], builtin_type='uint32', default=None, ranges=Ranges([(1, 256)])))
+        ])
     ])
 ])
 
