@@ -100,6 +100,94 @@ def combine_link_status(left: ?str, right: ?str) -> ?str:
     return "unknown"
 
 
+# --- IP fabric ----------------------------------------------------------------
+# Addressing and AS numbers are derived from the switch id so that the
+# switch and fabric-link transforms agree without sharing state:
+#   loopback        10.0.<id / 256>.<id % 256>/32
+#   point-to-point  10.100.0.0/16, one /31 per lower (switch, port) pair
+#   AS number       leaf: one per switch; spine: one per pod and plane;
+#                   super-spine: one per plane (RFC 7938 section 5.2.1)
+
+def _trailing_int(s: str, default: int) -> int:
+    """The number at the end of a name, such as 3 for 'pod-3' or
+    'ethernet-1/3'."""
+    n = len(s)
+    j = n
+    while j > 0 and s[j-1] in "0123456789":
+        j -= 1
+    if j == n:
+        return default
+    return int(s[j:])
+
+
+def fabric_loopback(switch_id: int) -> str:
+    return "10.0.{switch_id // 256}.{switch_id % 256}"
+
+
+def fabric_asn(role: str, switch_id: int, pod: str, plane: str) -> int:
+    if role == "leaf":
+        return 4200000000 + switch_id
+    if role == "spine":
+        return 4200100000 + _trailing_int(pod, 1) * 100 + _trailing_int(plane, 1)
+    return 4200200000 + _trailing_int(plane, 1)
+
+
+def fabric_link_addresses(lower_id: int, lower_port: str) -> (str, str):
+    offset = (lower_id * 64 + _trailing_int(lower_port, 0)) * 2
+    third = offset // 256
+    fourth = offset % 256
+    return ("10.100.{third}.{fourth}", "10.100.{third}.{fourth + 1}")
+
+
+class Fabric(base.Fabric):
+    """Transform of a complete fabric.
+
+    The transform sits on the fabric list entry and not on its switch and
+    fabric-link entries. A link needs the role, pod, plane and id of both of its
+    switches, and a sw:link can only select list entries by key. The switches
+    are nested below the fabric list, whose key such a link cannot supply.
+    """
+    def transform(self, i):
+        print("CFS fabric transform running", i.name)
+        o = base.o_root()
+
+        switches = {}
+        for sw in i.switch:
+            switches[sw.name] = sw
+            dev = o.device.create(sw.name, type=sw.type)
+            dev.address.create("oob", address=sw.name)
+            dev.credentials.username = "clab"
+            dev.credentials.password = "clab@123"
+            dev.mock.enabled = sw.mock
+
+            rfs = o.rfs.create(sw.name)
+            base_config = rfs.fabric_base_config.create(u64(fabric_asn(sw.role, int(sw.id), sw.pod, sw.plane)))
+            base_config.role = sw.role
+            base_config.ipv4_address = fabric_loopback(int(sw.id))
+
+        for link in i.fabric_link:
+            print("CFS fabric-link %s [%s] <-> %s [%s]" % (link.lower_switch, link.lower_port, link.upper_switch, link.upper_port))
+            lower = switches[link.lower_switch]
+            upper = switches[link.upper_switch]
+            lower_asn = fabric_asn(lower.role, int(lower.id), lower.pod, lower.plane)
+            upper_asn = fabric_asn(upper.role, int(upper.id), upper.pod, upper.plane)
+            lower_addr, upper_addr = fabric_link_addresses(int(lower.id), link.lower_port)
+
+            li = o.rfs.create(link.lower_switch).fabric_interface.create(link.lower_port, ipv4_address=lower_addr)
+            li.remote.device = link.upper_switch
+            li.remote.interface = link.upper_port
+            li.bgp.peer_address = upper_addr
+            li.bgp.peer_asn = u64(upper_asn)
+
+            ui = o.rfs.create(link.upper_switch).fabric_interface.create(link.upper_port, ipv4_address=upper_addr)
+            ui.remote.device = link.lower_switch
+            ui.remote.interface = link.lower_port
+            ui.bgp.peer_address = lower_addr
+            ui.bgp.peer_asn = u64(lower_asn)
+
+        return o
+
+
 # --- Backbone link oper-status lift -------------------------------------------
 # Combine the two endpoints' RFS backbone-interface oper-status into the
 # backbone-link link-status (up only when both ends are up; see

@@ -246,7 +246,9 @@ SRC_DNODE_CHILD_45: DLeaf = DLeaf(module='ip-fabric', namespace='http://example.
 
 SRC_DNODE_CHILD_46: DList = DList(module='ip-fabric', namespace='http://example.com/ip-fabric', prefix='ipf', name='switch', key=['name'], config=True, description='Fabric switch.', min_elements=2, ordered_by='system', children=[
     DLeaf(module='ip-fabric', namespace='http://example.com/ip-fabric', prefix='ipf', name='name', config=True, description='Switch name.', is_key=True, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
+    DLeaf(module='ip-fabric', namespace='http://example.com/ip-fabric', prefix='ipf', name='id', config=True, description='Numeric switch identifier, unique in the fabric. Loopback and\npoint-to-point addresses and BGP AS numbers are derived from it.', is_key=False, mandatory=True, type=DTypeIntegerUnsigned(name='uint16', description=None, reference=None, units=None, exts=[], builtin_type='uint16', default=None, ranges=Ranges([(0, 65535)]))),
     DLeaf(module='ip-fabric', namespace='http://example.com/ip-fabric', prefix='ipf', name='type', config=True, description='Device type.', is_key=False, mandatory=True, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
+    DLeaf(module='ip-fabric', namespace='http://example.com/ip-fabric', prefix='ipf', name='mock', config=True, default='false', is_key=False, mandatory=False, type=DTypeBoolean(name='boolean', description=None, reference=None, units=None, exts=[], builtin_type='boolean', default=None)),
     DLeaf(module='ip-fabric', namespace='http://example.com/ip-fabric', prefix='ipf', name='role', config=True, is_key=False, mandatory=True, type=DTypeEnum(name='enumeration', description=None, reference=None, units=None, exts=[], builtin_type='enumeration', default=None, name_to_val={'leaf':0, 'spine':1, 'super-spine':2})),
     DLeaf(module='ip-fabric', namespace='http://example.com/ip-fabric', prefix='ipf', name='pod', config=True, description='Pod membership; normally omitted for three-stage fabrics.', default='pod-1', is_key=False, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[]), when="../role!='super-spine'"),
     DLeaf(module='ip-fabric', namespace='http://example.com/ip-fabric', prefix='ipf', name='plane', config=True, description='Five-stage spine or superspine plane. Every pod must have\na spine in each plane; every plane must have a superspine.', default='plane-1', is_key=False, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[]), when="../../switch[role='super-spine'] and ../role!='leaf'")
@@ -285,7 +287,9 @@ DMust(condition="../../../switch[name=current()/switch]/role='leaf'", descriptio
     ])
 ])
 
-SRC_DNODE_CHILD_44: DList = DList(module='ip-fabric', namespace='http://example.com/ip-fabric', prefix='ipf', name='fabric', key=['name'], config=True, description='A complete physical fabric.', min_elements=0, ordered_by='system', children=[SRC_DNODE_CHILD_45, SRC_DNODE_CHILD_46, SRC_DNODE_CHILD_47, SRC_DNODE_CHILD_48])
+SRC_DNODE_CHILD_44: DList = DList(module='ip-fabric', namespace='http://example.com/ip-fabric', prefix='ipf', name='fabric', key=['name'], config=True, description='A complete physical fabric.', min_elements=0, ordered_by='system', exts=[
+        DExt(module='stratoweave', namespace='http://stratoweave.org/yang/stratoweave', prefix='sw', name='transform', arg='dorsi.cfs.Fabric', exts=[])
+    ], children=[SRC_DNODE_CHILD_45, SRC_DNODE_CHILD_46, SRC_DNODE_CHILD_47, SRC_DNODE_CHILD_48])
 
 SRC_DNODE_CHILD_43: DContainer = DContainer(module='ip-fabric', namespace='http://example.com/ip-fabric', prefix='ipf', name='ip-fabric', config=True, description='IP fabric underlay service model.', presence=False, children=[SRC_DNODE_CHILD_44])
 
@@ -777,6 +781,10 @@ SRC_YANG_1: str = r"""module ip-fabric {
   namespace "http://example.com/ip-fabric";
   prefix ipf;
 
+  import stratoweave {
+    prefix sw;
+  }
+
   organization "StratoWeave";
   description
     "IP fabric underlay service model.";
@@ -789,6 +797,7 @@ SRC_YANG_1: str = r"""module ip-fabric {
     description "IP fabric underlay service model.";
     list fabric {
       key name;
+      sw:transform dorsi.cfs.Fabric;
       description
         "A complete physical fabric.";
       leaf name {
@@ -797,6 +806,7 @@ SRC_YANG_1: str = r"""module ip-fabric {
 
       list switch {
         key name;
+        unique id;
         min-elements 2;
         description
           "Fabric switch.";
@@ -804,10 +814,21 @@ SRC_YANG_1: str = r"""module ip-fabric {
           type string;
           description "Switch name.";
         }
+        leaf id {
+          type uint16;
+          mandatory true;
+          description
+            "Numeric switch identifier, unique in the fabric. Loopback and
+             point-to-point addresses and BGP AS numbers are derived from it.";
+        }
         leaf type {
           type string;
           mandatory true;
           description "Device type.";
+        }
+        leaf mock {
+          type boolean;
+          default false;
         }
         leaf role {
           type enumeration {
@@ -4636,14 +4657,18 @@ class netinfra__netinfra(yadata.MNode):
 _breaker48: None = None
 class ip_fabric__ip_fabric__fabric__switch_entry(yadata.MNode):
     name: str
+    id: u64
     type: str
+    mock: bool
     role: str
     pod: str
     plane: str
 
-    mut def __init__(self, name: str, type: str, role: str, pod: ?str=None, plane: ?str=None) -> None:
+    mut def __init__(self, name: str, id: u64, type: str, role: str, mock: ?bool=None, pod: ?str=None, plane: ?str=None) -> None:
         self.name = name
+        self.id = id
         self.type = type
+        self.mock = mock if mock is not None else False
         self.role = role
         self.pod = pod if pod is not None else 'pod-1'
         self.plane = plane if plane is not None else 'plane-1'
@@ -4653,7 +4678,7 @@ class ip_fabric__ip_fabric__fabric__switch_entry(yadata.MNode):
 
     @staticmethod
     mut def from_gdata(n: ygdata.Node) -> ip_fabric__ip_fabric__fabric__switch_entry:
-        return ip_fabric__ip_fabric__fabric__switch_entry(name=n.get_str(ygdata.Id(NS_ip_fabric, 'name')), type=n.get_str(ygdata.Id(NS_ip_fabric, 'type')), role=n.get_str(ygdata.Id(NS_ip_fabric, 'role')), pod=n.get_opt_str(ygdata.Id(NS_ip_fabric, 'pod')), plane=n.get_opt_str(ygdata.Id(NS_ip_fabric, 'plane')))
+        return ip_fabric__ip_fabric__fabric__switch_entry(name=n.get_str(ygdata.Id(NS_ip_fabric, 'name')), id=n.get_u64(ygdata.Id(NS_ip_fabric, 'id')), type=n.get_str(ygdata.Id(NS_ip_fabric, 'type')), mock=n.get_opt_bool(ygdata.Id(NS_ip_fabric, 'mock')), role=n.get_str(ygdata.Id(NS_ip_fabric, 'role')), pod=n.get_opt_str(ygdata.Id(NS_ip_fabric, 'pod')), plane=n.get_opt_str(ygdata.Id(NS_ip_fabric, 'plane')))
 
     mut def copy(self) -> ip_fabric__ip_fabric__fabric__switch_entry:
         """Create a deep copy of this adata object"""
@@ -4664,18 +4689,21 @@ class ip_fabric__ip_fabric__fabric__switch(yadata.MKeyedList[str, ip_fabric__ip_
     mut def __init__(self, elements: list[ip_fabric__ip_fabric__fabric__switch_entry]=[]) -> None:
         yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
 
-    mut def create(self, key: str, type: str, role: str, pod: ?str=None, plane: ?str=None) -> ip_fabric__ip_fabric__fabric__switch_entry:
+    mut def create(self, key: str, id: u64, type: str, role: str, mock: ?bool=None, pod: ?str=None, plane: ?str=None) -> ip_fabric__ip_fabric__fabric__switch_entry:
         e = self.get(key)
         if e is not None:
+            e.id = id
             e.type = type
             e.role = role
+            if mock is not None:
+                e.mock = mock
             if pod is not None:
                 e.pod = pod
             if plane is not None:
                 e.plane = plane
             return e
         name = key
-        res = ip_fabric__ip_fabric__fabric__switch_entry(name=name, type=type, role=role, pod=pod, plane=plane)
+        res = ip_fabric__ip_fabric__fabric__switch_entry(name=name, id=id, type=type, role=role, mock=mock, pod=pod, plane=plane)
         self._append(res)
         return res
 

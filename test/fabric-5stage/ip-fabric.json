@@ -1,0 +1,169 @@
+{
+    "ip-fabric:ip-fabric": {
+        "fabric": [
+            {
+                "name": "dc1",
+                "switch": [
+                    {
+                        "name": "leaf1",
+                        "id": 1,
+                        "type": "NokiaSRLinux_25_3_2",
+                        "role": "leaf",
+                        "mock": false,
+                        "pod": "pod-1"
+                    },
+                    {
+                        "name": "leaf2",
+                        "id": 2,
+                        "type": "NokiaSRLinux_25_3_2",
+                        "role": "leaf",
+                        "mock": false,
+                        "pod": "pod-1"
+                    },
+                    {
+                        "name": "leaf3",
+                        "id": 3,
+                        "type": "NokiaSRLinux_25_3_2",
+                        "role": "leaf",
+                        "mock": false,
+                        "pod": "pod-2"
+                    },
+                    {
+                        "name": "leaf4",
+                        "id": 4,
+                        "type": "NokiaSRLinux_25_3_2",
+                        "role": "leaf",
+                        "mock": false,
+                        "pod": "pod-2"
+                    },
+                    {
+                        "name": "spine1",
+                        "id": 11,
+                        "type": "NokiaSRLinux_25_3_2",
+                        "role": "spine",
+                        "mock": false,
+                        "pod": "pod-1",
+                        "plane": "plane-1"
+                    },
+                    {
+                        "name": "spine2",
+                        "id": 12,
+                        "type": "NokiaSRLinux_25_3_2",
+                        "role": "spine",
+                        "mock": false,
+                        "pod": "pod-1",
+                        "plane": "plane-2"
+                    },
+                    {
+                        "name": "spine3",
+                        "id": 13,
+                        "type": "NokiaSRLinux_25_3_2",
+                        "role": "spine",
+                        "mock": false,
+                        "pod": "pod-2",
+                        "plane": "plane-1"
+                    },
+                    {
+                        "name": "spine4",
+                        "id": 14,
+                        "type": "NokiaSRLinux_25_3_2",
+                        "role": "spine",
+                        "mock": false,
+                        "pod": "pod-2",
+                        "plane": "plane-2"
+                    },
+                    {
+                        "name": "superspine1",
+                        "id": 21,
+                        "type": "NokiaSRLinux_25_3_2",
+                        "role": "super-spine",
+                        "mock": false,
+                        "plane": "plane-1"
+                    },
+                    {
+                        "name": "superspine2",
+                        "id": 22,
+                        "type": "NokiaSRLinux_25_3_2",
+                        "role": "super-spine",
+                        "mock": false,
+                        "plane": "plane-2"
+                    }
+                ],
+                "fabric-link": [
+                    {
+                        "lower-switch": "leaf1",
+                        "lower-port": "ethernet-1/49",
+                        "upper-switch": "spine1",
+                        "upper-port": "ethernet-1/1"
+                    },
+                    {
+                        "lower-switch": "leaf1",
+                        "lower-port": "ethernet-1/50",
+                        "upper-switch": "spine2",
+                        "upper-port": "ethernet-1/1"
+                    },
+                    {
+                        "lower-switch": "leaf2",
+                        "lower-port": "ethernet-1/49",
+                        "upper-switch": "spine1",
+                        "upper-port": "ethernet-1/2"
+                    },
+                    {
+                        "lower-switch": "leaf2",
+                        "lower-port": "ethernet-1/50",
+                        "upper-switch": "spine2",
+                        "upper-port": "ethernet-1/2"
+                    },
+                    {
+                        "lower-switch": "leaf3",
+                        "lower-port": "ethernet-1/49",
+                        "upper-switch": "spine3",
+                        "upper-port": "ethernet-1/1"
+                    },
+                    {
+                        "lower-switch": "leaf3",
+                        "lower-port": "ethernet-1/50",
+                        "upper-switch": "spine4",
+                        "upper-port": "ethernet-1/1"
+                    },
+                    {
+                        "lower-switch": "leaf4",
+                        "lower-port": "ethernet-1/49",
+                        "upper-switch": "spine3",
+                        "upper-port": "ethernet-1/2"
+                    },
+                    {
+                        "lower-switch": "leaf4",
+                        "lower-port": "ethernet-1/50",
+                        "upper-switch": "spine4",
+                        "upper-port": "ethernet-1/2"
+                    },
+                    {
+                        "lower-switch": "spine1",
+                        "lower-port": "ethernet-1/31",
+                        "upper-switch": "superspine1",
+                        "upper-port": "ethernet-1/1"
+                    },
+                    {
+                        "lower-switch": "spine3",
+                        "lower-port": "ethernet-1/31",
+                        "upper-switch": "superspine1",
+                        "upper-port": "ethernet-1/2"
+                    },
+                    {
+                        "lower-switch": "spine2",
+                        "lower-port": "ethernet-1/31",
+                        "upper-switch": "superspine2",
+                        "upper-port": "ethernet-1/1"
+                    },
+                    {
+                        "lower-switch": "spine4",
+                        "lower-port": "ethernet-1/31",
+                        "upper-switch": "superspine2",
+                        "upper-port": "ethernet-1/2"
+                    }
+                ]
+            }
+        ]
+    }
+}

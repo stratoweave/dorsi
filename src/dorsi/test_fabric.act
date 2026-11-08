@@ -1,0 +1,91 @@
+import testing
+
+import yang.gdata as gdata
+
+import dorsi.sysspec as sysspec
+import dorsi.layers.y_0 as cfs_layer
+import stratoweave.test_rig as swts
+
+SRL = "NokiaSRLinux_25_3_2"
+
+def _add_switch(fabric: cfs_layer.ip_fabric__ip_fabric__fabric_entry, name: str, id: u64, role: str, pod: ?str=None, plane: ?str=None):
+    s = fabric.switch.create(name, id, SRL, role)
+    s.mock = True
+    if pod is not None:
+        s.pod = pod
+    if plane is not None:
+        s.plane = plane
+
+def _add_link(fabric: cfs_layer.ip_fabric__ip_fabric__fabric_entry, lower: str, lower_port: str, upper: str, upper_port: str):
+    fabric.fabric_link.create((lower, lower_port, upper, upper_port))
+
+def _empty_root():
+    gs = cfs_layer.netinfra__netinfra__global_settings('ibgp-authentication-key')
+    return cfs_layer.root(cfs_layer.netinfra__netinfra(gs))
+
+# Three-stage Clos: three leaves, each connected to both spines.
+def three_stage():
+    root = _empty_root()
+    f = root.ip_fabric.fabric.create("dc1")
+    _add_switch(f, "leaf1", 1, "leaf")
+    _add_switch(f, "leaf2", 2, "leaf")
+    _add_switch(f, "leaf3", 3, "leaf")
+    _add_switch(f, "spine1", 11, "spine")
+    _add_switch(f, "spine2", 12, "spine")
+    for n, leaf in enumerate(["leaf1", "leaf2", "leaf3"]):
+        _add_link(f, leaf, "ethernet-1/49", "spine1", "ethernet-1/{n + 1}")
+        _add_link(f, leaf, "ethernet-1/50", "spine2", "ethernet-1/{n + 1}")
+    return root
+
+# Five-stage Clos: two pods, each with two leaves and one spine per plane.
+# Spines of the same plane connect to the super-spine of that plane.
+def five_stage():
+    root = _empty_root()
+    f = root.ip_fabric.fabric.create("dc1")
+    _add_switch(f, "leaf1", 1, "leaf", pod="pod-1")
+    _add_switch(f, "leaf2", 2, "leaf", pod="pod-1")
+    _add_switch(f, "leaf3", 3, "leaf", pod="pod-2")
+    _add_switch(f, "leaf4", 4, "leaf", pod="pod-2")
+    _add_switch(f, "spine1", 11, "spine", pod="pod-1", plane="plane-1")
+    _add_switch(f, "spine2", 12, "spine", pod="pod-1", plane="plane-2")
+    _add_switch(f, "spine3", 13, "spine", pod="pod-2", plane="plane-1")
+    _add_switch(f, "spine4", 14, "spine", pod="pod-2", plane="plane-2")
+    _add_switch(f, "superspine1", 21, "super-spine", plane="plane-1")
+    _add_switch(f, "superspine2", 22, "super-spine", plane="plane-2")
+    # Leaf to spine, within a pod. Uplink 49 goes to plane-1, 50 to plane-2.
+    for leaf, p1, p2, port in [("leaf1", "spine1", "spine2", 1), ("leaf2", "spine1", "spine2", 2),
+                               ("leaf3", "spine3", "spine4", 1), ("leaf4", "spine3", "spine4", 2)]:
+        _add_link(f, leaf, "ethernet-1/49", p1, "ethernet-1/{port}")
+        _add_link(f, leaf, "ethernet-1/50", p2, "ethernet-1/{port}")
+    # Spine to super-spine, within a plane
+    _add_link(f, "spine1", "ethernet-1/31", "superspine1", "ethernet-1/1")
+    _add_link(f, "spine3", "ethernet-1/31", "superspine1", "ethernet-1/2")
+    _add_link(f, "spine2", "ethernet-1/31", "superspine2", "ethernet-1/1")
+    _add_link(f, "spine4", "ethernet-1/31", "superspine2", "ethernet-1/2")
+    return root
+
+# TransformTester takes its snapshot as soon as the CFS commit completes. A
+# switch has no netinfra base-config, whose empty RFS container reports an empty
+# configuration for the device before its modules are known, and that completes
+# the commit before the device configuration exists. Wait for it to settle.
+actor FabricTester(t: testing.AsyncT, input_config: gdata.Node):
+    tr = swts.TestRig.build(sysspec.SYSSPEC, t.log_handler)
+
+    def snapshot():
+        t.success(tr.device_adata_snapshot())
+
+    def cont(r: value):
+        if isinstance(r, Exception):
+            t.failure(r)
+            return
+        after 1.0: snapshot()
+
+    tr.edit_config(input_config, cont, 0)
+
+actor _test_fabric_three_stage(t: testing.AsyncT):
+    t.timeout(30.0)
+    FabricTester(t, three_stage().to_gdata())
+
+actor _test_fabric_five_stage(t: testing.AsyncT):
+    t.timeout(30.0)
+    FabricTester(t, five_stage().to_gdata())

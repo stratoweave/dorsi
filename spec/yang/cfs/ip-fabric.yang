@@ -3,6 +3,10 @@ module ip-fabric {
   namespace "http://example.com/ip-fabric";
   prefix ipf;
 
+  import stratoweave {
+    prefix sw;
+  }
+
   organization "StratoWeave";
   description
     "IP fabric underlay service model.";
@@ -15,6 +19,7 @@ module ip-fabric {
     description "IP fabric underlay service model.";
     list fabric {
       key name;
+      sw:transform dorsi.cfs.Fabric;
       description
         "A complete physical fabric.";
       leaf name {
@@ -23,6 +28,7 @@ module ip-fabric {
 
       list switch {
         key name;
+        unique id;
         min-elements 2;
         description
           "Fabric switch.";
@@ -30,10 +36,21 @@ module ip-fabric {
           type string;
           description "Switch name.";
         }
+        leaf id {
+          type uint16;
+          mandatory true;
+          description
+            "Numeric switch identifier, unique in the fabric. Loopback and
+             point-to-point addresses and BGP AS numbers are derived from it.";
+        }
         leaf type {
           type string;
           mandatory true;
           description "Device type.";
+        }
+        leaf mock {
+          type boolean;
+          default false;
         }
         leaf role {
           type enumeration {

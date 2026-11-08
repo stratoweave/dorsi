@@ -1,0 +1,41 @@
+name: dorsi-fabric-3stage
+prefix: __lab-name
+
+mgmt:
+  network: dorsi-fabric-3stage
+  ipv4-subnet: auto
+  ipv6-subnet: auto
+
+topology:
+  kinds:
+    nokia_srlinux:
+      image: ghcr.io/nokia/srlinux:25.3.2
+      image-pull-policy: if-not-present
+      startup-config: srl-startup.conf
+  nodes:
+    leaf1:
+      kind: nokia_srlinux
+    leaf2:
+      kind: nokia_srlinux
+    leaf3:
+      kind: nokia_srlinux
+    spine1:
+      kind: nokia_srlinux
+    spine2:
+      kind: nokia_srlinux
+    sweave:
+      kind: linux
+      image: dorsi-sweave-base
+      image-pull-policy: if-not-present
+      ports:
+        # The dorsi binary serves the APIs and the embedded Web UI on :80.
+        - "${WEBUI_PUBLISH}:80/tcp"
+        - "830/tcp"
+
+  links:
+    - endpoints: ["leaf1:e1-49", "spine1:e1-1"]
+    - endpoints: ["leaf1:e1-50", "spine2:e1-1"]
+    - endpoints: ["leaf2:e1-49", "spine1:e1-2"]
+    - endpoints: ["leaf2:e1-50", "spine2:e1-2"]
+    - endpoints: ["leaf3:e1-49", "spine1:e1-3"]
+    - endpoints: ["leaf3:e1-50", "spine2:e1-3"]

@@ -1,0 +1,1321 @@
+# device leaf1
+# YANG module (prefix) and namespace:
+#   srl_nokia-bgp (srl_nokia-bgp)                   urn:nokia.com:srlinux:bgp:bgp
+#   srl_nokia-interfaces (srl_nokia-if)             urn:nokia.com:srlinux:chassis:interfaces
+#   srl_nokia-network-instance (srl_nokia-netinst)  urn:nokia.com:srlinux:net-inst:network-instance
+#   srl_nokia-system-name (srl_nokia-system-name)   urn:nokia.com:srlinux:chassis:system-name
+# Top node: /
+leaf1 = root()
+
+# Container: /system/name (srl_nokia-system-name)
+leaf1.system.name.host_name = 'leaf1'
+
+# List /interface (srl_nokia-interfaces) element: 'ethernet-1/49'
+interface_element = leaf1.interface.create('ethernet-1/49', description='Link to spine1 [ethernet-1/1]', admin_state='enable')
+
+# List /interface[name='ethernet-1/49']/subinterface element: 0
+subinterface_element = interface_element.subinterface.create(u64(0), description='Link to spine1 [ethernet-1/1]', admin_state='enable')
+
+# Container: /interface[name='ethernet-1/49']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# List /interface[name='ethernet-1/49']/subinterface[index='0']/ipv4/address element: '10.100.0.226/31'
+address_element = subinterface_element.ipv4.address.create('10.100.0.226/31')
+
+# List /interface (srl_nokia-interfaces) element: 'ethernet-1/50'
+interface_element = leaf1.interface.create('ethernet-1/50', description='Link to spine2 [ethernet-1/1]', admin_state='enable')
+
+# List /interface[name='ethernet-1/50']/subinterface element: 0
+subinterface_element = interface_element.subinterface.create(u64(0), description='Link to spine2 [ethernet-1/1]', admin_state='enable')
+
+# Container: /interface[name='ethernet-1/50']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# List /interface[name='ethernet-1/50']/subinterface[index='0']/ipv4/address element: '10.100.0.228/31'
+address_element = subinterface_element.ipv4.address.create('10.100.0.228/31')
+
+# List /interface (srl_nokia-interfaces) element: 'mgmt0'
+interface_element = leaf1.interface.create('mgmt0', admin_state='enable')
+
+# List /interface[name='mgmt0']/subinterface element: 0
+subinterface_element = interface_element.subinterface.create(u64(0), admin_state='enable')
+
+# Container: /interface[name='mgmt0']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# Container: /interface[name='mgmt0']/subinterface[index='0']/ipv6
+subinterface_element.ipv6.admin_state = 'enable'
+
+# List /interface (srl_nokia-interfaces) element: 'system0'
+interface_element = leaf1.interface.create('system0')
+
+# List /interface[name='system0']/subinterface element: 0
+subinterface_element = interface_element.subinterface.create(u64(0))
+
+# Container: /interface[name='system0']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# List /interface[name='system0']/subinterface[index='0']/ipv4/address element: '10.0.0.1/32'
+address_element = subinterface_element.ipv4.address.create('10.0.0.1/32')
+
+# List /network-instance (srl_nokia-network-instance) element: 'default'
+network_instance_element = leaf1.network_instance.create('default')
+
+# List /network-instance[name='default']/interface element: 'ethernet-1/49.0'
+interface_element_2 = network_instance_element.interface.create('ethernet-1/49.0')
+
+# List /network-instance[name='default']/interface element: 'ethernet-1/50.0'
+interface_element_2 = network_instance_element.interface.create('ethernet-1/50.0')
+
+# List /network-instance[name='default']/interface element: 'system0.0'
+interface_element_2 = network_instance_element.interface.create('system0.0')
+
+# P-container: /network-instance[name='default']/protocols/bgp (srl_nokia-bgp)
+bgp = network_instance_element.protocols.create_bgp(autonomous_system=u64(4200000001), router_id='10.0.0.1')
+
+# List /network-instance[name='default']/protocols/bgp/afi-safi element: Identityref('ipv4-unicast', ns='urn:nokia.com:srlinux:general:common', mod='srl_nokia-common', pfx='srl_nokia-comm')
+afi_safi_element = bgp.afi_safi.create(Identityref('ipv4-unicast', ns='urn:nokia.com:srlinux:general:common', mod='srl_nokia-common', pfx='srl_nokia-comm'), admin_state='enable')
+
+# Container: /network-instance[name='default']/protocols/bgp/afi-safi[afi-safi-name='Identityref(\'ipv4-unicast\', ns=\'urn:nokia.com:srlinux:general:common\', mod=\'srl_nokia-common\', pfx=\'srl_nokia-comm\')']/multipath
+afi_safi_element.multipath.maximum_paths = u64(64)
+
+# List /network-instance[name='default']/protocols/bgp/group element: 'fabric'
+group_element = bgp.group.create('fabric')
+group_element.export_policy = ['export-loopbacks']
+group_element.import_policy = ['accept-all']
+
+# List /network-instance[name='default']/protocols/bgp/neighbor element: '10.100.0.227'
+neighbor_element = bgp.neighbor.create('10.100.0.227', admin_state='enable', description='Link to spine1 [ethernet-1/1]', peer_as=u64(4200100101), peer_group='fabric')
+
+# List /network-instance[name='default']/protocols/bgp/neighbor element: '10.100.0.229'
+neighbor_element = bgp.neighbor.create('10.100.0.229', admin_state='enable', description='Link to spine2 [ethernet-1/1]', peer_as=u64(4200100102), peer_group='fabric')
+
+# List /network-instance (srl_nokia-network-instance) element: 'mgmt'
+network_instance_element = leaf1.network_instance.create('mgmt', type=Identityref('ip-vrf', ns='urn:nokia.com:srlinux:net-inst:network-instance', mod='srl_nokia-network-instance', pfx='srl_nokia-netinst'), admin_state='enable', description='Management network instance')
+
+# List /network-instance[name='mgmt']/interface element: 'mgmt0.0'
+interface_element_2 = network_instance_element.interface.create('mgmt0.0')
+
+# List /routing-policy/prefix-set element: 'loopbacks'
+prefix_set_element = leaf1.routing_policy.prefix_set.create('loopbacks')
+
+# List /routing-policy/prefix-set[name='loopbacks']/prefix element: '10.0.0.0/16', '32..32'
+prefix_element = prefix_set_element.prefix.create((ip_prefix='10.0.0.0/16', mask_length_range='32..32'))
+
+# List /routing-policy/policy element: 'accept-all'
+policy_element = leaf1.routing_policy.policy.create('accept-all')
+
+# List /routing-policy/policy[name='accept-all']/statement element: '10'
+statement_element = policy_element.statement.create('10')
+
+# Container: /routing-policy/policy[name='accept-all']/statement[name='10']/action
+statement_element.action_.policy_result = 'accept'
+
+# List /routing-policy/policy element: 'export-loopbacks'
+policy_element = leaf1.routing_policy.policy.create('export-loopbacks')
+
+# List /routing-policy/policy[name='export-loopbacks']/statement element: '10'
+statement_element = policy_element.statement.create('10')
+
+# Container: /routing-policy/policy[name='export-loopbacks']/statement[name='10']/match/prefix
+statement_element.match.prefix.prefix_set = 'loopbacks'
+
+# Container: /routing-policy/policy[name='export-loopbacks']/statement[name='10']/action
+statement_element.action_.policy_result = 'accept'
+
+# device leaf2
+# YANG module (prefix) and namespace:
+#   srl_nokia-bgp (srl_nokia-bgp)                   urn:nokia.com:srlinux:bgp:bgp
+#   srl_nokia-interfaces (srl_nokia-if)             urn:nokia.com:srlinux:chassis:interfaces
+#   srl_nokia-network-instance (srl_nokia-netinst)  urn:nokia.com:srlinux:net-inst:network-instance
+#   srl_nokia-system-name (srl_nokia-system-name)   urn:nokia.com:srlinux:chassis:system-name
+# Top node: /
+leaf2 = root()
+
+# Container: /system/name (srl_nokia-system-name)
+leaf2.system.name.host_name = 'leaf2'
+
+# List /interface (srl_nokia-interfaces) element: 'ethernet-1/49'
+interface_element = leaf2.interface.create('ethernet-1/49', description='Link to spine1 [ethernet-1/2]', admin_state='enable')
+
+# List /interface[name='ethernet-1/49']/subinterface element: 0
+subinterface_element = interface_element.subinterface.create(u64(0), description='Link to spine1 [ethernet-1/2]', admin_state='enable')
+
+# Container: /interface[name='ethernet-1/49']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# List /interface[name='ethernet-1/49']/subinterface[index='0']/ipv4/address element: '10.100.1.98/31'
+address_element = subinterface_element.ipv4.address.create('10.100.1.98/31')
+
+# List /interface (srl_nokia-interfaces) element: 'ethernet-1/50'
+interface_element = leaf2.interface.create('ethernet-1/50', description='Link to spine2 [ethernet-1/2]', admin_state='enable')
+
+# List /interface[name='ethernet-1/50']/subinterface element: 0
+subinterface_element = interface_element.subinterface.create(u64(0), description='Link to spine2 [ethernet-1/2]', admin_state='enable')
+
+# Container: /interface[name='ethernet-1/50']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# List /interface[name='ethernet-1/50']/subinterface[index='0']/ipv4/address element: '10.100.1.100/31'
+address_element = subinterface_element.ipv4.address.create('10.100.1.100/31')
+
+# List /interface (srl_nokia-interfaces) element: 'mgmt0'
+interface_element = leaf2.interface.create('mgmt0', admin_state='enable')
+
+# List /interface[name='mgmt0']/subinterface element: 0
+subinterface_element = interface_element.subinterface.create(u64(0), admin_state='enable')
+
+# Container: /interface[name='mgmt0']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# Container: /interface[name='mgmt0']/subinterface[index='0']/ipv6
+subinterface_element.ipv6.admin_state = 'enable'
+
+# List /interface (srl_nokia-interfaces) element: 'system0'
+interface_element = leaf2.interface.create('system0')
+
+# List /interface[name='system0']/subinterface element: 0
+subinterface_element = interface_element.subinterface.create(u64(0))
+
+# Container: /interface[name='system0']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# List /interface[name='system0']/subinterface[index='0']/ipv4/address element: '10.0.0.2/32'
+address_element = subinterface_element.ipv4.address.create('10.0.0.2/32')
+
+# List /network-instance (srl_nokia-network-instance) element: 'default'
+network_instance_element = leaf2.network_instance.create('default')
+
+# List /network-instance[name='default']/interface element: 'ethernet-1/49.0'
+interface_element_2 = network_instance_element.interface.create('ethernet-1/49.0')
+
+# List /network-instance[name='default']/interface element: 'ethernet-1/50.0'
+interface_element_2 = network_instance_element.interface.create('ethernet-1/50.0')
+
+# List /network-instance[name='default']/interface element: 'system0.0'
+interface_element_2 = network_instance_element.interface.create('system0.0')
+
+# P-container: /network-instance[name='default']/protocols/bgp (srl_nokia-bgp)
+bgp = network_instance_element.protocols.create_bgp(autonomous_system=u64(4200000002), router_id='10.0.0.2')
+
+# List /network-instance[name='default']/protocols/bgp/afi-safi element: Identityref('ipv4-unicast', ns='urn:nokia.com:srlinux:general:common', mod='srl_nokia-common', pfx='srl_nokia-comm')
+afi_safi_element = bgp.afi_safi.create(Identityref('ipv4-unicast', ns='urn:nokia.com:srlinux:general:common', mod='srl_nokia-common', pfx='srl_nokia-comm'), admin_state='enable')
+
+# Container: /network-instance[name='default']/protocols/bgp/afi-safi[afi-safi-name='Identityref(\'ipv4-unicast\', ns=\'urn:nokia.com:srlinux:general:common\', mod=\'srl_nokia-common\', pfx=\'srl_nokia-comm\')']/multipath
+afi_safi_element.multipath.maximum_paths = u64(64)
+
+# List /network-instance[name='default']/protocols/bgp/group element: 'fabric'
+group_element = bgp.group.create('fabric')
+group_element.export_policy = ['export-loopbacks']
+group_element.import_policy = ['accept-all']
+
+# List /network-instance[name='default']/protocols/bgp/neighbor element: '10.100.1.101'
+neighbor_element = bgp.neighbor.create('10.100.1.101', admin_state='enable', description='Link to spine2 [ethernet-1/2]', peer_as=u64(4200100102), peer_group='fabric')
+
+# List /network-instance[name='default']/protocols/bgp/neighbor element: '10.100.1.99'
+neighbor_element = bgp.neighbor.create('10.100.1.99', admin_state='enable', description='Link to spine1 [ethernet-1/2]', peer_as=u64(4200100101), peer_group='fabric')
+
+# List /network-instance (srl_nokia-network-instance) element: 'mgmt'
+network_instance_element = leaf2.network_instance.create('mgmt', type=Identityref('ip-vrf', ns='urn:nokia.com:srlinux:net-inst:network-instance', mod='srl_nokia-network-instance', pfx='srl_nokia-netinst'), admin_state='enable', description='Management network instance')
+
+# List /network-instance[name='mgmt']/interface element: 'mgmt0.0'
+interface_element_2 = network_instance_element.interface.create('mgmt0.0')
+
+# List /routing-policy/prefix-set element: 'loopbacks'
+prefix_set_element = leaf2.routing_policy.prefix_set.create('loopbacks')
+
+# List /routing-policy/prefix-set[name='loopbacks']/prefix element: '10.0.0.0/16', '32..32'
+prefix_element = prefix_set_element.prefix.create((ip_prefix='10.0.0.0/16', mask_length_range='32..32'))
+
+# List /routing-policy/policy element: 'accept-all'
+policy_element = leaf2.routing_policy.policy.create('accept-all')
+
+# List /routing-policy/policy[name='accept-all']/statement element: '10'
+statement_element = policy_element.statement.create('10')
+
+# Container: /routing-policy/policy[name='accept-all']/statement[name='10']/action
+statement_element.action_.policy_result = 'accept'
+
+# List /routing-policy/policy element: 'export-loopbacks'
+policy_element = leaf2.routing_policy.policy.create('export-loopbacks')
+
+# List /routing-policy/policy[name='export-loopbacks']/statement element: '10'
+statement_element = policy_element.statement.create('10')
+
+# Container: /routing-policy/policy[name='export-loopbacks']/statement[name='10']/match/prefix
+statement_element.match.prefix.prefix_set = 'loopbacks'
+
+# Container: /routing-policy/policy[name='export-loopbacks']/statement[name='10']/action
+statement_element.action_.policy_result = 'accept'
+
+# device leaf3
+# YANG module (prefix) and namespace:
+#   srl_nokia-bgp (srl_nokia-bgp)                   urn:nokia.com:srlinux:bgp:bgp
+#   srl_nokia-interfaces (srl_nokia-if)             urn:nokia.com:srlinux:chassis:interfaces
+#   srl_nokia-network-instance (srl_nokia-netinst)  urn:nokia.com:srlinux:net-inst:network-instance
+#   srl_nokia-system-name (srl_nokia-system-name)   urn:nokia.com:srlinux:chassis:system-name
+# Top node: /
+leaf3 = root()
+
+# Container: /system/name (srl_nokia-system-name)
+leaf3.system.name.host_name = 'leaf3'
+
+# List /interface (srl_nokia-interfaces) element: 'ethernet-1/49'
+interface_element = leaf3.interface.create('ethernet-1/49', description='Link to spine3 [ethernet-1/1]', admin_state='enable')
+
+# List /interface[name='ethernet-1/49']/subinterface element: 0
+subinterface_element = interface_element.subinterface.create(u64(0), description='Link to spine3 [ethernet-1/1]', admin_state='enable')
+
+# Container: /interface[name='ethernet-1/49']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# List /interface[name='ethernet-1/49']/subinterface[index='0']/ipv4/address element: '10.100.1.226/31'
+address_element = subinterface_element.ipv4.address.create('10.100.1.226/31')
+
+# List /interface (srl_nokia-interfaces) element: 'ethernet-1/50'
+interface_element = leaf3.interface.create('ethernet-1/50', description='Link to spine4 [ethernet-1/1]', admin_state='enable')
+
+# List /interface[name='ethernet-1/50']/subinterface element: 0
+subinterface_element = interface_element.subinterface.create(u64(0), description='Link to spine4 [ethernet-1/1]', admin_state='enable')
+
+# Container: /interface[name='ethernet-1/50']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# List /interface[name='ethernet-1/50']/subinterface[index='0']/ipv4/address element: '10.100.1.228/31'
+address_element = subinterface_element.ipv4.address.create('10.100.1.228/31')
+
+# List /interface (srl_nokia-interfaces) element: 'mgmt0'
+interface_element = leaf3.interface.create('mgmt0', admin_state='enable')
+
+# List /interface[name='mgmt0']/subinterface element: 0
+subinterface_element = interface_element.subinterface.create(u64(0), admin_state='enable')
+
+# Container: /interface[name='mgmt0']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# Container: /interface[name='mgmt0']/subinterface[index='0']/ipv6
+subinterface_element.ipv6.admin_state = 'enable'
+
+# List /interface (srl_nokia-interfaces) element: 'system0'
+interface_element = leaf3.interface.create('system0')
+
+# List /interface[name='system0']/subinterface element: 0
+subinterface_element = interface_element.subinterface.create(u64(0))
+
+# Container: /interface[name='system0']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# List /interface[name='system0']/subinterface[index='0']/ipv4/address element: '10.0.0.3/32'
+address_element = subinterface_element.ipv4.address.create('10.0.0.3/32')
+
+# List /network-instance (srl_nokia-network-instance) element: 'default'
+network_instance_element = leaf3.network_instance.create('default')
+
+# List /network-instance[name='default']/interface element: 'ethernet-1/49.0'
+interface_element_2 = network_instance_element.interface.create('ethernet-1/49.0')
+
+# List /network-instance[name='default']/interface element: 'ethernet-1/50.0'
+interface_element_2 = network_instance_element.interface.create('ethernet-1/50.0')
+
+# List /network-instance[name='default']/interface element: 'system0.0'
+interface_element_2 = network_instance_element.interface.create('system0.0')
+
+# P-container: /network-instance[name='default']/protocols/bgp (srl_nokia-bgp)
+bgp = network_instance_element.protocols.create_bgp(autonomous_system=u64(4200000003), router_id='10.0.0.3')
+
+# List /network-instance[name='default']/protocols/bgp/afi-safi element: Identityref('ipv4-unicast', ns='urn:nokia.com:srlinux:general:common', mod='srl_nokia-common', pfx='srl_nokia-comm')
+afi_safi_element = bgp.afi_safi.create(Identityref('ipv4-unicast', ns='urn:nokia.com:srlinux:general:common', mod='srl_nokia-common', pfx='srl_nokia-comm'), admin_state='enable')
+
+# Container: /network-instance[name='default']/protocols/bgp/afi-safi[afi-safi-name='Identityref(\'ipv4-unicast\', ns=\'urn:nokia.com:srlinux:general:common\', mod=\'srl_nokia-common\', pfx=\'srl_nokia-comm\')']/multipath
+afi_safi_element.multipath.maximum_paths = u64(64)
+
+# List /network-instance[name='default']/protocols/bgp/group element: 'fabric'
+group_element = bgp.group.create('fabric')
+group_element.export_policy = ['export-loopbacks']
+group_element.import_policy = ['accept-all']
+
+# List /network-instance[name='default']/protocols/bgp/neighbor element: '10.100.1.227'
+neighbor_element = bgp.neighbor.create('10.100.1.227', admin_state='enable', description='Link to spine3 [ethernet-1/1]', peer_as=u64(4200100201), peer_group='fabric')
+
+# List /network-instance[name='default']/protocols/bgp/neighbor element: '10.100.1.229'
+neighbor_element = bgp.neighbor.create('10.100.1.229', admin_state='enable', description='Link to spine4 [ethernet-1/1]', peer_as=u64(4200100202), peer_group='fabric')
+
+# List /network-instance (srl_nokia-network-instance) element: 'mgmt'
+network_instance_element = leaf3.network_instance.create('mgmt', type=Identityref('ip-vrf', ns='urn:nokia.com:srlinux:net-inst:network-instance', mod='srl_nokia-network-instance', pfx='srl_nokia-netinst'), admin_state='enable', description='Management network instance')
+
+# List /network-instance[name='mgmt']/interface element: 'mgmt0.0'
+interface_element_2 = network_instance_element.interface.create('mgmt0.0')
+
+# List /routing-policy/prefix-set element: 'loopbacks'
+prefix_set_element = leaf3.routing_policy.prefix_set.create('loopbacks')
+
+# List /routing-policy/prefix-set[name='loopbacks']/prefix element: '10.0.0.0/16', '32..32'
+prefix_element = prefix_set_element.prefix.create((ip_prefix='10.0.0.0/16', mask_length_range='32..32'))
+
+# List /routing-policy/policy element: 'accept-all'
+policy_element = leaf3.routing_policy.policy.create('accept-all')
+
+# List /routing-policy/policy[name='accept-all']/statement element: '10'
+statement_element = policy_element.statement.create('10')
+
+# Container: /routing-policy/policy[name='accept-all']/statement[name='10']/action
+statement_element.action_.policy_result = 'accept'
+
+# List /routing-policy/policy element: 'export-loopbacks'
+policy_element = leaf3.routing_policy.policy.create('export-loopbacks')
+
+# List /routing-policy/policy[name='export-loopbacks']/statement element: '10'
+statement_element = policy_element.statement.create('10')
+
+# Container: /routing-policy/policy[name='export-loopbacks']/statement[name='10']/match/prefix
+statement_element.match.prefix.prefix_set = 'loopbacks'
+
+# Container: /routing-policy/policy[name='export-loopbacks']/statement[name='10']/action
+statement_element.action_.policy_result = 'accept'
+
+# device leaf4
+# YANG module (prefix) and namespace:
+#   srl_nokia-bgp (srl_nokia-bgp)                   urn:nokia.com:srlinux:bgp:bgp
+#   srl_nokia-interfaces (srl_nokia-if)             urn:nokia.com:srlinux:chassis:interfaces
+#   srl_nokia-network-instance (srl_nokia-netinst)  urn:nokia.com:srlinux:net-inst:network-instance
+#   srl_nokia-system-name (srl_nokia-system-name)   urn:nokia.com:srlinux:chassis:system-name
+# Top node: /
+leaf4 = root()
+
+# Container: /system/name (srl_nokia-system-name)
+leaf4.system.name.host_name = 'leaf4'
+
+# List /interface (srl_nokia-interfaces) element: 'ethernet-1/49'
+interface_element = leaf4.interface.create('ethernet-1/49', description='Link to spine3 [ethernet-1/2]', admin_state='enable')
+
+# List /interface[name='ethernet-1/49']/subinterface element: 0
+subinterface_element = interface_element.subinterface.create(u64(0), description='Link to spine3 [ethernet-1/2]', admin_state='enable')
+
+# Container: /interface[name='ethernet-1/49']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# List /interface[name='ethernet-1/49']/subinterface[index='0']/ipv4/address element: '10.100.2.98/31'
+address_element = subinterface_element.ipv4.address.create('10.100.2.98/31')
+
+# List /interface (srl_nokia-interfaces) element: 'ethernet-1/50'
+interface_element = leaf4.interface.create('ethernet-1/50', description='Link to spine4 [ethernet-1/2]', admin_state='enable')
+
+# List /interface[name='ethernet-1/50']/subinterface element: 0
+subinterface_element = interface_element.subinterface.create(u64(0), description='Link to spine4 [ethernet-1/2]', admin_state='enable')
+
+# Container: /interface[name='ethernet-1/50']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# List /interface[name='ethernet-1/50']/subinterface[index='0']/ipv4/address element: '10.100.2.100/31'
+address_element = subinterface_element.ipv4.address.create('10.100.2.100/31')
+
+# List /interface (srl_nokia-interfaces) element: 'mgmt0'
+interface_element = leaf4.interface.create('mgmt0', admin_state='enable')
+
+# List /interface[name='mgmt0']/subinterface element: 0
+subinterface_element = interface_element.subinterface.create(u64(0), admin_state='enable')
+
+# Container: /interface[name='mgmt0']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# Container: /interface[name='mgmt0']/subinterface[index='0']/ipv6
+subinterface_element.ipv6.admin_state = 'enable'
+
+# List /interface (srl_nokia-interfaces) element: 'system0'
+interface_element = leaf4.interface.create('system0')
+
+# List /interface[name='system0']/subinterface element: 0
+subinterface_element = interface_element.subinterface.create(u64(0))
+
+# Container: /interface[name='system0']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# List /interface[name='system0']/subinterface[index='0']/ipv4/address element: '10.0.0.4/32'
+address_element = subinterface_element.ipv4.address.create('10.0.0.4/32')
+
+# List /network-instance (srl_nokia-network-instance) element: 'default'
+network_instance_element = leaf4.network_instance.create('default')
+
+# List /network-instance[name='default']/interface element: 'ethernet-1/49.0'
+interface_element_2 = network_instance_element.interface.create('ethernet-1/49.0')
+
+# List /network-instance[name='default']/interface element: 'ethernet-1/50.0'
+interface_element_2 = network_instance_element.interface.create('ethernet-1/50.0')
+
+# List /network-instance[name='default']/interface element: 'system0.0'
+interface_element_2 = network_instance_element.interface.create('system0.0')
+
+# P-container: /network-instance[name='default']/protocols/bgp (srl_nokia-bgp)
+bgp = network_instance_element.protocols.create_bgp(autonomous_system=u64(4200000004), router_id='10.0.0.4')
+
+# List /network-instance[name='default']/protocols/bgp/afi-safi element: Identityref('ipv4-unicast', ns='urn:nokia.com:srlinux:general:common', mod='srl_nokia-common', pfx='srl_nokia-comm')
+afi_safi_element = bgp.afi_safi.create(Identityref('ipv4-unicast', ns='urn:nokia.com:srlinux:general:common', mod='srl_nokia-common', pfx='srl_nokia-comm'), admin_state='enable')
+
+# Container: /network-instance[name='default']/protocols/bgp/afi-safi[afi-safi-name='Identityref(\'ipv4-unicast\', ns=\'urn:nokia.com:srlinux:general:common\', mod=\'srl_nokia-common\', pfx=\'srl_nokia-comm\')']/multipath
+afi_safi_element.multipath.maximum_paths = u64(64)
+
+# List /network-instance[name='default']/protocols/bgp/group element: 'fabric'
+group_element = bgp.group.create('fabric')
+group_element.export_policy = ['export-loopbacks']
+group_element.import_policy = ['accept-all']
+
+# List /network-instance[name='default']/protocols/bgp/neighbor element: '10.100.2.101'
+neighbor_element = bgp.neighbor.create('10.100.2.101', admin_state='enable', description='Link to spine4 [ethernet-1/2]', peer_as=u64(4200100202), peer_group='fabric')
+
+# List /network-instance[name='default']/protocols/bgp/neighbor element: '10.100.2.99'
+neighbor_element = bgp.neighbor.create('10.100.2.99', admin_state='enable', description='Link to spine3 [ethernet-1/2]', peer_as=u64(4200100201), peer_group='fabric')
+
+# List /network-instance (srl_nokia-network-instance) element: 'mgmt'
+network_instance_element = leaf4.network_instance.create('mgmt', type=Identityref('ip-vrf', ns='urn:nokia.com:srlinux:net-inst:network-instance', mod='srl_nokia-network-instance', pfx='srl_nokia-netinst'), admin_state='enable', description='Management network instance')
+
+# List /network-instance[name='mgmt']/interface element: 'mgmt0.0'
+interface_element_2 = network_instance_element.interface.create('mgmt0.0')
+
+# List /routing-policy/prefix-set element: 'loopbacks'
+prefix_set_element = leaf4.routing_policy.prefix_set.create('loopbacks')
+
+# List /routing-policy/prefix-set[name='loopbacks']/prefix element: '10.0.0.0/16', '32..32'
+prefix_element = prefix_set_element.prefix.create((ip_prefix='10.0.0.0/16', mask_length_range='32..32'))
+
+# List /routing-policy/policy element: 'accept-all'
+policy_element = leaf4.routing_policy.policy.create('accept-all')
+
+# List /routing-policy/policy[name='accept-all']/statement element: '10'
+statement_element = policy_element.statement.create('10')
+
+# Container: /routing-policy/policy[name='accept-all']/statement[name='10']/action
+statement_element.action_.policy_result = 'accept'
+
+# List /routing-policy/policy element: 'export-loopbacks'
+policy_element = leaf4.routing_policy.policy.create('export-loopbacks')
+
+# List /routing-policy/policy[name='export-loopbacks']/statement element: '10'
+statement_element = policy_element.statement.create('10')
+
+# Container: /routing-policy/policy[name='export-loopbacks']/statement[name='10']/match/prefix
+statement_element.match.prefix.prefix_set = 'loopbacks'
+
+# Container: /routing-policy/policy[name='export-loopbacks']/statement[name='10']/action
+statement_element.action_.policy_result = 'accept'
+
+# device spine1
+# YANG module (prefix) and namespace:
+#   srl_nokia-bgp (srl_nokia-bgp)                   urn:nokia.com:srlinux:bgp:bgp
+#   srl_nokia-interfaces (srl_nokia-if)             urn:nokia.com:srlinux:chassis:interfaces
+#   srl_nokia-network-instance (srl_nokia-netinst)  urn:nokia.com:srlinux:net-inst:network-instance
+#   srl_nokia-system-name (srl_nokia-system-name)   urn:nokia.com:srlinux:chassis:system-name
+# Top node: /
+spine1 = root()
+
+# Container: /system/name (srl_nokia-system-name)
+spine1.system.name.host_name = 'spine1'
+
+# List /interface (srl_nokia-interfaces) element: 'ethernet-1/1'
+interface_element = spine1.interface.create('ethernet-1/1', description='Link to leaf1 [ethernet-1/49]', admin_state='enable')
+
+# List /interface[name='ethernet-1/1']/subinterface element: 0
+subinterface_element = interface_element.subinterface.create(u64(0), description='Link to leaf1 [ethernet-1/49]', admin_state='enable')
+
+# Container: /interface[name='ethernet-1/1']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# List /interface[name='ethernet-1/1']/subinterface[index='0']/ipv4/address element: '10.100.0.227/31'
+address_element = subinterface_element.ipv4.address.create('10.100.0.227/31')
+
+# List /interface (srl_nokia-interfaces) element: 'ethernet-1/2'
+interface_element = spine1.interface.create('ethernet-1/2', description='Link to leaf2 [ethernet-1/49]', admin_state='enable')
+
+# List /interface[name='ethernet-1/2']/subinterface element: 0
+subinterface_element = interface_element.subinterface.create(u64(0), description='Link to leaf2 [ethernet-1/49]', admin_state='enable')
+
+# Container: /interface[name='ethernet-1/2']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# List /interface[name='ethernet-1/2']/subinterface[index='0']/ipv4/address element: '10.100.1.99/31'
+address_element = subinterface_element.ipv4.address.create('10.100.1.99/31')
+
+# List /interface (srl_nokia-interfaces) element: 'ethernet-1/31'
+interface_element = spine1.interface.create('ethernet-1/31', description='Link to superspine1 [ethernet-1/1]', admin_state='enable')
+
+# List /interface[name='ethernet-1/31']/subinterface element: 0
+subinterface_element = interface_element.subinterface.create(u64(0), description='Link to superspine1 [ethernet-1/1]', admin_state='enable')
+
+# Container: /interface[name='ethernet-1/31']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# List /interface[name='ethernet-1/31']/subinterface[index='0']/ipv4/address element: '10.100.5.190/31'
+address_element = subinterface_element.ipv4.address.create('10.100.5.190/31')
+
+# List /interface (srl_nokia-interfaces) element: 'mgmt0'
+interface_element = spine1.interface.create('mgmt0', admin_state='enable')
+
+# List /interface[name='mgmt0']/subinterface element: 0
+subinterface_element = interface_element.subinterface.create(u64(0), admin_state='enable')
+
+# Container: /interface[name='mgmt0']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# Container: /interface[name='mgmt0']/subinterface[index='0']/ipv6
+subinterface_element.ipv6.admin_state = 'enable'
+
+# List /interface (srl_nokia-interfaces) element: 'system0'
+interface_element = spine1.interface.create('system0')
+
+# List /interface[name='system0']/subinterface element: 0
+subinterface_element = interface_element.subinterface.create(u64(0))
+
+# Container: /interface[name='system0']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# List /interface[name='system0']/subinterface[index='0']/ipv4/address element: '10.0.0.11/32'
+address_element = subinterface_element.ipv4.address.create('10.0.0.11/32')
+
+# List /network-instance (srl_nokia-network-instance) element: 'default'
+network_instance_element = spine1.network_instance.create('default')
+
+# List /network-instance[name='default']/interface element: 'ethernet-1/1.0'
+interface_element_2 = network_instance_element.interface.create('ethernet-1/1.0')
+
+# List /network-instance[name='default']/interface element: 'ethernet-1/2.0'
+interface_element_2 = network_instance_element.interface.create('ethernet-1/2.0')
+
+# List /network-instance[name='default']/interface element: 'ethernet-1/31.0'
+interface_element_2 = network_instance_element.interface.create('ethernet-1/31.0')
+
+# List /network-instance[name='default']/interface element: 'system0.0'
+interface_element_2 = network_instance_element.interface.create('system0.0')
+
+# P-container: /network-instance[name='default']/protocols/bgp (srl_nokia-bgp)
+bgp = network_instance_element.protocols.create_bgp(autonomous_system=u64(4200100101), router_id='10.0.0.11')
+
+# List /network-instance[name='default']/protocols/bgp/afi-safi element: Identityref('ipv4-unicast', ns='urn:nokia.com:srlinux:general:common', mod='srl_nokia-common', pfx='srl_nokia-comm')
+afi_safi_element = bgp.afi_safi.create(Identityref('ipv4-unicast', ns='urn:nokia.com:srlinux:general:common', mod='srl_nokia-common', pfx='srl_nokia-comm'), admin_state='enable')
+
+# Container: /network-instance[name='default']/protocols/bgp/afi-safi[afi-safi-name='Identityref(\'ipv4-unicast\', ns=\'urn:nokia.com:srlinux:general:common\', mod=\'srl_nokia-common\', pfx=\'srl_nokia-comm\')']/multipath
+afi_safi_element.multipath.maximum_paths = u64(64)
+
+# List /network-instance[name='default']/protocols/bgp/group element: 'fabric'
+group_element = bgp.group.create('fabric')
+group_element.export_policy = ['export-loopbacks']
+group_element.import_policy = ['accept-all']
+
+# List /network-instance[name='default']/protocols/bgp/neighbor element: '10.100.0.226'
+neighbor_element = bgp.neighbor.create('10.100.0.226', admin_state='enable', description='Link to leaf1 [ethernet-1/49]', peer_as=u64(4200000001), peer_group='fabric')
+
+# List /network-instance[name='default']/protocols/bgp/neighbor element: '10.100.1.98'
+neighbor_element = bgp.neighbor.create('10.100.1.98', admin_state='enable', description='Link to leaf2 [ethernet-1/49]', peer_as=u64(4200000002), peer_group='fabric')
+
+# List /network-instance[name='default']/protocols/bgp/neighbor element: '10.100.5.191'
+neighbor_element = bgp.neighbor.create('10.100.5.191', admin_state='enable', description='Link to superspine1 [ethernet-1/1]', peer_as=u64(4200200001), peer_group='fabric')
+
+# List /network-instance (srl_nokia-network-instance) element: 'mgmt'
+network_instance_element = spine1.network_instance.create('mgmt', type=Identityref('ip-vrf', ns='urn:nokia.com:srlinux:net-inst:network-instance', mod='srl_nokia-network-instance', pfx='srl_nokia-netinst'), admin_state='enable', description='Management network instance')
+
+# List /network-instance[name='mgmt']/interface element: 'mgmt0.0'
+interface_element_2 = network_instance_element.interface.create('mgmt0.0')
+
+# List /routing-policy/prefix-set element: 'loopbacks'
+prefix_set_element = spine1.routing_policy.prefix_set.create('loopbacks')
+
+# List /routing-policy/prefix-set[name='loopbacks']/prefix element: '10.0.0.0/16', '32..32'
+prefix_element = prefix_set_element.prefix.create((ip_prefix='10.0.0.0/16', mask_length_range='32..32'))
+
+# List /routing-policy/policy element: 'accept-all'
+policy_element = spine1.routing_policy.policy.create('accept-all')
+
+# List /routing-policy/policy[name='accept-all']/statement element: '10'
+statement_element = policy_element.statement.create('10')
+
+# Container: /routing-policy/policy[name='accept-all']/statement[name='10']/action
+statement_element.action_.policy_result = 'accept'
+
+# List /routing-policy/policy element: 'export-loopbacks'
+policy_element = spine1.routing_policy.policy.create('export-loopbacks')
+
+# List /routing-policy/policy[name='export-loopbacks']/statement element: '10'
+statement_element = policy_element.statement.create('10')
+
+# Container: /routing-policy/policy[name='export-loopbacks']/statement[name='10']/match/prefix
+statement_element.match.prefix.prefix_set = 'loopbacks'
+
+# Container: /routing-policy/policy[name='export-loopbacks']/statement[name='10']/action
+statement_element.action_.policy_result = 'accept'
+
+# device spine2
+# YANG module (prefix) and namespace:
+#   srl_nokia-bgp (srl_nokia-bgp)                   urn:nokia.com:srlinux:bgp:bgp
+#   srl_nokia-interfaces (srl_nokia-if)             urn:nokia.com:srlinux:chassis:interfaces
+#   srl_nokia-network-instance (srl_nokia-netinst)  urn:nokia.com:srlinux:net-inst:network-instance
+#   srl_nokia-system-name (srl_nokia-system-name)   urn:nokia.com:srlinux:chassis:system-name
+# Top node: /
+spine2 = root()
+
+# Container: /system/name (srl_nokia-system-name)
+spine2.system.name.host_name = 'spine2'
+
+# List /interface (srl_nokia-interfaces) element: 'ethernet-1/1'
+interface_element = spine2.interface.create('ethernet-1/1', description='Link to leaf1 [ethernet-1/50]', admin_state='enable')
+
+# List /interface[name='ethernet-1/1']/subinterface element: 0
+subinterface_element = interface_element.subinterface.create(u64(0), description='Link to leaf1 [ethernet-1/50]', admin_state='enable')
+
+# Container: /interface[name='ethernet-1/1']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# List /interface[name='ethernet-1/1']/subinterface[index='0']/ipv4/address element: '10.100.0.229/31'
+address_element = subinterface_element.ipv4.address.create('10.100.0.229/31')
+
+# List /interface (srl_nokia-interfaces) element: 'ethernet-1/2'
+interface_element = spine2.interface.create('ethernet-1/2', description='Link to leaf2 [ethernet-1/50]', admin_state='enable')
+
+# List /interface[name='ethernet-1/2']/subinterface element: 0
+subinterface_element = interface_element.subinterface.create(u64(0), description='Link to leaf2 [ethernet-1/50]', admin_state='enable')
+
+# Container: /interface[name='ethernet-1/2']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# List /interface[name='ethernet-1/2']/subinterface[index='0']/ipv4/address element: '10.100.1.101/31'
+address_element = subinterface_element.ipv4.address.create('10.100.1.101/31')
+
+# List /interface (srl_nokia-interfaces) element: 'ethernet-1/31'
+interface_element = spine2.interface.create('ethernet-1/31', description='Link to superspine2 [ethernet-1/1]', admin_state='enable')
+
+# List /interface[name='ethernet-1/31']/subinterface element: 0
+subinterface_element = interface_element.subinterface.create(u64(0), description='Link to superspine2 [ethernet-1/1]', admin_state='enable')
+
+# Container: /interface[name='ethernet-1/31']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# List /interface[name='ethernet-1/31']/subinterface[index='0']/ipv4/address element: '10.100.6.62/31'
+address_element = subinterface_element.ipv4.address.create('10.100.6.62/31')
+
+# List /interface (srl_nokia-interfaces) element: 'mgmt0'
+interface_element = spine2.interface.create('mgmt0', admin_state='enable')
+
+# List /interface[name='mgmt0']/subinterface element: 0
+subinterface_element = interface_element.subinterface.create(u64(0), admin_state='enable')
+
+# Container: /interface[name='mgmt0']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# Container: /interface[name='mgmt0']/subinterface[index='0']/ipv6
+subinterface_element.ipv6.admin_state = 'enable'
+
+# List /interface (srl_nokia-interfaces) element: 'system0'
+interface_element = spine2.interface.create('system0')
+
+# List /interface[name='system0']/subinterface element: 0
+subinterface_element = interface_element.subinterface.create(u64(0))
+
+# Container: /interface[name='system0']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# List /interface[name='system0']/subinterface[index='0']/ipv4/address element: '10.0.0.12/32'
+address_element = subinterface_element.ipv4.address.create('10.0.0.12/32')
+
+# List /network-instance (srl_nokia-network-instance) element: 'default'
+network_instance_element = spine2.network_instance.create('default')
+
+# List /network-instance[name='default']/interface element: 'ethernet-1/1.0'
+interface_element_2 = network_instance_element.interface.create('ethernet-1/1.0')
+
+# List /network-instance[name='default']/interface element: 'ethernet-1/2.0'
+interface_element_2 = network_instance_element.interface.create('ethernet-1/2.0')
+
+# List /network-instance[name='default']/interface element: 'ethernet-1/31.0'
+interface_element_2 = network_instance_element.interface.create('ethernet-1/31.0')
+
+# List /network-instance[name='default']/interface element: 'system0.0'
+interface_element_2 = network_instance_element.interface.create('system0.0')
+
+# P-container: /network-instance[name='default']/protocols/bgp (srl_nokia-bgp)
+bgp = network_instance_element.protocols.create_bgp(autonomous_system=u64(4200100102), router_id='10.0.0.12')
+
+# List /network-instance[name='default']/protocols/bgp/afi-safi element: Identityref('ipv4-unicast', ns='urn:nokia.com:srlinux:general:common', mod='srl_nokia-common', pfx='srl_nokia-comm')
+afi_safi_element = bgp.afi_safi.create(Identityref('ipv4-unicast', ns='urn:nokia.com:srlinux:general:common', mod='srl_nokia-common', pfx='srl_nokia-comm'), admin_state='enable')
+
+# Container: /network-instance[name='default']/protocols/bgp/afi-safi[afi-safi-name='Identityref(\'ipv4-unicast\', ns=\'urn:nokia.com:srlinux:general:common\', mod=\'srl_nokia-common\', pfx=\'srl_nokia-comm\')']/multipath
+afi_safi_element.multipath.maximum_paths = u64(64)
+
+# List /network-instance[name='default']/protocols/bgp/group element: 'fabric'
+group_element = bgp.group.create('fabric')
+group_element.export_policy = ['export-loopbacks']
+group_element.import_policy = ['accept-all']
+
+# List /network-instance[name='default']/protocols/bgp/neighbor element: '10.100.0.228'
+neighbor_element = bgp.neighbor.create('10.100.0.228', admin_state='enable', description='Link to leaf1 [ethernet-1/50]', peer_as=u64(4200000001), peer_group='fabric')
+
+# List /network-instance[name='default']/protocols/bgp/neighbor element: '10.100.1.100'
+neighbor_element = bgp.neighbor.create('10.100.1.100', admin_state='enable', description='Link to leaf2 [ethernet-1/50]', peer_as=u64(4200000002), peer_group='fabric')
+
+# List /network-instance[name='default']/protocols/bgp/neighbor element: '10.100.6.63'
+neighbor_element = bgp.neighbor.create('10.100.6.63', admin_state='enable', description='Link to superspine2 [ethernet-1/1]', peer_as=u64(4200200002), peer_group='fabric')
+
+# List /network-instance (srl_nokia-network-instance) element: 'mgmt'
+network_instance_element = spine2.network_instance.create('mgmt', type=Identityref('ip-vrf', ns='urn:nokia.com:srlinux:net-inst:network-instance', mod='srl_nokia-network-instance', pfx='srl_nokia-netinst'), admin_state='enable', description='Management network instance')
+
+# List /network-instance[name='mgmt']/interface element: 'mgmt0.0'
+interface_element_2 = network_instance_element.interface.create('mgmt0.0')
+
+# List /routing-policy/prefix-set element: 'loopbacks'
+prefix_set_element = spine2.routing_policy.prefix_set.create('loopbacks')
+
+# List /routing-policy/prefix-set[name='loopbacks']/prefix element: '10.0.0.0/16', '32..32'
+prefix_element = prefix_set_element.prefix.create((ip_prefix='10.0.0.0/16', mask_length_range='32..32'))
+
+# List /routing-policy/policy element: 'accept-all'
+policy_element = spine2.routing_policy.policy.create('accept-all')
+
+# List /routing-policy/policy[name='accept-all']/statement element: '10'
+statement_element = policy_element.statement.create('10')
+
+# Container: /routing-policy/policy[name='accept-all']/statement[name='10']/action
+statement_element.action_.policy_result = 'accept'
+
+# List /routing-policy/policy element: 'export-loopbacks'
+policy_element = spine2.routing_policy.policy.create('export-loopbacks')
+
+# List /routing-policy/policy[name='export-loopbacks']/statement element: '10'
+statement_element = policy_element.statement.create('10')
+
+# Container: /routing-policy/policy[name='export-loopbacks']/statement[name='10']/match/prefix
+statement_element.match.prefix.prefix_set = 'loopbacks'
+
+# Container: /routing-policy/policy[name='export-loopbacks']/statement[name='10']/action
+statement_element.action_.policy_result = 'accept'
+
+# device spine3
+# YANG module (prefix) and namespace:
+#   srl_nokia-bgp (srl_nokia-bgp)                   urn:nokia.com:srlinux:bgp:bgp
+#   srl_nokia-interfaces (srl_nokia-if)             urn:nokia.com:srlinux:chassis:interfaces
+#   srl_nokia-network-instance (srl_nokia-netinst)  urn:nokia.com:srlinux:net-inst:network-instance
+#   srl_nokia-system-name (srl_nokia-system-name)   urn:nokia.com:srlinux:chassis:system-name
+# Top node: /
+spine3 = root()
+
+# Container: /system/name (srl_nokia-system-name)
+spine3.system.name.host_name = 'spine3'
+
+# List /interface (srl_nokia-interfaces) element: 'ethernet-1/1'
+interface_element = spine3.interface.create('ethernet-1/1', description='Link to leaf3 [ethernet-1/49]', admin_state='enable')
+
+# List /interface[name='ethernet-1/1']/subinterface element: 0
+subinterface_element = interface_element.subinterface.create(u64(0), description='Link to leaf3 [ethernet-1/49]', admin_state='enable')
+
+# Container: /interface[name='ethernet-1/1']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# List /interface[name='ethernet-1/1']/subinterface[index='0']/ipv4/address element: '10.100.1.227/31'
+address_element = subinterface_element.ipv4.address.create('10.100.1.227/31')
+
+# List /interface (srl_nokia-interfaces) element: 'ethernet-1/2'
+interface_element = spine3.interface.create('ethernet-1/2', description='Link to leaf4 [ethernet-1/49]', admin_state='enable')
+
+# List /interface[name='ethernet-1/2']/subinterface element: 0
+subinterface_element = interface_element.subinterface.create(u64(0), description='Link to leaf4 [ethernet-1/49]', admin_state='enable')
+
+# Container: /interface[name='ethernet-1/2']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# List /interface[name='ethernet-1/2']/subinterface[index='0']/ipv4/address element: '10.100.2.99/31'
+address_element = subinterface_element.ipv4.address.create('10.100.2.99/31')
+
+# List /interface (srl_nokia-interfaces) element: 'ethernet-1/31'
+interface_element = spine3.interface.create('ethernet-1/31', description='Link to superspine1 [ethernet-1/2]', admin_state='enable')
+
+# List /interface[name='ethernet-1/31']/subinterface element: 0
+subinterface_element = interface_element.subinterface.create(u64(0), description='Link to superspine1 [ethernet-1/2]', admin_state='enable')
+
+# Container: /interface[name='ethernet-1/31']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# List /interface[name='ethernet-1/31']/subinterface[index='0']/ipv4/address element: '10.100.6.190/31'
+address_element = subinterface_element.ipv4.address.create('10.100.6.190/31')
+
+# List /interface (srl_nokia-interfaces) element: 'mgmt0'
+interface_element = spine3.interface.create('mgmt0', admin_state='enable')
+
+# List /interface[name='mgmt0']/subinterface element: 0
+subinterface_element = interface_element.subinterface.create(u64(0), admin_state='enable')
+
+# Container: /interface[name='mgmt0']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# Container: /interface[name='mgmt0']/subinterface[index='0']/ipv6
+subinterface_element.ipv6.admin_state = 'enable'
+
+# List /interface (srl_nokia-interfaces) element: 'system0'
+interface_element = spine3.interface.create('system0')
+
+# List /interface[name='system0']/subinterface element: 0
+subinterface_element = interface_element.subinterface.create(u64(0))
+
+# Container: /interface[name='system0']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# List /interface[name='system0']/subinterface[index='0']/ipv4/address element: '10.0.0.13/32'
+address_element = subinterface_element.ipv4.address.create('10.0.0.13/32')
+
+# List /network-instance (srl_nokia-network-instance) element: 'default'
+network_instance_element = spine3.network_instance.create('default')
+
+# List /network-instance[name='default']/interface element: 'ethernet-1/1.0'
+interface_element_2 = network_instance_element.interface.create('ethernet-1/1.0')
+
+# List /network-instance[name='default']/interface element: 'ethernet-1/2.0'
+interface_element_2 = network_instance_element.interface.create('ethernet-1/2.0')
+
+# List /network-instance[name='default']/interface element: 'ethernet-1/31.0'
+interface_element_2 = network_instance_element.interface.create('ethernet-1/31.0')
+
+# List /network-instance[name='default']/interface element: 'system0.0'
+interface_element_2 = network_instance_element.interface.create('system0.0')
+
+# P-container: /network-instance[name='default']/protocols/bgp (srl_nokia-bgp)
+bgp = network_instance_element.protocols.create_bgp(autonomous_system=u64(4200100201), router_id='10.0.0.13')
+
+# List /network-instance[name='default']/protocols/bgp/afi-safi element: Identityref('ipv4-unicast', ns='urn:nokia.com:srlinux:general:common', mod='srl_nokia-common', pfx='srl_nokia-comm')
+afi_safi_element = bgp.afi_safi.create(Identityref('ipv4-unicast', ns='urn:nokia.com:srlinux:general:common', mod='srl_nokia-common', pfx='srl_nokia-comm'), admin_state='enable')
+
+# Container: /network-instance[name='default']/protocols/bgp/afi-safi[afi-safi-name='Identityref(\'ipv4-unicast\', ns=\'urn:nokia.com:srlinux:general:common\', mod=\'srl_nokia-common\', pfx=\'srl_nokia-comm\')']/multipath
+afi_safi_element.multipath.maximum_paths = u64(64)
+
+# List /network-instance[name='default']/protocols/bgp/group element: 'fabric'
+group_element = bgp.group.create('fabric')
+group_element.export_policy = ['export-loopbacks']
+group_element.import_policy = ['accept-all']
+
+# List /network-instance[name='default']/protocols/bgp/neighbor element: '10.100.1.226'
+neighbor_element = bgp.neighbor.create('10.100.1.226', admin_state='enable', description='Link to leaf3 [ethernet-1/49]', peer_as=u64(4200000003), peer_group='fabric')
+
+# List /network-instance[name='default']/protocols/bgp/neighbor element: '10.100.2.98'
+neighbor_element = bgp.neighbor.create('10.100.2.98', admin_state='enable', description='Link to leaf4 [ethernet-1/49]', peer_as=u64(4200000004), peer_group='fabric')
+
+# List /network-instance[name='default']/protocols/bgp/neighbor element: '10.100.6.191'
+neighbor_element = bgp.neighbor.create('10.100.6.191', admin_state='enable', description='Link to superspine1 [ethernet-1/2]', peer_as=u64(4200200001), peer_group='fabric')
+
+# List /network-instance (srl_nokia-network-instance) element: 'mgmt'
+network_instance_element = spine3.network_instance.create('mgmt', type=Identityref('ip-vrf', ns='urn:nokia.com:srlinux:net-inst:network-instance', mod='srl_nokia-network-instance', pfx='srl_nokia-netinst'), admin_state='enable', description='Management network instance')
+
+# List /network-instance[name='mgmt']/interface element: 'mgmt0.0'
+interface_element_2 = network_instance_element.interface.create('mgmt0.0')
+
+# List /routing-policy/prefix-set element: 'loopbacks'
+prefix_set_element = spine3.routing_policy.prefix_set.create('loopbacks')
+
+# List /routing-policy/prefix-set[name='loopbacks']/prefix element: '10.0.0.0/16', '32..32'
+prefix_element = prefix_set_element.prefix.create((ip_prefix='10.0.0.0/16', mask_length_range='32..32'))
+
+# List /routing-policy/policy element: 'accept-all'
+policy_element = spine3.routing_policy.policy.create('accept-all')
+
+# List /routing-policy/policy[name='accept-all']/statement element: '10'
+statement_element = policy_element.statement.create('10')
+
+# Container: /routing-policy/policy[name='accept-all']/statement[name='10']/action
+statement_element.action_.policy_result = 'accept'
+
+# List /routing-policy/policy element: 'export-loopbacks'
+policy_element = spine3.routing_policy.policy.create('export-loopbacks')
+
+# List /routing-policy/policy[name='export-loopbacks']/statement element: '10'
+statement_element = policy_element.statement.create('10')
+
+# Container: /routing-policy/policy[name='export-loopbacks']/statement[name='10']/match/prefix
+statement_element.match.prefix.prefix_set = 'loopbacks'
+
+# Container: /routing-policy/policy[name='export-loopbacks']/statement[name='10']/action
+statement_element.action_.policy_result = 'accept'
+
+# device spine4
+# YANG module (prefix) and namespace:
+#   srl_nokia-bgp (srl_nokia-bgp)                   urn:nokia.com:srlinux:bgp:bgp
+#   srl_nokia-interfaces (srl_nokia-if)             urn:nokia.com:srlinux:chassis:interfaces
+#   srl_nokia-network-instance (srl_nokia-netinst)  urn:nokia.com:srlinux:net-inst:network-instance
+#   srl_nokia-system-name (srl_nokia-system-name)   urn:nokia.com:srlinux:chassis:system-name
+# Top node: /
+spine4 = root()
+
+# Container: /system/name (srl_nokia-system-name)
+spine4.system.name.host_name = 'spine4'
+
+# List /interface (srl_nokia-interfaces) element: 'ethernet-1/1'
+interface_element = spine4.interface.create('ethernet-1/1', description='Link to leaf3 [ethernet-1/50]', admin_state='enable')
+
+# List /interface[name='ethernet-1/1']/subinterface element: 0
+subinterface_element = interface_element.subinterface.create(u64(0), description='Link to leaf3 [ethernet-1/50]', admin_state='enable')
+
+# Container: /interface[name='ethernet-1/1']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# List /interface[name='ethernet-1/1']/subinterface[index='0']/ipv4/address element: '10.100.1.229/31'
+address_element = subinterface_element.ipv4.address.create('10.100.1.229/31')
+
+# List /interface (srl_nokia-interfaces) element: 'ethernet-1/2'
+interface_element = spine4.interface.create('ethernet-1/2', description='Link to leaf4 [ethernet-1/50]', admin_state='enable')
+
+# List /interface[name='ethernet-1/2']/subinterface element: 0
+subinterface_element = interface_element.subinterface.create(u64(0), description='Link to leaf4 [ethernet-1/50]', admin_state='enable')
+
+# Container: /interface[name='ethernet-1/2']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# List /interface[name='ethernet-1/2']/subinterface[index='0']/ipv4/address element: '10.100.2.101/31'
+address_element = subinterface_element.ipv4.address.create('10.100.2.101/31')
+
+# List /interface (srl_nokia-interfaces) element: 'ethernet-1/31'
+interface_element = spine4.interface.create('ethernet-1/31', description='Link to superspine2 [ethernet-1/2]', admin_state='enable')
+
+# List /interface[name='ethernet-1/31']/subinterface element: 0
+subinterface_element = interface_element.subinterface.create(u64(0), description='Link to superspine2 [ethernet-1/2]', admin_state='enable')
+
+# Container: /interface[name='ethernet-1/31']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# List /interface[name='ethernet-1/31']/subinterface[index='0']/ipv4/address element: '10.100.7.62/31'
+address_element = subinterface_element.ipv4.address.create('10.100.7.62/31')
+
+# List /interface (srl_nokia-interfaces) element: 'mgmt0'
+interface_element = spine4.interface.create('mgmt0', admin_state='enable')
+
+# List /interface[name='mgmt0']/subinterface element: 0
+subinterface_element = interface_element.subinterface.create(u64(0), admin_state='enable')
+
+# Container: /interface[name='mgmt0']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# Container: /interface[name='mgmt0']/subinterface[index='0']/ipv6
+subinterface_element.ipv6.admin_state = 'enable'
+
+# List /interface (srl_nokia-interfaces) element: 'system0'
+interface_element = spine4.interface.create('system0')
+
+# List /interface[name='system0']/subinterface element: 0
+subinterface_element = interface_element.subinterface.create(u64(0))
+
+# Container: /interface[name='system0']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# List /interface[name='system0']/subinterface[index='0']/ipv4/address element: '10.0.0.14/32'
+address_element = subinterface_element.ipv4.address.create('10.0.0.14/32')
+
+# List /network-instance (srl_nokia-network-instance) element: 'default'
+network_instance_element = spine4.network_instance.create('default')
+
+# List /network-instance[name='default']/interface element: 'ethernet-1/1.0'
+interface_element_2 = network_instance_element.interface.create('ethernet-1/1.0')
+
+# List /network-instance[name='default']/interface element: 'ethernet-1/2.0'
+interface_element_2 = network_instance_element.interface.create('ethernet-1/2.0')
+
+# List /network-instance[name='default']/interface element: 'ethernet-1/31.0'
+interface_element_2 = network_instance_element.interface.create('ethernet-1/31.0')
+
+# List /network-instance[name='default']/interface element: 'system0.0'
+interface_element_2 = network_instance_element.interface.create('system0.0')
+
+# P-container: /network-instance[name='default']/protocols/bgp (srl_nokia-bgp)
+bgp = network_instance_element.protocols.create_bgp(autonomous_system=u64(4200100202), router_id='10.0.0.14')
+
+# List /network-instance[name='default']/protocols/bgp/afi-safi element: Identityref('ipv4-unicast', ns='urn:nokia.com:srlinux:general:common', mod='srl_nokia-common', pfx='srl_nokia-comm')
+afi_safi_element = bgp.afi_safi.create(Identityref('ipv4-unicast', ns='urn:nokia.com:srlinux:general:common', mod='srl_nokia-common', pfx='srl_nokia-comm'), admin_state='enable')
+
+# Container: /network-instance[name='default']/protocols/bgp/afi-safi[afi-safi-name='Identityref(\'ipv4-unicast\', ns=\'urn:nokia.com:srlinux:general:common\', mod=\'srl_nokia-common\', pfx=\'srl_nokia-comm\')']/multipath
+afi_safi_element.multipath.maximum_paths = u64(64)
+
+# List /network-instance[name='default']/protocols/bgp/group element: 'fabric'
+group_element = bgp.group.create('fabric')
+group_element.export_policy = ['export-loopbacks']
+group_element.import_policy = ['accept-all']
+
+# List /network-instance[name='default']/protocols/bgp/neighbor element: '10.100.1.228'
+neighbor_element = bgp.neighbor.create('10.100.1.228', admin_state='enable', description='Link to leaf3 [ethernet-1/50]', peer_as=u64(4200000003), peer_group='fabric')
+
+# List /network-instance[name='default']/protocols/bgp/neighbor element: '10.100.2.100'
+neighbor_element = bgp.neighbor.create('10.100.2.100', admin_state='enable', description='Link to leaf4 [ethernet-1/50]', peer_as=u64(4200000004), peer_group='fabric')
+
+# List /network-instance[name='default']/protocols/bgp/neighbor element: '10.100.7.63'
+neighbor_element = bgp.neighbor.create('10.100.7.63', admin_state='enable', description='Link to superspine2 [ethernet-1/2]', peer_as=u64(4200200002), peer_group='fabric')
+
+# List /network-instance (srl_nokia-network-instance) element: 'mgmt'
+network_instance_element = spine4.network_instance.create('mgmt', type=Identityref('ip-vrf', ns='urn:nokia.com:srlinux:net-inst:network-instance', mod='srl_nokia-network-instance', pfx='srl_nokia-netinst'), admin_state='enable', description='Management network instance')
+
+# List /network-instance[name='mgmt']/interface element: 'mgmt0.0'
+interface_element_2 = network_instance_element.interface.create('mgmt0.0')
+
+# List /routing-policy/prefix-set element: 'loopbacks'
+prefix_set_element = spine4.routing_policy.prefix_set.create('loopbacks')
+
+# List /routing-policy/prefix-set[name='loopbacks']/prefix element: '10.0.0.0/16', '32..32'
+prefix_element = prefix_set_element.prefix.create((ip_prefix='10.0.0.0/16', mask_length_range='32..32'))
+
+# List /routing-policy/policy element: 'accept-all'
+policy_element = spine4.routing_policy.policy.create('accept-all')
+
+# List /routing-policy/policy[name='accept-all']/statement element: '10'
+statement_element = policy_element.statement.create('10')
+
+# Container: /routing-policy/policy[name='accept-all']/statement[name='10']/action
+statement_element.action_.policy_result = 'accept'
+
+# List /routing-policy/policy element: 'export-loopbacks'
+policy_element = spine4.routing_policy.policy.create('export-loopbacks')
+
+# List /routing-policy/policy[name='export-loopbacks']/statement element: '10'
+statement_element = policy_element.statement.create('10')
+
+# Container: /routing-policy/policy[name='export-loopbacks']/statement[name='10']/match/prefix
+statement_element.match.prefix.prefix_set = 'loopbacks'
+
+# Container: /routing-policy/policy[name='export-loopbacks']/statement[name='10']/action
+statement_element.action_.policy_result = 'accept'
+
+# device superspine1
+# YANG module (prefix) and namespace:
+#   srl_nokia-bgp (srl_nokia-bgp)                   urn:nokia.com:srlinux:bgp:bgp
+#   srl_nokia-interfaces (srl_nokia-if)             urn:nokia.com:srlinux:chassis:interfaces
+#   srl_nokia-network-instance (srl_nokia-netinst)  urn:nokia.com:srlinux:net-inst:network-instance
+#   srl_nokia-system-name (srl_nokia-system-name)   urn:nokia.com:srlinux:chassis:system-name
+# Top node: /
+superspine1 = root()
+
+# Container: /system/name (srl_nokia-system-name)
+superspine1.system.name.host_name = 'superspine1'
+
+# List /interface (srl_nokia-interfaces) element: 'ethernet-1/1'
+interface_element = superspine1.interface.create('ethernet-1/1', description='Link to spine1 [ethernet-1/31]', admin_state='enable')
+
+# List /interface[name='ethernet-1/1']/subinterface element: 0
+subinterface_element = interface_element.subinterface.create(u64(0), description='Link to spine1 [ethernet-1/31]', admin_state='enable')
+
+# Container: /interface[name='ethernet-1/1']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# List /interface[name='ethernet-1/1']/subinterface[index='0']/ipv4/address element: '10.100.5.191/31'
+address_element = subinterface_element.ipv4.address.create('10.100.5.191/31')
+
+# List /interface (srl_nokia-interfaces) element: 'ethernet-1/2'
+interface_element = superspine1.interface.create('ethernet-1/2', description='Link to spine3 [ethernet-1/31]', admin_state='enable')
+
+# List /interface[name='ethernet-1/2']/subinterface element: 0
+subinterface_element = interface_element.subinterface.create(u64(0), description='Link to spine3 [ethernet-1/31]', admin_state='enable')
+
+# Container: /interface[name='ethernet-1/2']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# List /interface[name='ethernet-1/2']/subinterface[index='0']/ipv4/address element: '10.100.6.191/31'
+address_element = subinterface_element.ipv4.address.create('10.100.6.191/31')
+
+# List /interface (srl_nokia-interfaces) element: 'mgmt0'
+interface_element = superspine1.interface.create('mgmt0', admin_state='enable')
+
+# List /interface[name='mgmt0']/subinterface element: 0
+subinterface_element = interface_element.subinterface.create(u64(0), admin_state='enable')
+
+# Container: /interface[name='mgmt0']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# Container: /interface[name='mgmt0']/subinterface[index='0']/ipv6
+subinterface_element.ipv6.admin_state = 'enable'
+
+# List /interface (srl_nokia-interfaces) element: 'system0'
+interface_element = superspine1.interface.create('system0')
+
+# List /interface[name='system0']/subinterface element: 0
+subinterface_element = interface_element.subinterface.create(u64(0))
+
+# Container: /interface[name='system0']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# List /interface[name='system0']/subinterface[index='0']/ipv4/address element: '10.0.0.21/32'
+address_element = subinterface_element.ipv4.address.create('10.0.0.21/32')
+
+# List /network-instance (srl_nokia-network-instance) element: 'default'
+network_instance_element = superspine1.network_instance.create('default')
+
+# List /network-instance[name='default']/interface element: 'ethernet-1/1.0'
+interface_element_2 = network_instance_element.interface.create('ethernet-1/1.0')
+
+# List /network-instance[name='default']/interface element: 'ethernet-1/2.0'
+interface_element_2 = network_instance_element.interface.create('ethernet-1/2.0')
+
+# List /network-instance[name='default']/interface element: 'system0.0'
+interface_element_2 = network_instance_element.interface.create('system0.0')
+
+# P-container: /network-instance[name='default']/protocols/bgp (srl_nokia-bgp)
+bgp = network_instance_element.protocols.create_bgp(autonomous_system=u64(4200200001), router_id='10.0.0.21')
+
+# List /network-instance[name='default']/protocols/bgp/afi-safi element: Identityref('ipv4-unicast', ns='urn:nokia.com:srlinux:general:common', mod='srl_nokia-common', pfx='srl_nokia-comm')
+afi_safi_element = bgp.afi_safi.create(Identityref('ipv4-unicast', ns='urn:nokia.com:srlinux:general:common', mod='srl_nokia-common', pfx='srl_nokia-comm'), admin_state='enable')
+
+# Container: /network-instance[name='default']/protocols/bgp/afi-safi[afi-safi-name='Identityref(\'ipv4-unicast\', ns=\'urn:nokia.com:srlinux:general:common\', mod=\'srl_nokia-common\', pfx=\'srl_nokia-comm\')']/multipath
+afi_safi_element.multipath.maximum_paths = u64(64)
+
+# List /network-instance[name='default']/protocols/bgp/group element: 'fabric'
+group_element = bgp.group.create('fabric')
+group_element.export_policy = ['export-loopbacks']
+group_element.import_policy = ['accept-all']
+
+# List /network-instance[name='default']/protocols/bgp/neighbor element: '10.100.5.190'
+neighbor_element = bgp.neighbor.create('10.100.5.190', admin_state='enable', description='Link to spine1 [ethernet-1/31]', peer_as=u64(4200100101), peer_group='fabric')
+
+# List /network-instance[name='default']/protocols/bgp/neighbor element: '10.100.6.190'
+neighbor_element = bgp.neighbor.create('10.100.6.190', admin_state='enable', description='Link to spine3 [ethernet-1/31]', peer_as=u64(4200100201), peer_group='fabric')
+
+# List /network-instance (srl_nokia-network-instance) element: 'mgmt'
+network_instance_element = superspine1.network_instance.create('mgmt', type=Identityref('ip-vrf', ns='urn:nokia.com:srlinux:net-inst:network-instance', mod='srl_nokia-network-instance', pfx='srl_nokia-netinst'), admin_state='enable', description='Management network instance')
+
+# List /network-instance[name='mgmt']/interface element: 'mgmt0.0'
+interface_element_2 = network_instance_element.interface.create('mgmt0.0')
+
+# List /routing-policy/prefix-set element: 'loopbacks'
+prefix_set_element = superspine1.routing_policy.prefix_set.create('loopbacks')
+
+# List /routing-policy/prefix-set[name='loopbacks']/prefix element: '10.0.0.0/16', '32..32'
+prefix_element = prefix_set_element.prefix.create((ip_prefix='10.0.0.0/16', mask_length_range='32..32'))
+
+# List /routing-policy/policy element: 'accept-all'
+policy_element = superspine1.routing_policy.policy.create('accept-all')
+
+# List /routing-policy/policy[name='accept-all']/statement element: '10'
+statement_element = policy_element.statement.create('10')
+
+# Container: /routing-policy/policy[name='accept-all']/statement[name='10']/action
+statement_element.action_.policy_result = 'accept'
+
+# List /routing-policy/policy element: 'export-loopbacks'
+policy_element = superspine1.routing_policy.policy.create('export-loopbacks')
+
+# List /routing-policy/policy[name='export-loopbacks']/statement element: '10'
+statement_element = policy_element.statement.create('10')
+
+# Container: /routing-policy/policy[name='export-loopbacks']/statement[name='10']/match/prefix
+statement_element.match.prefix.prefix_set = 'loopbacks'
+
+# Container: /routing-policy/policy[name='export-loopbacks']/statement[name='10']/action
+statement_element.action_.policy_result = 'accept'
+
+# device superspine2
+# YANG module (prefix) and namespace:
+#   srl_nokia-bgp (srl_nokia-bgp)                   urn:nokia.com:srlinux:bgp:bgp
+#   srl_nokia-interfaces (srl_nokia-if)             urn:nokia.com:srlinux:chassis:interfaces
+#   srl_nokia-network-instance (srl_nokia-netinst)  urn:nokia.com:srlinux:net-inst:network-instance
+#   srl_nokia-system-name (srl_nokia-system-name)   urn:nokia.com:srlinux:chassis:system-name
+# Top node: /
+superspine2 = root()
+
+# Container: /system/name (srl_nokia-system-name)
+superspine2.system.name.host_name = 'superspine2'
+
+# List /interface (srl_nokia-interfaces) element: 'ethernet-1/1'
+interface_element = superspine2.interface.create('ethernet-1/1', description='Link to spine2 [ethernet-1/31]', admin_state='enable')
+
+# List /interface[name='ethernet-1/1']/subinterface element: 0
+subinterface_element = interface_element.subinterface.create(u64(0), description='Link to spine2 [ethernet-1/31]', admin_state='enable')
+
+# Container: /interface[name='ethernet-1/1']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# List /interface[name='ethernet-1/1']/subinterface[index='0']/ipv4/address element: '10.100.6.63/31'
+address_element = subinterface_element.ipv4.address.create('10.100.6.63/31')
+
+# List /interface (srl_nokia-interfaces) element: 'ethernet-1/2'
+interface_element = superspine2.interface.create('ethernet-1/2', description='Link to spine4 [ethernet-1/31]', admin_state='enable')
+
+# List /interface[name='ethernet-1/2']/subinterface element: 0
+subinterface_element = interface_element.subinterface.create(u64(0), description='Link to spine4 [ethernet-1/31]', admin_state='enable')
+
+# Container: /interface[name='ethernet-1/2']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# List /interface[name='ethernet-1/2']/subinterface[index='0']/ipv4/address element: '10.100.7.63/31'
+address_element = subinterface_element.ipv4.address.create('10.100.7.63/31')
+
+# List /interface (srl_nokia-interfaces) element: 'mgmt0'
+interface_element = superspine2.interface.create('mgmt0', admin_state='enable')
+
+# List /interface[name='mgmt0']/subinterface element: 0
+subinterface_element = interface_element.subinterface.create(u64(0), admin_state='enable')
+
+# Container: /interface[name='mgmt0']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# Container: /interface[name='mgmt0']/subinterface[index='0']/ipv6
+subinterface_element.ipv6.admin_state = 'enable'
+
+# List /interface (srl_nokia-interfaces) element: 'system0'
+interface_element = superspine2.interface.create('system0')
+
+# List /interface[name='system0']/subinterface element: 0
+subinterface_element = interface_element.subinterface.create(u64(0))
+
+# Container: /interface[name='system0']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# List /interface[name='system0']/subinterface[index='0']/ipv4/address element: '10.0.0.22/32'
+address_element = subinterface_element.ipv4.address.create('10.0.0.22/32')
+
+# List /network-instance (srl_nokia-network-instance) element: 'default'
+network_instance_element = superspine2.network_instance.create('default')
+
+# List /network-instance[name='default']/interface element: 'ethernet-1/1.0'
+interface_element_2 = network_instance_element.interface.create('ethernet-1/1.0')
+
+# List /network-instance[name='default']/interface element: 'ethernet-1/2.0'
+interface_element_2 = network_instance_element.interface.create('ethernet-1/2.0')
+
+# List /network-instance[name='default']/interface element: 'system0.0'
+interface_element_2 = network_instance_element.interface.create('system0.0')
+
+# P-container: /network-instance[name='default']/protocols/bgp (srl_nokia-bgp)
+bgp = network_instance_element.protocols.create_bgp(autonomous_system=u64(4200200002), router_id='10.0.0.22')
+
+# List /network-instance[name='default']/protocols/bgp/afi-safi element: Identityref('ipv4-unicast', ns='urn:nokia.com:srlinux:general:common', mod='srl_nokia-common', pfx='srl_nokia-comm')
+afi_safi_element = bgp.afi_safi.create(Identityref('ipv4-unicast', ns='urn:nokia.com:srlinux:general:common', mod='srl_nokia-common', pfx='srl_nokia-comm'), admin_state='enable')
+
+# Container: /network-instance[name='default']/protocols/bgp/afi-safi[afi-safi-name='Identityref(\'ipv4-unicast\', ns=\'urn:nokia.com:srlinux:general:common\', mod=\'srl_nokia-common\', pfx=\'srl_nokia-comm\')']/multipath
+afi_safi_element.multipath.maximum_paths = u64(64)
+
+# List /network-instance[name='default']/protocols/bgp/group element: 'fabric'
+group_element = bgp.group.create('fabric')
+group_element.export_policy = ['export-loopbacks']
+group_element.import_policy = ['accept-all']
+
+# List /network-instance[name='default']/protocols/bgp/neighbor element: '10.100.6.62'
+neighbor_element = bgp.neighbor.create('10.100.6.62', admin_state='enable', description='Link to spine2 [ethernet-1/31]', peer_as=u64(4200100102), peer_group='fabric')
+
+# List /network-instance[name='default']/protocols/bgp/neighbor element: '10.100.7.62'
+neighbor_element = bgp.neighbor.create('10.100.7.62', admin_state='enable', description='Link to spine4 [ethernet-1/31]', peer_as=u64(4200100202), peer_group='fabric')
+
+# List /network-instance (srl_nokia-network-instance) element: 'mgmt'
+network_instance_element = superspine2.network_instance.create('mgmt', type=Identityref('ip-vrf', ns='urn:nokia.com:srlinux:net-inst:network-instance', mod='srl_nokia-network-instance', pfx='srl_nokia-netinst'), admin_state='enable', description='Management network instance')
+
+# List /network-instance[name='mgmt']/interface element: 'mgmt0.0'
+interface_element_2 = network_instance_element.interface.create('mgmt0.0')
+
+# List /routing-policy/prefix-set element: 'loopbacks'
+prefix_set_element = superspine2.routing_policy.prefix_set.create('loopbacks')
+
+# List /routing-policy/prefix-set[name='loopbacks']/prefix element: '10.0.0.0/16', '32..32'
+prefix_element = prefix_set_element.prefix.create((ip_prefix='10.0.0.0/16', mask_length_range='32..32'))
+
+# List /routing-policy/policy element: 'accept-all'
+policy_element = superspine2.routing_policy.policy.create('accept-all')
+
+# List /routing-policy/policy[name='accept-all']/statement element: '10'
+statement_element = policy_element.statement.create('10')
+
+# Container: /routing-policy/policy[name='accept-all']/statement[name='10']/action
+statement_element.action_.policy_result = 'accept'
+
+# List /routing-policy/policy element: 'export-loopbacks'
+policy_element = superspine2.routing_policy.policy.create('export-loopbacks')
+
+# List /routing-policy/policy[name='export-loopbacks']/statement element: '10'
+statement_element = policy_element.statement.create('10')
+
+# Container: /routing-policy/policy[name='export-loopbacks']/statement[name='10']/match/prefix
+statement_element.match.prefix.prefix_set = 'loopbacks'
+
+# Container: /routing-policy/policy[name='export-loopbacks']/statement[name='10']/action
+statement_element.action_.policy_result = 'accept'
