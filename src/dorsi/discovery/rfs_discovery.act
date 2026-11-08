@@ -3,10 +3,10 @@ import yang.gdata as gdata
 import dorsi.devices.CiscoIosXr_25_3_1 as xr25
 import dorsi.devices.JuniperCRPD_24_4R1_9 as crpd24
 import dorsi.devices.NokiaSRLinux_25_3_2 as srl25
-import dorsi.layers.y_2_loose as rfs_layer
-from dorsi.layers.y_2_loose import stratoweave_rfs__rfs__base_config
-from dorsi.layers.y_2_loose import stratoweave_rfs__rfs__backbone_interface_entry
-from dorsi.layers.y_2_loose import stratoweave_rfs__rfs__backbone_interface__remote
+import dorsi.layers.y_1_loose as rfs_layer
+from dorsi.layers.y_1_loose import stratoweave_rfs__rfs__base_config
+from dorsi.layers.y_1_loose import stratoweave_rfs__rfs__backbone_interface_entry
+from dorsi.layers.y_1_loose import stratoweave_rfs__rfs__backbone_interface__remote
 from rtrsecrets.cisco import cisco_type7_encrypt
 from rtrsecrets.junos import junos_encrypt
 from rtrsecrets.nokia import nokia_srl_aes1_decrypt

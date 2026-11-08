@@ -1,7 +1,7 @@
 # Service Discovery
 
 Service discovery turns device XML configuration snapshots into DORSI service
-data. The test inputs live under `test/sd`, and the discovery implementation
+data. The test inputs live under `test/sd-quicklab`, and the discovery implementation
 lives under `src/dorsi/discovery`.
 
 ## Adding Device XML
@@ -9,15 +9,15 @@ lives under `src/dorsi/discovery`.
 Put each device snapshot in:
 
 ```text
-test/sd/<device-type>/<device-name>.xml
+test/sd-quicklab/<device-type>/<device-name>.xml
 ```
 
 `<device-type>` must match a key in `dorsi.sysspec.SYSSPEC.device_types`, for
 example:
 
 ```text
-test/sd/CiscoIosXr_25_3_1/AMS-CORE-1.xml
-test/sd/JuniperCRPD_24_4R1_9/LJU-CORE-1.xml
+test/sd-quicklab/CiscoIosXr_25_3_1/AMS-CORE-1.xml
+test/sd-quicklab/JuniperCRPD_24_4R1_9/LJU-CORE-1.xml
 ```
 
 The file name without `.xml` becomes the device name. Keep names unique across
@@ -34,12 +34,12 @@ plaintext values to `_AUTHENTICATION_KEY_HINTS` in
 `src/dorsi/test_discovery.act` defines two service-discovery tests:
 
 - `_test_sd_to_rfs` runs `rfs_discovery.discover_rfs(...)` and applies the
-  result at layer 2 - rfs layer.
+  result at layer 1 - rfs layer.
 - `_test_sd_to_cfs` runs `cfs_discovery.discover(...)` and applies the result at
   layer 0 - cfs layer.
 
 Both tests use `stratoweave.testing.ServiceDiscoveryTester`. The tester scans
-`test/sd`, parses every `*.xml` file by device type, passes a
+`test/sd-quicklab`, parses every `*.xml` file by device type, passes a
 `dict[device-name, gdata.Node]` to the discovery function, and applies the
 returned gdata through the normal TTT layer stack. The snapshot contains the
 discovered layer data and a per-device round-trip diff against the regenerated

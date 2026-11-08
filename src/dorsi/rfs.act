@@ -10,11 +10,11 @@ from rtrsecrets.nokia import nokia_srl_aes1_encrypt
 
 import timeseries
 
-import dorsi.layers.base_2 as base
-import dorsi.layers.y_2 as y_2
-import dorsi.layers.y_2_oper as y_2_oper
+import dorsi.layers.base_1 as base
+import dorsi.layers.y_1 as y_1
+import dorsi.layers.y_1_oper as y_1_oper
 
-from dorsi.layers.y_2 import stratoweave_rfs__rfs__backbone_interface_entry
+from dorsi.layers.y_1 import stratoweave_rfs__rfs__backbone_interface_entry
 
 import dorsi.devices.CiscoIosXr_25_3_1 as xr25
 import dorsi.devices.CiscoIosXr_25_3_1_oper as xr25_oper
@@ -258,7 +258,7 @@ class BBInterface(base.BBInterface):
 # Poll each backbone interface's oper-state from the device. The inter/CFS
 # BBLinkTransform lift combines the two endpoints into a link-status (up only
 # when both ends are up). SR Linux and IOS XR expose interface oper-state.
-actor BBInterfaceTransform(path, update_oper: proc(?y_2_oper.stratoweave_rfs__rfs__backbone_interface_entry)->None, dev: swdev.DeviceMgr):
+actor BBInterfaceTransform(path, update_oper: proc(?y_1_oper.stratoweave_rfs__rfs__backbone_interface_entry)->None, dev: swdev.DeviceMgr):
     _subs = gdata.SubscriptionManager(dev.tree_provider(), str(path))
     _oper = base.BBInterface.new_state(path)
 
@@ -300,7 +300,7 @@ actor BBInterfaceTransform(path, update_oper: proc(?y_2_oper.stratoweave_rfs__rf
                     status = "unknown"
         publish(status)
 
-    def on_conf(conf: y_2.stratoweave_rfs__rfs__backbone_interface_entry):
+    def on_conf(conf: y_1.stratoweave_rfs__rfs__backbone_interface_entry):
         want: set[gdata.Delivery] = set()
         modset = dev.get_modules().0
         if "Cisco-IOS-XR-um-hostname-cfg" in modset:

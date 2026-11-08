@@ -11,9 +11,6 @@ import stratoweave.adapters.netconf as swna
 import stratoweave.ttt as ttt
 
 import dorsi.device_types as sw_device_types
-import dorsi.layers.t_3 as t_3
-import dorsi.layers.y_3 as y_3
-import dorsi.layers.y_3_oper as y_3_oper
 import dorsi.layers.t_2 as t_2
 import dorsi.layers.y_2 as y_2
 import dorsi.layers.y_2_oper as y_2_oper
@@ -32,23 +29,20 @@ import dorsi.devices.NokiaSRLinux_25_3_2 as dev_NokiaSRLinux_25_3_2
 import dorsi.devices.NokiaSRLinux_25_3_2_oper as dev_NokiaSRLinux_25_3_2_oper
 
 def get_layers(dev_registry: swdev.DeviceRegistry, log_handler: ?logging.Handler=None, db: ?swdb.Store=None):
-    layer3 = ttt.Layer('3', t_3.get_ttt(None, dev_registry, log_handler), None, db)
-    layer2 = ttt.Layer('2', t_2.get_ttt(layer3, dev_registry, log_handler), layer3, db)
+    layer2 = ttt.Layer('2', t_2.get_ttt(None, dev_registry, log_handler), None, db)
     layer1 = ttt.Layer('1', t_1.get_ttt(layer2, dev_registry, log_handler), layer2, db)
     layer0 = ttt.Layer('0', t_0.get_ttt(layer1, dev_registry, log_handler), layer1, db)
     return layer0
 
 
 def schema_for_layer(layer):
-    if layer == 3:
-        # Layer 3 is a bit special, in that there is more than one schema:
+    if layer == 2:
+        # Layer 2 is a bit special, in that there is more than one schema:
         # 1. The device manager, defined in stratoweave-device.yang
         # 2. The device configuration, defined in the devices own YANG models
         # and selected with the chosen device type.
-        # The contents of layer 3 (gdata) is a combination of both, here we
+        # The contents of layer 2 (gdata) is a combination of both, here we
         # return the device manager tree.
-        return y_3.SRC_DNODE
-    if layer == 2:
         return y_2.SRC_DNODE
     if layer == 1:
         return y_1.SRC_DNODE
@@ -58,8 +52,6 @@ def schema_for_layer(layer):
 
 
 def oper_schema_for_layer(layer):
-    if layer == 3:
-        return y_3_oper.SRC_DNODE
     if layer == 2:
         return y_2_oper.SRC_DNODE
     if layer == 1:

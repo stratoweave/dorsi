@@ -25,9 +25,6 @@ module netinfra {
 
       sw:transform dorsi.cfs.Router;
       tmf:cfs-service "Router";
-      sw:link global {
-        sw:path /netinfra:netinfra/netinfra:global-settings;
-      }
 
       leaf name {
         type string;
@@ -96,6 +93,30 @@ module netinfra {
             enum unknown;
           }
         }
+      }
+    }
+
+    list ibgp-fullmesh {
+      description
+        "iBGP full-mesh between the listed routers. Every member peers with
+         every other member, using the loopback addresses allocated by the
+         router transform.";
+      key asn;
+
+      sw:transform dorsi.cfs.IbgpFullmesh;
+      sw:link global {
+        sw:path /netinfra:netinfra/netinfra:global-settings;
+      }
+
+      leaf asn {
+        type inet:as-number;
+      }
+      leaf-list router {
+        sw:link member;
+        type leafref {
+          path "/netinfra:netinfra/netinfra:router/netinfra:name";
+        }
+        description "Routers in the full-mesh.";
       }
     }
 

@@ -62,5 +62,12 @@
             <right-router>LJU-CORE-1</right-router>
             <right-interface>eth2</right-interface>
         </backbone-link>
+        <ibgp-fullmesh>
+            <asn>65001</asn>
+                <router>AMS-CORE-1</router>
+                <router>FRA-CORE-1</router>
+                <router>STO-CORE-1</router>
+                <router>LJU-CORE-1</router>
+        </ibgp-fullmesh>
     </netinfra>
 </data>

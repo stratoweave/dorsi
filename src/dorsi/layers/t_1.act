@@ -9,16 +9,16 @@ import stratoweave.ttt as ttt
 import yang.adata as yadata
 import yang.gdata as ygdata
 
-import dorsi.inter as inter
+import dorsi.rfs as rfs
 
-from dorsi.layers.y_1 import netinfra_inter__netinfra__backbone_link_entry
+from dorsi.layers.y_1 import stratoweave_rfs__rfs__backbone_interface_entry
 
 def get_ttt(lower: ?ttt.Layer, dev_registry: swdev.DeviceRegistry, log_handler: ?logging.Handler=None) -> proc(ttt.Path,?ttt.Layer)->ttt.Node:
-    r = ttt.Container({ygdata.Id("http://example.com/netinfra-inter", "netinfra"): ttt.Container({ygdata.Id("http://example.com/netinfra-inter", "router"): ttt.List(ttt.Transform(inter.Router, None, None, lower, log_handler), [ygdata.Id("http://example.com/netinfra-inter", "name")]), ygdata.Id("http://example.com/netinfra-inter", "backbone-link"): ttt.List(ttt.Transform(inter.BBLink, BBLinkTransformCtor, None, lower, log_handler), [ygdata.Id("http://example.com/netinfra-inter", "left-router"), ygdata.Id("http://example.com/netinfra-inter", "left-interface"), ygdata.Id("http://example.com/netinfra-inter", "right-router"), ygdata.Id("http://example.com/netinfra-inter", "right-interface")]), ygdata.Id("http://example.com/netinfra-inter", "ibgp-fullmesh"): ttt.List(ttt.Transform(inter.IbgpFullmesh, None, None, lower, log_handler), [ygdata.Id("http://example.com/netinfra-inter", "asn")])}, ns='http://example.com/netinfra-inter', module='netinfra-inter')})
+    r = ttt.Container({ygdata.Id("http://stratoweave.org/yang/stratoweave-rfs", "device"): ttt.List(ttt.Device(dev_registry, log_handler), [ygdata.Id("http://stratoweave.org/yang/stratoweave-rfs", "name")], ns='http://stratoweave.org/yang/stratoweave-rfs', module='stratoweave-rfs'), ygdata.Id("http://stratoweave.org/yang/stratoweave-rfs", "rfs"): ttt.List(ttt.Container({ygdata.Id("http://example.com/dorsi-rfs", "base-config"): ttt.RFSTransform(rfs.BaseConfig, dev_registry, None, lower, log_handler), ygdata.Id("http://example.com/dorsi-rfs", "backbone-interface"): ttt.List(ttt.RFSTransform(rfs.BBInterface, dev_registry, BBInterfaceTransformCtor, lower, log_handler), [ygdata.Id("http://example.com/dorsi-rfs", "name")], ns='http://example.com/dorsi-rfs', module='dorsi-rfs'), ygdata.Id("http://example.com/dorsi-rfs", "ibgp-neighbor"): ttt.List(ttt.RFSTransform(rfs.IbgpNeighbor, dev_registry, None, lower, log_handler), [ygdata.Id("http://example.com/dorsi-rfs", "address")], ns='http://example.com/dorsi-rfs', module='dorsi-rfs')}), [ygdata.Id("http://stratoweave.org/yang/stratoweave-rfs", "name")], ns='http://stratoweave.org/yang/stratoweave-rfs', module='stratoweave-rfs')})
     return r
 
-def BBLinkTransformCtor(params: ttt.TransformActorParams) -> ttt.TransformActor:
+def BBInterfaceTransformCtor(params: ttt.TransformActorParams) -> ttt.TransformActor:
     update_oper_wrapper = yadata.ToGdataPrevWrapper(params.update_oper)
-    act = inter.BBLinkTransform(params.path, update_oper_wrapper.update, params.lower_tree_provider)
-    return ttt.TransformActor(lambda c, l, m: act.on_conf(netinfra_inter__netinfra__backbone_link_entry.from_gdata(c)),
+    act = rfs.BBInterfaceTransform(params.path, update_oper_wrapper.update, params.dev!)
+    return ttt.TransformActor(lambda c, l, m: act.on_conf(stratoweave_rfs__rfs__backbone_interface_entry.from_gdata(c)),
                               lambda m: act.shutdown())
