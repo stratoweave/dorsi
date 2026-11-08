@@ -139,6 +139,100 @@ def fabric_link_addresses(lower_id: int, lower_port: str) -> (str, str):
     return ("10.100.{third}.{fourth}", "10.100.{third}.{fourth + 1}")
 
 
+def validate_fabric(f: y_0.ip_fabric__ip_fabric__fabric_entry) -> list[str]:
+    """The problems found in a fabric, an empty list when it is valid.
+
+    Checks the constraints of the ip-fabric model, which are not enforced
+    when the data is applied, and the limits of the addressing scheme."""
+    errors: list[str] = []
+    switches: dict[str, y_0.ip_fabric__ip_fabric__fabric__switch_entry] = {}
+    ids: dict[int, str] = {}
+    for sw in f.switch:
+        switches[sw.name] = sw
+        sid = int(sw.id)
+        if sid in ids:
+            errors.append("switches {ids[sid]} and {sw.name} have the same id {sid}")
+        else:
+            ids[sid] = sw.name
+        if sid > 511:
+            errors.append("switch {sw.name}: id {sid} is above 511, which the addressing scheme supports")
+
+    # A port is used by at most one fabric link or server link
+    used: dict[str, str] = {}
+
+    def use(switch: str, port: str, what: str):
+        key = "{switch}/{port}"
+        if key in used:
+            errors.append("{switch} port {port} is used by both {used[key]} and {what}")
+        else:
+            used[key] = what
+
+    for link in f.fabric_link:
+        what = "the link {link.lower_switch} [{link.lower_port}] <-> {link.upper_switch} [{link.upper_port}]"
+        lower = switches.get(link.lower_switch)
+        upper = switches.get(link.upper_switch)
+        if lower is None:
+            errors.append("{what}: switch {link.lower_switch} does not exist")
+        if upper is None:
+            errors.append("{what}: switch {link.upper_switch} does not exist")
+        use(link.lower_switch, link.lower_port, what)
+        use(link.upper_switch, link.upper_port, what)
+        if _trailing_int(link.lower_port, -1) < 0 or _trailing_int(link.lower_port, -1) > 63:
+            errors.append("{what}: the lower port must end in a number below 64, the addresses are derived from it")
+        if lower is not None and upper is not None:
+            if lower.role == "leaf" and upper.role == "spine":
+                if lower.pod != upper.pod:
+                    errors.append("{what}: leaf {lower.name} is in {lower.pod} and spine {upper.name} in {upper.pod}")
+            elif lower.role == "spine" and upper.role == "super-spine":
+                if lower.plane != upper.plane:
+                    errors.append("{what}: spine {lower.name} is in {lower.plane} and super-spine {upper.name} in {upper.plane}")
+            else:
+                errors.append("{what}: a link joins a leaf to a spine or a spine to a super-spine, not a {lower.role} to a {upper.role}")
+
+    # A five-stage fabric has a super-spine in every plane and a spine in every
+    # plane of every pod
+    planes: set[str] = set()
+    for sw in f.switch:
+        if sw.role == "super-spine":
+            planes.add(sw.plane)
+    if len(planes) > 0:
+        spine_planes: dict[str, set[str]] = {}
+        for sw in f.switch:
+            if sw.role == "spine":
+                if sw.pod not in spine_planes:
+                    spine_planes[sw.pod] = set()
+                spine_planes[sw.pod].add(sw.plane)
+                if sw.plane not in planes:
+                    errors.append("spine {sw.name}: there is no super-spine in {sw.plane}")
+        for pod, pod_planes in spine_planes.items():
+            for plane in planes:
+                if plane not in pod_planes:
+                    errors.append("{pod} has no spine in {plane}")
+
+    for server in f.server:
+        what = "server {server.name}"
+        profile = server.connectivity.profile
+        leaves: list[str] = []
+        server_ports: set[str] = set()
+        for link in server.connectivity.link:
+            use(link.switch, link.switch_port, "{what} [{link.server_port}]")
+            sw = switches.get(link.switch)
+            if sw is None:
+                errors.append("{what}: switch {link.switch} does not exist")
+            elif sw!.role != "leaf":
+                errors.append("{what}: {link.switch} is a {sw!.role}, a server links to a leaf")
+            if link.switch not in leaves:
+                leaves.append(link.switch)
+            if link.server_port in server_ports:
+                errors.append("{what}: port {link.server_port} is used by more than one link")
+            server_ports.add(link.server_port)
+        if profile == "single-homed" and len(leaves) != 1:
+            errors.append("{what}: a single-homed server links to one leaf, not {len(leaves)}")
+        if profile == "dual-homed" and len(leaves) != 2:
+            errors.append("{what}: a dual-homed server links to two leaves, not {len(leaves)}")
+    return errors
+
+
 class Fabric(base.Fabric):
     """Transform of a complete fabric.
 
@@ -149,6 +243,9 @@ class Fabric(base.Fabric):
     """
     def transform(self, i):
         print("CFS fabric transform running", i.name)
+        errors = validate_fabric(i)
+        if len(errors) > 0:
+            raise ValueError("fabric {i.name} is invalid:\n  " + "\n  ".join(errors))
         o = base.o_root()
 
         switches = {}

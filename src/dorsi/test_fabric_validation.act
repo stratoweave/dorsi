@@ -1,0 +1,102 @@
+import testing
+
+import dorsi.cfs as cfs
+import dorsi.layers.y_0 as cfs_layer
+import dorsi.test_fabric as fabrics
+
+def _fabric(root: cfs_layer.root) -> cfs_layer.ip_fabric__ip_fabric__fabric_entry:
+    return root.ip_fabric.fabric.get("dc1")!
+
+def _single_error(f: cfs_layer.ip_fabric__ip_fabric__fabric_entry, text: str):
+    errors = cfs.validate_fabric(f)
+    testing.assertEqual(len(errors), 1, "expected one error: {errors}")
+    testing.assertTrue(text in errors[0], "'{text}' not in '{errors[0]}'")
+
+def _test_valid_three_stage():
+    testing.assertEqual(cfs.validate_fabric(_fabric(fabrics.three_stage())), [])
+
+def _test_valid_five_stage():
+    testing.assertEqual(cfs.validate_fabric(_fabric(fabrics.five_stage())), [])
+
+def _test_duplicate_switch_id():
+    f = _fabric(fabrics.three_stage())
+    fabrics.add_switch(f, "leaf4", 1, "leaf")
+    _single_error(f, "have the same id 1")
+
+def _test_switch_id_too_large():
+    f = _fabric(fabrics.three_stage())
+    fabrics.add_switch(f, "leaf4", 512, "leaf")
+    _single_error(f, "above 511")
+
+def _test_link_to_missing_switch():
+    f = _fabric(fabrics.three_stage())
+    fabrics.add_link(f, "leaf1", "ethernet-1/48", "spine9", "ethernet-1/1")
+    errors = cfs.validate_fabric(f)
+    testing.assertTrue(any(["switch spine9 does not exist" in e for e in errors]), "{errors}")
+
+def _test_link_between_leaves():
+    f = _fabric(fabrics.three_stage())
+    fabrics.add_link(f, "leaf1", "ethernet-1/48", "leaf2", "ethernet-1/48")
+    _single_error(f, "not a leaf to a leaf")
+
+def _test_link_leaf_and_spine_in_different_pods():
+    f = _fabric(fabrics.five_stage())
+    sw = f.switch.get("leaf1")!
+    sw.pod = "pod-2"
+    errors = cfs.validate_fabric(f)
+    testing.assertTrue(any(["leaf leaf1 is in pod-2 and spine spine1 in pod-1" in e for e in errors]), "{errors}")
+
+def _test_link_spine_and_super_spine_in_different_planes():
+    f = _fabric(fabrics.five_stage())
+    sw = f.switch.get("superspine1")!
+    sw.plane = "plane-2"
+    errors = cfs.validate_fabric(f)
+    testing.assertTrue(any(["spine spine1 is in plane-1 and super-spine superspine1 in plane-2" in e for e in errors]), "{errors}")
+
+def _test_port_used_twice():
+    f = _fabric(fabrics.three_stage())
+    fabrics.add_link(f, "leaf1", "ethernet-1/49", "spine2", "ethernet-1/9")
+    _single_error(f, "leaf1 port ethernet-1/49 is used by both")
+
+def _test_lower_port_number_too_large():
+    f = _fabric(fabrics.three_stage())
+    fabrics.add_link(f, "leaf1", "ethernet-1/64", "spine1", "ethernet-1/9")
+    _single_error(f, "below 64")
+
+def _test_super_spine_plane_without_spines():
+    f = _fabric(fabrics.five_stage())
+    fabrics.add_switch(f, "superspine3", 23, "super-spine", plane="plane-3")
+    errors = cfs.validate_fabric(f)
+    testing.assertTrue(any(["pod-1 has no spine in plane-3" in e for e in errors]), "{errors}")
+    testing.assertTrue(any(["pod-2 has no spine in plane-3" in e for e in errors]), "{errors}")
+
+def _test_spine_plane_without_super_spine():
+    f = _fabric(fabrics.five_stage())
+    fabrics.add_switch(f, "spine5", 15, "spine", pod="pod-1", plane="plane-3")
+    errors = cfs.validate_fabric(f)
+    testing.assertTrue(any(["no super-spine in plane-3" in e for e in errors]), "{errors}")
+
+def _test_dual_homed_server_on_one_leaf():
+    f = _fabric(fabrics.three_stage())
+    fabrics.add_server(f, "bad", "dual-homed", [("leaf1", "ethernet-1/3", "eth1"), ("leaf1", "ethernet-1/4", "eth2")])
+    _single_error(f, "a dual-homed server links to two leaves, not 1")
+
+def _test_single_homed_server_on_two_leaves():
+    f = _fabric(fabrics.three_stage())
+    fabrics.add_server(f, "bad", "single-homed", [("leaf1", "ethernet-1/3", "eth1"), ("leaf2", "ethernet-1/3", "eth2")])
+    _single_error(f, "a single-homed server links to one leaf, not 2")
+
+def _test_server_on_spine():
+    f = _fabric(fabrics.three_stage())
+    fabrics.add_server(f, "bad", "single-homed", [("spine1", "ethernet-1/9", "eth1")])
+    _single_error(f, "spine1 is a spine, a server links to a leaf")
+
+def _test_server_port_on_a_fabric_port():
+    f = _fabric(fabrics.three_stage())
+    fabrics.add_server(f, "bad", "single-homed", [("leaf1", "ethernet-1/49", "eth1")])
+    _single_error(f, "leaf1 port ethernet-1/49 is used by both")
+
+def _test_server_port_used_twice():
+    f = _fabric(fabrics.three_stage())
+    fabrics.add_server(f, "bad", "dual-homed", [("leaf1", "ethernet-1/3", "eth1"), ("leaf2", "ethernet-1/3", "eth1")])
+    _single_error(f, "more than one link")

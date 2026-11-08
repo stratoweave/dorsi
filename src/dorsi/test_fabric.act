@@ -8,7 +8,7 @@ import stratoweave.test_rig as swts
 
 SRL = "NokiaSRLinux_25_3_2"
 
-def _add_switch(fabric: cfs_layer.ip_fabric__ip_fabric__fabric_entry, name: str, id: u64, role: str, pod: ?str=None, plane: ?str=None):
+def add_switch(fabric: cfs_layer.ip_fabric__ip_fabric__fabric_entry, name: str, id: u64, role: str, pod: ?str=None, plane: ?str=None):
     s = fabric.switch.create(name, id, SRL, role)
     s.mock = True
     if pod is not None:
@@ -16,10 +16,10 @@ def _add_switch(fabric: cfs_layer.ip_fabric__ip_fabric__fabric_entry, name: str,
     if plane is not None:
         s.plane = plane
 
-def _add_link(fabric: cfs_layer.ip_fabric__ip_fabric__fabric_entry, lower: str, lower_port: str, upper: str, upper_port: str):
+def add_link(fabric: cfs_layer.ip_fabric__ip_fabric__fabric_entry, lower: str, lower_port: str, upper: str, upper_port: str):
     fabric.fabric_link.create((lower, lower_port, upper, upper_port))
 
-def _add_server(fabric: cfs_layer.ip_fabric__ip_fabric__fabric_entry, name: str, profile: str, links: list[(str, str, str)]):
+def add_server(fabric: cfs_layer.ip_fabric__ip_fabric__fabric_entry, name: str, profile: str, links: list[(str, str, str)]):
     conn = cfs_layer.ip_fabric__ip_fabric__fabric__server__connectivity(profile)
     for switch, switch_port, server_port in links:
         conn.link.create((switch, switch_port), server_port)
@@ -31,24 +31,24 @@ def _empty_root():
 
 # Servers: two dual-homed to a pair of leaves, one single-homed. The same in
 # both topologies, which both have leaf1 to leaf3.
-def _add_servers(fabric: cfs_layer.ip_fabric__ip_fabric__fabric_entry):
-    _add_server(fabric, "server1", "dual-homed", [("leaf1", "ethernet-1/1", "eth1"), ("leaf2", "ethernet-1/1", "eth2")])
-    _add_server(fabric, "server2", "dual-homed", [("leaf2", "ethernet-1/2", "eth1"), ("leaf3", "ethernet-1/1", "eth2")])
-    _add_server(fabric, "server3", "single-homed", [("leaf3", "ethernet-1/2", "eth1")])
+def add_servers(fabric: cfs_layer.ip_fabric__ip_fabric__fabric_entry):
+    add_server(fabric, "server1", "dual-homed", [("leaf1", "ethernet-1/1", "eth1"), ("leaf2", "ethernet-1/1", "eth2")])
+    add_server(fabric, "server2", "dual-homed", [("leaf2", "ethernet-1/2", "eth1"), ("leaf3", "ethernet-1/1", "eth2")])
+    add_server(fabric, "server3", "single-homed", [("leaf3", "ethernet-1/2", "eth1")])
 
 # Three-stage Clos: three leaves, each connected to both spines.
 def three_stage():
     root = _empty_root()
     f = root.ip_fabric.fabric.create("dc1")
-    _add_switch(f, "leaf1", 1, "leaf")
-    _add_switch(f, "leaf2", 2, "leaf")
-    _add_switch(f, "leaf3", 3, "leaf")
-    _add_switch(f, "spine1", 11, "spine")
-    _add_switch(f, "spine2", 12, "spine")
+    add_switch(f, "leaf1", 1, "leaf")
+    add_switch(f, "leaf2", 2, "leaf")
+    add_switch(f, "leaf3", 3, "leaf")
+    add_switch(f, "spine1", 11, "spine")
+    add_switch(f, "spine2", 12, "spine")
     for n, leaf in enumerate(["leaf1", "leaf2", "leaf3"]):
-        _add_link(f, leaf, "ethernet-1/49", "spine1", "ethernet-1/{n + 1}")
-        _add_link(f, leaf, "ethernet-1/50", "spine2", "ethernet-1/{n + 1}")
-    _add_servers(f)
+        add_link(f, leaf, "ethernet-1/49", "spine1", "ethernet-1/{n + 1}")
+        add_link(f, leaf, "ethernet-1/50", "spine2", "ethernet-1/{n + 1}")
+    add_servers(f)
     return root
 
 # Five-stage Clos: two pods, each with two leaves and one spine per plane.
@@ -56,27 +56,27 @@ def three_stage():
 def five_stage():
     root = _empty_root()
     f = root.ip_fabric.fabric.create("dc1")
-    _add_switch(f, "leaf1", 1, "leaf", pod="pod-1")
-    _add_switch(f, "leaf2", 2, "leaf", pod="pod-1")
-    _add_switch(f, "leaf3", 3, "leaf", pod="pod-2")
-    _add_switch(f, "leaf4", 4, "leaf", pod="pod-2")
-    _add_switch(f, "spine1", 11, "spine", pod="pod-1", plane="plane-1")
-    _add_switch(f, "spine2", 12, "spine", pod="pod-1", plane="plane-2")
-    _add_switch(f, "spine3", 13, "spine", pod="pod-2", plane="plane-1")
-    _add_switch(f, "spine4", 14, "spine", pod="pod-2", plane="plane-2")
-    _add_switch(f, "superspine1", 21, "super-spine", plane="plane-1")
-    _add_switch(f, "superspine2", 22, "super-spine", plane="plane-2")
+    add_switch(f, "leaf1", 1, "leaf", pod="pod-1")
+    add_switch(f, "leaf2", 2, "leaf", pod="pod-1")
+    add_switch(f, "leaf3", 3, "leaf", pod="pod-2")
+    add_switch(f, "leaf4", 4, "leaf", pod="pod-2")
+    add_switch(f, "spine1", 11, "spine", pod="pod-1", plane="plane-1")
+    add_switch(f, "spine2", 12, "spine", pod="pod-1", plane="plane-2")
+    add_switch(f, "spine3", 13, "spine", pod="pod-2", plane="plane-1")
+    add_switch(f, "spine4", 14, "spine", pod="pod-2", plane="plane-2")
+    add_switch(f, "superspine1", 21, "super-spine", plane="plane-1")
+    add_switch(f, "superspine2", 22, "super-spine", plane="plane-2")
     # Leaf to spine, within a pod. Uplink 49 goes to plane-1, 50 to plane-2.
     for leaf, p1, p2, port in [("leaf1", "spine1", "spine2", 1), ("leaf2", "spine1", "spine2", 2),
                                ("leaf3", "spine3", "spine4", 1), ("leaf4", "spine3", "spine4", 2)]:
-        _add_link(f, leaf, "ethernet-1/49", p1, "ethernet-1/{port}")
-        _add_link(f, leaf, "ethernet-1/50", p2, "ethernet-1/{port}")
+        add_link(f, leaf, "ethernet-1/49", p1, "ethernet-1/{port}")
+        add_link(f, leaf, "ethernet-1/50", p2, "ethernet-1/{port}")
     # Spine to super-spine, within a plane
-    _add_link(f, "spine1", "ethernet-1/31", "superspine1", "ethernet-1/1")
-    _add_link(f, "spine3", "ethernet-1/31", "superspine1", "ethernet-1/2")
-    _add_link(f, "spine2", "ethernet-1/31", "superspine2", "ethernet-1/1")
-    _add_link(f, "spine4", "ethernet-1/31", "superspine2", "ethernet-1/2")
-    _add_servers(f)
+    add_link(f, "spine1", "ethernet-1/31", "superspine1", "ethernet-1/1")
+    add_link(f, "spine3", "ethernet-1/31", "superspine1", "ethernet-1/2")
+    add_link(f, "spine2", "ethernet-1/31", "superspine2", "ethernet-1/1")
+    add_link(f, "spine4", "ethernet-1/31", "superspine2", "ethernet-1/2")
+    add_servers(f)
     return root
 
 # TransformTester takes its snapshot as soon as the CFS commit completes. A
@@ -104,3 +104,19 @@ actor _test_fabric_three_stage(t: testing.AsyncT):
 actor _test_fabric_five_stage(t: testing.AsyncT):
     t.timeout(30.0)
     FabricTester(t, five_stage().to_gdata())
+
+# An invalid fabric is rejected as a whole, with the problems listed.
+actor _test_fabric_invalid_is_rejected(t: testing.AsyncT):
+    t.timeout(5.0)
+    root = three_stage()
+    f = root.ip_fabric.fabric.get("dc1")!
+    add_server(f, "bad", "single-homed", [("spine1", "ethernet-1/9", "eth1")])
+    tr = swts.TestRig.build(sysspec.SYSSPEC, t.log_handler)
+
+    def cont(r: value):
+        if isinstance(r, Exception):
+            t.success("rejected: {r}")
+        else:
+            t.failure(ValueError("the invalid fabric was accepted"))
+
+    tr.edit_config(root.to_gdata(), cont, 0)
