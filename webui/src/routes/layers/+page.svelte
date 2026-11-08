@@ -8,9 +8,8 @@
 
   const LAYER_OPTIONS = [
     { value: 0, label: '0 · CFS' },
-    { value: 1, label: '1 · Inter' },
-    { value: 2, label: '2 · RFS' },
-    { value: 3, label: '3 · Device' }
+    { value: 1, label: '1 · RFS' },
+    { value: 2, label: '2 · Device' }
   ];
   const FORMAT_OPTIONS = [
     { value: 'xml', label: 'XML' },

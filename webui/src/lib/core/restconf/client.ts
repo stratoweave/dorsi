@@ -145,8 +145,22 @@ export function encodeListKey(key: string | string[]): string {
   return encodeListKeyPart(String(key));
 }
 
+/**
+ * The path of a list entry. A root below other keyed lists has a `{}` for each
+ * of their keys, which the leading parts of `key` fill in order:
+ * `data/m:top/parent={}/child` with `['a', 'b']` gives
+ * `data/m:top/parent=a/child=b`. The remaining parts are the key of the entry.
+ */
 export function getListEntryPath(root: string, key: string | string[]): string {
-  return `${normalizePath(root)}=${encodeListKey(key)}`;
+  let path = normalizePath(root);
+  let rest = Array.isArray(key) ? key : [key];
+
+  while (path.includes('{}') && rest.length > 1) {
+    path = path.replace('{}', encodeListKeyPart(String(rest[0])));
+    rest = rest.slice(1);
+  }
+
+  return `${path}=${encodeListKey(rest)}`;
 }
 
 function getListWrapperKey(restconfRoot: string): string {

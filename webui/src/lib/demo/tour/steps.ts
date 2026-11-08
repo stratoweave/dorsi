@@ -76,7 +76,7 @@ export const TOUR_STEPS: TourStep[] = [
     route: '/layers',
     target: 'layer-viewer',
     title: 'The transformation layers',
-    body: 'Watch intent become device config: from CFS (what you asked for) through the intermediate and RFS layers down to per-device configuration — in XML, JSON, or AData.'
+    body: 'Watch intent become device config: from CFS (what you asked for) through the RFS layer down to per-device configuration — in XML, JSON, or AData.'
   },
   {
     route: '/services/netinfra-router',

@@ -4,10 +4,9 @@ import {
   deviceConfigXml
 } from '$lib/demo/fixtures/device-configs';
 
-// Blobs for /layer/{0..3}: the CFS → Intermediate → RFS → Device
-// transformation chain. Layer 0 (JSON) and layer 3 are rendered live from the
-// demo state so edits show up when re-inspecting; the intermediate layers are
-// representative static content.
+// Blobs for /layer/{0..2}: the CFS → RFS → Device transformation chain.
+// Layer 0 (JSON) and layer 2 are rendered live from the demo state so edits
+// show up when re-inspecting; the RFS layer is representative static content.
 
 interface LayerContext {
   /** Wrapped CFS payloads exactly as served over RESTCONF. */
@@ -15,58 +14,6 @@ interface LayerContext {
   /** Managed routers, for the per-device layers. */
   routers: { name: string; id: number }[];
 }
-
-const LAYER1_XML = `<intermediate xmlns="urn:dorsi:inter">
-  <router>
-    <name>AMS-CORE-1</name>
-    <loopback>10.0.0.1</loopback>
-    <ibgp-peer>10.0.0.2</ibgp-peer>
-    <ibgp-peer>10.0.0.3</ibgp-peer>
-    <ibgp-peer>10.0.0.4</ibgp-peer>
-  </router>
-  <router>
-    <name>FRA-CORE-1</name>
-    <loopback>10.0.0.2</loopback>
-    <ibgp-peer>10.0.0.1</ibgp-peer>
-    <ibgp-peer>10.0.0.3</ibgp-peer>
-    <ibgp-peer>10.0.0.4</ibgp-peer>
-  </router>
-  <router>
-    <name>STO-CORE-1</name>
-    <loopback>10.0.0.3</loopback>
-    <ibgp-peer>10.0.0.1</ibgp-peer>
-    <ibgp-peer>10.0.0.2</ibgp-peer>
-    <ibgp-peer>10.0.0.4</ibgp-peer>
-  </router>
-  <router>
-    <name>LJU-CORE-1</name>
-    <loopback>10.0.0.4</loopback>
-    <ibgp-peer>10.0.0.1</ibgp-peer>
-    <ibgp-peer>10.0.0.2</ibgp-peer>
-    <ibgp-peer>10.0.0.3</ibgp-peer>
-  </router>
-</intermediate>`;
-
-const LAYER1_JSON = JSON.stringify(
-  {
-    'inter:intermediate': {
-      router: [1, 2, 3, 4].map((id) => ({
-        name: ['AMS-CORE-1', 'FRA-CORE-1', 'STO-CORE-1', 'LJU-CORE-1'][id - 1],
-        loopback: `10.0.0.${id}`,
-        'ibgp-peer': [1, 2, 3, 4].filter((peer) => peer !== id).map((peer) => `10.0.0.${peer}`)
-      }))
-    }
-  },
-  null,
-  2
-);
-
-const LAYER1_ADATA = `intermediate {
-    router AMS-CORE-1 { loopback: 10.0.0.1, ibgp-peers: [10.0.0.2, 10.0.0.3, 10.0.0.4] }
-    router FRA-CORE-1 { loopback: 10.0.0.2, ibgp-peers: [10.0.0.1, 10.0.0.3, 10.0.0.4] }
-    router STO-CORE-1 { loopback: 10.0.0.3, ibgp-peers: [10.0.0.1, 10.0.0.2, 10.0.0.4] }
-    router LJU-CORE-1 { loopback: 10.0.0.4, ibgp-peers: [10.0.0.1, 10.0.0.2, 10.0.0.3] }
-}`;
 
 const LAYER2_XML = `<rfs xmlns="urn:dorsi:rfs">
   <device>
@@ -168,18 +115,12 @@ export function layerConfigText(layer: number, format: string, ctx: LayerContext
   }
 
   if (layer === 1) {
-    if (format === 'json') return LAYER1_JSON;
-    if (format === 'adata') return LAYER1_ADATA;
-    return LAYER1_XML;
-  }
-
-  if (layer === 2) {
     if (format === 'json') return LAYER2_JSON;
     if (format === 'adata') return LAYER2_ADATA;
     return LAYER2_XML;
   }
 
-  // Layer 3: the fully rendered per-device configuration.
+  // Layer 2: the fully rendered per-device configuration.
   if (format === 'json') {
     const devices: Record<string, unknown> = {};
     for (const router of ctx.routers) {

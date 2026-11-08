@@ -31,6 +31,31 @@ switches and the links between them.
 
 The topology and data match the `fabric_three_stage` and `fabric_five_stage`
 transform tests (`src/dorsi/test_fabric.act`), which check the generated SR Linux
-configuration. The lab itself has not been deployed yet, and `make start` is the
-only part of the shared `quicklab.mk` that applies to it: its configuration
-targets send `netinfra.xml`, which this lab does not have.
+configuration. The lab has been deployed: all eBGP sessions come up, ECMP and
+loopback reachability work. `make start` and `make stop` are the only parts of the
+shared `quicklab.mk` that apply to it, its configuration targets send
+`netinfra.xml`, which this lab does not have.
+
+## Running it
+
+Without a lab, with mocked switches (no containers needed). Add
+`<mock>true</mock>` to every switch of `ip-fabric.xml` in a copy and run:
+
+```sh
+out/bin/dorsi --http.port 8089 ip-fabric-mock.xml
+```
+
+The Web UI is then on http://localhost:8089 and RESTCONF under `/restconf`.
+
+In the lab, after `WEBUI_PORT=3100 CI=true make start` (pick a free port) and
+once the switches have booted:
+
+```sh
+make -C ../.. build-linux-aarch64   # or build-linux-x86_64
+docker cp ../../out/bin/dorsi dorsi-fabric-3stage-sweave:/dorsi
+docker cp ip-fabric.xml dorsi-fabric-3stage-sweave:/ip-fabric.xml
+docker exec -d dorsi-fabric-3stage-sweave sh -c '/dorsi ip-fabric.xml > /dorsi.log 2>&1'
+```
+
+Five SR Linux nodes need about 9 GB of memory. With less, nodes lose their
+dataplane (`xdp_lc_1 has failed`) and cannot be configured.

@@ -30,14 +30,15 @@ export const load: PageLoad = async ({ params, url, fetch, depends }) => {
   depends(`data:service-clone:${params.module}:${cloneSourceId}`);
 
   try {
+    const pathKey = getRoutePathKey(serviceModule, cloneSourceId);
     const response = await restconfGetJson(
-      getListEntryPath(serviceModule.restconfRoot, getRoutePathKey(serviceModule, cloneSourceId)),
+      getListEntryPath(serviceModule.restconfRoot, pathKey),
       fetch
     );
 
     return {
       ...base,
-      draft: createClonedDraft(serviceModule, serviceModule.parse(response))
+      draft: createClonedDraft(serviceModule, serviceModule.parse(response, pathKey))
     };
   } catch (loadError) {
     const message = loadError instanceof Error ? loadError.message : 'Failed to load clone source.';

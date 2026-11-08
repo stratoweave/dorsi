@@ -38,6 +38,6 @@ switches and the links between them.
 
 The topology and data match the `fabric_three_stage` and `fabric_five_stage`
 transform tests (`src/dorsi/test_fabric.act`), which check the generated SR Linux
-configuration. The lab itself has not been deployed yet, and `make start` is the
-only part of the shared `quicklab.mk` that applies to it: its configuration
-targets send `netinfra.xml`, which this lab does not have.
+configuration. The lab itself has not been deployed: ten SR Linux nodes need far more memory than
+the 3-stage lab, which already needs about 9 GB. See the 3-stage README for how
+to run it.
