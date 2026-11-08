@@ -963,26 +963,72 @@ class srl_nokia_network_instance__network_instance__protocols__isis(yadata.MNode
 
 
 _breaker24: None = None
+class srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi__multipath__ebgp(yadata.MNode):
+    maximum_paths: ?u64
+
+    mut def __init__(self, maximum_paths: ?u64=None) -> None:
+        self.maximum_paths = maximum_paths
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['srl_nokia-network-instance:network-instance', 'protocols', 'srl_nokia-bgp:bgp', 'afi-safi', 'multipath', 'ebgp'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi__multipath__ebgp:
+        if n is not None:
+            return srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi__multipath__ebgp(maximum_paths=n.get_opt_u64(ygdata.Id(NS_srl_nokia_bgp, 'maximum-paths')))
+        return srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi__multipath__ebgp()
+
+    mut def copy(self) -> srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi__multipath__ebgp:
+        """Create a deep copy of this adata object"""
+        return srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi__multipath__ebgp.from_gdata(self.to_gdata())
+
+
+_breaker25: None = None
+class srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi__multipath(yadata.MNode):
+    allow_multiple_as: ?bool
+    ebgp: srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi__multipath__ebgp
+
+    mut def __init__(self, allow_multiple_as: ?bool=None, ebgp: ?srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi__multipath__ebgp=None) -> None:
+        self.allow_multiple_as = allow_multiple_as
+        self.ebgp = ebgp if ebgp is not None else srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi__multipath__ebgp()
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['srl_nokia-network-instance:network-instance', 'protocols', 'srl_nokia-bgp:bgp', 'afi-safi', 'multipath'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi__multipath:
+        if n is not None:
+            return srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi__multipath(allow_multiple_as=n.get_opt_bool(ygdata.Id(NS_srl_nokia_bgp, 'allow-multiple-as')), ebgp=srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi__multipath__ebgp.from_gdata(n.get_opt_cnt(ygdata.Id(NS_srl_nokia_bgp, 'ebgp'))))
+        return srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi__multipath()
+
+    mut def copy(self) -> srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi__multipath:
+        """Create a deep copy of this adata object"""
+        return srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi__multipath.from_gdata(self.to_gdata())
+
+
+_breaker26: None = None
 class srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi_entry(yadata.MNode):
     afi_safi_name: Identityref
     admin_state: ?str
+    multipath: srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi__multipath
 
-    mut def __init__(self, afi_safi_name: Identityref, admin_state: ?str=None) -> None:
+    mut def __init__(self, afi_safi_name: Identityref, admin_state: ?str=None, multipath: ?srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi__multipath=None) -> None:
         self.afi_safi_name = afi_safi_name
         self.admin_state = admin_state
+        self.multipath = multipath if multipath is not None else srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi__multipath()
 
     mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
         return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['srl_nokia-network-instance:network-instance', 'protocols', 'srl_nokia-bgp:bgp', 'afi-safi'], prev=prev)
 
     @staticmethod
     mut def from_gdata(n: ygdata.Node) -> srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi_entry:
-        return srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi_entry(afi_safi_name=n.get_Identityref(ygdata.Id(NS_srl_nokia_bgp, 'afi-safi-name')), admin_state=n.get_opt_str(ygdata.Id(NS_srl_nokia_bgp, 'admin-state')))
+        return srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi_entry(afi_safi_name=n.get_Identityref(ygdata.Id(NS_srl_nokia_bgp, 'afi-safi-name')), admin_state=n.get_opt_str(ygdata.Id(NS_srl_nokia_bgp, 'admin-state')), multipath=srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi__multipath.from_gdata(n.get_opt_cnt(ygdata.Id(NS_srl_nokia_bgp, 'multipath'))))
 
     mut def copy(self) -> srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi_entry:
         """Create a deep copy of this adata object"""
         return srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi_entry.from_gdata(self.to_gdata())
 
-_breaker25: None = None
+_breaker27: None = None
 class srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi(yadata.MKeyedList[Identityref, srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi_entry]):
     mut def __init__(self, elements: list[srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi_entry]=[]) -> None:
         yadata.MKeyedList.__init__(self, lambda e: e.afi_safi_name, elements)
@@ -1015,13 +1061,17 @@ class srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi(yad
         return srl_nokia_network_instance__network_instance__protocols__bgp__afi_safi(elements=copied_elements)
 
 
-_breaker26: None = None
+_breaker28: None = None
 class srl_nokia_network_instance__network_instance__protocols__bgp__group_entry(yadata.MNode):
     group_name: str
+    export_policy: list[str]
+    import_policy: list[str]
     peer_as: ?u64
 
-    mut def __init__(self, group_name: str, peer_as: ?u64=None) -> None:
+    mut def __init__(self, group_name: str, export_policy: ?list[str]=None, import_policy: ?list[str]=None, peer_as: ?u64=None) -> None:
         self.group_name = group_name
+        self.export_policy = export_policy if export_policy is not None else []
+        self.import_policy = import_policy if import_policy is not None else []
         self.peer_as = peer_as
 
     mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
@@ -1029,13 +1079,13 @@ class srl_nokia_network_instance__network_instance__protocols__bgp__group_entry(
 
     @staticmethod
     mut def from_gdata(n: ygdata.Node) -> srl_nokia_network_instance__network_instance__protocols__bgp__group_entry:
-        return srl_nokia_network_instance__network_instance__protocols__bgp__group_entry(group_name=n.get_str(ygdata.Id(NS_srl_nokia_bgp, 'group-name')), peer_as=n.get_opt_u64(ygdata.Id(NS_srl_nokia_bgp, 'peer-as')))
+        return srl_nokia_network_instance__network_instance__protocols__bgp__group_entry(group_name=n.get_str(ygdata.Id(NS_srl_nokia_bgp, 'group-name')), export_policy=n.get_opt_strs(ygdata.Id(NS_srl_nokia_bgp, 'export-policy')), import_policy=n.get_opt_strs(ygdata.Id(NS_srl_nokia_bgp, 'import-policy')), peer_as=n.get_opt_u64(ygdata.Id(NS_srl_nokia_bgp, 'peer-as')))
 
     mut def copy(self) -> srl_nokia_network_instance__network_instance__protocols__bgp__group_entry:
         """Create a deep copy of this adata object"""
         return srl_nokia_network_instance__network_instance__protocols__bgp__group_entry.from_gdata(self.to_gdata())
 
-_breaker27: None = None
+_breaker29: None = None
 class srl_nokia_network_instance__network_instance__protocols__bgp__group(yadata.MKeyedList[str, srl_nokia_network_instance__network_instance__protocols__bgp__group_entry]):
     mut def __init__(self, elements: list[srl_nokia_network_instance__network_instance__protocols__bgp__group_entry]=[]) -> None:
         yadata.MKeyedList.__init__(self, lambda e: e.group_name, elements)
@@ -1068,7 +1118,7 @@ class srl_nokia_network_instance__network_instance__protocols__bgp__group(yadata
         return srl_nokia_network_instance__network_instance__protocols__bgp__group(elements=copied_elements)
 
 
-_breaker28: None = None
+_breaker30: None = None
 class srl_nokia_network_instance__network_instance__protocols__bgp__neighbor__authentication(yadata.MNode):
     password: ?str
 
@@ -1089,7 +1139,7 @@ class srl_nokia_network_instance__network_instance__protocols__bgp__neighbor__au
         return srl_nokia_network_instance__network_instance__protocols__bgp__neighbor__authentication.from_gdata(self.to_gdata())
 
 
-_breaker29: None = None
+_breaker31: None = None
 class srl_nokia_network_instance__network_instance__protocols__bgp__neighbor__timers(yadata.MNode):
     connect_retry: ?u64
     hold_time: ?u64
@@ -1114,7 +1164,7 @@ class srl_nokia_network_instance__network_instance__protocols__bgp__neighbor__ti
         return srl_nokia_network_instance__network_instance__protocols__bgp__neighbor__timers.from_gdata(self.to_gdata())
 
 
-_breaker30: None = None
+_breaker32: None = None
 class srl_nokia_network_instance__network_instance__protocols__bgp__neighbor_entry(yadata.MNode):
     peer_address: str
     admin_state: ?str
@@ -1144,7 +1194,7 @@ class srl_nokia_network_instance__network_instance__protocols__bgp__neighbor_ent
         """Create a deep copy of this adata object"""
         return srl_nokia_network_instance__network_instance__protocols__bgp__neighbor_entry.from_gdata(self.to_gdata())
 
-_breaker31: None = None
+_breaker33: None = None
 class srl_nokia_network_instance__network_instance__protocols__bgp__neighbor(yadata.MKeyedList[str, srl_nokia_network_instance__network_instance__protocols__bgp__neighbor_entry]):
     mut def __init__(self, elements: list[srl_nokia_network_instance__network_instance__protocols__bgp__neighbor_entry]=[]) -> None:
         yadata.MKeyedList.__init__(self, lambda e: e.peer_address, elements)
@@ -1183,7 +1233,7 @@ class srl_nokia_network_instance__network_instance__protocols__bgp__neighbor(yad
         return srl_nokia_network_instance__network_instance__protocols__bgp__neighbor(elements=copied_elements)
 
 
-_breaker32: None = None
+_breaker34: None = None
 class srl_nokia_network_instance__network_instance__protocols__bgp(yadata.MNode):
     autonomous_system: ?u64
     router_id: ?str
@@ -1215,7 +1265,7 @@ class srl_nokia_network_instance__network_instance__protocols__bgp(yadata.MNode)
         raise Exception('Unreachable in srl_nokia_network_instance__network_instance__protocols__bgp.copy()')
 
 
-_breaker33: None = None
+_breaker35: None = None
 class srl_nokia_network_instance__network_instance__protocols(yadata.MNode):
     isis: ?srl_nokia_network_instance__network_instance__protocols__isis
     bgp: ?srl_nokia_network_instance__network_instance__protocols__bgp
@@ -1258,7 +1308,7 @@ class srl_nokia_network_instance__network_instance__protocols(yadata.MNode):
         return srl_nokia_network_instance__network_instance__protocols.from_gdata(self.to_gdata())
 
 
-_breaker34: None = None
+_breaker36: None = None
 class srl_nokia_network_instance__network_instance_entry(yadata.MNode):
     name: str
     type: ?Identityref
@@ -1286,7 +1336,7 @@ class srl_nokia_network_instance__network_instance_entry(yadata.MNode):
         """Create a deep copy of this adata object"""
         return srl_nokia_network_instance__network_instance_entry.from_gdata(self.to_gdata())
 
-_breaker35: None = None
+_breaker37: None = None
 class srl_nokia_network_instance__network_instance(yadata.MKeyedList[str, srl_nokia_network_instance__network_instance_entry]):
     mut def __init__(self, elements: list[srl_nokia_network_instance__network_instance_entry]=[]) -> None:
         yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
@@ -1323,16 +1373,310 @@ class srl_nokia_network_instance__network_instance(yadata.MKeyedList[str, srl_no
         return srl_nokia_network_instance__network_instance(elements=copied_elements)
 
 
-_breaker36: None = None
+_breaker38: None = None
+class srl_nokia_routing_policy__routing_policy__prefix_set__prefix_entry(yadata.MNode):
+    ip_prefix: str
+    mask_length_range: str
+
+    mut def __init__(self, ip_prefix: str, mask_length_range: str) -> None:
+        self.ip_prefix = ip_prefix
+        self.mask_length_range = mask_length_range
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['srl_nokia-routing-policy:routing-policy', 'prefix-set', 'prefix'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ygdata.Node) -> srl_nokia_routing_policy__routing_policy__prefix_set__prefix_entry:
+        return srl_nokia_routing_policy__routing_policy__prefix_set__prefix_entry(ip_prefix=n.get_str(ygdata.Id(NS_srl_nokia_routing_policy, 'ip-prefix')), mask_length_range=n.get_str(ygdata.Id(NS_srl_nokia_routing_policy, 'mask-length-range')))
+
+    mut def copy(self) -> srl_nokia_routing_policy__routing_policy__prefix_set__prefix_entry:
+        """Create a deep copy of this adata object"""
+        return srl_nokia_routing_policy__routing_policy__prefix_set__prefix_entry.from_gdata(self.to_gdata())
+
+_breaker39: None = None
+class srl_nokia_routing_policy__routing_policy__prefix_set__prefix(yadata.MKeyedList[(ip_prefix: str, mask_length_range: str), srl_nokia_routing_policy__routing_policy__prefix_set__prefix_entry]):
+    mut def __init__(self, elements: list[srl_nokia_routing_policy__routing_policy__prefix_set__prefix_entry]=[]) -> None:
+        yadata.MKeyedList.__init__(self, lambda e: (ip_prefix=e.ip_prefix, mask_length_range=e.mask_length_range), elements)
+
+    mut def create(self, key: (ip_prefix: str, mask_length_range: str)) -> srl_nokia_routing_policy__routing_policy__prefix_set__prefix_entry:
+        e = self.get(key)
+        if e is not None:
+            return e
+        (ip_prefix=ip_prefix, mask_length_range=mask_length_range) = key
+        res = srl_nokia_routing_policy__routing_policy__prefix_set__prefix_entry(ip_prefix=ip_prefix, mask_length_range=mask_length_range)
+        self._append(res)
+        return res
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.List) -> list[srl_nokia_routing_policy__routing_policy__prefix_set__prefix_entry]:
+        if n is not None:
+            return [srl_nokia_routing_policy__routing_policy__prefix_set__prefix_entry.from_gdata(e) for e in n.entries()]
+        return []
+
+    mut def copy(self) -> srl_nokia_routing_policy__routing_policy__prefix_set__prefix:
+        """Create a deep copy of this list object"""
+        # Copy each element in the list
+        copied_elements = []
+        for e in self:
+            ce = e.copy()
+            if ce is not None:
+                copied_elements.append(ce)
+        return srl_nokia_routing_policy__routing_policy__prefix_set__prefix(elements=copied_elements)
+
+
+_breaker40: None = None
+class srl_nokia_routing_policy__routing_policy__prefix_set_entry(yadata.MNode):
+    name: str
+    prefix: srl_nokia_routing_policy__routing_policy__prefix_set__prefix
+
+    mut def __init__(self, name: str, prefix: list[srl_nokia_routing_policy__routing_policy__prefix_set__prefix_entry]=[]) -> None:
+        self.name = name
+        self.prefix = srl_nokia_routing_policy__routing_policy__prefix_set__prefix(elements=prefix)
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['srl_nokia-routing-policy:routing-policy', 'prefix-set'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ygdata.Node) -> srl_nokia_routing_policy__routing_policy__prefix_set_entry:
+        return srl_nokia_routing_policy__routing_policy__prefix_set_entry(name=n.get_str(ygdata.Id(NS_srl_nokia_routing_policy, 'name')), prefix=srl_nokia_routing_policy__routing_policy__prefix_set__prefix.from_gdata(n.get_opt_list(ygdata.Id(NS_srl_nokia_routing_policy, 'prefix'))))
+
+    mut def copy(self) -> srl_nokia_routing_policy__routing_policy__prefix_set_entry:
+        """Create a deep copy of this adata object"""
+        return srl_nokia_routing_policy__routing_policy__prefix_set_entry.from_gdata(self.to_gdata())
+
+_breaker41: None = None
+class srl_nokia_routing_policy__routing_policy__prefix_set(yadata.MKeyedList[str, srl_nokia_routing_policy__routing_policy__prefix_set_entry]):
+    mut def __init__(self, elements: list[srl_nokia_routing_policy__routing_policy__prefix_set_entry]=[]) -> None:
+        yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
+
+    mut def create(self, key: str) -> srl_nokia_routing_policy__routing_policy__prefix_set_entry:
+        e = self.get(key)
+        if e is not None:
+            return e
+        name = key
+        res = srl_nokia_routing_policy__routing_policy__prefix_set_entry(name=name)
+        self._append(res)
+        return res
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.List) -> list[srl_nokia_routing_policy__routing_policy__prefix_set_entry]:
+        if n is not None:
+            return [srl_nokia_routing_policy__routing_policy__prefix_set_entry.from_gdata(e) for e in n.entries()]
+        return []
+
+    mut def copy(self) -> srl_nokia_routing_policy__routing_policy__prefix_set:
+        """Create a deep copy of this list object"""
+        # Copy each element in the list
+        copied_elements = []
+        for e in self:
+            ce = e.copy()
+            if ce is not None:
+                copied_elements.append(ce)
+        return srl_nokia_routing_policy__routing_policy__prefix_set(elements=copied_elements)
+
+
+_breaker42: None = None
+class srl_nokia_routing_policy__routing_policy__policy__statement__match__prefix(yadata.MNode):
+    prefix_set: ?str
+
+    mut def __init__(self, prefix_set: ?str=None) -> None:
+        self.prefix_set = prefix_set
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['srl_nokia-routing-policy:routing-policy', 'policy', 'statement', 'match', 'prefix'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> srl_nokia_routing_policy__routing_policy__policy__statement__match__prefix:
+        if n is not None:
+            return srl_nokia_routing_policy__routing_policy__policy__statement__match__prefix(prefix_set=n.get_opt_str(ygdata.Id(NS_srl_nokia_routing_policy, 'prefix-set')))
+        return srl_nokia_routing_policy__routing_policy__policy__statement__match__prefix()
+
+    mut def copy(self) -> srl_nokia_routing_policy__routing_policy__policy__statement__match__prefix:
+        """Create a deep copy of this adata object"""
+        return srl_nokia_routing_policy__routing_policy__policy__statement__match__prefix.from_gdata(self.to_gdata())
+
+
+_breaker43: None = None
+class srl_nokia_routing_policy__routing_policy__policy__statement__match(yadata.MNode):
+    prefix: srl_nokia_routing_policy__routing_policy__policy__statement__match__prefix
+
+    mut def __init__(self, prefix: ?srl_nokia_routing_policy__routing_policy__policy__statement__match__prefix=None) -> None:
+        self.prefix = prefix if prefix is not None else srl_nokia_routing_policy__routing_policy__policy__statement__match__prefix()
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['srl_nokia-routing-policy:routing-policy', 'policy', 'statement', 'match'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> srl_nokia_routing_policy__routing_policy__policy__statement__match:
+        if n is not None:
+            return srl_nokia_routing_policy__routing_policy__policy__statement__match(prefix=srl_nokia_routing_policy__routing_policy__policy__statement__match__prefix.from_gdata(n.get_opt_cnt(ygdata.Id(NS_srl_nokia_routing_policy, 'prefix'))))
+        return srl_nokia_routing_policy__routing_policy__policy__statement__match()
+
+    mut def copy(self) -> srl_nokia_routing_policy__routing_policy__policy__statement__match:
+        """Create a deep copy of this adata object"""
+        return srl_nokia_routing_policy__routing_policy__policy__statement__match.from_gdata(self.to_gdata())
+
+
+_breaker44: None = None
+class srl_nokia_routing_policy__routing_policy__policy__statement__action(yadata.MNode):
+    policy_result: ?str
+
+    mut def __init__(self, policy_result: ?str=None) -> None:
+        self.policy_result = policy_result
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['srl_nokia-routing-policy:routing-policy', 'policy', 'statement', 'action'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> srl_nokia_routing_policy__routing_policy__policy__statement__action:
+        if n is not None:
+            return srl_nokia_routing_policy__routing_policy__policy__statement__action(policy_result=n.get_opt_str(ygdata.Id(NS_srl_nokia_routing_policy, 'policy-result')))
+        return srl_nokia_routing_policy__routing_policy__policy__statement__action()
+
+    mut def copy(self) -> srl_nokia_routing_policy__routing_policy__policy__statement__action:
+        """Create a deep copy of this adata object"""
+        return srl_nokia_routing_policy__routing_policy__policy__statement__action.from_gdata(self.to_gdata())
+
+
+_breaker45: None = None
+class srl_nokia_routing_policy__routing_policy__policy__statement_entry(yadata.MNode):
+    name: str
+    match: srl_nokia_routing_policy__routing_policy__policy__statement__match
+    action_: srl_nokia_routing_policy__routing_policy__policy__statement__action
+
+    mut def __init__(self, name: str, match: ?srl_nokia_routing_policy__routing_policy__policy__statement__match=None, action_: ?srl_nokia_routing_policy__routing_policy__policy__statement__action=None) -> None:
+        self.name = name
+        self.match = match if match is not None else srl_nokia_routing_policy__routing_policy__policy__statement__match()
+        self.action_ = action_ if action_ is not None else srl_nokia_routing_policy__routing_policy__policy__statement__action()
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['srl_nokia-routing-policy:routing-policy', 'policy', 'statement'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ygdata.Node) -> srl_nokia_routing_policy__routing_policy__policy__statement_entry:
+        return srl_nokia_routing_policy__routing_policy__policy__statement_entry(name=n.get_str(ygdata.Id(NS_srl_nokia_routing_policy, 'name')), match=srl_nokia_routing_policy__routing_policy__policy__statement__match.from_gdata(n.get_opt_cnt(ygdata.Id(NS_srl_nokia_routing_policy, 'match'))), action_=srl_nokia_routing_policy__routing_policy__policy__statement__action.from_gdata(n.get_opt_cnt(ygdata.Id(NS_srl_nokia_routing_policy, 'action'))))
+
+    mut def copy(self) -> srl_nokia_routing_policy__routing_policy__policy__statement_entry:
+        """Create a deep copy of this adata object"""
+        return srl_nokia_routing_policy__routing_policy__policy__statement_entry.from_gdata(self.to_gdata())
+
+_breaker46: None = None
+class srl_nokia_routing_policy__routing_policy__policy__statement(yadata.MKeyedList[str, srl_nokia_routing_policy__routing_policy__policy__statement_entry]):
+    mut def __init__(self, elements: list[srl_nokia_routing_policy__routing_policy__policy__statement_entry]=[]) -> None:
+        yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
+
+    mut def create(self, key: str) -> srl_nokia_routing_policy__routing_policy__policy__statement_entry:
+        e = self.get(key)
+        if e is not None:
+            return e
+        name = key
+        res = srl_nokia_routing_policy__routing_policy__policy__statement_entry(name=name)
+        self._append(res)
+        return res
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.List) -> list[srl_nokia_routing_policy__routing_policy__policy__statement_entry]:
+        if n is not None:
+            return [srl_nokia_routing_policy__routing_policy__policy__statement_entry.from_gdata(e) for e in n.entries()]
+        return []
+
+    mut def copy(self) -> srl_nokia_routing_policy__routing_policy__policy__statement:
+        """Create a deep copy of this list object"""
+        # Copy each element in the list
+        copied_elements = []
+        for e in self:
+            ce = e.copy()
+            if ce is not None:
+                copied_elements.append(ce)
+        return srl_nokia_routing_policy__routing_policy__policy__statement(elements=copied_elements)
+
+
+_breaker47: None = None
+class srl_nokia_routing_policy__routing_policy__policy_entry(yadata.MNode):
+    name: str
+    statement: srl_nokia_routing_policy__routing_policy__policy__statement
+
+    mut def __init__(self, name: str, statement: list[srl_nokia_routing_policy__routing_policy__policy__statement_entry]=[]) -> None:
+        self.name = name
+        self.statement = srl_nokia_routing_policy__routing_policy__policy__statement(elements=statement)
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['srl_nokia-routing-policy:routing-policy', 'policy'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ygdata.Node) -> srl_nokia_routing_policy__routing_policy__policy_entry:
+        return srl_nokia_routing_policy__routing_policy__policy_entry(name=n.get_str(ygdata.Id(NS_srl_nokia_routing_policy, 'name')), statement=srl_nokia_routing_policy__routing_policy__policy__statement.from_gdata(n.get_opt_list(ygdata.Id(NS_srl_nokia_routing_policy, 'statement'))))
+
+    mut def copy(self) -> srl_nokia_routing_policy__routing_policy__policy_entry:
+        """Create a deep copy of this adata object"""
+        return srl_nokia_routing_policy__routing_policy__policy_entry.from_gdata(self.to_gdata())
+
+_breaker48: None = None
+class srl_nokia_routing_policy__routing_policy__policy(yadata.MKeyedList[str, srl_nokia_routing_policy__routing_policy__policy_entry]):
+    mut def __init__(self, elements: list[srl_nokia_routing_policy__routing_policy__policy_entry]=[]) -> None:
+        yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
+
+    mut def create(self, key: str) -> srl_nokia_routing_policy__routing_policy__policy_entry:
+        e = self.get(key)
+        if e is not None:
+            return e
+        name = key
+        res = srl_nokia_routing_policy__routing_policy__policy_entry(name=name)
+        self._append(res)
+        return res
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.List) -> list[srl_nokia_routing_policy__routing_policy__policy_entry]:
+        if n is not None:
+            return [srl_nokia_routing_policy__routing_policy__policy_entry.from_gdata(e) for e in n.entries()]
+        return []
+
+    mut def copy(self) -> srl_nokia_routing_policy__routing_policy__policy:
+        """Create a deep copy of this list object"""
+        # Copy each element in the list
+        copied_elements = []
+        for e in self:
+            ce = e.copy()
+            if ce is not None:
+                copied_elements.append(ce)
+        return srl_nokia_routing_policy__routing_policy__policy(elements=copied_elements)
+
+
+_breaker49: None = None
+class srl_nokia_routing_policy__routing_policy(yadata.MNode):
+    prefix_set: srl_nokia_routing_policy__routing_policy__prefix_set
+    policy: srl_nokia_routing_policy__routing_policy__policy
+
+    mut def __init__(self, prefix_set: list[srl_nokia_routing_policy__routing_policy__prefix_set_entry]=[], policy: list[srl_nokia_routing_policy__routing_policy__policy_entry]=[]) -> None:
+        self.prefix_set = srl_nokia_routing_policy__routing_policy__prefix_set(elements=prefix_set)
+        self.policy = srl_nokia_routing_policy__routing_policy__policy(elements=policy)
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['srl_nokia-routing-policy:routing-policy'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> srl_nokia_routing_policy__routing_policy:
+        if n is not None:
+            return srl_nokia_routing_policy__routing_policy(prefix_set=srl_nokia_routing_policy__routing_policy__prefix_set.from_gdata(n.get_opt_list(ygdata.Id(NS_srl_nokia_routing_policy, 'prefix-set'))), policy=srl_nokia_routing_policy__routing_policy__policy.from_gdata(n.get_opt_list(ygdata.Id(NS_srl_nokia_routing_policy, 'policy'))))
+        return srl_nokia_routing_policy__routing_policy()
+
+    mut def copy(self) -> srl_nokia_routing_policy__routing_policy:
+        """Create a deep copy of this adata object"""
+        return srl_nokia_routing_policy__routing_policy.from_gdata(self.to_gdata())
+
+
+_breaker50: None = None
 class root(yadata.MNode):
     system: srl_nokia_system__system
     interface: srl_nokia_interfaces__interface
     network_instance: srl_nokia_network_instance__network_instance
+    routing_policy: srl_nokia_routing_policy__routing_policy
 
-    mut def __init__(self, system: ?srl_nokia_system__system=None, interface: list[srl_nokia_interfaces__interface_entry]=[], network_instance: list[srl_nokia_network_instance__network_instance_entry]=[]) -> None:
+    mut def __init__(self, system: ?srl_nokia_system__system=None, interface: list[srl_nokia_interfaces__interface_entry]=[], network_instance: list[srl_nokia_network_instance__network_instance_entry]=[], routing_policy: ?srl_nokia_routing_policy__routing_policy=None) -> None:
         self.system = system if system is not None else srl_nokia_system__system()
         self.interface = srl_nokia_interfaces__interface(elements=interface)
         self.network_instance = srl_nokia_network_instance__network_instance(elements=network_instance)
+        self.routing_policy = routing_policy if routing_policy is not None else srl_nokia_routing_policy__routing_policy()
 
     mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
         return yadata.from_adata(SRC_DNODE, self, loose=True, prev=prev)
@@ -1340,7 +1684,7 @@ class root(yadata.MNode):
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> root:
         if n is not None:
-            return root(system=srl_nokia_system__system.from_gdata(n.get_opt_cnt(ygdata.Id(NS_srl_nokia_system, 'system'))), interface=srl_nokia_interfaces__interface.from_gdata(n.get_opt_list(ygdata.Id(NS_srl_nokia_interfaces, 'interface'))), network_instance=srl_nokia_network_instance__network_instance.from_gdata(n.get_opt_list(ygdata.Id(NS_srl_nokia_network_instance, 'network-instance'))))
+            return root(system=srl_nokia_system__system.from_gdata(n.get_opt_cnt(ygdata.Id(NS_srl_nokia_system, 'system'))), interface=srl_nokia_interfaces__interface.from_gdata(n.get_opt_list(ygdata.Id(NS_srl_nokia_interfaces, 'interface'))), network_instance=srl_nokia_network_instance__network_instance.from_gdata(n.get_opt_list(ygdata.Id(NS_srl_nokia_network_instance, 'network-instance'))), routing_policy=srl_nokia_routing_policy__routing_policy.from_gdata(n.get_opt_cnt(ygdata.Id(NS_srl_nokia_routing_policy, 'routing-policy'))))
         return root()
 
     mut def copy(self) -> root:

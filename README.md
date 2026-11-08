@@ -47,9 +47,10 @@ service automation with StratoWeave as simple as possible.
 ### Service Automation Layering
 
 DORSI implements highly abstracted device and service configuration through
-layers of automation. While DORSI is implemented using four discrete layers,
-StratoWeave does not place any limitations on the number of layers that can be
-implemented - as few or many as necessary can be used.
+layers of automation. DORSI is implemented using two service layers, the
+Customer Facing Service (CFS) and the Resource Facing Service (RFS), on top of
+the device layer. StratoWeave does not place any limitations on the number of
+layers that can be implemented - as few or many as necessary can be used.
 
 ```
                         +-------------------------------+
@@ -59,13 +60,10 @@ implemented - as few or many as necessary can be used.
 |               |    Customer Facing Service (CFS) - Layer 0    |               |
 |               +-----------------------------------------------+               |
 |               +-----------------------------------------------+               |
-|               |            Intermediate - Layer 1             |               |
+|               |    Resource Facing Service (RFS) - Layer 1    |               |
 |               +-----------------------------------------------+               |
 |               +-----------------------------------------------+               |
-|               |    Resource Facing Service (RFS) - Layer 2    |               |
-|               +-----------------------------------------------+               |
-|               +-----------------------------------------------+               |
-|               |                Device - Layer 3               |               |
+|               |                Device - Layer 2               |               |
 |               +-----------------------------------------------+               |
 |                       +-------------------------------+                       |
 +-----------------------|  NETCONF Southbound Interface |-----------------------+

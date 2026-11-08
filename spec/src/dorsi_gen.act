@@ -214,6 +214,17 @@ actor main(env):
     "/srl_nokia-netinst:network-instance/protocols/bgp/afi-safi/admin-state",
     "/srl_nokia-netinst:network-instance/protocols/bgp/group/group-name",
     "/srl_nokia-netinst:network-instance/protocols/bgp/group/peer-as",
+    "/srl_nokia-netinst:network-instance/protocols/bgp/group/export-policy",
+    "/srl_nokia-netinst:network-instance/protocols/bgp/group/import-policy",
+    "/srl_nokia-netinst:network-instance/protocols/bgp/afi-safi/multipath/ebgp/maximum-paths",
+    "/srl_nokia-netinst:network-instance/protocols/bgp/afi-safi/multipath/allow-multiple-as",
+    "/srl_rpol:routing-policy/prefix-set/name",
+    "/srl_rpol:routing-policy/prefix-set/prefix/ip-prefix",
+    "/srl_rpol:routing-policy/prefix-set/prefix/mask-length-range",
+    "/srl_rpol:routing-policy/policy/name",
+    "/srl_rpol:routing-policy/policy/statement/name",
+    "/srl_rpol:routing-policy/policy/statement/match/prefix/prefix-set",
+    "/srl_rpol:routing-policy/policy/statement/action/policy-result",
     "/srl_nokia-netinst:network-instance/protocols/bgp/neighbor/peer-address",
     "/srl_nokia-netinst:network-instance/protocols/bgp/neighbor/admin-state",
     "/srl_nokia-netinst:network-instance/protocols/bgp/neighbor/description",
@@ -262,14 +273,11 @@ actor main(env):
             tmf_yang.swtmf.replace("TMF640_STORE_TRANSFORM", "dorsi.tmf.Tmf640Store"),
             tmf_yang.swtmf640
         ])
-        inter_layer = stratoweave.build.Layer.from_dir(fc, "yang/inter")
-        inter_layer.models.extend([swyang.stratoweave, swyang.ietf_inet_types])
         rfs_layer = stratoweave.build.Layer.from_dir(fc, "yang/rfs")
         rfs_layer.models.extend([swyang.stratoweave, swyang.rfs, swyang.ssh, swyang.ietf_inet_types, swyang.ietf_yang_types])
 
         spec = stratoweave.build.SysSpec("dorsi", [
             cfs_layer,
-            inter_layer,
             rfs_layer,
         ], [
             stratoweave.build.DeviceType.from_dir(fc, "CiscoIosXr_25_3_1", "yang/CiscoIosXr_25_3_1",

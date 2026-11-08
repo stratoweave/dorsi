@@ -25,4 +25,4 @@ actor _test_sd_to_cfs_quicklab(t: testing.EnvT):
     swts.ServiceDiscoveryTester(t, sysspec.SYSSPEC, "test/sd-quicklab", _discover_cfs)
 
 actor _test_sd_to_rfs_quicklab(t: testing.EnvT):
-    swts.ServiceDiscoveryTester(t, sysspec.SYSSPEC, "test/sd-quicklab", _discover_rfs, layer_depth=2)
+    swts.ServiceDiscoveryTester(t, sysspec.SYSSPEC, "test/sd-quicklab", _discover_rfs, layer_depth=1)

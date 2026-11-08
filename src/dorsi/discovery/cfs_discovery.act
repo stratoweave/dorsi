@@ -2,7 +2,7 @@ import yang.gdata as gdata
 
 import dorsi.layers.y_0_loose as cfs_layer
 from dorsi.layers.y_0_loose import netinfra__netinfra
-from dorsi.layers.y_2_loose import stratoweave_rfs__rfs__backbone_interface
+from dorsi.layers.y_1_loose import stratoweave_rfs__rfs__backbone_interface
 import dorsi.discovery.rfs_discovery as rfsd
 
 
@@ -118,6 +118,7 @@ def discover(devices: dict[str, gdata.Node], authentication_key_hints: list[str]
     rfs_root = rfsd.discover_rfs_root(devices, authentication_key_hints)
     bb_interfaces_by_device: dict[str, stratoweave_rfs__rfs__backbone_interface] = {}
     ibgp_authentication_key: ?str = None
+    mesh_members: dict[u64, list[str]] = {}
 
     for rfs_entry in rfs_root.rfs:
         name = rfs_entry.name
@@ -142,9 +143,17 @@ def discover(devices: dict[str, gdata.Node], authentication_key_hints: list[str]
             mock=True,
         )
 
+        asn = base_config.asn!
+        if asn not in mesh_members:
+            mesh_members[asn] = []
+        mesh_members[asn].append(name)
+
         bb_interfaces_by_device[name] = rfs_entry.backbone_interface
 
     _aggregate_backbone_links(bb_interfaces_by_device, cfs_root.netinfra)
+    for asn, members in mesh_members.items():
+        mesh = cfs_root.netinfra.ibgp_fullmesh.create(asn)
+        mesh.router = members
     if ibgp_authentication_key is None:
         raise ValueError("No iBGP authentication key discovered from recognized devices")
     cfs_root.netinfra.global_settings = cfs_layer.netinfra__netinfra__global_settings(

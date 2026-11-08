@@ -28,7 +28,9 @@ export interface ServiceModule<TDraft = unknown> {
   keyParam: string;
   keyLabel?: string;
   createDraft(): TDraft;
-  parse(input: unknown): TDraft;
+  /** `key` is the path key of the entry being loaded, for modules whose entry
+   * does not carry all of its key (a list below another keyed list). */
+  parse(input: unknown, key?: string | string[]): TDraft;
   cloneDraft?(draft: TDraft): TDraft;
   list?(input: unknown): ServiceListItem[];
   validate(draft: TDraft): ValidationResult;

@@ -64,6 +64,17 @@
                 "right-router": "LJU-CORE-1",
                 "right-interface": "eth2"
             }
+        ],
+        "ibgp-fullmesh": [
+            {
+                "asn": 65001,
+                "router": [
+                    "AMS-CORE-1",
+                    "FRA-CORE-1",
+                    "STO-CORE-1",
+                    "LJU-CORE-1"
+                ]
+            }
         ]
     }
 }

@@ -6,7 +6,7 @@ import stratoweave.ttt
 import stratoweave.adapters.adapter
 
 import dorsi.rfs as rfs
-from dorsi.layers.y_2 import stratoweave_rfs__rfs__backbone_interface__remote
+from dorsi.layers.y_1 import stratoweave_rfs__rfs__backbone_interface__remote
 
 proc def _test_rfs_bbinterface1(t: testing.SyncT):
     modeled_input = rfs.BBInterface.input_type()(

@@ -37,6 +37,12 @@ netinfra1_in = """<data>
             <right-router>FRA-CORE-1</right-router>
             <right-interface>GigabitEthernet0/0/0/0</right-interface>
         </backbone-link>
+        <ibgp-fullmesh>
+            <asn>65001</asn>
+            <router>AMS-CORE-1</router>
+            <router>FRA-CORE-1</router>
+            <router>STO-CORE-1</router>
+        </ibgp-fullmesh>
         <global-settings>
             <ibgp-authentication-key>ibgp-authentication-key</ibgp-authentication-key>
         </global-settings>

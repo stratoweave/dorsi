@@ -100,6 +100,89 @@ module dorsi-rfs {
 
         }
 
+        list fabric-base-config {
+            description
+                "Base configuration of an IP fabric switch: loopback, BGP
+                 autonomous system and the policy that advertises the loopback.
+                 A switch has a single entry. It is a list keyed by the AS
+                 number and not a container, because a container with a
+                 transform and no data would send an empty configuration to
+                 the device before its modules are known.";
+            key asn;
+            sw:rfs-transform dorsi.rfs.FabricBaseConfig;
+            leaf asn {
+                type inet:as-number;
+            }
+            leaf role {
+                type string;
+            }
+            leaf ipv4-address {
+                description "Loopback address, used as router-id.";
+                type string;
+                mandatory true;
+            }
+        }
+        list fabric-interface {
+            description
+                "Routed point-to-point fabric link with its eBGP session.";
+            key name;
+            sw:rfs-transform dorsi.rfs.FabricInterface;
+            leaf name {
+                type string;
+            }
+            leaf ipv4-address {
+                type string;
+                mandatory true;
+            }
+            leaf ipv4-prefix-length {
+                type uint8 {
+                    range "0..32";
+                }
+                default "31";
+            }
+            container remote {
+                leaf device {
+                    type string;
+                    mandatory true;
+                }
+                leaf interface {
+                    type string;
+                    mandatory true;
+                }
+            }
+            container bgp {
+                leaf peer-address {
+                    type string;
+                    mandatory true;
+                }
+                leaf peer-asn {
+                    type inet:as-number;
+                    mandatory true;
+                }
+            }
+        }
+        list server-port {
+            description
+                "Leaf port facing a server.";
+            key name;
+            sw:rfs-transform dorsi.rfs.ServerPort;
+            leaf name {
+                type string;
+            }
+            leaf server {
+                type string;
+                mandatory true;
+            }
+            leaf server-port {
+                type string;
+                mandatory true;
+            }
+            leaf profile {
+                description "Connectivity profile of the server.";
+                type string;
+                mandatory true;
+            }
+        }
         list ibgp-neighbor {
           key address;
           sw:rfs-transform dorsi.rfs.IbgpNeighbor;
