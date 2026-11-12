@@ -1,4 +1,4 @@
-import type { NetinfraBackboneLinkApi } from '$lib/core/topology/model';
+import type { NetinfraBackboneLinkApi } from '$lib/demo/netinfra-types';
 
 import {
   deviceConfigAdata,

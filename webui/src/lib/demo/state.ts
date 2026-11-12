@@ -1,4 +1,4 @@
-import type { NetinfraBackboneLinkApi, NetinfraRouterApi } from '$lib/core/topology/model';
+import type { NetinfraBackboneLinkApi, NetinfraRouterApi } from '$lib/demo/netinfra-types';
 
 import { makeDeviceStaticInfo, type DemoDeviceStaticInfo } from '$lib/demo/fixtures/devices';
 import {

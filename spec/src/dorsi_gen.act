@@ -226,6 +226,7 @@ actor main(env):
     "/srl_rpol:routing-policy/policy/statement/match/prefix/prefix-set",
     "/srl_rpol:routing-policy/policy/statement/action/policy-result",
     "/srl_nokia-netinst:network-instance/protocols/bgp/neighbor/peer-address",
+    "/srl_nokia-netinst:network-instance/protocols/bgp/neighbor/session-state",
     "/srl_nokia-netinst:network-instance/protocols/bgp/neighbor/admin-state",
     "/srl_nokia-netinst:network-instance/protocols/bgp/neighbor/description",
     "/srl_nokia-netinst:network-instance/protocols/bgp/neighbor/peer-as",

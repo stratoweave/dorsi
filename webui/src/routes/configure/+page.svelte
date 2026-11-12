@@ -180,8 +180,8 @@
       ondragleave={handleDragLeave}
       ondrop={handleDrop}
       placeholder={format === 'xml'
-        ? '<netinfra xmlns="http://example.com/netinfra">\n  ...\n</netinfra>'
-        : '{\n  "netinfra:netinfra": {\n    ...\n  }\n}'}
+        ? '<ip-fabric xmlns="http://example.com/ip-fabric">\n  ...\n</ip-fabric>'
+        : '{\n  "ip-fabric:ip-fabric": {\n    ...\n  }\n}'}
       spellcheck="false"
       autocapitalize="off"
       autocomplete="off"

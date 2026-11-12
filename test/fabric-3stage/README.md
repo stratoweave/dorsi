@@ -32,9 +32,8 @@ switches and the links between them.
 The topology and data match the `fabric_three_stage` and `fabric_five_stage`
 transform tests (`src/dorsi/test_fabric.act`), which check the generated SR Linux
 configuration. The lab has been deployed: all eBGP sessions come up, ECMP and
-loopback reachability work. `make start` and `make stop` are the only parts of the
-shared `quicklab.mk` that apply to it, its configuration targets send
-`netinfra.xml`, which this lab does not have.
+loopback reachability work. The configuration targets of the shared `quicklab.mk`
+(`copy`, `run-and-configure`) send `ip-fabric.xml`, set by `CONFIG`.
 
 ## Running it
 

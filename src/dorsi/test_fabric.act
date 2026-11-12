@@ -26,8 +26,7 @@ def add_server(fabric: cfs_layer.ip_fabric__ip_fabric__fabric_entry, name: str, 
     fabric.server.create(name, conn)
 
 def _empty_root():
-    gs = cfs_layer.netinfra__netinfra__global_settings('ibgp-authentication-key')
-    return cfs_layer.root(cfs_layer.netinfra__netinfra(gs))
+    return cfs_layer.root()
 
 # Servers: two dual-homed to a pair of leaves, one single-homed. The same in
 # both topologies, which both have leaf1 to leaf3.
@@ -79,10 +78,8 @@ def five_stage():
     add_servers(f)
     return root
 
-# TransformTester takes its snapshot as soon as the CFS commit completes. A
-# switch has no netinfra base-config, whose empty RFS container reports an empty
-# configuration for the device before its modules are known, and that completes
-# the commit before the device configuration exists. Wait for it to settle.
+# TransformTester takes its snapshot as soon as the CFS commit completes, which
+# can be before the device configuration exists. Wait for it to settle.
 actor FabricTester(t: testing.AsyncT, input_config: gdata.Node):
     tr = swts.TestRig.build(sysspec.SYSSPEC, t.log_handler)
 

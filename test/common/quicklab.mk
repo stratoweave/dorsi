@@ -134,10 +134,13 @@ stop:
 WAIT?=60
 wait: $(addprefix platform-wait-,$(ROUTERS_XR) $(ROUTERS_CRPD))
 
+# The configuration file sent to dorsi, one per lab directory
+CONFIG ?= ip-fabric.xml
+
 .PHONY: copy
 copy:
 	docker cp ../../out/bin/dorsi $(TESTENV)-sweave:/dorsi
-	docker cp netinfra.xml $(TESTENV)-sweave:/netinfra.xml
+	docker cp $(CONFIG) $(TESTENV)-sweave:/$(CONFIG)
 
 .PHONY: run
 run:
@@ -151,17 +154,11 @@ endif
 
 .PHONY: run-and-configure
 run-and-configure:
-	docker exec $(INTERACTIVE) $(TESTENV)-sweave /dorsi $(EXIT_ON_DONE) netinfra.xml --rts-bt-dbg
+	docker exec $(INTERACTIVE) $(TESTENV)-sweave /dorsi $(EXIT_ON_DONE) $(CONFIG) --rts-bt-dbg
 
 .PHONY: configure
 configure:
-	$(MAKE) send-config-wait FILE="netinfra.xml"
-
-.PHONY: configure-tmf640
-configure-tmf640:
-	settings=$$(jq -c '{"netinfra:global-settings": .["netinfra:netinfra"]["global-settings"]}' netinfra.json); \
-	curl -f -k -sS -X PUT -H "Content-Type: application/yang-data+json" -d "$$settings" $(STRATOWEAVE_API_ORIGIN)/restconf/data/netinfra:netinfra/global-settings
-	$(MAKE) send-config-tmf640-stream FILE="netinfra.json" FILTER="../common/netinfra-to-tmf640.jq"
+	$(MAKE) send-config-wait FILE="$(CONFIG)"
 
 
 .PHONY: tutorial
@@ -300,10 +297,6 @@ $(addprefix get-diff-adata-,$(ROUTERS_XR) $(ROUTERS_CRPD)):
 $(addprefix resync-,$(ROUTERS_XR) $(ROUTERS_CRPD)):
 	@curl $(STRATOWEAVE_API_ORIGIN)/device/$(call upper,$(subst resync-,,$@))/resync
 
-.PHONY: delete-config
-delete-config:
-	curl -f -X DELETE $(STRATOWEAVE_API_ORIGIN)/restconf/data/netinfra:netinfra/router=STO-CORE-1
-
 .PHONY: $(addprefix cli-,$(ROUTERS_XR) $(ROUTERS_CRPD))
 $(addprefix cli-,$(ROUTERS_XR) $(ROUTERS_CRPD)): cli-%: platform-cli-%
 
@@ -311,15 +304,10 @@ $(addprefix cli-,$(ROUTERS_XR) $(ROUTERS_CRPD)): cli-%: platform-cli-%
 $(addprefix get-dev-config-,$(ROUTERS_XR) $(ROUTERS_CRPD)):
 	docker run $(INTERACTIVE) --rm --network container:$(TESTENV)-sweave ghcr.io/stratoweave/ncurl --host $(@:get-dev-config-%=%) --port 830 --username clab --password clab@123 get-config
 
-.PHONY: test-restconf-get
-test-restconf-get:
-	curl -sS -f -H "Accept: application/yang-data+json" $(STRATOWEAVE_API_ORIGIN)/restconf/data/netinfra:netinfra/router=AMS-CORE-1 | jq '.["netinfra:router"][0].name' | grep -q "AMS-CORE-1"
-
 .PHONY: test
 test:
 	$(MAKE) test-ping
 	$(MAKE) test-get-config
-	$(MAKE) test-restconf-get
 
 .PHONY: test-ping
 test-ping::

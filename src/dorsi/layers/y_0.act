@@ -193,58 +193,9 @@ SRC_DNODE_CHILD_1: DContainer = DContainer(module='stratoweave-tmf', namespace='
 
 SRC_DNODE_CHILD_0: DContainer = DContainer(module='stratoweave-tmf', namespace='http://stratoweave.org/yang/stratoweave-tmf', prefix='sw-tmf', name='tmf-store', config=True, description='TMF Data Store', presence=False, children=[SRC_DNODE_CHILD_1])
 
-SRC_DNODE_CHILD_39: DList = DList(module='netinfra', namespace='http://example.com/netinfra', prefix='netinfra', name='router', key=['name'], config=True, description='Network Infrastructure Router', min_elements=0, ordered_by='system', exts=[
-        DExt(module='stratoweave', namespace='http://stratoweave.org/yang/stratoweave', prefix='sw', name='transform', arg='dorsi.cfs.Router', exts=[]),
-        DExt(module='ietf-yang-tmf-map', namespace='urn:ietf:params:xml:ns:yang:ietf-yang-tmf-map', prefix='tmf', name='cfs-service', arg='Router', exts=[])
-    ], children=[
-    DLeaf(module='netinfra', namespace='http://example.com/netinfra', prefix='netinfra', name='name', config=True, is_key=True, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
-    DLeaf(module='netinfra', namespace='http://example.com/netinfra', prefix='netinfra', name='id', config=True, description='router id', is_key=False, mandatory=True, type=DTypeIntegerUnsigned(name='uint32', description=None, reference=None, units=None, exts=[], builtin_type='uint32', default=None, ranges=Ranges([(0, 4294967295)]))),
-    DLeaf(module='netinfra', namespace='http://example.com/netinfra', prefix='netinfra', name='type', config=True, is_key=False, mandatory=True, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
-    DLeaf(module='netinfra', namespace='http://example.com/netinfra', prefix='netinfra', name='role', config=True, is_key=False, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
-    DLeaf(module='netinfra', namespace='http://example.com/netinfra', prefix='netinfra', name='asn', config=True, is_key=False, mandatory=True, type=DTypeIntegerUnsigned(name='inet:as-number', description='The as-number type represents autonomous system numbers\nwhich identify an Autonomous System (AS).  An AS is a set\nof routers under a single technical administration, using\nan interior gateway protocol and common metrics to route\npackets within the AS, and using an exterior gateway\nprotocol to route packets to other ASes.  IANA maintains\nthe AS number space and has delegated large parts to the\nregional registries.\n\nAutonomous system numbers were originally limited to 16\nbits.  BGP extensions have enlarged the autonomous system\nnumber space to 32 bits.  This type therefore uses an uint32\nbase type without a range restriction in order to support\na larger autonomous system number space.\n\nIn the value set and its semantics, this type is equivalent\nto the InetAutonomousSystemNumber textual convention of\nthe SMIv2.', reference='RFC 1930: Guidelines for creation, selection, and registration\n          of an Autonomous System (AS)\nRFC 4271: A Border Gateway Protocol 4 (BGP-4)\nRFC 4001: Textual Conventions for Internet Network Addresses\nRFC 6793: BGP Support for Four-Octet Autonomous System (AS)\n          Number Space', units=None, exts=[], builtin_type='uint32', default=None, ranges=Ranges([(0, 4294967295)]))),
-    DLeaf(module='netinfra', namespace='http://example.com/netinfra', prefix='netinfra', name='mock', config=True, default='false', is_key=False, mandatory=False, type=DTypeBoolean(name='boolean', description=None, reference=None, units=None, exts=[], builtin_type='boolean', default=None)),
-    DLeaf(module='netinfra', namespace='http://example.com/netinfra', prefix='netinfra', name='approval-required', config=True, default='false', is_key=False, mandatory=False, type=DTypeBoolean(name='boolean', description=None, reference=None, units=None, exts=[], builtin_type='boolean', default=None)),
-    DContainer(module='netinfra', namespace='http://example.com/netinfra', prefix='netinfra', name='feature-flags', config=True, presence=False, children=[
-        DLeaf(module='netinfra', namespace='http://example.com/netinfra', prefix='netinfra', name='runtime-schema-fetch', config=True, default='false', is_key=False, mandatory=False, type=DTypeBoolean(name='boolean', description=None, reference=None, units=None, exts=[], builtin_type='boolean', default=None))
-    ])
-])
+SRC_DNODE_CHILD_40: DLeaf = DLeaf(module='ip-fabric', namespace='http://example.com/ip-fabric', prefix='ipf', name='name', config=True, is_key=True, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[]))
 
-SRC_DNODE_CHILD_40: DList = DList(module='netinfra', namespace='http://example.com/netinfra', prefix='netinfra', name='backbone-link', key=[
-'left-router',
-'left-interface',
-'right-router',
-'right-interface'
-    ], config=True, min_elements=0, ordered_by='system', exts=[
-        DExt(module='stratoweave', namespace='http://stratoweave.org/yang/stratoweave', prefix='sw', name='transform', arg='dorsi.cfs.BBLink', exts=[]),
-        DExt(module='ietf-yang-tmf-map', namespace='urn:ietf:params:xml:ns:yang:ietf-yang-tmf-map', prefix='tmf', name='cfs-service', arg='Backbone Link', exts=[])
-    ], children=[
-    DLeaf(module='netinfra', namespace='http://example.com/netinfra', prefix='netinfra', name='left-router', config=True, is_key=True, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
-    DLeaf(module='netinfra', namespace='http://example.com/netinfra', prefix='netinfra', name='left-interface', config=True, is_key=True, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
-    DLeaf(module='netinfra', namespace='http://example.com/netinfra', prefix='netinfra', name='right-router', config=True, is_key=True, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
-    DLeaf(module='netinfra', namespace='http://example.com/netinfra', prefix='netinfra', name='right-interface', config=True, is_key=True, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[]))
-])
-
-SRC_DNODE_CHILD_41: DList = DList(module='netinfra', namespace='http://example.com/netinfra', prefix='netinfra', name='ibgp-fullmesh', key=['asn'], config=True, description='iBGP full-mesh between the listed routers. Every member peers with\nevery other member, using the loopback addresses allocated by the\nrouter transform.', min_elements=0, ordered_by='system', exts=[
-        DExt(module='stratoweave', namespace='http://stratoweave.org/yang/stratoweave', prefix='sw', name='transform', arg='dorsi.cfs.IbgpFullmesh', exts=[]),
-        DExt(module='stratoweave', namespace='http://stratoweave.org/yang/stratoweave', prefix='sw', name='link', arg='global', exts=[DExt(module='stratoweave', namespace='http://stratoweave.org/yang/stratoweave', prefix='sw', name='path', arg='/netinfra:netinfra/netinfra:global-settings', exts=[])])
-    ], children=[
-    DLeaf(module='netinfra', namespace='http://example.com/netinfra', prefix='netinfra', name='asn', config=True, is_key=True, mandatory=False, type=DTypeIntegerUnsigned(name='inet:as-number', description='The as-number type represents autonomous system numbers\nwhich identify an Autonomous System (AS).  An AS is a set\nof routers under a single technical administration, using\nan interior gateway protocol and common metrics to route\npackets within the AS, and using an exterior gateway\nprotocol to route packets to other ASes.  IANA maintains\nthe AS number space and has delegated large parts to the\nregional registries.\n\nAutonomous system numbers were originally limited to 16\nbits.  BGP extensions have enlarged the autonomous system\nnumber space to 32 bits.  This type therefore uses an uint32\nbase type without a range restriction in order to support\na larger autonomous system number space.\n\nIn the value set and its semantics, this type is equivalent\nto the InetAutonomousSystemNumber textual convention of\nthe SMIv2.', reference='RFC 1930: Guidelines for creation, selection, and registration\n          of an Autonomous System (AS)\nRFC 4271: A Border Gateway Protocol 4 (BGP-4)\nRFC 4001: Textual Conventions for Internet Network Addresses\nRFC 6793: BGP Support for Four-Octet Autonomous System (AS)\n          Number Space', units=None, exts=[], builtin_type='uint32', default=None, ranges=Ranges([(0, 4294967295)]))),
-    DLeafList(module='netinfra', namespace='http://example.com/netinfra', prefix='netinfra', name='router', config=True, description='Routers in the full-mesh.', min_elements=0, ordered_by='system', type=DTypeLeafref(name='leafref', description=None, reference=None, units=None, exts=[], builtin_type='leafref', default=None, path=yxpath.AbsoluteLocationPath([yxpath.NodeTestStep('netinfra', 'netinfra', []), yxpath.NodeTestStep('netinfra', 'router', []), yxpath.NodeTestStep('netinfra', 'name', [])]), require_instance=False, target_type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])), exts=[
-            DExt(module='stratoweave', namespace='http://stratoweave.org/yang/stratoweave', prefix='sw', name='link', arg='member', exts=[])
-        ])
-])
-
-SRC_DNODE_CHILD_42: DContainer = DContainer(module='netinfra', namespace='http://example.com/netinfra', prefix='netinfra', name='global-settings', config=True, description='Network-wide settings shared across all routers.', presence=False, exts=[
-        DExt(module='stratoweave', namespace='http://stratoweave.org/yang/stratoweave', prefix='sw', name='transform', arg='dorsi.cfs.GlobalSettings', exts=[])
-    ], children=[
-    DLeaf(module='netinfra', namespace='http://example.com/netinfra', prefix='netinfra', name='ibgp-authentication-key', config=True, description="Shared iBGP authentication key applied to every router's\niBGP full-mesh neighbors.", is_key=False, mandatory=True, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[]))
-])
-
-SRC_DNODE_CHILD_38: DContainer = DContainer(module='netinfra', namespace='http://example.com/netinfra', prefix='netinfra', name='netinfra', config=True, description='Network infrastructure', presence=False, children=[SRC_DNODE_CHILD_39, SRC_DNODE_CHILD_40, SRC_DNODE_CHILD_41, SRC_DNODE_CHILD_42])
-
-SRC_DNODE_CHILD_45: DLeaf = DLeaf(module='ip-fabric', namespace='http://example.com/ip-fabric', prefix='ipf', name='name', config=True, is_key=True, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[]))
-
-SRC_DNODE_CHILD_46: DList = DList(module='ip-fabric', namespace='http://example.com/ip-fabric', prefix='ipf', name='switch', key=['name'], config=True, description='Fabric switch.', min_elements=2, ordered_by='system', children=[
+SRC_DNODE_CHILD_41: DList = DList(module='ip-fabric', namespace='http://example.com/ip-fabric', prefix='ipf', name='switch', key=['name'], config=True, description='Fabric switch.', min_elements=2, ordered_by='system', children=[
     DLeaf(module='ip-fabric', namespace='http://example.com/ip-fabric', prefix='ipf', name='name', config=True, description='Switch name.', is_key=True, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
     DLeaf(module='ip-fabric', namespace='http://example.com/ip-fabric', prefix='ipf', name='id', config=True, description='Numeric switch identifier, unique in the fabric. Loopback and\npoint-to-point addresses and BGP AS numbers are derived from it.', is_key=False, mandatory=True, type=DTypeIntegerUnsigned(name='uint16', description=None, reference=None, units=None, exts=[], builtin_type='uint16', default=None, ranges=Ranges([(0, 65535)]))),
     DLeaf(module='ip-fabric', namespace='http://example.com/ip-fabric', prefix='ipf', name='type', config=True, description='Device type.', is_key=False, mandatory=True, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
@@ -254,7 +205,7 @@ SRC_DNODE_CHILD_46: DList = DList(module='ip-fabric', namespace='http://example.
     DLeaf(module='ip-fabric', namespace='http://example.com/ip-fabric', prefix='ipf', name='plane', config=True, description='Five-stage spine or superspine plane. Every pod must have\na spine in each plane; every plane must have a superspine.', default='plane-1', is_key=False, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[]), when="../../switch[role='super-spine'] and ../role!='leaf'")
 ])
 
-SRC_DNODE_CHILD_47: DList = DList(module='ip-fabric', namespace='http://example.com/ip-fabric', prefix='ipf', name='fabric-link', key=[
+SRC_DNODE_CHILD_42: DList = DList(module='ip-fabric', namespace='http://example.com/ip-fabric', prefix='ipf', name='fabric-link', key=[
 'lower-switch',
 'lower-port',
 'upper-switch',
@@ -268,7 +219,7 @@ DMust(condition="(../switch[name=current()/lower-switch]/role='leaf' and\n   ../
     DLeaf(module='ip-fabric', namespace='http://example.com/ip-fabric', prefix='ipf', name='upper-port', config=True, is_key=True, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[]))
 ])
 
-SRC_DNODE_CHILD_48: DList = DList(module='ip-fabric', namespace='http://example.com/ip-fabric', prefix='ipf', name='server', key=['name'], config=True, description='Connectivity requirements for a server.', min_elements=0, ordered_by='system', children=[
+SRC_DNODE_CHILD_43: DList = DList(module='ip-fabric', namespace='http://example.com/ip-fabric', prefix='ipf', name='server', key=['name'], config=True, description='Connectivity requirements for a server.', min_elements=0, ordered_by='system', children=[
     DLeaf(module='ip-fabric', namespace='http://example.com/ip-fabric', prefix='ipf', name='name', config=True, description='Server name.', is_key=True, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
     DContainer(module='ip-fabric', namespace='http://example.com/ip-fabric', prefix='ipf', name='connectivity', config=True, description='Server connectivity profile.', must=[
 DMust(condition="(profile='single-homed' and\n   not(link[switch!=current()/link[1]/switch])) or\n(profile='dual-homed' and\n   link[switch!=current()/link[1]/switch] and\n   not(link[switch!=current()/link[1]/switch and\n     switch!=current()/link[switch!=current()/link[1]/switch][1]/switch]))", description=None, error_app_tag=None, error_message='The profile requires links to exactly one or two distinct leaves.', reference=None)
@@ -287,17 +238,17 @@ DMust(condition="../../../switch[name=current()/switch]/role='leaf'", descriptio
     ])
 ])
 
-SRC_DNODE_CHILD_44: DList = DList(module='ip-fabric', namespace='http://example.com/ip-fabric', prefix='ipf', name='fabric', key=['name'], config=True, description='A complete physical fabric.', min_elements=0, ordered_by='system', exts=[
+SRC_DNODE_CHILD_39: DList = DList(module='ip-fabric', namespace='http://example.com/ip-fabric', prefix='ipf', name='fabric', key=['name'], config=True, description='A complete physical fabric.', min_elements=0, ordered_by='system', exts=[
         DExt(module='stratoweave', namespace='http://stratoweave.org/yang/stratoweave', prefix='sw', name='transform', arg='dorsi.cfs.Fabric', exts=[])
-    ], children=[SRC_DNODE_CHILD_45, SRC_DNODE_CHILD_46, SRC_DNODE_CHILD_47, SRC_DNODE_CHILD_48])
+    ], children=[SRC_DNODE_CHILD_40, SRC_DNODE_CHILD_41, SRC_DNODE_CHILD_42, SRC_DNODE_CHILD_43])
 
-SRC_DNODE_CHILD_43: DContainer = DContainer(module='ip-fabric', namespace='http://example.com/ip-fabric', prefix='ipf', name='ip-fabric', config=True, description='IP fabric underlay service model.', presence=False, children=[SRC_DNODE_CHILD_44])
+SRC_DNODE_CHILD_38: DContainer = DContainer(module='ip-fabric', namespace='http://example.com/ip-fabric', prefix='ipf', name='ip-fabric', config=True, description='IP fabric underlay service model.', presence=False, children=[SRC_DNODE_CHILD_39])
 
 SRC_DNODE: DRoot = DRoot(
-    children=[SRC_DNODE_CHILD_0, SRC_DNODE_CHILD_38, SRC_DNODE_CHILD_43],
+    children=[SRC_DNODE_CHILD_0, SRC_DNODE_CHILD_38],
     identities=[],
     rpcs=[],
-    module_metadata={'urn:ietf:params:xml:ns:yang:ietf-yang-types':('ietf-yang-types', '2013-07-15', [], False), 'urn:ietf:params:xml:ns:yang:ietf-inet-types':('ietf-inet-types', '2013-07-15', [], False), 'http://stratoweave.org/yang/stratoweave-tmf640':('stratoweave-tmf640', '2025-10-26', [], False), 'http://stratoweave.org/yang/stratoweave':('stratoweave', '2026-04-01', [], False), 'http://stratoweave.org/yang/stratoweave-tmf':('stratoweave-tmf', '2025-10-26', [], True), 'urn:ietf:params:xml:ns:yang:ietf-yang-tmf-map':('ietf-yang-tmf-map', '2026-02-23', [], False), 'http://example.com/netinfra':('netinfra', '2019-01-01', [], True), 'http://example.com/ip-fabric':('ip-fabric', '2026-11-06', [], True)},
+    module_metadata={'urn:ietf:params:xml:ns:yang:ietf-yang-types':('ietf-yang-types', '2013-07-15', [], False), 'urn:ietf:params:xml:ns:yang:ietf-inet-types':('ietf-inet-types', '2013-07-15', [], False), 'http://stratoweave.org/yang/stratoweave-tmf640':('stratoweave-tmf640', '2025-10-26', [], False), 'http://stratoweave.org/yang/stratoweave':('stratoweave', '2026-04-01', [], False), 'http://stratoweave.org/yang/stratoweave-tmf':('stratoweave-tmf', '2025-10-26', [], True), 'urn:ietf:params:xml:ns:yang:ietf-yang-tmf-map':('ietf-yang-tmf-map', '2026-02-23', [], False), 'http://example.com/ip-fabric':('ip-fabric', '2026-11-06', [], True)},
 )
 
 SRC_YANG_0: str = r"""module ietf-yang-types {
@@ -887,6 +838,29 @@ SRC_YANG_1: str = r"""module ip-fabric {
         leaf upper-port {
           type string;
         }
+        container state {
+          config false;
+          description
+            "State of the link, lifted from the RFS fabric-interface entries
+             of its two ends. A status is up only when both ends are up, down
+             if either end is down and unknown when either is unavailable.";
+          leaf link-status {
+            type enumeration {
+              enum up;
+              enum down;
+              enum unknown;
+            }
+            description "Oper-state of the interfaces on the link.";
+          }
+          leaf bgp-status {
+            type enumeration {
+              enum up;
+              enum down;
+              enum unknown;
+            }
+            description "State of the eBGP session on the link.";
+          }
+        }
       }
 
       list server {
@@ -951,145 +925,7 @@ SRC_YANG_1: str = r"""module ip-fabric {
 }
 """
 
-SRC_YANG_2: str = r"""module netinfra {
-  yang-version "1.1";
-  namespace "http://example.com/netinfra";
-  prefix "netinfra";
-  description "Network Infrastructure";
-  revision 2019-01-01 {
-    description "test revision";
-    reference "ref1";
-  }
-  import ietf-inet-types {
-    prefix inet;
-  }
-  import stratoweave {
-    prefix sw;
-  }
-  import ietf-yang-tmf-map {
-    prefix tmf;
-  }
-
-  container netinfra {
-    description "Network infrastructure";
-    list router {
-      description "Network Infrastructure Router";
-      key name;
-
-      sw:transform dorsi.cfs.Router;
-      tmf:cfs-service "Router";
-
-      leaf name {
-        type string;
-      }
-      leaf id {
-        type uint32;
-        description "router id";
-        mandatory true;
-      }
-      leaf type {
-        type string;
-        mandatory true;
-      }
-      leaf role {
-        type string;
-      }
-      leaf asn {
-        type inet:as-number;
-        mandatory true;
-      }
-      leaf mock {
-        type boolean;
-        default false;
-      }
-      leaf approval-required {
-        type boolean;
-        default false;
-      }
-      container feature-flags {
-        leaf runtime-schema-fetch {
-          type boolean;
-          default false;
-        }
-      }
-    }
-
-    list backbone-link {
-      key "left-router left-interface right-router right-interface";
-
-      sw:transform dorsi.cfs.BBLink;
-      tmf:cfs-service "Backbone Link";
-
-      leaf left-router {
-        type string;
-      }
-      leaf left-interface {
-        type string;
-      }
-      leaf right-router {
-        type string;
-      }
-      leaf right-interface {
-        type string;
-      }
-
-      container state {
-        config false;
-        description
-          "Combined oper-state of the link, lifted from the underlying RFS
-           backbone-interface entries: up only when both endpoints are up,
-           down if either is down, unknown when either is unavailable.";
-        leaf link-status {
-          type enumeration {
-            enum up;
-            enum down;
-            enum unknown;
-          }
-        }
-      }
-    }
-
-    list ibgp-fullmesh {
-      description
-        "iBGP full-mesh between the listed routers. Every member peers with
-         every other member, using the loopback addresses allocated by the
-         router transform.";
-      key asn;
-
-      sw:transform dorsi.cfs.IbgpFullmesh;
-      sw:link global {
-        sw:path /netinfra:netinfra/netinfra:global-settings;
-      }
-
-      leaf asn {
-        type inet:as-number;
-      }
-      leaf-list router {
-        sw:link member;
-        type leafref {
-          path "/netinfra:netinfra/netinfra:router/netinfra:name";
-        }
-        description "Routers in the full-mesh.";
-      }
-    }
-
-    container global-settings {
-      sw:transform dorsi.cfs.GlobalSettings;
-      description
-        "Network-wide settings shared across all routers.";
-      leaf ibgp-authentication-key {
-        type string;
-        mandatory true;
-        description
-          "Shared iBGP authentication key applied to every router's
-           iBGP full-mesh neighbors.";
-      }
-    }
-  }
-}
-"""
-
-SRC_YANG_3: str = r"""module stratoweave {
+SRC_YANG_2: str = r"""module stratoweave {
   yang-version "1.1";
   namespace "http://stratoweave.org/yang/stratoweave";
   prefix "sw";
@@ -1157,7 +993,7 @@ SRC_YANG_3: str = r"""module stratoweave {
   }
 }"""
 
-SRC_YANG_4: str = r"""module ietf-inet-types {
+SRC_YANG_3: str = r"""module ietf-inet-types {
 
   namespace "urn:ietf:params:xml:ns:yang:ietf-inet-types";
   prefix "inet";
@@ -1617,7 +1453,7 @@ SRC_YANG_4: str = r"""module ietf-inet-types {
 }
 """
 
-SRC_YANG_5: str = r"""module ietf-yang-tmf-map {
+SRC_YANG_4: str = r"""module ietf-yang-tmf-map {
   yang-version 1.1;
   namespace "urn:ietf:params:xml:ns:yang:ietf-yang-tmf-map";
   prefix tmf;
@@ -1677,7 +1513,7 @@ SRC_YANG_5: str = r"""module ietf-yang-tmf-map {
   }
 }"""
 
-SRC_YANG_6: str = r"""module stratoweave-tmf {
+SRC_YANG_5: str = r"""module stratoweave-tmf {
   yang-version "1.1";
   namespace "http://stratoweave.org/yang/stratoweave-tmf";
   prefix "sw-tmf";
@@ -1706,7 +1542,7 @@ SRC_YANG_6: str = r"""module stratoweave-tmf {
 }
 """
 
-SRC_YANG_7: str = r"""module stratoweave-tmf640 {
+SRC_YANG_6: str = r"""module stratoweave-tmf640 {
   yang-version "1.1";
   namespace "http://stratoweave.org/yang/stratoweave-tmf640";
   prefix "sw-tmf640";
@@ -3154,12 +2990,10 @@ pure def src_yang() -> list[str]:
         SRC_YANG_4,
         SRC_YANG_5,
         SRC_YANG_6,
-        SRC_YANG_7,
     ]
 
 
 NS_ip_fabric: str = 'http://example.com/ip-fabric'
-NS_netinfra: str = 'http://example.com/netinfra'
 NS_stratoweave: str = 'http://stratoweave.org/yang/stratoweave'
 NS_stratoweave_tmf: str = 'http://stratoweave.org/yang/stratoweave-tmf'
 NS_stratoweave_tmf640: str = 'http://stratoweave.org/yang/stratoweave-tmf640'
@@ -4408,253 +4242,6 @@ class stratoweave_tmf__tmf_store(yadata.MNode):
 
 
 _breaker39: None = None
-class netinfra__netinfra__router__feature_flags(yadata.MNode):
-    runtime_schema_fetch: bool
-
-    mut def __init__(self, runtime_schema_fetch: ?bool=None) -> None:
-        self.runtime_schema_fetch = runtime_schema_fetch if runtime_schema_fetch is not None else False
-
-    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
-        return yadata.from_adata(SRC_DNODE, self, loose=False, root_path=['netinfra:netinfra', 'router', 'feature-flags'], prev=prev)
-
-    @staticmethod
-    mut def from_gdata(n: ?ygdata.Node) -> netinfra__netinfra__router__feature_flags:
-        if n is not None:
-            return netinfra__netinfra__router__feature_flags(runtime_schema_fetch=n.get_opt_bool(ygdata.Id(NS_netinfra, 'runtime-schema-fetch')))
-        return netinfra__netinfra__router__feature_flags()
-
-    mut def copy(self) -> netinfra__netinfra__router__feature_flags:
-        """Create a deep copy of this adata object"""
-        return netinfra__netinfra__router__feature_flags.from_gdata(self.to_gdata())
-
-
-_breaker40: None = None
-class netinfra__netinfra__router_entry(yadata.MNode):
-    name: str
-    id: u64
-    type: str
-    role: ?str
-    asn: u64
-    mock: bool
-    approval_required: bool
-    feature_flags: netinfra__netinfra__router__feature_flags
-
-    mut def __init__(self, name: str, id: u64, type: str, asn: u64, role: ?str=None, mock: ?bool=None, approval_required: ?bool=None, feature_flags: ?netinfra__netinfra__router__feature_flags=None) -> None:
-        self.name = name
-        self.id = id
-        self.type = type
-        self.role = role
-        self.asn = asn
-        self.mock = mock if mock is not None else False
-        self.approval_required = approval_required if approval_required is not None else False
-        self.feature_flags = feature_flags if feature_flags is not None else netinfra__netinfra__router__feature_flags()
-
-    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
-        return yadata.from_adata(SRC_DNODE, self, loose=False, root_path=['netinfra:netinfra', 'router'], prev=prev)
-
-    @staticmethod
-    mut def from_gdata(n: ygdata.Node) -> netinfra__netinfra__router_entry:
-        return netinfra__netinfra__router_entry(name=n.get_str(ygdata.Id(NS_netinfra, 'name')), id=n.get_u64(ygdata.Id(NS_netinfra, 'id')), type=n.get_str(ygdata.Id(NS_netinfra, 'type')), role=n.get_opt_str(ygdata.Id(NS_netinfra, 'role')), asn=n.get_u64(ygdata.Id(NS_netinfra, 'asn')), mock=n.get_opt_bool(ygdata.Id(NS_netinfra, 'mock')), approval_required=n.get_opt_bool(ygdata.Id(NS_netinfra, 'approval-required')), feature_flags=netinfra__netinfra__router__feature_flags.from_gdata(n.get_opt_cnt(ygdata.Id(NS_netinfra, 'feature-flags'))))
-
-    mut def copy(self) -> netinfra__netinfra__router_entry:
-        """Create a deep copy of this adata object"""
-        return netinfra__netinfra__router_entry.from_gdata(self.to_gdata())
-
-_breaker41: None = None
-class netinfra__netinfra__router(yadata.MKeyedList[str, netinfra__netinfra__router_entry]):
-    mut def __init__(self, elements: list[netinfra__netinfra__router_entry]=[]) -> None:
-        yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
-
-    mut def create(self, key: str, id: u64, type: str, asn: u64, role: ?str=None, mock: ?bool=None, approval_required: ?bool=None) -> netinfra__netinfra__router_entry:
-        e = self.get(key)
-        if e is not None:
-            e.id = id
-            e.type = type
-            e.asn = asn
-            if role is not None:
-                e.role = role
-            if mock is not None:
-                e.mock = mock
-            if approval_required is not None:
-                e.approval_required = approval_required
-            return e
-        name = key
-        res = netinfra__netinfra__router_entry(name=name, id=id, type=type, asn=asn, role=role, mock=mock, approval_required=approval_required)
-        self._append(res)
-        return res
-
-    @staticmethod
-    mut def from_gdata(n: ?ygdata.List) -> list[netinfra__netinfra__router_entry]:
-        if n is not None:
-            return [netinfra__netinfra__router_entry.from_gdata(e) for e in n.entries()]
-        return []
-
-    mut def copy(self) -> netinfra__netinfra__router:
-        """Create a deep copy of this list object"""
-        # Copy each element in the list
-        copied_elements = []
-        for e in self:
-            ce = e.copy()
-            if ce is not None:
-                copied_elements.append(ce)
-        return netinfra__netinfra__router(elements=copied_elements)
-
-
-_breaker42: None = None
-class netinfra__netinfra__backbone_link_entry(yadata.MNode):
-    left_router: str
-    left_interface: str
-    right_router: str
-    right_interface: str
-
-    mut def __init__(self, left_router: str, left_interface: str, right_router: str, right_interface: str) -> None:
-        self.left_router = left_router
-        self.left_interface = left_interface
-        self.right_router = right_router
-        self.right_interface = right_interface
-
-    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
-        return yadata.from_adata(SRC_DNODE, self, loose=False, root_path=['netinfra:netinfra', 'backbone-link'], prev=prev)
-
-    @staticmethod
-    mut def from_gdata(n: ygdata.Node) -> netinfra__netinfra__backbone_link_entry:
-        return netinfra__netinfra__backbone_link_entry(left_router=n.get_str(ygdata.Id(NS_netinfra, 'left-router')), left_interface=n.get_str(ygdata.Id(NS_netinfra, 'left-interface')), right_router=n.get_str(ygdata.Id(NS_netinfra, 'right-router')), right_interface=n.get_str(ygdata.Id(NS_netinfra, 'right-interface')))
-
-    mut def copy(self) -> netinfra__netinfra__backbone_link_entry:
-        """Create a deep copy of this adata object"""
-        return netinfra__netinfra__backbone_link_entry.from_gdata(self.to_gdata())
-
-_breaker43: None = None
-class netinfra__netinfra__backbone_link(yadata.MKeyedList[(left_router: str, left_interface: str, right_router: str, right_interface: str), netinfra__netinfra__backbone_link_entry]):
-    mut def __init__(self, elements: list[netinfra__netinfra__backbone_link_entry]=[]) -> None:
-        yadata.MKeyedList.__init__(self, lambda e: (left_router=e.left_router, left_interface=e.left_interface, right_router=e.right_router, right_interface=e.right_interface), elements)
-
-    mut def create(self, key: (left_router: str, left_interface: str, right_router: str, right_interface: str)) -> netinfra__netinfra__backbone_link_entry:
-        e = self.get(key)
-        if e is not None:
-            return e
-        (left_router=left_router, left_interface=left_interface, right_router=right_router, right_interface=right_interface) = key
-        res = netinfra__netinfra__backbone_link_entry(left_router=left_router, left_interface=left_interface, right_router=right_router, right_interface=right_interface)
-        self._append(res)
-        return res
-
-    @staticmethod
-    mut def from_gdata(n: ?ygdata.List) -> list[netinfra__netinfra__backbone_link_entry]:
-        if n is not None:
-            return [netinfra__netinfra__backbone_link_entry.from_gdata(e) for e in n.entries()]
-        return []
-
-    mut def copy(self) -> netinfra__netinfra__backbone_link:
-        """Create a deep copy of this list object"""
-        # Copy each element in the list
-        copied_elements = []
-        for e in self:
-            ce = e.copy()
-            if ce is not None:
-                copied_elements.append(ce)
-        return netinfra__netinfra__backbone_link(elements=copied_elements)
-
-
-_breaker44: None = None
-class netinfra__netinfra__ibgp_fullmesh_entry(yadata.MNode):
-    asn: u64
-    router: list[str]
-
-    mut def __init__(self, asn: u64, router: ?list[str]=None) -> None:
-        self.asn = asn
-        self.router = router if router is not None else []
-
-    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
-        return yadata.from_adata(SRC_DNODE, self, loose=False, root_path=['netinfra:netinfra', 'ibgp-fullmesh'], prev=prev)
-
-    @staticmethod
-    mut def from_gdata(n: ygdata.Node) -> netinfra__netinfra__ibgp_fullmesh_entry:
-        return netinfra__netinfra__ibgp_fullmesh_entry(asn=n.get_u64(ygdata.Id(NS_netinfra, 'asn')), router=n.get_opt_strs(ygdata.Id(NS_netinfra, 'router')))
-
-    mut def copy(self) -> netinfra__netinfra__ibgp_fullmesh_entry:
-        """Create a deep copy of this adata object"""
-        return netinfra__netinfra__ibgp_fullmesh_entry.from_gdata(self.to_gdata())
-
-_breaker45: None = None
-class netinfra__netinfra__ibgp_fullmesh(yadata.MKeyedList[u64, netinfra__netinfra__ibgp_fullmesh_entry]):
-    mut def __init__(self, elements: list[netinfra__netinfra__ibgp_fullmesh_entry]=[]) -> None:
-        yadata.MKeyedList.__init__(self, lambda e: e.asn, elements)
-
-    mut def create(self, key: u64) -> netinfra__netinfra__ibgp_fullmesh_entry:
-        e = self.get(key)
-        if e is not None:
-            return e
-        asn = key
-        res = netinfra__netinfra__ibgp_fullmesh_entry(asn=asn)
-        self._append(res)
-        return res
-
-    @staticmethod
-    mut def from_gdata(n: ?ygdata.List) -> list[netinfra__netinfra__ibgp_fullmesh_entry]:
-        if n is not None:
-            return [netinfra__netinfra__ibgp_fullmesh_entry.from_gdata(e) for e in n.entries()]
-        return []
-
-    mut def copy(self) -> netinfra__netinfra__ibgp_fullmesh:
-        """Create a deep copy of this list object"""
-        # Copy each element in the list
-        copied_elements = []
-        for e in self:
-            ce = e.copy()
-            if ce is not None:
-                copied_elements.append(ce)
-        return netinfra__netinfra__ibgp_fullmesh(elements=copied_elements)
-
-
-_breaker46: None = None
-class netinfra__netinfra__global_settings(yadata.MNode):
-    ibgp_authentication_key: str
-
-    mut def __init__(self, ibgp_authentication_key: str) -> None:
-        self.ibgp_authentication_key = ibgp_authentication_key
-
-    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
-        return yadata.from_adata(SRC_DNODE, self, loose=False, root_path=['netinfra:netinfra', 'global-settings'], prev=prev)
-
-    @staticmethod
-    mut def from_gdata(n: ?ygdata.Node) -> netinfra__netinfra__global_settings:
-        if n is not None:
-            return netinfra__netinfra__global_settings(ibgp_authentication_key=n.get_str(ygdata.Id(NS_netinfra, 'ibgp-authentication-key')))
-        raise ValueError('Missing required subtree netinfra__netinfra__global_settings')
-
-    mut def copy(self) -> netinfra__netinfra__global_settings:
-        """Create a deep copy of this adata object"""
-        return netinfra__netinfra__global_settings.from_gdata(self.to_gdata())
-
-
-_breaker47: None = None
-class netinfra__netinfra(yadata.MNode):
-    router: netinfra__netinfra__router
-    backbone_link: netinfra__netinfra__backbone_link
-    ibgp_fullmesh: netinfra__netinfra__ibgp_fullmesh
-    global_settings: netinfra__netinfra__global_settings
-
-    mut def __init__(self, global_settings: netinfra__netinfra__global_settings, router: list[netinfra__netinfra__router_entry]=[], backbone_link: list[netinfra__netinfra__backbone_link_entry]=[], ibgp_fullmesh: list[netinfra__netinfra__ibgp_fullmesh_entry]=[]) -> None:
-        self.router = netinfra__netinfra__router(elements=router)
-        self.backbone_link = netinfra__netinfra__backbone_link(elements=backbone_link)
-        self.ibgp_fullmesh = netinfra__netinfra__ibgp_fullmesh(elements=ibgp_fullmesh)
-        self.global_settings = global_settings
-
-    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
-        return yadata.from_adata(SRC_DNODE, self, loose=False, root_path=['netinfra:netinfra'], prev=prev)
-
-    @staticmethod
-    mut def from_gdata(n: ?ygdata.Node) -> netinfra__netinfra:
-        if n is not None:
-            return netinfra__netinfra(router=netinfra__netinfra__router.from_gdata(n.get_opt_list(ygdata.Id(NS_netinfra, 'router'))), backbone_link=netinfra__netinfra__backbone_link.from_gdata(n.get_opt_list(ygdata.Id(NS_netinfra, 'backbone-link'))), ibgp_fullmesh=netinfra__netinfra__ibgp_fullmesh.from_gdata(n.get_opt_list(ygdata.Id(NS_netinfra, 'ibgp-fullmesh'))), global_settings=netinfra__netinfra__global_settings.from_gdata(n.get_cnt(ygdata.Id(NS_netinfra, 'global-settings'))))
-        raise ValueError('Missing required subtree netinfra__netinfra')
-
-    mut def copy(self) -> netinfra__netinfra:
-        """Create a deep copy of this adata object"""
-        return netinfra__netinfra.from_gdata(self.to_gdata())
-
-
-_breaker48: None = None
 class ip_fabric__ip_fabric__fabric__switch_entry(yadata.MNode):
     name: str
     id: u64
@@ -4684,7 +4271,7 @@ class ip_fabric__ip_fabric__fabric__switch_entry(yadata.MNode):
         """Create a deep copy of this adata object"""
         return ip_fabric__ip_fabric__fabric__switch_entry.from_gdata(self.to_gdata())
 
-_breaker49: None = None
+_breaker40: None = None
 class ip_fabric__ip_fabric__fabric__switch(yadata.MKeyedList[str, ip_fabric__ip_fabric__fabric__switch_entry]):
     mut def __init__(self, elements: list[ip_fabric__ip_fabric__fabric__switch_entry]=[]) -> None:
         yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
@@ -4724,7 +4311,7 @@ class ip_fabric__ip_fabric__fabric__switch(yadata.MKeyedList[str, ip_fabric__ip_
         return ip_fabric__ip_fabric__fabric__switch(elements=copied_elements)
 
 
-_breaker50: None = None
+_breaker41: None = None
 class ip_fabric__ip_fabric__fabric__fabric_link_entry(yadata.MNode):
     lower_switch: str
     lower_port: str
@@ -4748,7 +4335,7 @@ class ip_fabric__ip_fabric__fabric__fabric_link_entry(yadata.MNode):
         """Create a deep copy of this adata object"""
         return ip_fabric__ip_fabric__fabric__fabric_link_entry.from_gdata(self.to_gdata())
 
-_breaker51: None = None
+_breaker42: None = None
 class ip_fabric__ip_fabric__fabric__fabric_link(yadata.MKeyedList[(lower_switch: str, lower_port: str, upper_switch: str, upper_port: str), ip_fabric__ip_fabric__fabric__fabric_link_entry]):
     mut def __init__(self, elements: list[ip_fabric__ip_fabric__fabric__fabric_link_entry]=[]) -> None:
         yadata.MKeyedList.__init__(self, lambda e: (lower_switch=e.lower_switch, lower_port=e.lower_port, upper_switch=e.upper_switch, upper_port=e.upper_port), elements)
@@ -4779,7 +4366,7 @@ class ip_fabric__ip_fabric__fabric__fabric_link(yadata.MKeyedList[(lower_switch:
         return ip_fabric__ip_fabric__fabric__fabric_link(elements=copied_elements)
 
 
-_breaker52: None = None
+_breaker43: None = None
 class ip_fabric__ip_fabric__fabric__server__connectivity__link_entry(yadata.MNode):
     switch: str
     switch_port: str
@@ -4801,7 +4388,7 @@ class ip_fabric__ip_fabric__fabric__server__connectivity__link_entry(yadata.MNod
         """Create a deep copy of this adata object"""
         return ip_fabric__ip_fabric__fabric__server__connectivity__link_entry.from_gdata(self.to_gdata())
 
-_breaker53: None = None
+_breaker44: None = None
 class ip_fabric__ip_fabric__fabric__server__connectivity__link(yadata.MKeyedList[(switch: str, switch_port: str), ip_fabric__ip_fabric__fabric__server__connectivity__link_entry]):
     mut def __init__(self, elements: list[ip_fabric__ip_fabric__fabric__server__connectivity__link_entry]=[]) -> None:
         yadata.MKeyedList.__init__(self, lambda e: (switch=e.switch, switch_port=e.switch_port), elements)
@@ -4833,7 +4420,7 @@ class ip_fabric__ip_fabric__fabric__server__connectivity__link(yadata.MKeyedList
         return ip_fabric__ip_fabric__fabric__server__connectivity__link(elements=copied_elements)
 
 
-_breaker54: None = None
+_breaker45: None = None
 class ip_fabric__ip_fabric__fabric__server__connectivity(yadata.MNode):
     profile: str
     link: ip_fabric__ip_fabric__fabric__server__connectivity__link
@@ -4856,7 +4443,7 @@ class ip_fabric__ip_fabric__fabric__server__connectivity(yadata.MNode):
         return ip_fabric__ip_fabric__fabric__server__connectivity.from_gdata(self.to_gdata())
 
 
-_breaker55: None = None
+_breaker46: None = None
 class ip_fabric__ip_fabric__fabric__server_entry(yadata.MNode):
     name: str
     connectivity: ip_fabric__ip_fabric__fabric__server__connectivity
@@ -4876,7 +4463,7 @@ class ip_fabric__ip_fabric__fabric__server_entry(yadata.MNode):
         """Create a deep copy of this adata object"""
         return ip_fabric__ip_fabric__fabric__server_entry.from_gdata(self.to_gdata())
 
-_breaker56: None = None
+_breaker47: None = None
 class ip_fabric__ip_fabric__fabric__server(yadata.MKeyedList[str, ip_fabric__ip_fabric__fabric__server_entry]):
     mut def __init__(self, elements: list[ip_fabric__ip_fabric__fabric__server_entry]=[]) -> None:
         yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
@@ -4908,7 +4495,7 @@ class ip_fabric__ip_fabric__fabric__server(yadata.MKeyedList[str, ip_fabric__ip_
         return ip_fabric__ip_fabric__fabric__server(elements=copied_elements)
 
 
-_breaker57: None = None
+_breaker48: None = None
 class ip_fabric__ip_fabric__fabric_entry(yadata.MNode):
     name: str
     switch: ip_fabric__ip_fabric__fabric__switch
@@ -4932,7 +4519,7 @@ class ip_fabric__ip_fabric__fabric_entry(yadata.MNode):
         """Create a deep copy of this adata object"""
         return ip_fabric__ip_fabric__fabric_entry.from_gdata(self.to_gdata())
 
-_breaker58: None = None
+_breaker49: None = None
 class ip_fabric__ip_fabric__fabric(yadata.MKeyedList[str, ip_fabric__ip_fabric__fabric_entry]):
     mut def __init__(self, elements: list[ip_fabric__ip_fabric__fabric_entry]=[]) -> None:
         yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
@@ -4963,7 +4550,7 @@ class ip_fabric__ip_fabric__fabric(yadata.MKeyedList[str, ip_fabric__ip_fabric__
         return ip_fabric__ip_fabric__fabric(elements=copied_elements)
 
 
-_breaker59: None = None
+_breaker50: None = None
 class ip_fabric__ip_fabric(yadata.MNode):
     fabric: ip_fabric__ip_fabric__fabric
 
@@ -4984,15 +4571,13 @@ class ip_fabric__ip_fabric(yadata.MNode):
         return ip_fabric__ip_fabric.from_gdata(self.to_gdata())
 
 
-_breaker60: None = None
+_breaker51: None = None
 class root(yadata.MNode):
     tmf_store: stratoweave_tmf__tmf_store
-    netinfra: netinfra__netinfra
     ip_fabric: ip_fabric__ip_fabric
 
-    mut def __init__(self, netinfra: netinfra__netinfra, tmf_store: ?stratoweave_tmf__tmf_store=None, ip_fabric: ?ip_fabric__ip_fabric=None) -> None:
+    mut def __init__(self, tmf_store: ?stratoweave_tmf__tmf_store=None, ip_fabric: ?ip_fabric__ip_fabric=None) -> None:
         self.tmf_store = tmf_store if tmf_store is not None else stratoweave_tmf__tmf_store()
-        self.netinfra = netinfra
         self.ip_fabric = ip_fabric if ip_fabric is not None else ip_fabric__ip_fabric()
 
     mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
@@ -5001,8 +4586,8 @@ class root(yadata.MNode):
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> root:
         if n is not None:
-            return root(tmf_store=stratoweave_tmf__tmf_store.from_gdata(n.get_opt_cnt(ygdata.Id(NS_stratoweave_tmf, 'tmf-store'))), netinfra=netinfra__netinfra.from_gdata(n.get_cnt(ygdata.Id(NS_netinfra, 'netinfra'))), ip_fabric=ip_fabric__ip_fabric.from_gdata(n.get_opt_cnt(ygdata.Id(NS_ip_fabric, 'ip-fabric'))))
-        raise ValueError('Missing required subtree root')
+            return root(tmf_store=stratoweave_tmf__tmf_store.from_gdata(n.get_opt_cnt(ygdata.Id(NS_stratoweave_tmf, 'tmf-store'))), ip_fabric=ip_fabric__ip_fabric.from_gdata(n.get_opt_cnt(ygdata.Id(NS_ip_fabric, 'ip-fabric'))))
+        return root()
 
     mut def copy(self) -> root:
         """Create a deep copy of this adata object"""

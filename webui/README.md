@@ -11,7 +11,7 @@ Choose an environment under `test/` and run its Make targets from the
 repository root. For example:
 
 ```bash
-TESTENV=test/quicklab-notconf
+TESTENV=test/fabric-3stage
 make -C "$TESTENV" start
 ```
 

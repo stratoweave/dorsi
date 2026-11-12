@@ -6,7 +6,7 @@
   import { fetchDevices, isPendingQueueItem, type DeviceSummary } from '$lib/core/orchestron/client';
   import { queuesPoll } from '$lib/core/orchestron/poll-store';
   import TopologyMap from '$lib/core/topology/TopologyMap.svelte';
-  import { buildTopologyGraph } from '$lib/core/topology/model';
+  import { buildTopologyGraphs } from '$lib/core/topology/model';
   import { restconfGetJson } from '$lib/core/restconf/client';
   import DeviceConfigStatus from '$lib/core/ui/DeviceConfigStatus.svelte';
   import EmptyState from '$lib/core/ui/EmptyState.svelte';
@@ -18,7 +18,7 @@
   import { appHref } from '$lib/core/util/nav';
   import { startPolling } from '$lib/core/util/poll';
 
-  import type { NetinfraPayload, TopologyGraph } from '$lib/core/topology/model';
+  import type { FabricPayload, TopologyGraph } from '$lib/core/topology/model';
 
   const modules = listServiceModules();
 
@@ -26,7 +26,7 @@
   let devices = $state.raw<DeviceSummary[]>([]);
   let loadingDevices = $state(true);
   let loadError = $state('');
-  let topologyGraph = $state.raw<TopologyGraph | null>(null);
+  let topologyGraphs = $state.raw<TopologyGraph[] | null>(null);
   let loadingTopology = $state(true);
   let topologyError = $state('');
   let topologyNote = $state('');
@@ -36,10 +36,11 @@
   let pendingApprovals = $derived($queuesPoll.queues.filter(isPendingQueueItem).length);
   let queueLoaded = $derived($queuesPoll.loaded);
   let devicesWithoutConfig = $derived(devices.filter((device) => device.hasRunningConfig === false).length);
-  let linksUp = $derived(topologyGraph?.links.filter((link) => link.linkStatus === 'up').length ?? 0);
-  let linksDown = $derived(topologyGraph?.links.filter((link) => link.linkStatus === 'down').length ?? 0);
-  let linksTotal = $derived(topologyGraph?.links.length ?? 0);
-  let routersCount = $derived(serviceCounts['netinfra-router'] ?? null);
+  let switchesCount = $derived(serviceCounts['ip-fabric-switch'] ?? null);
+  let linksCount = $derived(serviceCounts['ip-fabric-link'] ?? null);
+  let allLinks = $derived((topologyGraphs ?? []).flatMap((graph) => graph.links));
+  let linksUp = $derived(allLinks.filter((link) => link.status === 'up').length);
+  let linksDown = $derived(allLinks.filter((link) => link.status === 'down').length);
 
   async function loadDevices(): Promise<void> {
     try {
@@ -57,7 +58,7 @@
   const topologyRequest = new LatestRequest();
 
   async function loadTopology(): Promise<void> {
-    const isInitialLoad = topologyGraph === null;
+    const isInitialLoad = topologyGraphs === null;
     const token = topologyRequest.begin();
     try {
       if (isInitialLoad) {
@@ -65,17 +66,17 @@
       }
       topologyNote = '';
 
-      const [netinfraResult] = await Promise.allSettled([
-        restconfGetJson<NetinfraPayload>('data/netinfra:netinfra')
+      const [fabricResult] = await Promise.allSettled([
+        restconfGetJson<FabricPayload>('data/ip-fabric:ip-fabric')
       ]);
       if (!topologyRequest.isCurrent(token)) return;
 
-      if (netinfraResult.status !== 'fulfilled') {
-        const message = netinfraResult.reason instanceof Error
-          ? netinfraResult.reason.message
-          : 'Failed to load netinfra topology.';
+      if (fabricResult.status !== 'fulfilled') {
+        const message = fabricResult.reason instanceof Error
+          ? fabricResult.reason.message
+          : 'Failed to load the fabric topology.';
         if (isInitialLoad) {
-          topologyGraph = null;
+          topologyGraphs = null;
           topologyError = message;
         } else {
           topologyNote = `Refresh failed: ${message}`;
@@ -84,13 +85,13 @@
       }
 
       topologyError = '';
-      topologyGraph = buildTopologyGraph(netinfraResult.value);
+      topologyGraphs = buildTopologyGraphs(fabricResult.value);
     } finally {
       if (topologyRequest.isCurrent(token)) loadingTopology = false;
     }
   }
 
-  /** One RESTCONF GET per distinct collection root; several modules share `netinfra`. */
+  /** One RESTCONF GET per distinct collection root; several modules share `ip-fabric`. */
   async function loadServiceCounts(): Promise<void> {
     const roots = new Map<string, Promise<unknown>>();
     const results = await Promise.all(
@@ -140,7 +141,7 @@
   <div class="page-header page-header--flush">
     <div>
       <h1>Overview</h1>
-      <p>Live view of devices, backbone links, and pending changes.</p>
+      <p>Live view of devices, fabric services, and pending changes.</p>
     </div>
   </div>
 
@@ -162,38 +163,36 @@
       loading={!queueLoaded}
     />
     <StatTile
-      label="Backbone links"
-      value={linksTotal}
-      hint={linksDown > 0 ? `${linksDown} down · ${linksUp} up` : linksTotal > 0 ? `${linksUp} up` : ''}
-      tone={linksDown > 0 ? 'danger' : linksUp > 0 ? 'success' : 'neutral'}
-      href="/services/netinfra-backbone-link"
-      loading={loadingTopology}
+      label="Fabric switches"
+      value={switchesCount}
+      href="/services/ip-fabric-switch"
+      loading={loadingCounts}
     />
     <StatTile
-      label="Routers"
-      value={routersCount}
-      href="/services/netinfra-router"
+      label="Fabric links"
+      value={linksCount}
+      hint={linksDown > 0 ? `${linksDown} down · ${linksUp} up` : linksUp > 0 ? `${linksUp} up` : ''}
+      tone={linksDown > 0 ? 'danger' : linksUp > 0 ? 'success' : 'neutral'}
+      href="/services/ip-fabric-link"
       loading={loadingCounts}
     />
   </section>
 
   <section class="overview__section" data-tour="topology">
     <div class="section-head">
-      <h2>Network Topology</h2>
+      <h2>Fabric Topology</h2>
     </div>
 
     {#if loadingTopology}
       <Skeleton height="320px" />
     {:else if topologyError}
       <EmptyState tone="danger" icon="alert" title="Topology unavailable" description={topologyError} />
-    {:else if topologyGraph && topologyGraph.routers.length === 0}
-      <EmptyState icon="services" title="No routers yet" description="Add a router service to start building the backbone.">
-        {#snippet action()}
-          <a class="btn btn-primary btn-sm" href={appHref('/services/netinfra-router/new')}>Create router</a>
-        {/snippet}
-      </EmptyState>
-    {:else if topologyGraph}
-      <TopologyMap graph={topologyGraph} note={topologyNote} />
+    {:else if topologyGraphs && topologyGraphs.length === 0}
+      <EmptyState icon="services" title="No fabric yet" description="Create a fabric through RESTCONF or a startup file, then add switches, links and servers." />
+    {:else if topologyGraphs}
+      {#each topologyGraphs as graph (graph.fabric)}
+        <TopologyMap {graph} {devices} note={topologyNote} />
+      {/each}
     {/if}
   </section>
 

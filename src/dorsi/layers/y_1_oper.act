@@ -156,34 +156,7 @@ SRC_DNODE_CHILD_0: DList = DList(module='stratoweave-rfs', namespace='http://str
 
 SRC_DNODE_CHILD_22: DLeaf = DLeaf(module='stratoweave-rfs', namespace='http://stratoweave.org/yang/stratoweave-rfs', prefix='sw-rfs', name='name', config=True, description='Device name', is_key=True, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[]))
 
-SRC_DNODE_CHILD_23: DContainer = DContainer(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='base-config', config=True, presence=False, exts=[
-        DExt(module='stratoweave', namespace='http://stratoweave.org/yang/stratoweave', prefix='sw', name='rfs-transform', arg='dorsi.rfs.BaseConfig', exts=[])
-    ], children=[
-    DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='role', config=True, is_key=False, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
-    DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='ipv4-address', config=True, is_key=False, mandatory=True, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
-    DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='ipv6-address', config=True, is_key=False, mandatory=True, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
-    DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='asn', config=True, is_key=False, mandatory=True, type=DTypeIntegerUnsigned(name='inet:as-number', description='The as-number type represents autonomous system numbers\nwhich identify an Autonomous System (AS).  An AS is a set\nof routers under a single technical administration, using\nan interior gateway protocol and common metrics to route\npackets within the AS, and using an exterior gateway\nprotocol to route packets to other ASes.  IANA maintains\nthe AS number space and has delegated large parts to the\nregional registries.\n\nAutonomous system numbers were originally limited to 16\nbits.  BGP extensions have enlarged the autonomous system\nnumber space to 32 bits.  This type therefore uses an uint32\nbase type without a range restriction in order to support\na larger autonomous system number space.\n\nIn the value set and its semantics, this type is equivalent\nto the InetAutonomousSystemNumber textual convention of\nthe SMIv2.', reference='RFC 1930: Guidelines for creation, selection, and registration\n          of an Autonomous System (AS)\nRFC 4271: A Border Gateway Protocol 4 (BGP-4)\nRFC 4001: Textual Conventions for Internet Network Addresses\nRFC 6793: BGP Support for Four-Octet Autonomous System (AS)\n          Number Space', units=None, exts=[], builtin_type='uint32', default=None, ranges=Ranges([(0, 4294967295)]))),
-    DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='ibgp-authentication-key', config=True, is_key=False, mandatory=True, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[]))
-])
-
-SRC_DNODE_CHILD_24: DList = DList(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='backbone-interface', key=['name'], config=True, min_elements=0, ordered_by='system', exts=[
-        DExt(module='stratoweave', namespace='http://stratoweave.org/yang/stratoweave', prefix='sw', name='rfs-transform', arg='dorsi.rfs.BBInterface', exts=[])
-    ], children=[
-    DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='name', config=True, is_key=True, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
-    DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='ipv4-address', config=True, is_key=False, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
-    DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='ipv4-prefix-length', config=True, default='30', is_key=False, mandatory=False, type=DTypeIntegerUnsigned(name='uint8', description=None, reference=None, units=None, exts=[], builtin_type='uint8', default=None, ranges=Ranges([(0, 32)]))),
-    DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='ipv6-address', config=True, is_key=False, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
-    DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='ipv6-prefix-length', config=True, is_key=False, mandatory=False, type=DTypeIntegerUnsigned(name='uint8', description=None, reference=None, units=None, exts=[], builtin_type='uint8', default=None, ranges=Ranges([(0, 128)]))),
-    DContainer(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='remote', config=True, presence=False, children=[
-        DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='device', config=True, is_key=False, mandatory=True, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
-        DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='interface', config=True, is_key=False, mandatory=True, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[]))
-    ]),
-    DContainer(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='state', config=False, description='Operational state of the backbone interface, polled from\nthe device. oper-status is the interface oper-state.', presence=False, children=[
-        DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='oper-status', config=False, is_key=False, mandatory=False, type=DTypeEnum(name='enumeration', description=None, reference=None, units=None, exts=[], builtin_type='enumeration', default=None, name_to_val={'up':0, 'down':1, 'unknown':2}))
-    ])
-])
-
-SRC_DNODE_CHILD_25: DList = DList(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='fabric-base-config', key=['asn'], config=True, description='Base configuration of an IP fabric switch: loopback, BGP\nautonomous system and the policy that advertises the loopback.\nA switch has a single entry. It is a list keyed by the AS\nnumber and not a container, because a container with a\ntransform and no data would send an empty configuration to\nthe device before its modules are known.', min_elements=0, ordered_by='system', exts=[
+SRC_DNODE_CHILD_23: DList = DList(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='fabric-base-config', key=['asn'], config=True, description='Base configuration of an IP fabric switch: loopback, BGP\nautonomous system and the policy that advertises the loopback.\nA switch has a single entry. It is a list keyed by the AS\nnumber and not a container, because a container with a\ntransform and no data would send an empty configuration to\nthe device before its modules are known.', min_elements=0, ordered_by='system', exts=[
         DExt(module='stratoweave', namespace='http://stratoweave.org/yang/stratoweave', prefix='sw', name='rfs-transform', arg='dorsi.rfs.FabricBaseConfig', exts=[])
     ], children=[
     DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='asn', config=True, is_key=True, mandatory=False, type=DTypeIntegerUnsigned(name='inet:as-number', description='The as-number type represents autonomous system numbers\nwhich identify an Autonomous System (AS).  An AS is a set\nof routers under a single technical administration, using\nan interior gateway protocol and common metrics to route\npackets within the AS, and using an exterior gateway\nprotocol to route packets to other ASes.  IANA maintains\nthe AS number space and has delegated large parts to the\nregional registries.\n\nAutonomous system numbers were originally limited to 16\nbits.  BGP extensions have enlarged the autonomous system\nnumber space to 32 bits.  This type therefore uses an uint32\nbase type without a range restriction in order to support\na larger autonomous system number space.\n\nIn the value set and its semantics, this type is equivalent\nto the InetAutonomousSystemNumber textual convention of\nthe SMIv2.', reference='RFC 1930: Guidelines for creation, selection, and registration\n          of an Autonomous System (AS)\nRFC 4271: A Border Gateway Protocol 4 (BGP-4)\nRFC 4001: Textual Conventions for Internet Network Addresses\nRFC 6793: BGP Support for Four-Octet Autonomous System (AS)\n          Number Space', units=None, exts=[], builtin_type='uint32', default=None, ranges=Ranges([(0, 4294967295)]))),
@@ -191,7 +164,7 @@ SRC_DNODE_CHILD_25: DList = DList(module='dorsi-rfs', namespace='http://example.
     DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='ipv4-address', config=True, description='Loopback address, used as router-id.', is_key=False, mandatory=True, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[]))
 ])
 
-SRC_DNODE_CHILD_26: DList = DList(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='fabric-interface', key=['name'], config=True, description='Routed point-to-point fabric link with its eBGP session.', min_elements=0, ordered_by='system', exts=[
+SRC_DNODE_CHILD_24: DList = DList(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='fabric-interface', key=['name'], config=True, description='Routed point-to-point fabric link with its eBGP session.', min_elements=0, ordered_by='system', exts=[
         DExt(module='stratoweave', namespace='http://stratoweave.org/yang/stratoweave', prefix='sw', name='rfs-transform', arg='dorsi.rfs.FabricInterface', exts=[])
     ], children=[
     DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='name', config=True, is_key=True, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
@@ -204,10 +177,14 @@ SRC_DNODE_CHILD_26: DList = DList(module='dorsi-rfs', namespace='http://example.
     DContainer(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='bgp', config=True, presence=False, children=[
         DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='peer-address', config=True, is_key=False, mandatory=True, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
         DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='peer-asn', config=True, is_key=False, mandatory=True, type=DTypeIntegerUnsigned(name='inet:as-number', description='The as-number type represents autonomous system numbers\nwhich identify an Autonomous System (AS).  An AS is a set\nof routers under a single technical administration, using\nan interior gateway protocol and common metrics to route\npackets within the AS, and using an exterior gateway\nprotocol to route packets to other ASes.  IANA maintains\nthe AS number space and has delegated large parts to the\nregional registries.\n\nAutonomous system numbers were originally limited to 16\nbits.  BGP extensions have enlarged the autonomous system\nnumber space to 32 bits.  This type therefore uses an uint32\nbase type without a range restriction in order to support\na larger autonomous system number space.\n\nIn the value set and its semantics, this type is equivalent\nto the InetAutonomousSystemNumber textual convention of\nthe SMIv2.', reference='RFC 1930: Guidelines for creation, selection, and registration\n          of an Autonomous System (AS)\nRFC 4271: A Border Gateway Protocol 4 (BGP-4)\nRFC 4001: Textual Conventions for Internet Network Addresses\nRFC 6793: BGP Support for Four-Octet Autonomous System (AS)\n          Number Space', units=None, exts=[], builtin_type='uint32', default=None, ranges=Ranges([(0, 4294967295)])))
+    ]),
+    DContainer(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='state', config=False, description='Operational state of the fabric interface, polled from the\ndevice. oper-status is the interface oper-state and\nbgp-status is the state of the eBGP session on it: up when\nit is established, down for any other session state.', presence=False, children=[
+        DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='oper-status', config=False, is_key=False, mandatory=False, type=DTypeEnum(name='enumeration', description=None, reference=None, units=None, exts=[], builtin_type='enumeration', default=None, name_to_val={'up':0, 'down':1, 'unknown':2})),
+        DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='bgp-status', config=False, is_key=False, mandatory=False, type=DTypeEnum(name='enumeration', description=None, reference=None, units=None, exts=[], builtin_type='enumeration', default=None, name_to_val={'up':0, 'down':1, 'unknown':2}))
     ])
 ])
 
-SRC_DNODE_CHILD_27: DList = DList(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='server-port', key=['name'], config=True, description='Leaf port facing a server.', min_elements=0, ordered_by='system', exts=[
+SRC_DNODE_CHILD_25: DList = DList(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='server-port', key=['name'], config=True, description='Leaf port facing a server.', min_elements=0, ordered_by='system', exts=[
         DExt(module='stratoweave', namespace='http://stratoweave.org/yang/stratoweave', prefix='sw', name='rfs-transform', arg='dorsi.rfs.ServerPort', exts=[])
     ], children=[
     DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='name', config=True, is_key=True, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
@@ -216,16 +193,7 @@ SRC_DNODE_CHILD_27: DList = DList(module='dorsi-rfs', namespace='http://example.
     DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='profile', config=True, description='Connectivity profile of the server.', is_key=False, mandatory=True, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[]))
 ])
 
-SRC_DNODE_CHILD_28: DList = DList(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='ibgp-neighbor', key=['address'], config=True, min_elements=0, ordered_by='system', exts=[
-        DExt(module='stratoweave', namespace='http://stratoweave.org/yang/stratoweave', prefix='sw', name='rfs-transform', arg='dorsi.rfs.IbgpNeighbor', exts=[])
-    ], children=[
-    DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='address', config=True, is_key=True, mandatory=False, type=DTypeUnion(name='inet:ip-address', description='The ip-address type represents an IP address and is IP\nversion neutral.  The format of the textual representation\nimplies the IP version.  This type supports scoped addresses\nby allowing zone identifiers in the address format.', reference='RFC 4007: IPv6 Scoped Address Architecture', units=None, exts=[], builtin_type='union', default=None, types=[DTypeString(name='inet:ipv4-address', description='The ipv4-address type represents an IPv4 address in\ndotted-quad notation.  The IPv4 address may include a zone\nindex, separated by a % sign.\n\nThe zone index is used to disambiguate identical address\nvalues.  For link-local addresses, the zone index will\ntypically be the interface index number or the name of an\ninterface.  If the zone index is not present, the default\nzone of the device will be used.\n\nThe canonical format for the zone index is the numerical\nformat', reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[YangPattern(yang_regex='(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.){{3}}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(%[\\p{{N}}\\p{{L}}]+)?', pcre='^((([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.){{3}}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(%[\\p{{N}}\\p{{L}}]+)?)$', invert=False)]), DTypeString(name='inet:ipv6-address', description='The ipv6-address type represents an IPv6 address in full,\nmixed, shortened, and shortened-mixed notation.  The IPv6\naddress may include a zone index, separated by a % sign.\n\nThe zone index is used to disambiguate identical address\nvalues.  For link-local addresses, the zone index will\ntypically be the interface index number or the name of an\ninterface.  If the zone index is not present, the default\nzone of the device will be used.\n\nThe canonical format of IPv6 addresses uses the textual\nrepresentation defined in Section 4 of RFC 5952.  The\ncanonical format for the zone index is the numerical\nformat as described in Section 11.2 of RFC 4007.', reference='RFC 4291: IP Version 6 Addressing Architecture\nRFC 4007: IPv6 Scoped Address Architecture\nRFC 5952: A Recommendation for IPv6 Address Text\n          Representation', units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[YangPattern(yang_regex='((:|[0-9a-fA-F]{{0,4}}):)([0-9a-fA-F]{{0,4}}:){{0,5}}((([0-9a-fA-F]{{0,4}}:)?(:|[0-9a-fA-F]{{0,4}}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\\.){{3}}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))(%[\\p{{N}}\\p{{L}}]+)?', pcre='^(((:|[0-9a-fA-F]{{0,4}}):)([0-9a-fA-F]{{0,4}}:){{0,5}}((([0-9a-fA-F]{{0,4}}:)?(:|[0-9a-fA-F]{{0,4}}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\\.){{3}}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))(%[\\p{{N}}\\p{{L}}]+)?)$', invert=False), YangPattern(yang_regex='(([^:]+:){{6}}(([^:]+:[^:]+)|(.*\\..*)))|((([^:]+:)*[^:]+)?::(([^:]+:)*[^:]+)?)(%.+)?', pcre='^((([^\\:]+:){{6}}(([^\\:]+:[^\\:]+)|(.*\\..*)))|((([^\\:]+:)*[^\\:]+)?::(([^\\:]+:)*[^\\:]+)?)(%.+)?)$', invert=False)])])),
-    DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='asn', config=True, is_key=False, mandatory=True, type=DTypeIntegerUnsigned(name='inet:as-number', description='The as-number type represents autonomous system numbers\nwhich identify an Autonomous System (AS).  An AS is a set\nof routers under a single technical administration, using\nan interior gateway protocol and common metrics to route\npackets within the AS, and using an exterior gateway\nprotocol to route packets to other ASes.  IANA maintains\nthe AS number space and has delegated large parts to the\nregional registries.\n\nAutonomous system numbers were originally limited to 16\nbits.  BGP extensions have enlarged the autonomous system\nnumber space to 32 bits.  This type therefore uses an uint32\nbase type without a range restriction in order to support\na larger autonomous system number space.\n\nIn the value set and its semantics, this type is equivalent\nto the InetAutonomousSystemNumber textual convention of\nthe SMIv2.', reference='RFC 1930: Guidelines for creation, selection, and registration\n          of an Autonomous System (AS)\nRFC 4271: A Border Gateway Protocol 4 (BGP-4)\nRFC 4001: Textual Conventions for Internet Network Addresses\nRFC 6793: BGP Support for Four-Octet Autonomous System (AS)\n          Number Space', units=None, exts=[], builtin_type='uint32', default=None, ranges=Ranges([(0, 4294967295)]))),
-    DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='description', config=True, is_key=False, mandatory=True, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
-    DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='ibgp-authentication-key', config=True, is_key=False, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[]))
-])
-
-SRC_DNODE_CHILD_21: DList = DList(module='stratoweave-rfs', namespace='http://stratoweave.org/yang/stratoweave-rfs', prefix='sw-rfs', name='rfs', key=['name'], config=True, min_elements=0, ordered_by='system', children=[SRC_DNODE_CHILD_22, SRC_DNODE_CHILD_23, SRC_DNODE_CHILD_24, SRC_DNODE_CHILD_25, SRC_DNODE_CHILD_26, SRC_DNODE_CHILD_27, SRC_DNODE_CHILD_28])
+SRC_DNODE_CHILD_21: DList = DList(module='stratoweave-rfs', namespace='http://stratoweave.org/yang/stratoweave-rfs', prefix='sw-rfs', name='rfs', key=['name'], config=True, min_elements=0, ordered_by='system', children=[SRC_DNODE_CHILD_22, SRC_DNODE_CHILD_23, SRC_DNODE_CHILD_24, SRC_DNODE_CHILD_25])
 
 SRC_DNODE: DRoot = DRoot(
     children=[SRC_DNODE_CHILD_0, SRC_DNODE_CHILD_21],
@@ -250,92 +218,6 @@ SRC_YANG_0: str = r"""module dorsi-rfs {
     }
 
     augment "/sw-rfs:rfs" {
-        container base-config {
-
-            sw:rfs-transform dorsi.rfs.BaseConfig;
-
-            leaf role {
-                type string;
-            }
-
-            leaf ipv4-address {
-                type string;
-                mandatory true;
-            }
-
-            leaf ipv6-address {
-                type string;
-                mandatory true;
-            }
-
-            leaf asn {
-                type inet:as-number;
-                mandatory true;
-            }
-
-            leaf ibgp-authentication-key {
-                type string;
-                mandatory true;
-            }
-        }
-
-        list backbone-interface {
-            key name;
-
-            sw:rfs-transform dorsi.rfs.BBInterface;
-
-            leaf name {
-                type string;
-            }
-
-            leaf ipv4-address {
-                type string;
-            }
-
-            leaf ipv4-prefix-length {
-                type uint8 {
-                    range "0..32";
-                }
-                default "30";
-            }
-
-            leaf ipv6-address {
-                type string;
-            }
-
-            leaf ipv6-prefix-length {
-                type uint8 {
-                    range "0..128";
-                }
-            }
-
-            container remote {
-                leaf device {
-                    type string;
-                    mandatory true;
-                }
-                leaf interface {
-                    type string;
-                    mandatory true;
-                }
-            }
-
-            container state {
-                config false;
-                description
-                    "Operational state of the backbone interface, polled from
-                     the device. oper-status is the interface oper-state.";
-                leaf oper-status {
-                    type enumeration {
-                        enum up;
-                        enum down;
-                        enum unknown;
-                    }
-                }
-            }
-
-        }
-
         list fabric-base-config {
             description
                 "Base configuration of an IP fabric switch: loopback, BGP
@@ -396,6 +278,29 @@ SRC_YANG_0: str = r"""module dorsi-rfs {
                     mandatory true;
                 }
             }
+
+            container state {
+                config false;
+                description
+                    "Operational state of the fabric interface, polled from the
+                     device. oper-status is the interface oper-state and
+                     bgp-status is the state of the eBGP session on it: up when
+                     it is established, down for any other session state.";
+                leaf oper-status {
+                    type enumeration {
+                        enum up;
+                        enum down;
+                        enum unknown;
+                    }
+                }
+                leaf bgp-status {
+                    type enumeration {
+                        enum up;
+                        enum down;
+                        enum unknown;
+                    }
+                }
+            }
         }
         list server-port {
             description
@@ -418,25 +323,6 @@ SRC_YANG_0: str = r"""module dorsi-rfs {
                 type string;
                 mandatory true;
             }
-        }
-        list ibgp-neighbor {
-          key address;
-          sw:rfs-transform dorsi.rfs.IbgpNeighbor;
-          leaf address {
-            type inet:ip-address;
-          }
-          leaf asn {
-            // Need this one for IOS XR: router bgp <asn>
-            type inet:as-number;
-            mandatory true;
-          }
-          leaf description {
-            type string;
-            mandatory true;
-          }
-          leaf ibgp-authentication-key {
-            type string;
-          }
         }
   }
 }
@@ -3205,148 +3091,6 @@ class stratoweave_rfs__device(yadata.MKeyedList[str, stratoweave_rfs__device_ent
 
 
 _breaker29: None = None
-class stratoweave_rfs__rfs__base_config(yadata.MNode):
-    role: ?str
-    ipv4_address: ?str
-    ipv6_address: ?str
-    asn: ?u64
-    ibgp_authentication_key: ?str
-
-    mut def __init__(self, role: ?str=None, ipv4_address: ?str=None, ipv6_address: ?str=None, asn: ?u64=None, ibgp_authentication_key: ?str=None) -> None:
-        self.role = role
-        self.ipv4_address = ipv4_address
-        self.ipv6_address = ipv6_address
-        self.asn = asn
-        self.ibgp_authentication_key = ibgp_authentication_key
-
-    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
-        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['stratoweave-rfs:rfs', 'dorsi-rfs:base-config'], prev=prev)
-
-    @staticmethod
-    mut def from_gdata(n: ?ygdata.Node) -> stratoweave_rfs__rfs__base_config:
-        if n is not None:
-            return stratoweave_rfs__rfs__base_config(role=n.get_opt_str(ygdata.Id(NS_dorsi_rfs, 'role')), ipv4_address=n.get_opt_str(ygdata.Id(NS_dorsi_rfs, 'ipv4-address')), ipv6_address=n.get_opt_str(ygdata.Id(NS_dorsi_rfs, 'ipv6-address')), asn=n.get_opt_u64(ygdata.Id(NS_dorsi_rfs, 'asn')), ibgp_authentication_key=n.get_opt_str(ygdata.Id(NS_dorsi_rfs, 'ibgp-authentication-key')))
-        return stratoweave_rfs__rfs__base_config()
-
-    mut def copy(self) -> stratoweave_rfs__rfs__base_config:
-        """Create a deep copy of this adata object"""
-        return stratoweave_rfs__rfs__base_config.from_gdata(self.to_gdata())
-
-
-_breaker30: None = None
-class stratoweave_rfs__rfs__backbone_interface__remote(yadata.MNode):
-    device: ?str
-    interface: ?str
-
-    mut def __init__(self, device: ?str=None, interface: ?str=None) -> None:
-        self.device = device
-        self.interface = interface
-
-    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
-        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['stratoweave-rfs:rfs', 'dorsi-rfs:backbone-interface', 'remote'], prev=prev)
-
-    @staticmethod
-    mut def from_gdata(n: ?ygdata.Node) -> stratoweave_rfs__rfs__backbone_interface__remote:
-        if n is not None:
-            return stratoweave_rfs__rfs__backbone_interface__remote(device=n.get_opt_str(ygdata.Id(NS_dorsi_rfs, 'device')), interface=n.get_opt_str(ygdata.Id(NS_dorsi_rfs, 'interface')))
-        return stratoweave_rfs__rfs__backbone_interface__remote()
-
-    mut def copy(self) -> stratoweave_rfs__rfs__backbone_interface__remote:
-        """Create a deep copy of this adata object"""
-        return stratoweave_rfs__rfs__backbone_interface__remote.from_gdata(self.to_gdata())
-
-
-_breaker31: None = None
-class stratoweave_rfs__rfs__backbone_interface__state(yadata.MNode):
-    oper_status: ?str
-
-    mut def __init__(self, oper_status: ?str=None) -> None:
-        self.oper_status = oper_status
-
-    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
-        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['stratoweave-rfs:rfs', 'dorsi-rfs:backbone-interface', 'state'], prev=prev)
-
-    @staticmethod
-    mut def from_gdata(n: ?ygdata.Node) -> stratoweave_rfs__rfs__backbone_interface__state:
-        if n is not None:
-            return stratoweave_rfs__rfs__backbone_interface__state(oper_status=n.get_opt_str(ygdata.Id(NS_dorsi_rfs, 'oper-status')))
-        return stratoweave_rfs__rfs__backbone_interface__state()
-
-    mut def copy(self) -> stratoweave_rfs__rfs__backbone_interface__state:
-        """Create a deep copy of this adata object"""
-        return stratoweave_rfs__rfs__backbone_interface__state.from_gdata(self.to_gdata())
-
-
-_breaker32: None = None
-class stratoweave_rfs__rfs__backbone_interface_entry(yadata.MNode):
-    name: str
-    ipv4_address: ?str
-    ipv4_prefix_length: ?u64
-    ipv6_address: ?str
-    ipv6_prefix_length: ?u64
-    remote: stratoweave_rfs__rfs__backbone_interface__remote
-    state: stratoweave_rfs__rfs__backbone_interface__state
-
-    mut def __init__(self, name: str, ipv4_address: ?str=None, ipv4_prefix_length: ?u64=None, ipv6_address: ?str=None, ipv6_prefix_length: ?u64=None, remote: ?stratoweave_rfs__rfs__backbone_interface__remote=None, state: ?stratoweave_rfs__rfs__backbone_interface__state=None) -> None:
-        self.name = name
-        self.ipv4_address = ipv4_address
-        self.ipv4_prefix_length = ipv4_prefix_length
-        self.ipv6_address = ipv6_address
-        self.ipv6_prefix_length = ipv6_prefix_length
-        self.remote = remote if remote is not None else stratoweave_rfs__rfs__backbone_interface__remote()
-        self.state = state if state is not None else stratoweave_rfs__rfs__backbone_interface__state()
-
-    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
-        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['stratoweave-rfs:rfs', 'dorsi-rfs:backbone-interface'], prev=prev)
-
-    @staticmethod
-    mut def from_gdata(n: ygdata.Node) -> stratoweave_rfs__rfs__backbone_interface_entry:
-        return stratoweave_rfs__rfs__backbone_interface_entry(name=n.get_str(ygdata.Id(NS_dorsi_rfs, 'name')), ipv4_address=n.get_opt_str(ygdata.Id(NS_dorsi_rfs, 'ipv4-address')), ipv4_prefix_length=n.get_opt_u64(ygdata.Id(NS_dorsi_rfs, 'ipv4-prefix-length')), ipv6_address=n.get_opt_str(ygdata.Id(NS_dorsi_rfs, 'ipv6-address')), ipv6_prefix_length=n.get_opt_u64(ygdata.Id(NS_dorsi_rfs, 'ipv6-prefix-length')), remote=stratoweave_rfs__rfs__backbone_interface__remote.from_gdata(n.get_opt_cnt(ygdata.Id(NS_dorsi_rfs, 'remote'))), state=stratoweave_rfs__rfs__backbone_interface__state.from_gdata(n.get_opt_cnt(ygdata.Id(NS_dorsi_rfs, 'state'))))
-
-    mut def copy(self) -> stratoweave_rfs__rfs__backbone_interface_entry:
-        """Create a deep copy of this adata object"""
-        return stratoweave_rfs__rfs__backbone_interface_entry.from_gdata(self.to_gdata())
-
-_breaker33: None = None
-class stratoweave_rfs__rfs__backbone_interface(yadata.MKeyedList[str, stratoweave_rfs__rfs__backbone_interface_entry]):
-    mut def __init__(self, elements: list[stratoweave_rfs__rfs__backbone_interface_entry]=[]) -> None:
-        yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
-
-    mut def create(self, key: str, ipv4_address: ?str=None, ipv4_prefix_length: ?u64=None, ipv6_address: ?str=None, ipv6_prefix_length: ?u64=None) -> stratoweave_rfs__rfs__backbone_interface_entry:
-        e = self.get(key)
-        if e is not None:
-            if ipv4_address is not None:
-                e.ipv4_address = ipv4_address
-            if ipv4_prefix_length is not None:
-                e.ipv4_prefix_length = ipv4_prefix_length
-            if ipv6_address is not None:
-                e.ipv6_address = ipv6_address
-            if ipv6_prefix_length is not None:
-                e.ipv6_prefix_length = ipv6_prefix_length
-            return e
-        name = key
-        res = stratoweave_rfs__rfs__backbone_interface_entry(name=name, ipv4_address=ipv4_address, ipv4_prefix_length=ipv4_prefix_length, ipv6_address=ipv6_address, ipv6_prefix_length=ipv6_prefix_length)
-        self._append(res)
-        return res
-
-    @staticmethod
-    mut def from_gdata(n: ?ygdata.List) -> list[stratoweave_rfs__rfs__backbone_interface_entry]:
-        if n is not None:
-            return [stratoweave_rfs__rfs__backbone_interface_entry.from_gdata(e) for e in n.entries()]
-        return []
-
-    mut def copy(self) -> stratoweave_rfs__rfs__backbone_interface:
-        """Create a deep copy of this list object"""
-        # Copy each element in the list
-        copied_elements = []
-        for e in self:
-            ce = e.copy()
-            if ce is not None:
-                copied_elements.append(ce)
-        return stratoweave_rfs__rfs__backbone_interface(elements=copied_elements)
-
-
-_breaker34: None = None
 class stratoweave_rfs__rfs__fabric_base_config_entry(yadata.MNode):
     asn: u64
     role: ?str
@@ -3368,7 +3112,7 @@ class stratoweave_rfs__rfs__fabric_base_config_entry(yadata.MNode):
         """Create a deep copy of this adata object"""
         return stratoweave_rfs__rfs__fabric_base_config_entry.from_gdata(self.to_gdata())
 
-_breaker35: None = None
+_breaker30: None = None
 class stratoweave_rfs__rfs__fabric_base_config(yadata.MKeyedList[u64, stratoweave_rfs__rfs__fabric_base_config_entry]):
     mut def __init__(self, elements: list[stratoweave_rfs__rfs__fabric_base_config_entry]=[]) -> None:
         yadata.MKeyedList.__init__(self, lambda e: e.asn, elements)
@@ -3403,7 +3147,7 @@ class stratoweave_rfs__rfs__fabric_base_config(yadata.MKeyedList[u64, stratoweav
         return stratoweave_rfs__rfs__fabric_base_config(elements=copied_elements)
 
 
-_breaker36: None = None
+_breaker31: None = None
 class stratoweave_rfs__rfs__fabric_interface__remote(yadata.MNode):
     device: ?str
     interface: ?str
@@ -3426,7 +3170,7 @@ class stratoweave_rfs__rfs__fabric_interface__remote(yadata.MNode):
         return stratoweave_rfs__rfs__fabric_interface__remote.from_gdata(self.to_gdata())
 
 
-_breaker37: None = None
+_breaker32: None = None
 class stratoweave_rfs__rfs__fabric_interface__bgp(yadata.MNode):
     peer_address: ?str
     peer_asn: ?u64
@@ -3449,33 +3193,58 @@ class stratoweave_rfs__rfs__fabric_interface__bgp(yadata.MNode):
         return stratoweave_rfs__rfs__fabric_interface__bgp.from_gdata(self.to_gdata())
 
 
-_breaker38: None = None
+_breaker33: None = None
+class stratoweave_rfs__rfs__fabric_interface__state(yadata.MNode):
+    oper_status: ?str
+    bgp_status: ?str
+
+    mut def __init__(self, oper_status: ?str=None, bgp_status: ?str=None) -> None:
+        self.oper_status = oper_status
+        self.bgp_status = bgp_status
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['stratoweave-rfs:rfs', 'dorsi-rfs:fabric-interface', 'state'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> stratoweave_rfs__rfs__fabric_interface__state:
+        if n is not None:
+            return stratoweave_rfs__rfs__fabric_interface__state(oper_status=n.get_opt_str(ygdata.Id(NS_dorsi_rfs, 'oper-status')), bgp_status=n.get_opt_str(ygdata.Id(NS_dorsi_rfs, 'bgp-status')))
+        return stratoweave_rfs__rfs__fabric_interface__state()
+
+    mut def copy(self) -> stratoweave_rfs__rfs__fabric_interface__state:
+        """Create a deep copy of this adata object"""
+        return stratoweave_rfs__rfs__fabric_interface__state.from_gdata(self.to_gdata())
+
+
+_breaker34: None = None
 class stratoweave_rfs__rfs__fabric_interface_entry(yadata.MNode):
     name: str
     ipv4_address: ?str
     ipv4_prefix_length: ?u64
     remote: stratoweave_rfs__rfs__fabric_interface__remote
     bgp: stratoweave_rfs__rfs__fabric_interface__bgp
+    state: stratoweave_rfs__rfs__fabric_interface__state
 
-    mut def __init__(self, name: str, ipv4_address: ?str=None, ipv4_prefix_length: ?u64=None, remote: ?stratoweave_rfs__rfs__fabric_interface__remote=None, bgp: ?stratoweave_rfs__rfs__fabric_interface__bgp=None) -> None:
+    mut def __init__(self, name: str, ipv4_address: ?str=None, ipv4_prefix_length: ?u64=None, remote: ?stratoweave_rfs__rfs__fabric_interface__remote=None, bgp: ?stratoweave_rfs__rfs__fabric_interface__bgp=None, state: ?stratoweave_rfs__rfs__fabric_interface__state=None) -> None:
         self.name = name
         self.ipv4_address = ipv4_address
         self.ipv4_prefix_length = ipv4_prefix_length
         self.remote = remote if remote is not None else stratoweave_rfs__rfs__fabric_interface__remote()
         self.bgp = bgp if bgp is not None else stratoweave_rfs__rfs__fabric_interface__bgp()
+        self.state = state if state is not None else stratoweave_rfs__rfs__fabric_interface__state()
 
     mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
         return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['stratoweave-rfs:rfs', 'dorsi-rfs:fabric-interface'], prev=prev)
 
     @staticmethod
     mut def from_gdata(n: ygdata.Node) -> stratoweave_rfs__rfs__fabric_interface_entry:
-        return stratoweave_rfs__rfs__fabric_interface_entry(name=n.get_str(ygdata.Id(NS_dorsi_rfs, 'name')), ipv4_address=n.get_opt_str(ygdata.Id(NS_dorsi_rfs, 'ipv4-address')), ipv4_prefix_length=n.get_opt_u64(ygdata.Id(NS_dorsi_rfs, 'ipv4-prefix-length')), remote=stratoweave_rfs__rfs__fabric_interface__remote.from_gdata(n.get_opt_cnt(ygdata.Id(NS_dorsi_rfs, 'remote'))), bgp=stratoweave_rfs__rfs__fabric_interface__bgp.from_gdata(n.get_opt_cnt(ygdata.Id(NS_dorsi_rfs, 'bgp'))))
+        return stratoweave_rfs__rfs__fabric_interface_entry(name=n.get_str(ygdata.Id(NS_dorsi_rfs, 'name')), ipv4_address=n.get_opt_str(ygdata.Id(NS_dorsi_rfs, 'ipv4-address')), ipv4_prefix_length=n.get_opt_u64(ygdata.Id(NS_dorsi_rfs, 'ipv4-prefix-length')), remote=stratoweave_rfs__rfs__fabric_interface__remote.from_gdata(n.get_opt_cnt(ygdata.Id(NS_dorsi_rfs, 'remote'))), bgp=stratoweave_rfs__rfs__fabric_interface__bgp.from_gdata(n.get_opt_cnt(ygdata.Id(NS_dorsi_rfs, 'bgp'))), state=stratoweave_rfs__rfs__fabric_interface__state.from_gdata(n.get_opt_cnt(ygdata.Id(NS_dorsi_rfs, 'state'))))
 
     mut def copy(self) -> stratoweave_rfs__rfs__fabric_interface_entry:
         """Create a deep copy of this adata object"""
         return stratoweave_rfs__rfs__fabric_interface_entry.from_gdata(self.to_gdata())
 
-_breaker39: None = None
+_breaker35: None = None
 class stratoweave_rfs__rfs__fabric_interface(yadata.MKeyedList[str, stratoweave_rfs__rfs__fabric_interface_entry]):
     mut def __init__(self, elements: list[stratoweave_rfs__rfs__fabric_interface_entry]=[]) -> None:
         yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
@@ -3510,7 +3279,7 @@ class stratoweave_rfs__rfs__fabric_interface(yadata.MKeyedList[str, stratoweave_
         return stratoweave_rfs__rfs__fabric_interface(elements=copied_elements)
 
 
-_breaker40: None = None
+_breaker36: None = None
 class stratoweave_rfs__rfs__server_port_entry(yadata.MNode):
     name: str
     server: ?str
@@ -3534,7 +3303,7 @@ class stratoweave_rfs__rfs__server_port_entry(yadata.MNode):
         """Create a deep copy of this adata object"""
         return stratoweave_rfs__rfs__server_port_entry.from_gdata(self.to_gdata())
 
-_breaker41: None = None
+_breaker37: None = None
 class stratoweave_rfs__rfs__server_port(yadata.MKeyedList[str, stratoweave_rfs__rfs__server_port_entry]):
     mut def __init__(self, elements: list[stratoweave_rfs__rfs__server_port_entry]=[]) -> None:
         yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
@@ -3571,98 +3340,31 @@ class stratoweave_rfs__rfs__server_port(yadata.MKeyedList[str, stratoweave_rfs__
         return stratoweave_rfs__rfs__server_port(elements=copied_elements)
 
 
-_breaker42: None = None
-class stratoweave_rfs__rfs__ibgp_neighbor_entry(yadata.MNode):
-    address: str
-    asn: ?u64
-    description: ?str
-    ibgp_authentication_key: ?str
-
-    mut def __init__(self, address: str, asn: ?u64=None, description: ?str=None, ibgp_authentication_key: ?str=None) -> None:
-        self.address = address
-        self.asn = asn
-        self.description = description
-        self.ibgp_authentication_key = ibgp_authentication_key
-
-    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
-        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['stratoweave-rfs:rfs', 'dorsi-rfs:ibgp-neighbor'], prev=prev)
-
-    @staticmethod
-    mut def from_gdata(n: ygdata.Node) -> stratoweave_rfs__rfs__ibgp_neighbor_entry:
-        return stratoweave_rfs__rfs__ibgp_neighbor_entry(address=n.get_str(ygdata.Id(NS_dorsi_rfs, 'address')), asn=n.get_opt_u64(ygdata.Id(NS_dorsi_rfs, 'asn')), description=n.get_opt_str(ygdata.Id(NS_dorsi_rfs, 'description')), ibgp_authentication_key=n.get_opt_str(ygdata.Id(NS_dorsi_rfs, 'ibgp-authentication-key')))
-
-    mut def copy(self) -> stratoweave_rfs__rfs__ibgp_neighbor_entry:
-        """Create a deep copy of this adata object"""
-        return stratoweave_rfs__rfs__ibgp_neighbor_entry.from_gdata(self.to_gdata())
-
-_breaker43: None = None
-class stratoweave_rfs__rfs__ibgp_neighbor(yadata.MKeyedList[str, stratoweave_rfs__rfs__ibgp_neighbor_entry]):
-    mut def __init__(self, elements: list[stratoweave_rfs__rfs__ibgp_neighbor_entry]=[]) -> None:
-        yadata.MKeyedList.__init__(self, lambda e: e.address, elements)
-
-    mut def create(self, key: str, asn: ?u64=None, description: ?str=None, ibgp_authentication_key: ?str=None) -> stratoweave_rfs__rfs__ibgp_neighbor_entry:
-        e = self.get(key)
-        if e is not None:
-            if asn is not None:
-                e.asn = asn
-            if description is not None:
-                e.description = description
-            if ibgp_authentication_key is not None:
-                e.ibgp_authentication_key = ibgp_authentication_key
-            return e
-        address = key
-        res = stratoweave_rfs__rfs__ibgp_neighbor_entry(address=address, asn=asn, description=description, ibgp_authentication_key=ibgp_authentication_key)
-        self._append(res)
-        return res
-
-    @staticmethod
-    mut def from_gdata(n: ?ygdata.List) -> list[stratoweave_rfs__rfs__ibgp_neighbor_entry]:
-        if n is not None:
-            return [stratoweave_rfs__rfs__ibgp_neighbor_entry.from_gdata(e) for e in n.entries()]
-        return []
-
-    mut def copy(self) -> stratoweave_rfs__rfs__ibgp_neighbor:
-        """Create a deep copy of this list object"""
-        # Copy each element in the list
-        copied_elements = []
-        for e in self:
-            ce = e.copy()
-            if ce is not None:
-                copied_elements.append(ce)
-        return stratoweave_rfs__rfs__ibgp_neighbor(elements=copied_elements)
-
-
-_breaker44: None = None
+_breaker38: None = None
 class stratoweave_rfs__rfs_entry(yadata.MNode):
     name: str
-    base_config: stratoweave_rfs__rfs__base_config
-    backbone_interface: stratoweave_rfs__rfs__backbone_interface
     fabric_base_config: stratoweave_rfs__rfs__fabric_base_config
     fabric_interface: stratoweave_rfs__rfs__fabric_interface
     server_port: stratoweave_rfs__rfs__server_port
-    ibgp_neighbor: stratoweave_rfs__rfs__ibgp_neighbor
 
-    mut def __init__(self, name: str, base_config: ?stratoweave_rfs__rfs__base_config=None, backbone_interface: list[stratoweave_rfs__rfs__backbone_interface_entry]=[], fabric_base_config: list[stratoweave_rfs__rfs__fabric_base_config_entry]=[], fabric_interface: list[stratoweave_rfs__rfs__fabric_interface_entry]=[], server_port: list[stratoweave_rfs__rfs__server_port_entry]=[], ibgp_neighbor: list[stratoweave_rfs__rfs__ibgp_neighbor_entry]=[]) -> None:
+    mut def __init__(self, name: str, fabric_base_config: list[stratoweave_rfs__rfs__fabric_base_config_entry]=[], fabric_interface: list[stratoweave_rfs__rfs__fabric_interface_entry]=[], server_port: list[stratoweave_rfs__rfs__server_port_entry]=[]) -> None:
         self.name = name
-        self.base_config = base_config if base_config is not None else stratoweave_rfs__rfs__base_config()
-        self.backbone_interface = stratoweave_rfs__rfs__backbone_interface(elements=backbone_interface)
         self.fabric_base_config = stratoweave_rfs__rfs__fabric_base_config(elements=fabric_base_config)
         self.fabric_interface = stratoweave_rfs__rfs__fabric_interface(elements=fabric_interface)
         self.server_port = stratoweave_rfs__rfs__server_port(elements=server_port)
-        self.ibgp_neighbor = stratoweave_rfs__rfs__ibgp_neighbor(elements=ibgp_neighbor)
 
     mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
         return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['stratoweave-rfs:rfs'], prev=prev)
 
     @staticmethod
     mut def from_gdata(n: ygdata.Node) -> stratoweave_rfs__rfs_entry:
-        return stratoweave_rfs__rfs_entry(name=n.get_str(ygdata.Id(NS_stratoweave_rfs, 'name')), base_config=stratoweave_rfs__rfs__base_config.from_gdata(n.get_opt_cnt(ygdata.Id(NS_dorsi_rfs, 'base-config'))), backbone_interface=stratoweave_rfs__rfs__backbone_interface.from_gdata(n.get_opt_list(ygdata.Id(NS_dorsi_rfs, 'backbone-interface'))), fabric_base_config=stratoweave_rfs__rfs__fabric_base_config.from_gdata(n.get_opt_list(ygdata.Id(NS_dorsi_rfs, 'fabric-base-config'))), fabric_interface=stratoweave_rfs__rfs__fabric_interface.from_gdata(n.get_opt_list(ygdata.Id(NS_dorsi_rfs, 'fabric-interface'))), server_port=stratoweave_rfs__rfs__server_port.from_gdata(n.get_opt_list(ygdata.Id(NS_dorsi_rfs, 'server-port'))), ibgp_neighbor=stratoweave_rfs__rfs__ibgp_neighbor.from_gdata(n.get_opt_list(ygdata.Id(NS_dorsi_rfs, 'ibgp-neighbor'))))
+        return stratoweave_rfs__rfs_entry(name=n.get_str(ygdata.Id(NS_stratoweave_rfs, 'name')), fabric_base_config=stratoweave_rfs__rfs__fabric_base_config.from_gdata(n.get_opt_list(ygdata.Id(NS_dorsi_rfs, 'fabric-base-config'))), fabric_interface=stratoweave_rfs__rfs__fabric_interface.from_gdata(n.get_opt_list(ygdata.Id(NS_dorsi_rfs, 'fabric-interface'))), server_port=stratoweave_rfs__rfs__server_port.from_gdata(n.get_opt_list(ygdata.Id(NS_dorsi_rfs, 'server-port'))))
 
     mut def copy(self) -> stratoweave_rfs__rfs_entry:
         """Create a deep copy of this adata object"""
         return stratoweave_rfs__rfs_entry.from_gdata(self.to_gdata())
 
-_breaker45: None = None
+_breaker39: None = None
 class stratoweave_rfs__rfs(yadata.MKeyedList[str, stratoweave_rfs__rfs_entry]):
     mut def __init__(self, elements: list[stratoweave_rfs__rfs_entry]=[]) -> None:
         yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
@@ -3693,7 +3395,7 @@ class stratoweave_rfs__rfs(yadata.MKeyedList[str, stratoweave_rfs__rfs_entry]):
         return stratoweave_rfs__rfs(elements=copied_elements)
 
 
-_breaker46: None = None
+_breaker40: None = None
 class root(yadata.MNode):
     device: stratoweave_rfs__device
     rfs: stratoweave_rfs__rfs
@@ -3742,7 +3444,7 @@ def _present(n: ?ygdata.Node) -> ?ygdata.Node:
             return n
     return None
 
-_breaker47: None = None
+_breaker41: None = None
 class stratoweave_rfs__device__address__initial_credentials_entry_subs(SubscriptionNode):
     username: SubscriptionNode
     password: SubscriptionNode
@@ -3758,7 +3460,7 @@ class stratoweave_rfs__device__address__initial_credentials_entry_subs(Subscript
         direct: list[SubscriptionNode] = [self.username, self.password, self.key]
         return direct
 
-_breaker48: None = None
+_breaker42: None = None
 proc def stratoweave_rfs__device__address__initial_credentials_deliver(cb: action(?(device_name: str, address_name: str, initial_credentials_username: str, initial_credentials_password: str, initial_credentials_key: str), ?stratoweave_rfs__device__address__initial_credentials_entry, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(device_name: str, address_name: str, initial_credentials_username: str, initial_credentials_password: str, initial_credentials_key: str) = None
     inst: ?stratoweave_rfs__device__address__initial_credentials_entry = None
@@ -3805,7 +3507,7 @@ class stratoweave_rfs__device__address__initial_credentials_subs(SubscriptionNod
         direct: list[SubscriptionNode] = [self.username, self.password, self.key]
         return direct
 
-_breaker49: None = None
+_breaker43: None = None
 class stratoweave_rfs__device__address_entry_subs(SubscriptionNode):
     name: SubscriptionNode
     address: SubscriptionNode
@@ -3823,7 +3525,7 @@ class stratoweave_rfs__device__address_entry_subs(SubscriptionNode):
         direct: list[SubscriptionNode] = [self.name, self.address, self.port, self.initial_credentials]
         return direct
 
-_breaker50: None = None
+_breaker44: None = None
 proc def stratoweave_rfs__device__address_deliver(cb: action(?(device_name: str, address_name: str), ?stratoweave_rfs__device__address_entry, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(device_name: str, address_name: str) = None
     inst: ?stratoweave_rfs__device__address_entry = None
@@ -3869,7 +3571,7 @@ class stratoweave_rfs__device__address_subs(SubscriptionNode):
         direct: list[SubscriptionNode] = [self.name, self.address, self.port, self.initial_credentials]
         return direct
 
-_breaker51: None = None
+_breaker45: None = None
 class stratoweave_rfs__device__credentials__key_entry_subs(SubscriptionNode):
     key: SubscriptionNode
     private_key: SubscriptionNode
@@ -3883,7 +3585,7 @@ class stratoweave_rfs__device__credentials__key_entry_subs(SubscriptionNode):
         direct: list[SubscriptionNode] = [self.key, self.private_key]
         return direct
 
-_breaker52: None = None
+_breaker46: None = None
 proc def stratoweave_rfs__device__credentials__key_deliver(cb: action(?(device_name: str, key_key: str), ?stratoweave_rfs__device__credentials__key_entry, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(device_name: str, key_key: str) = None
     inst: ?stratoweave_rfs__device__credentials__key_entry = None
@@ -3926,7 +3628,7 @@ class stratoweave_rfs__device__credentials__key_subs(SubscriptionNode):
         direct: list[SubscriptionNode] = [self.key, self.private_key]
         return direct
 
-_breaker53: None = None
+_breaker47: None = None
 proc def stratoweave_rfs__device__credentials_deliver(cb: action(?(device_name: str), ?stratoweave_rfs__device__credentials, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(device_name: str) = None
     inst: ?stratoweave_rfs__device__credentials = None
@@ -3964,7 +3666,7 @@ class stratoweave_rfs__device__credentials_subs(SubscriptionNode):
         after a change or None when it is gone, and an error."""
         return ygdata.Dst(lambda n, err: stratoweave_rfs__device__credentials_deliver(cb, n, err), root=self.filt())
 
-_breaker54: None = None
+_breaker48: None = None
 class stratoweave_rfs__device__initial_credentials_entry_subs(SubscriptionNode):
     username: SubscriptionNode
     password: SubscriptionNode
@@ -3980,7 +3682,7 @@ class stratoweave_rfs__device__initial_credentials_entry_subs(SubscriptionNode):
         direct: list[SubscriptionNode] = [self.username, self.password, self.key]
         return direct
 
-_breaker55: None = None
+_breaker49: None = None
 proc def stratoweave_rfs__device__initial_credentials_deliver(cb: action(?(device_name: str, initial_credentials_username: str, initial_credentials_password: str, initial_credentials_key: str), ?stratoweave_rfs__device__initial_credentials_entry, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(device_name: str, initial_credentials_username: str, initial_credentials_password: str, initial_credentials_key: str) = None
     inst: ?stratoweave_rfs__device__initial_credentials_entry = None
@@ -4026,7 +3728,7 @@ class stratoweave_rfs__device__initial_credentials_subs(SubscriptionNode):
         direct: list[SubscriptionNode] = [self.username, self.password, self.key]
         return direct
 
-_breaker56: None = None
+_breaker50: None = None
 proc def stratoweave_rfs__device__ssh_deliver(cb: action(?(device_name: str), ?stratoweave_rfs__device__ssh, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(device_name: str) = None
     inst: ?stratoweave_rfs__device__ssh = None
@@ -4078,7 +3780,7 @@ class stratoweave_rfs__device__ssh_subs(SubscriptionNode):
         after a change or None when it is gone, and an error."""
         return ygdata.Dst(lambda n, err: stratoweave_rfs__device__ssh_deliver(cb, n, err), root=self.filt())
 
-_breaker57: None = None
+_breaker51: None = None
 proc def stratoweave_rfs__device__mock__software_deliver(cb: action(?(device_name: str), ?stratoweave_rfs__device__mock__software, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(device_name: str) = None
     inst: ?stratoweave_rfs__device__mock__software = None
@@ -4117,7 +3819,7 @@ class stratoweave_rfs__device__mock__software_subs(SubscriptionNode):
         after a change or None when it is gone, and an error."""
         return ygdata.Dst(lambda n, err: stratoweave_rfs__device__mock__software_deliver(cb, n, err), root=self.filt())
 
-_breaker58: None = None
+_breaker52: None = None
 class stratoweave_rfs__device__mock__module_entry_subs(SubscriptionNode):
     name: SubscriptionNode
     namespace: SubscriptionNode
@@ -4135,7 +3837,7 @@ class stratoweave_rfs__device__mock__module_entry_subs(SubscriptionNode):
         direct: list[SubscriptionNode] = [self.name, self.namespace, self.revision, self.feature]
         return direct
 
-_breaker59: None = None
+_breaker53: None = None
 proc def stratoweave_rfs__device__mock__module_deliver(cb: action(?(device_name: str, module_name: str), ?stratoweave_rfs__device__mock__module_entry, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(device_name: str, module_name: str) = None
     inst: ?stratoweave_rfs__device__mock__module_entry = None
@@ -4182,7 +3884,7 @@ class stratoweave_rfs__device__mock__module_subs(SubscriptionNode):
         direct: list[SubscriptionNode] = [self.name, self.namespace, self.revision, self.feature]
         return direct
 
-_breaker60: None = None
+_breaker54: None = None
 proc def stratoweave_rfs__device__mock_deliver(cb: action(?(device_name: str), ?stratoweave_rfs__device__mock, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(device_name: str) = None
     inst: ?stratoweave_rfs__device__mock = None
@@ -4220,7 +3922,7 @@ class stratoweave_rfs__device__mock_subs(SubscriptionNode):
         after a change or None when it is gone, and an error."""
         return ygdata.Dst(lambda n, err: stratoweave_rfs__device__mock_deliver(cb, n, err), root=self.filt())
 
-_breaker61: None = None
+_breaker55: None = None
 proc def stratoweave_rfs__device__debug_deliver(cb: action(?(device_name: str), ?stratoweave_rfs__device__debug, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(device_name: str) = None
     inst: ?stratoweave_rfs__device__debug = None
@@ -4256,7 +3958,7 @@ class stratoweave_rfs__device__debug_subs(SubscriptionNode):
         after a change or None when it is gone, and an error."""
         return ygdata.Dst(lambda n, err: stratoweave_rfs__device__debug_deliver(cb, n, err), root=self.filt())
 
-_breaker62: None = None
+_breaker56: None = None
 proc def stratoweave_rfs__device__feature_flags_deliver(cb: action(?(device_name: str), ?stratoweave_rfs__device__feature_flags, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(device_name: str) = None
     inst: ?stratoweave_rfs__device__feature_flags = None
@@ -4290,7 +3992,7 @@ class stratoweave_rfs__device__feature_flags_subs(SubscriptionNode):
         after a change or None when it is gone, and an error."""
         return ygdata.Dst(lambda n, err: stratoweave_rfs__device__feature_flags_deliver(cb, n, err), root=self.filt())
 
-_breaker63: None = None
+_breaker57: None = None
 class stratoweave_rfs__device__software__veto_entry_subs(SubscriptionNode):
     holder: SubscriptionNode
     reason: SubscriptionNode
@@ -4304,7 +4006,7 @@ class stratoweave_rfs__device__software__veto_entry_subs(SubscriptionNode):
         direct: list[SubscriptionNode] = [self.holder, self.reason]
         return direct
 
-_breaker64: None = None
+_breaker58: None = None
 proc def stratoweave_rfs__device__software__veto_deliver(cb: action(?(device_name: str, veto_holder: str), ?stratoweave_rfs__device__software__veto_entry, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(device_name: str, veto_holder: str) = None
     inst: ?stratoweave_rfs__device__software__veto_entry = None
@@ -4347,7 +4049,7 @@ class stratoweave_rfs__device__software__veto_subs(SubscriptionNode):
         direct: list[SubscriptionNode] = [self.holder, self.reason]
         return direct
 
-_breaker65: None = None
+_breaker59: None = None
 class stratoweave_rfs__device__software__state__job_entry_subs(SubscriptionNode):
     name: SubscriptionNode
     state: SubscriptionNode
@@ -4369,7 +4071,7 @@ class stratoweave_rfs__device__software__state__job_entry_subs(SubscriptionNode)
         direct: list[SubscriptionNode] = [self.name, self.state, self.started, self.ended, self.progress, self.message]
         return direct
 
-_breaker66: None = None
+_breaker60: None = None
 proc def stratoweave_rfs__device__software__state__job_deliver(cb: action(?(device_name: str, job_name: str), ?stratoweave_rfs__device__software__state__job_entry, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(device_name: str, job_name: str) = None
     inst: ?stratoweave_rfs__device__software__state__job_entry = None
@@ -4421,7 +4123,7 @@ class stratoweave_rfs__device__software__state__job_subs(SubscriptionNode):
         direct: list[SubscriptionNode] = [self.name, self.state, self.started, self.ended, self.progress, self.message]
         return direct
 
-_breaker67: None = None
+_breaker61: None = None
 proc def stratoweave_rfs__device__software__state__precheck_deliver(cb: action(?(device_name: str), ?stratoweave_rfs__device__software__state__precheck, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(device_name: str) = None
     inst: ?stratoweave_rfs__device__software__state__precheck = None
@@ -4461,7 +4163,7 @@ class stratoweave_rfs__device__software__state__precheck_subs(SubscriptionNode):
         after a change or None when it is gone, and an error."""
         return ygdata.Dst(lambda n, err: stratoweave_rfs__device__software__state__precheck_deliver(cb, n, err), root=self.filt())
 
-_breaker68: None = None
+_breaker62: None = None
 proc def stratoweave_rfs__device__software__state__postcheck_deliver(cb: action(?(device_name: str), ?stratoweave_rfs__device__software__state__postcheck, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(device_name: str) = None
     inst: ?stratoweave_rfs__device__software__state__postcheck = None
@@ -4501,7 +4203,7 @@ class stratoweave_rfs__device__software__state__postcheck_subs(SubscriptionNode)
         after a change or None when it is gone, and an error."""
         return ygdata.Dst(lambda n, err: stratoweave_rfs__device__software__state__postcheck_deliver(cb, n, err), root=self.filt())
 
-_breaker69: None = None
+_breaker63: None = None
 proc def stratoweave_rfs__device__software__state_deliver(cb: action(?(device_name: str), ?stratoweave_rfs__device__software__state, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(device_name: str) = None
     inst: ?stratoweave_rfs__device__software__state = None
@@ -4548,7 +4250,7 @@ class stratoweave_rfs__device__software__state_subs(SubscriptionNode):
         after a change or None when it is gone, and an error."""
         return ygdata.Dst(lambda n, err: stratoweave_rfs__device__software__state_deliver(cb, n, err), root=self.filt())
 
-_breaker70: None = None
+_breaker64: None = None
 proc def stratoweave_rfs__device__software_deliver(cb: action(?(device_name: str), ?stratoweave_rfs__device__software, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(device_name: str) = None
     inst: ?stratoweave_rfs__device__software = None
@@ -4592,7 +4294,7 @@ class stratoweave_rfs__device__software_subs(SubscriptionNode):
         after a change or None when it is gone, and an error."""
         return ygdata.Dst(lambda n, err: stratoweave_rfs__device__software_deliver(cb, n, err), root=self.filt())
 
-_breaker71: None = None
+_breaker65: None = None
 proc def stratoweave_rfs__device__state__platform_deliver(cb: action(?(device_name: str), ?stratoweave_rfs__device__state__platform, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(device_name: str) = None
     inst: ?stratoweave_rfs__device__state__platform = None
@@ -4635,7 +4337,7 @@ class stratoweave_rfs__device__state__platform_subs(SubscriptionNode):
         after a change or None when it is gone, and an error."""
         return ygdata.Dst(lambda n, err: stratoweave_rfs__device__state__platform_deliver(cb, n, err), root=self.filt())
 
-_breaker72: None = None
+_breaker66: None = None
 proc def stratoweave_rfs__device__state_deliver(cb: action(?(device_name: str), ?stratoweave_rfs__device__state, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(device_name: str) = None
     inst: ?stratoweave_rfs__device__state = None
@@ -4669,7 +4371,7 @@ class stratoweave_rfs__device__state_subs(SubscriptionNode):
         after a change or None when it is gone, and an error."""
         return ygdata.Dst(lambda n, err: stratoweave_rfs__device__state_deliver(cb, n, err), root=self.filt())
 
-_breaker73: None = None
+_breaker67: None = None
 class stratoweave_rfs__device_entry_subs(SubscriptionNode):
     name: SubscriptionNode
     description: SubscriptionNode
@@ -4707,7 +4409,7 @@ class stratoweave_rfs__device_entry_subs(SubscriptionNode):
         direct: list[SubscriptionNode] = [self.name, self.description, self.type, self.address, self.credentials, self.initial_credentials, self.ssh, self.approval_required, self.sync_check, self.mock, self.debug, self.feature_flags, self.software, self.state]
         return direct
 
-_breaker74: None = None
+_breaker68: None = None
 proc def stratoweave_rfs__device_deliver(cb: action(?(device_name: str), ?stratoweave_rfs__device_entry, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(device_name: str) = None
     inst: ?stratoweave_rfs__device_entry = None
@@ -4772,197 +4474,7 @@ class stratoweave_rfs__device_subs(SubscriptionNode):
         direct: list[SubscriptionNode] = [self.name, self.description, self.type, self.address, self.credentials, self.initial_credentials, self.ssh, self.approval_required, self.sync_check, self.mock, self.debug, self.feature_flags, self.software, self.state]
         return direct
 
-_breaker75: None = None
-proc def stratoweave_rfs__rfs__base_config_deliver(cb: action(?(rfs_name: str), ?stratoweave_rfs__rfs__base_config, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
-    keys: ?(rfs_name: str) = None
-    inst: ?stratoweave_rfs__rfs__base_config = None
-    if n is not None:
-        try:
-            e1 = _one(_at(n, ygdata.Id(NS_stratoweave_rfs, 'rfs')), 'rfs')
-            c2 = _at(e1, ygdata.Id(NS_dorsi_rfs, 'base-config'))
-            keys = (rfs_name=e1.get_str(ygdata.Id(NS_stratoweave_rfs, 'name')))
-            here = _present(c2)
-            if here is not None:
-                inst = stratoweave_rfs__rfs__base_config.from_gdata(here)
-        except Exception as e:
-            cb(None, None, e)
-            return
-    cb(keys, inst, err)
-
-class stratoweave_rfs__rfs__base_config_subs(SubscriptionNode):
-    role: SubscriptionNode
-    ipv4_address: SubscriptionNode
-    ipv6_address: SubscriptionNode
-    asn: SubscriptionNode
-    ibgp_authentication_key: SubscriptionNode
-
-    pure def __init__(self, path: ?SubscriptionPath=None) -> None:
-        SubscriptionNode.__init__(self, path)
-        self.role = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_dorsi_rfs, 'role'), parent=path))
-        self.ipv4_address = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_dorsi_rfs, 'ipv4-address'), parent=path))
-        self.ipv6_address = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_dorsi_rfs, 'ipv6-address'), parent=path))
-        self.asn = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_dorsi_rfs, 'asn'), parent=path))
-        self.ibgp_authentication_key = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_dorsi_rfs, 'ibgp-authentication-key'), parent=path))
-
-    pure def _direct_children(self) -> list[SubscriptionNode]:
-        direct: list[SubscriptionNode] = [self.role, self.ipv4_address, self.ipv6_address, self.asn, self.ibgp_authentication_key]
-        return direct
-
-    def dst(self, cb: action(?(rfs_name: str), ?stratoweave_rfs__rfs__base_config, ?Exception) -> None) -> ygdata.Dst:
-        """A destination rooted here: cb gets, one instance at a time,
-        the keys of the lists on the way down, this container as it is
-        after a change or None when it is gone, and an error."""
-        return ygdata.Dst(lambda n, err: stratoweave_rfs__rfs__base_config_deliver(cb, n, err), root=self.filt())
-
-_breaker76: None = None
-proc def stratoweave_rfs__rfs__backbone_interface__remote_deliver(cb: action(?(rfs_name: str, backbone_interface_name: str), ?stratoweave_rfs__rfs__backbone_interface__remote, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
-    keys: ?(rfs_name: str, backbone_interface_name: str) = None
-    inst: ?stratoweave_rfs__rfs__backbone_interface__remote = None
-    if n is not None:
-        try:
-            e1 = _one(_at(n, ygdata.Id(NS_stratoweave_rfs, 'rfs')), 'rfs')
-            e2 = _one(_at(e1, ygdata.Id(NS_dorsi_rfs, 'backbone-interface')), 'backbone-interface')
-            c3 = _at(e2, ygdata.Id(NS_dorsi_rfs, 'remote'))
-            keys = (rfs_name=e1.get_str(ygdata.Id(NS_stratoweave_rfs, 'name')), backbone_interface_name=e2.get_str(ygdata.Id(NS_dorsi_rfs, 'name')))
-            here = _present(c3)
-            if here is not None:
-                inst = stratoweave_rfs__rfs__backbone_interface__remote.from_gdata(here)
-        except Exception as e:
-            cb(None, None, e)
-            return
-    cb(keys, inst, err)
-
-class stratoweave_rfs__rfs__backbone_interface__remote_subs(SubscriptionNode):
-    device: SubscriptionNode
-    interface: SubscriptionNode
-
-    pure def __init__(self, path: ?SubscriptionPath=None) -> None:
-        SubscriptionNode.__init__(self, path)
-        self.device = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_dorsi_rfs, 'device'), parent=path))
-        self.interface = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_dorsi_rfs, 'interface'), parent=path))
-
-    pure def _direct_children(self) -> list[SubscriptionNode]:
-        direct: list[SubscriptionNode] = [self.device, self.interface]
-        return direct
-
-    def dst(self, cb: action(?(rfs_name: str, backbone_interface_name: str), ?stratoweave_rfs__rfs__backbone_interface__remote, ?Exception) -> None) -> ygdata.Dst:
-        """A destination rooted here: cb gets, one instance at a time,
-        the keys of the lists on the way down, this container as it is
-        after a change or None when it is gone, and an error."""
-        return ygdata.Dst(lambda n, err: stratoweave_rfs__rfs__backbone_interface__remote_deliver(cb, n, err), root=self.filt())
-
-_breaker77: None = None
-proc def stratoweave_rfs__rfs__backbone_interface__state_deliver(cb: action(?(rfs_name: str, backbone_interface_name: str), ?stratoweave_rfs__rfs__backbone_interface__state, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
-    keys: ?(rfs_name: str, backbone_interface_name: str) = None
-    inst: ?stratoweave_rfs__rfs__backbone_interface__state = None
-    if n is not None:
-        try:
-            e1 = _one(_at(n, ygdata.Id(NS_stratoweave_rfs, 'rfs')), 'rfs')
-            e2 = _one(_at(e1, ygdata.Id(NS_dorsi_rfs, 'backbone-interface')), 'backbone-interface')
-            c3 = _at(e2, ygdata.Id(NS_dorsi_rfs, 'state'))
-            keys = (rfs_name=e1.get_str(ygdata.Id(NS_stratoweave_rfs, 'name')), backbone_interface_name=e2.get_str(ygdata.Id(NS_dorsi_rfs, 'name')))
-            here = _present(c3)
-            if here is not None:
-                inst = stratoweave_rfs__rfs__backbone_interface__state.from_gdata(here)
-        except Exception as e:
-            cb(None, None, e)
-            return
-    cb(keys, inst, err)
-
-class stratoweave_rfs__rfs__backbone_interface__state_subs(SubscriptionNode):
-    oper_status: SubscriptionNode
-
-    pure def __init__(self, path: ?SubscriptionPath=None) -> None:
-        SubscriptionNode.__init__(self, path)
-        self.oper_status = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_dorsi_rfs, 'oper-status'), parent=path))
-
-    pure def _direct_children(self) -> list[SubscriptionNode]:
-        direct: list[SubscriptionNode] = [self.oper_status]
-        return direct
-
-    def dst(self, cb: action(?(rfs_name: str, backbone_interface_name: str), ?stratoweave_rfs__rfs__backbone_interface__state, ?Exception) -> None) -> ygdata.Dst:
-        """A destination rooted here: cb gets, one instance at a time,
-        the keys of the lists on the way down, this container as it is
-        after a change or None when it is gone, and an error."""
-        return ygdata.Dst(lambda n, err: stratoweave_rfs__rfs__backbone_interface__state_deliver(cb, n, err), root=self.filt())
-
-_breaker78: None = None
-class stratoweave_rfs__rfs__backbone_interface_entry_subs(SubscriptionNode):
-    name: SubscriptionNode
-    ipv4_address: SubscriptionNode
-    ipv4_prefix_length: SubscriptionNode
-    ipv6_address: SubscriptionNode
-    ipv6_prefix_length: SubscriptionNode
-    remote: stratoweave_rfs__rfs__backbone_interface__remote_subs
-    state: stratoweave_rfs__rfs__backbone_interface__state_subs
-
-    pure def __init__(self, path: ?SubscriptionPath=None) -> None:
-        SubscriptionNode.__init__(self, path)
-        self.name = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_dorsi_rfs, 'name'), parent=path))
-        self.ipv4_address = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_dorsi_rfs, 'ipv4-address'), parent=path))
-        self.ipv4_prefix_length = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_dorsi_rfs, 'ipv4-prefix-length'), parent=path))
-        self.ipv6_address = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_dorsi_rfs, 'ipv6-address'), parent=path))
-        self.ipv6_prefix_length = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_dorsi_rfs, 'ipv6-prefix-length'), parent=path))
-        self.remote = stratoweave_rfs__rfs__backbone_interface__remote_subs(SubscriptionPath(ygdata.Id(NS_dorsi_rfs, 'remote'), parent=path))
-        self.state = stratoweave_rfs__rfs__backbone_interface__state_subs(SubscriptionPath(ygdata.Id(NS_dorsi_rfs, 'state'), parent=path))
-
-    pure def _direct_children(self) -> list[SubscriptionNode]:
-        direct: list[SubscriptionNode] = [self.name, self.ipv4_address, self.ipv4_prefix_length, self.ipv6_address, self.ipv6_prefix_length, self.remote, self.state]
-        return direct
-
-_breaker79: None = None
-proc def stratoweave_rfs__rfs__backbone_interface_deliver(cb: action(?(rfs_name: str, backbone_interface_name: str), ?stratoweave_rfs__rfs__backbone_interface_entry, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
-    keys: ?(rfs_name: str, backbone_interface_name: str) = None
-    inst: ?stratoweave_rfs__rfs__backbone_interface_entry = None
-    if n is not None:
-        try:
-            e1 = _one(_at(n, ygdata.Id(NS_stratoweave_rfs, 'rfs')), 'rfs')
-            e2 = _one(_at(e1, ygdata.Id(NS_dorsi_rfs, 'backbone-interface')), 'backbone-interface')
-            keys = (rfs_name=e1.get_str(ygdata.Id(NS_stratoweave_rfs, 'name')), backbone_interface_name=e2.get_str(ygdata.Id(NS_dorsi_rfs, 'name')))
-            here = _present(e2)
-            if here is not None:
-                inst = stratoweave_rfs__rfs__backbone_interface_entry.from_gdata(here)
-        except Exception as e:
-            cb(None, None, e)
-            return
-    cb(keys, inst, err)
-
-class stratoweave_rfs__rfs__backbone_interface_subs(SubscriptionNode):
-    name: SubscriptionNode
-    ipv4_address: SubscriptionNode
-    ipv4_prefix_length: SubscriptionNode
-    ipv6_address: SubscriptionNode
-    ipv6_prefix_length: SubscriptionNode
-    remote: stratoweave_rfs__rfs__backbone_interface__remote_subs
-    state: stratoweave_rfs__rfs__backbone_interface__state_subs
-    pure def __init__(self, path: ?SubscriptionPath=None) -> None:
-        SubscriptionNode.__init__(self, path)
-        self.name = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_dorsi_rfs, 'name'), parent=path))
-        self.ipv4_address = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_dorsi_rfs, 'ipv4-address'), parent=path))
-        self.ipv4_prefix_length = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_dorsi_rfs, 'ipv4-prefix-length'), parent=path))
-        self.ipv6_address = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_dorsi_rfs, 'ipv6-address'), parent=path))
-        self.ipv6_prefix_length = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_dorsi_rfs, 'ipv6-prefix-length'), parent=path))
-        self.remote = stratoweave_rfs__rfs__backbone_interface__remote_subs(SubscriptionPath(ygdata.Id(NS_dorsi_rfs, 'remote'), parent=path))
-        self.state = stratoweave_rfs__rfs__backbone_interface__state_subs(SubscriptionPath(ygdata.Id(NS_dorsi_rfs, 'state'), parent=path))
-
-    pure def entry(self, name: str) -> stratoweave_rfs__rfs__backbone_interface_entry_subs:
-        predicates = [
-            ygdata.FNode(ygdata.Id(NS_dorsi_rfs, 'name'), value_match=name),
-        ]
-        base_path = self._path!.parent
-        return stratoweave_rfs__rfs__backbone_interface_entry_subs(SubscriptionPath(ygdata.Id(NS_dorsi_rfs, 'backbone-interface'), predicates=predicates, parent=base_path))
-
-    def dst(self, cb: action(?(rfs_name: str, backbone_interface_name: str), ?stratoweave_rfs__rfs__backbone_interface_entry, ?Exception) -> None) -> ygdata.Dst:
-        """A destination rooted here: cb gets, one instance at a time,
-        the keys of the lists on the way down, this entry as it is
-        after a change or None when it is gone, and an error."""
-        return ygdata.Dst(lambda n, err: stratoweave_rfs__rfs__backbone_interface_deliver(cb, n, err), root=self.filt())
-
-    pure def _direct_children(self) -> list[SubscriptionNode]:
-        direct: list[SubscriptionNode] = [self.name, self.ipv4_address, self.ipv4_prefix_length, self.ipv6_address, self.ipv6_prefix_length, self.remote, self.state]
-        return direct
-
-_breaker80: None = None
+_breaker69: None = None
 class stratoweave_rfs__rfs__fabric_base_config_entry_subs(SubscriptionNode):
     asn: SubscriptionNode
     role: SubscriptionNode
@@ -4978,7 +4490,7 @@ class stratoweave_rfs__rfs__fabric_base_config_entry_subs(SubscriptionNode):
         direct: list[SubscriptionNode] = [self.asn, self.role, self.ipv4_address]
         return direct
 
-_breaker81: None = None
+_breaker70: None = None
 proc def stratoweave_rfs__rfs__fabric_base_config_deliver(cb: action(?(rfs_name: str, fabric_base_config_asn: u64), ?stratoweave_rfs__rfs__fabric_base_config_entry, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(rfs_name: str, fabric_base_config_asn: u64) = None
     inst: ?stratoweave_rfs__rfs__fabric_base_config_entry = None
@@ -5022,7 +4534,7 @@ class stratoweave_rfs__rfs__fabric_base_config_subs(SubscriptionNode):
         direct: list[SubscriptionNode] = [self.asn, self.role, self.ipv4_address]
         return direct
 
-_breaker82: None = None
+_breaker71: None = None
 proc def stratoweave_rfs__rfs__fabric_interface__remote_deliver(cb: action(?(rfs_name: str, fabric_interface_name: str), ?stratoweave_rfs__rfs__fabric_interface__remote, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(rfs_name: str, fabric_interface_name: str) = None
     inst: ?stratoweave_rfs__rfs__fabric_interface__remote = None
@@ -5059,7 +4571,7 @@ class stratoweave_rfs__rfs__fabric_interface__remote_subs(SubscriptionNode):
         after a change or None when it is gone, and an error."""
         return ygdata.Dst(lambda n, err: stratoweave_rfs__rfs__fabric_interface__remote_deliver(cb, n, err), root=self.filt())
 
-_breaker83: None = None
+_breaker72: None = None
 proc def stratoweave_rfs__rfs__fabric_interface__bgp_deliver(cb: action(?(rfs_name: str, fabric_interface_name: str), ?stratoweave_rfs__rfs__fabric_interface__bgp, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(rfs_name: str, fabric_interface_name: str) = None
     inst: ?stratoweave_rfs__rfs__fabric_interface__bgp = None
@@ -5096,13 +4608,51 @@ class stratoweave_rfs__rfs__fabric_interface__bgp_subs(SubscriptionNode):
         after a change or None when it is gone, and an error."""
         return ygdata.Dst(lambda n, err: stratoweave_rfs__rfs__fabric_interface__bgp_deliver(cb, n, err), root=self.filt())
 
-_breaker84: None = None
+_breaker73: None = None
+proc def stratoweave_rfs__rfs__fabric_interface__state_deliver(cb: action(?(rfs_name: str, fabric_interface_name: str), ?stratoweave_rfs__rfs__fabric_interface__state, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
+    keys: ?(rfs_name: str, fabric_interface_name: str) = None
+    inst: ?stratoweave_rfs__rfs__fabric_interface__state = None
+    if n is not None:
+        try:
+            e1 = _one(_at(n, ygdata.Id(NS_stratoweave_rfs, 'rfs')), 'rfs')
+            e2 = _one(_at(e1, ygdata.Id(NS_dorsi_rfs, 'fabric-interface')), 'fabric-interface')
+            c3 = _at(e2, ygdata.Id(NS_dorsi_rfs, 'state'))
+            keys = (rfs_name=e1.get_str(ygdata.Id(NS_stratoweave_rfs, 'name')), fabric_interface_name=e2.get_str(ygdata.Id(NS_dorsi_rfs, 'name')))
+            here = _present(c3)
+            if here is not None:
+                inst = stratoweave_rfs__rfs__fabric_interface__state.from_gdata(here)
+        except Exception as e:
+            cb(None, None, e)
+            return
+    cb(keys, inst, err)
+
+class stratoweave_rfs__rfs__fabric_interface__state_subs(SubscriptionNode):
+    oper_status: SubscriptionNode
+    bgp_status: SubscriptionNode
+
+    pure def __init__(self, path: ?SubscriptionPath=None) -> None:
+        SubscriptionNode.__init__(self, path)
+        self.oper_status = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_dorsi_rfs, 'oper-status'), parent=path))
+        self.bgp_status = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_dorsi_rfs, 'bgp-status'), parent=path))
+
+    pure def _direct_children(self) -> list[SubscriptionNode]:
+        direct: list[SubscriptionNode] = [self.oper_status, self.bgp_status]
+        return direct
+
+    def dst(self, cb: action(?(rfs_name: str, fabric_interface_name: str), ?stratoweave_rfs__rfs__fabric_interface__state, ?Exception) -> None) -> ygdata.Dst:
+        """A destination rooted here: cb gets, one instance at a time,
+        the keys of the lists on the way down, this container as it is
+        after a change or None when it is gone, and an error."""
+        return ygdata.Dst(lambda n, err: stratoweave_rfs__rfs__fabric_interface__state_deliver(cb, n, err), root=self.filt())
+
+_breaker74: None = None
 class stratoweave_rfs__rfs__fabric_interface_entry_subs(SubscriptionNode):
     name: SubscriptionNode
     ipv4_address: SubscriptionNode
     ipv4_prefix_length: SubscriptionNode
     remote: stratoweave_rfs__rfs__fabric_interface__remote_subs
     bgp: stratoweave_rfs__rfs__fabric_interface__bgp_subs
+    state: stratoweave_rfs__rfs__fabric_interface__state_subs
 
     pure def __init__(self, path: ?SubscriptionPath=None) -> None:
         SubscriptionNode.__init__(self, path)
@@ -5111,12 +4661,13 @@ class stratoweave_rfs__rfs__fabric_interface_entry_subs(SubscriptionNode):
         self.ipv4_prefix_length = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_dorsi_rfs, 'ipv4-prefix-length'), parent=path))
         self.remote = stratoweave_rfs__rfs__fabric_interface__remote_subs(SubscriptionPath(ygdata.Id(NS_dorsi_rfs, 'remote'), parent=path))
         self.bgp = stratoweave_rfs__rfs__fabric_interface__bgp_subs(SubscriptionPath(ygdata.Id(NS_dorsi_rfs, 'bgp'), parent=path))
+        self.state = stratoweave_rfs__rfs__fabric_interface__state_subs(SubscriptionPath(ygdata.Id(NS_dorsi_rfs, 'state'), parent=path))
 
     pure def _direct_children(self) -> list[SubscriptionNode]:
-        direct: list[SubscriptionNode] = [self.name, self.ipv4_address, self.ipv4_prefix_length, self.remote, self.bgp]
+        direct: list[SubscriptionNode] = [self.name, self.ipv4_address, self.ipv4_prefix_length, self.remote, self.bgp, self.state]
         return direct
 
-_breaker85: None = None
+_breaker75: None = None
 proc def stratoweave_rfs__rfs__fabric_interface_deliver(cb: action(?(rfs_name: str, fabric_interface_name: str), ?stratoweave_rfs__rfs__fabric_interface_entry, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(rfs_name: str, fabric_interface_name: str) = None
     inst: ?stratoweave_rfs__rfs__fabric_interface_entry = None
@@ -5139,6 +4690,7 @@ class stratoweave_rfs__rfs__fabric_interface_subs(SubscriptionNode):
     ipv4_prefix_length: SubscriptionNode
     remote: stratoweave_rfs__rfs__fabric_interface__remote_subs
     bgp: stratoweave_rfs__rfs__fabric_interface__bgp_subs
+    state: stratoweave_rfs__rfs__fabric_interface__state_subs
     pure def __init__(self, path: ?SubscriptionPath=None) -> None:
         SubscriptionNode.__init__(self, path)
         self.name = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_dorsi_rfs, 'name'), parent=path))
@@ -5146,6 +4698,7 @@ class stratoweave_rfs__rfs__fabric_interface_subs(SubscriptionNode):
         self.ipv4_prefix_length = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_dorsi_rfs, 'ipv4-prefix-length'), parent=path))
         self.remote = stratoweave_rfs__rfs__fabric_interface__remote_subs(SubscriptionPath(ygdata.Id(NS_dorsi_rfs, 'remote'), parent=path))
         self.bgp = stratoweave_rfs__rfs__fabric_interface__bgp_subs(SubscriptionPath(ygdata.Id(NS_dorsi_rfs, 'bgp'), parent=path))
+        self.state = stratoweave_rfs__rfs__fabric_interface__state_subs(SubscriptionPath(ygdata.Id(NS_dorsi_rfs, 'state'), parent=path))
 
     pure def entry(self, name: str) -> stratoweave_rfs__rfs__fabric_interface_entry_subs:
         predicates = [
@@ -5161,10 +4714,10 @@ class stratoweave_rfs__rfs__fabric_interface_subs(SubscriptionNode):
         return ygdata.Dst(lambda n, err: stratoweave_rfs__rfs__fabric_interface_deliver(cb, n, err), root=self.filt())
 
     pure def _direct_children(self) -> list[SubscriptionNode]:
-        direct: list[SubscriptionNode] = [self.name, self.ipv4_address, self.ipv4_prefix_length, self.remote, self.bgp]
+        direct: list[SubscriptionNode] = [self.name, self.ipv4_address, self.ipv4_prefix_length, self.remote, self.bgp, self.state]
         return direct
 
-_breaker86: None = None
+_breaker76: None = None
 class stratoweave_rfs__rfs__server_port_entry_subs(SubscriptionNode):
     name: SubscriptionNode
     server: SubscriptionNode
@@ -5182,7 +4735,7 @@ class stratoweave_rfs__rfs__server_port_entry_subs(SubscriptionNode):
         direct: list[SubscriptionNode] = [self.name, self.server, self.server_port, self.profile]
         return direct
 
-_breaker87: None = None
+_breaker77: None = None
 proc def stratoweave_rfs__rfs__server_port_deliver(cb: action(?(rfs_name: str, server_port_name: str), ?stratoweave_rfs__rfs__server_port_entry, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(rfs_name: str, server_port_name: str) = None
     inst: ?stratoweave_rfs__rfs__server_port_entry = None
@@ -5228,95 +4781,25 @@ class stratoweave_rfs__rfs__server_port_subs(SubscriptionNode):
         direct: list[SubscriptionNode] = [self.name, self.server, self.server_port, self.profile]
         return direct
 
-_breaker88: None = None
-class stratoweave_rfs__rfs__ibgp_neighbor_entry_subs(SubscriptionNode):
-    address: SubscriptionNode
-    asn: SubscriptionNode
-    description: SubscriptionNode
-    ibgp_authentication_key: SubscriptionNode
-
-    pure def __init__(self, path: ?SubscriptionPath=None) -> None:
-        SubscriptionNode.__init__(self, path)
-        self.address = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_dorsi_rfs, 'address'), parent=path))
-        self.asn = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_dorsi_rfs, 'asn'), parent=path))
-        self.description = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_dorsi_rfs, 'description'), parent=path))
-        self.ibgp_authentication_key = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_dorsi_rfs, 'ibgp-authentication-key'), parent=path))
-
-    pure def _direct_children(self) -> list[SubscriptionNode]:
-        direct: list[SubscriptionNode] = [self.address, self.asn, self.description, self.ibgp_authentication_key]
-        return direct
-
-_breaker89: None = None
-proc def stratoweave_rfs__rfs__ibgp_neighbor_deliver(cb: action(?(rfs_name: str, ibgp_neighbor_address: str), ?stratoweave_rfs__rfs__ibgp_neighbor_entry, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
-    keys: ?(rfs_name: str, ibgp_neighbor_address: str) = None
-    inst: ?stratoweave_rfs__rfs__ibgp_neighbor_entry = None
-    if n is not None:
-        try:
-            e1 = _one(_at(n, ygdata.Id(NS_stratoweave_rfs, 'rfs')), 'rfs')
-            e2 = _one(_at(e1, ygdata.Id(NS_dorsi_rfs, 'ibgp-neighbor')), 'ibgp-neighbor')
-            keys = (rfs_name=e1.get_str(ygdata.Id(NS_stratoweave_rfs, 'name')), ibgp_neighbor_address=e2.get_str(ygdata.Id(NS_dorsi_rfs, 'address')))
-            here = _present(e2)
-            if here is not None:
-                inst = stratoweave_rfs__rfs__ibgp_neighbor_entry.from_gdata(here)
-        except Exception as e:
-            cb(None, None, e)
-            return
-    cb(keys, inst, err)
-
-class stratoweave_rfs__rfs__ibgp_neighbor_subs(SubscriptionNode):
-    address: SubscriptionNode
-    asn: SubscriptionNode
-    description: SubscriptionNode
-    ibgp_authentication_key: SubscriptionNode
-    pure def __init__(self, path: ?SubscriptionPath=None) -> None:
-        SubscriptionNode.__init__(self, path)
-        self.address = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_dorsi_rfs, 'address'), parent=path))
-        self.asn = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_dorsi_rfs, 'asn'), parent=path))
-        self.description = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_dorsi_rfs, 'description'), parent=path))
-        self.ibgp_authentication_key = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_dorsi_rfs, 'ibgp-authentication-key'), parent=path))
-
-    pure def entry(self, address: str) -> stratoweave_rfs__rfs__ibgp_neighbor_entry_subs:
-        predicates = [
-            ygdata.FNode(ygdata.Id(NS_dorsi_rfs, 'address'), value_match=address),
-        ]
-        base_path = self._path!.parent
-        return stratoweave_rfs__rfs__ibgp_neighbor_entry_subs(SubscriptionPath(ygdata.Id(NS_dorsi_rfs, 'ibgp-neighbor'), predicates=predicates, parent=base_path))
-
-    def dst(self, cb: action(?(rfs_name: str, ibgp_neighbor_address: str), ?stratoweave_rfs__rfs__ibgp_neighbor_entry, ?Exception) -> None) -> ygdata.Dst:
-        """A destination rooted here: cb gets, one instance at a time,
-        the keys of the lists on the way down, this entry as it is
-        after a change or None when it is gone, and an error."""
-        return ygdata.Dst(lambda n, err: stratoweave_rfs__rfs__ibgp_neighbor_deliver(cb, n, err), root=self.filt())
-
-    pure def _direct_children(self) -> list[SubscriptionNode]:
-        direct: list[SubscriptionNode] = [self.address, self.asn, self.description, self.ibgp_authentication_key]
-        return direct
-
-_breaker90: None = None
+_breaker78: None = None
 class stratoweave_rfs__rfs_entry_subs(SubscriptionNode):
     name: SubscriptionNode
-    base_config: stratoweave_rfs__rfs__base_config_subs
-    backbone_interface: stratoweave_rfs__rfs__backbone_interface_subs
     fabric_base_config: stratoweave_rfs__rfs__fabric_base_config_subs
     fabric_interface: stratoweave_rfs__rfs__fabric_interface_subs
     server_port: stratoweave_rfs__rfs__server_port_subs
-    ibgp_neighbor: stratoweave_rfs__rfs__ibgp_neighbor_subs
 
     pure def __init__(self, path: ?SubscriptionPath=None) -> None:
         SubscriptionNode.__init__(self, path)
         self.name = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_stratoweave_rfs, 'name'), parent=path))
-        self.base_config = stratoweave_rfs__rfs__base_config_subs(SubscriptionPath(ygdata.Id(NS_dorsi_rfs, 'base-config'), parent=path))
-        self.backbone_interface = stratoweave_rfs__rfs__backbone_interface_subs(SubscriptionPath(ygdata.Id(NS_dorsi_rfs, 'backbone-interface'), parent=path))
         self.fabric_base_config = stratoweave_rfs__rfs__fabric_base_config_subs(SubscriptionPath(ygdata.Id(NS_dorsi_rfs, 'fabric-base-config'), parent=path))
         self.fabric_interface = stratoweave_rfs__rfs__fabric_interface_subs(SubscriptionPath(ygdata.Id(NS_dorsi_rfs, 'fabric-interface'), parent=path))
         self.server_port = stratoweave_rfs__rfs__server_port_subs(SubscriptionPath(ygdata.Id(NS_dorsi_rfs, 'server-port'), parent=path))
-        self.ibgp_neighbor = stratoweave_rfs__rfs__ibgp_neighbor_subs(SubscriptionPath(ygdata.Id(NS_dorsi_rfs, 'ibgp-neighbor'), parent=path))
 
     pure def _direct_children(self) -> list[SubscriptionNode]:
-        direct: list[SubscriptionNode] = [self.name, self.base_config, self.backbone_interface, self.fabric_base_config, self.fabric_interface, self.server_port, self.ibgp_neighbor]
+        direct: list[SubscriptionNode] = [self.name, self.fabric_base_config, self.fabric_interface, self.server_port]
         return direct
 
-_breaker91: None = None
+_breaker79: None = None
 proc def stratoweave_rfs__rfs_deliver(cb: action(?(rfs_name: str), ?stratoweave_rfs__rfs_entry, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(rfs_name: str) = None
     inst: ?stratoweave_rfs__rfs_entry = None
@@ -5334,21 +4817,15 @@ proc def stratoweave_rfs__rfs_deliver(cb: action(?(rfs_name: str), ?stratoweave_
 
 class stratoweave_rfs__rfs_subs(SubscriptionNode):
     name: SubscriptionNode
-    base_config: stratoweave_rfs__rfs__base_config_subs
-    backbone_interface: stratoweave_rfs__rfs__backbone_interface_subs
     fabric_base_config: stratoweave_rfs__rfs__fabric_base_config_subs
     fabric_interface: stratoweave_rfs__rfs__fabric_interface_subs
     server_port: stratoweave_rfs__rfs__server_port_subs
-    ibgp_neighbor: stratoweave_rfs__rfs__ibgp_neighbor_subs
     pure def __init__(self, path: ?SubscriptionPath=None) -> None:
         SubscriptionNode.__init__(self, path)
         self.name = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_stratoweave_rfs, 'name'), parent=path))
-        self.base_config = stratoweave_rfs__rfs__base_config_subs(SubscriptionPath(ygdata.Id(NS_dorsi_rfs, 'base-config'), parent=path))
-        self.backbone_interface = stratoweave_rfs__rfs__backbone_interface_subs(SubscriptionPath(ygdata.Id(NS_dorsi_rfs, 'backbone-interface'), parent=path))
         self.fabric_base_config = stratoweave_rfs__rfs__fabric_base_config_subs(SubscriptionPath(ygdata.Id(NS_dorsi_rfs, 'fabric-base-config'), parent=path))
         self.fabric_interface = stratoweave_rfs__rfs__fabric_interface_subs(SubscriptionPath(ygdata.Id(NS_dorsi_rfs, 'fabric-interface'), parent=path))
         self.server_port = stratoweave_rfs__rfs__server_port_subs(SubscriptionPath(ygdata.Id(NS_dorsi_rfs, 'server-port'), parent=path))
-        self.ibgp_neighbor = stratoweave_rfs__rfs__ibgp_neighbor_subs(SubscriptionPath(ygdata.Id(NS_dorsi_rfs, 'ibgp-neighbor'), parent=path))
 
     pure def entry(self, name: str) -> stratoweave_rfs__rfs_entry_subs:
         predicates = [
@@ -5364,10 +4841,10 @@ class stratoweave_rfs__rfs_subs(SubscriptionNode):
         return ygdata.Dst(lambda n, err: stratoweave_rfs__rfs_deliver(cb, n, err), root=self.filt())
 
     pure def _direct_children(self) -> list[SubscriptionNode]:
-        direct: list[SubscriptionNode] = [self.name, self.base_config, self.backbone_interface, self.fabric_base_config, self.fabric_interface, self.server_port, self.ibgp_neighbor]
+        direct: list[SubscriptionNode] = [self.name, self.fabric_base_config, self.fabric_interface, self.server_port]
         return direct
 
-_breaker92: None = None
+_breaker80: None = None
 class root_subs(SubscriptionNode):
     device: stratoweave_rfs__device_subs
     rfs: stratoweave_rfs__rfs_subs

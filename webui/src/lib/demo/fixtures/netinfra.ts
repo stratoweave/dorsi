@@ -1,4 +1,4 @@
-import type { NetinfraBackboneLinkApi, NetinfraRouterApi } from '$lib/core/topology/model';
+import type { NetinfraBackboneLinkApi, NetinfraRouterApi } from '$lib/demo/netinfra-types';
 
 // The demo network is modelled on a small SR Linux lab (formerly the
 // quicklab-srl test environment): four Nokia SR Linux cores in a ring-ish
