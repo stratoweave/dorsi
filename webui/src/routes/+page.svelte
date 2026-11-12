@@ -5,6 +5,8 @@
   import { lowercaseFirst } from '$lib/core/registry/types';
   import { fetchDevices, isPendingQueueItem, type DeviceSummary } from '$lib/core/orchestron/client';
   import { queuesPoll } from '$lib/core/orchestron/poll-store';
+  import TopologyMap from '$lib/core/topology/TopologyMap.svelte';
+  import { buildTopologyGraphs } from '$lib/core/topology/model';
   import { restconfGetJson } from '$lib/core/restconf/client';
   import DeviceConfigStatus from '$lib/core/ui/DeviceConfigStatus.svelte';
   import EmptyState from '$lib/core/ui/EmptyState.svelte';
@@ -12,7 +14,11 @@
   import StatTile from '$lib/core/ui/StatTile.svelte';
   import StatusPill from '$lib/core/ui/StatusPill.svelte';
   import { onGlobalRefresh } from '$lib/core/util/global-refresh';
+  import { LatestRequest } from '$lib/core/util/latest-request';
   import { appHref } from '$lib/core/util/nav';
+  import { startPolling } from '$lib/core/util/poll';
+
+  import type { FabricPayload, TopologyGraph } from '$lib/core/topology/model';
 
   const modules = listServiceModules();
 
@@ -20,6 +26,10 @@
   let devices = $state.raw<DeviceSummary[]>([]);
   let loadingDevices = $state(true);
   let loadError = $state('');
+  let topologyGraphs = $state.raw<TopologyGraph[] | null>(null);
+  let loadingTopology = $state(true);
+  let topologyError = $state('');
+  let topologyNote = $state('');
   let serviceCounts = $state.raw<Record<string, number | null>>({});
   let loadingCounts = $state(true);
 
@@ -39,6 +49,42 @@
       devices = [];
     } finally {
       loadingDevices = false;
+    }
+  }
+
+  const topologyRequest = new LatestRequest();
+
+  async function loadTopology(): Promise<void> {
+    const isInitialLoad = topologyGraphs === null;
+    const token = topologyRequest.begin();
+    try {
+      if (isInitialLoad) {
+        loadingTopology = true;
+      }
+      topologyNote = '';
+
+      const [fabricResult] = await Promise.allSettled([
+        restconfGetJson<FabricPayload>('data/ip-fabric:ip-fabric')
+      ]);
+      if (!topologyRequest.isCurrent(token)) return;
+
+      if (fabricResult.status !== 'fulfilled') {
+        const message = fabricResult.reason instanceof Error
+          ? fabricResult.reason.message
+          : 'Failed to load the fabric topology.';
+        if (isInitialLoad) {
+          topologyGraphs = null;
+          topologyError = message;
+        } else {
+          topologyNote = `Refresh failed: ${message}`;
+        }
+        return;
+      }
+
+      topologyError = '';
+      topologyGraphs = buildTopologyGraphs(fabricResult.value);
+    } finally {
+      if (topologyRequest.isCurrent(token)) loadingTopology = false;
     }
   }
 
@@ -66,17 +112,24 @@
     loadingCounts = false;
   }
 
+  const TOPOLOGY_REFRESH_MS = 2000;
+
   onMount(() => {
     loadDevices();
+    loadTopology();
     loadServiceCounts();
 
     const offRefresh = onGlobalRefresh(() => {
       loadDevices();
-        loadServiceCounts();
+      loadTopology();
+      loadServiceCounts();
     });
+
+    const stopTopologyRefresh = startPolling(loadTopology, TOPOLOGY_REFRESH_MS, { immediate: false });
 
     return () => {
       offRefresh();
+      stopTopologyRefresh();
     };
   });
 </script>
@@ -118,6 +171,24 @@
       href="/services/ip-fabric-link"
       loading={loadingCounts}
     />
+  </section>
+
+  <section class="overview__section" data-tour="topology">
+    <div class="section-head">
+      <h2>Fabric Topology</h2>
+    </div>
+
+    {#if loadingTopology}
+      <Skeleton height="320px" />
+    {:else if topologyError}
+      <EmptyState tone="danger" icon="alert" title="Topology unavailable" description={topologyError} />
+    {:else if topologyGraphs && topologyGraphs.length === 0}
+      <EmptyState icon="services" title="No fabric yet" description="Create a fabric through RESTCONF or a startup file, then add switches, links and servers." />
+    {:else if topologyGraphs}
+      {#each topologyGraphs as graph (graph.fabric)}
+        <TopologyMap {graph} {devices} note={topologyNote} />
+      {/each}
+    {/if}
   </section>
 
   <section class="overview__section" data-tour="devices-table">
