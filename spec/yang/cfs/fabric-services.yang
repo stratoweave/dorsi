@@ -1,0 +1,140 @@
+module fabric-services {
+  yang-version 1.1;
+  namespace "http://example.com/fabric-services";
+  prefix fs;
+
+  import ip-fabric {
+    prefix ipf;
+  }
+  import ietf-inet-types {
+    prefix inet;
+    revision-date 2013-07-15;
+  }
+
+  organization "StratoWeave";
+  description
+    "EVPN-VXLAN tenant services over an IP fabric.";
+
+  revision 2026-11-12 {
+    description "Initial revision.";
+  }
+
+  container fabric-services {
+    description "Tenant overlay services using EVPN-VXLAN.";
+    list tenant {
+      key name;
+      description "Tenant identity shared across fabrics.";
+      leaf name {
+        type string;
+        description "Global tenant name.";
+      }
+
+      list fabric {
+        key name;
+        description "Tenant services local to this fabric.";
+        leaf name {
+          type leafref {
+            path "/ipf:ip-fabric/ipf:fabric/ipf:name";
+            require-instance true;
+          }
+          description "Existing IP fabric.";
+        }
+
+        list vrf {
+          key name;
+          description
+            "Isolated routing domain. Routed networks within it can
+             communicate. Subnets may overlap across VRFs, but not
+             within a VRF.";
+          leaf name {
+            type string;
+            description "VRF name scoped to this tenant and fabric.";
+          }
+
+          list network {
+            key name;
+            description
+              "Layer 2 network with optional IPv4 and IPv6 gateways.";
+            leaf name {
+              type string;
+              description "Network name scoped to this VRF.";
+            }
+
+            container ipv4 {
+              presence "Enable IPv4 routing with a distributed anycast gateway.";
+              description
+                "Omitted subnet and gateway values are allocated automatically.";
+              leaf subnet {
+                type inet:ipv4-prefix;
+                description "IPv4 subnet.";
+              }
+              leaf gateway {
+                type inet:ipv4-address-no-zone;
+                must "../subnet" {
+                  error-message "An explicit IPv4 gateway requires an explicit subnet.";
+                }
+                description "Anycast gateway address within the subnet.";
+              }
+            }
+
+            container ipv6 {
+              presence "Enable IPv6 routing with a distributed anycast gateway.";
+              description
+                "Omitted subnet and gateway values are allocated automatically.";
+              leaf subnet {
+                type inet:ipv6-prefix;
+                description "IPv6 subnet.";
+              }
+              leaf gateway {
+                type inet:ipv6-address-no-zone;
+                must "../subnet" {
+                  error-message "An explicit IPv6 gateway requires an explicit subnet.";
+                }
+                description "Anycast gateway address within the subnet.";
+              }
+            }
+
+            list attachment {
+              key server;
+              must "vlan-id or
+                    count(/fs:fabric-services/fs:tenant/fs:fabric
+                      [fs:name=current()/../../../name]
+                      /fs:vrf/fs:network/fs:attachment
+                      [fs:server=current()/server and not(fs:vlan-id)])=1" {
+                error-message "A server can have only one untagged network per fabric.";
+              }
+              must "not(vlan-id) or
+                    count(/fs:fabric-services/fs:tenant/fs:fabric
+                      [fs:name=current()/../../../name]
+                      /fs:vrf/fs:network/fs:attachment
+                      [fs:server=current()/server and
+                       fs:vlan-id=current()/vlan-id])=1" {
+                error-message "A server VLAN ID must identify only one network per fabric.";
+              }
+              description
+                "Attach all of a server's links to this network. VLAN
+                 tags must be unique per server and fabric, with at
+                 most one untagged network.";
+              leaf server {
+                type leafref {
+                  path "/ipf:ip-fabric/ipf:fabric"
+                     + "[ipf:name=current()/../../../../fs:name]"
+                     + "/ipf:server/ipf:name";
+                  require-instance true;
+                }
+                description "Existing server in the selected fabric.";
+              }
+              leaf vlan-id {
+                type uint16 {
+                  range "1..4094";
+                }
+                description
+                  "Server-facing VLAN tag; omit for untagged traffic.";
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
