@@ -1,8 +1,15 @@
+import yang.gdata as gdata
+import stratoweave.device as swdev
+
 import dorsi.layers.base_1 as base
+import dorsi.layers.y_1 as y_1
+import dorsi.layers.y_1_oper as y_1_oper
 
 from stratoweave.exception import UnsupportedDevice
 
 import dorsi.devices.NokiaSRLinux_25_3_2 as srl25
+import dorsi.devices.NokiaSRLinux_25_3_2_oper as srl25_oper
+from dorsi.devices.NokiaSRLinux_25_3_2_oper import root as srl25_oper_root
 
 
 def _link_description(remote_device: str, remote_interface: str) -> str:
@@ -94,6 +101,62 @@ class FabricInterface(base.FabricInterface):
             return dev
 
         raise UnsupportedDevice()
+
+
+# --- Fabric interface oper-status ---------------------------------------------
+# Poll the oper-state of each fabric interface and the state of its eBGP session
+# from the device. The CFS FabricTransform lift combines the two ends of a link
+# into the state of the fabric-link.
+actor FabricInterfaceTransform(path, update_oper: proc(?y_1_oper.stratoweave_rfs__rfs__fabric_interface_entry)->None, dev: swdev.DeviceMgr):
+    _subs = gdata.SubscriptionManager(dev.tree_provider(), str(path))
+    _oper = base.FabricInterface.new_state(path)
+
+    def publish(oper_status: ?str, bgp_status: ?str):
+        _oper.state.oper_status = oper_status
+        _oper.state.bgp_status = bgp_status
+        update_oper(_oper)
+
+    def on_srl_state(root: ?srl25_oper_root, err: ?Exception, peer_address: str):
+        oper_status: ?str = None
+        bgp_status: ?str = None
+        if err is not None:
+            print("FabricInterfaceTransform subscription error: {err}", err=True)
+        elif root is not None:
+            for interface in root.interface:
+                raw = interface.oper_state
+                if raw == "up":
+                    oper_status = "up"
+                elif raw == "down":
+                    oper_status = "down"
+                elif raw is not None:
+                    oper_status = "unknown"
+            for ni in root.network_instance:
+                bgp = ni.protocols.bgp
+                if bgp is not None:
+                    for neighbor in bgp.neighbor:
+                        if neighbor.peer_address == peer_address:
+                            session = neighbor.session_state
+                            if session == "established":
+                                bgp_status = "up"
+                            elif session is not None:
+                                # idle, connect, active, opensent and openconfirm
+                                bgp_status = "down"
+        publish(oper_status, bgp_status)
+
+    def on_conf(conf: y_1.stratoweave_rfs__rfs__fabric_interface_entry):
+        want: set[gdata.Delivery] = set()
+        modset = dev.get_modules().0
+        if "srl_nokia-system" in modset:
+            peer_address = conf.bgp.peer_address
+            srl_dst = srl25_oper.dst(lambda r, e: on_srl_state(r, e, peer_address))
+            want.add(srl_dst.deliver({
+                srl25_oper.subs.interface.entry(conf.name).oper_state.subscribe(period=5.0),
+                srl25_oper.subs.network_instance.entry("default").protocols.bgp.neighbor.entry(peer_address).session_state.subscribe(period=5.0)
+            }))
+        _subs.declare(want)
+
+    def shutdown():
+        pass
 
 
 class ServerPort(base.ServerPort):

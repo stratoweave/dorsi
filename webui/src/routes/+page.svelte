@@ -38,6 +38,9 @@
   let devicesWithoutConfig = $derived(devices.filter((device) => device.hasRunningConfig === false).length);
   let switchesCount = $derived(serviceCounts['ip-fabric-switch'] ?? null);
   let linksCount = $derived(serviceCounts['ip-fabric-link'] ?? null);
+  let allLinks = $derived((topologyGraphs ?? []).flatMap((graph) => graph.links));
+  let linksUp = $derived(allLinks.filter((link) => link.status === 'up').length);
+  let linksDown = $derived(allLinks.filter((link) => link.status === 'down').length);
 
   async function loadDevices(): Promise<void> {
     try {
@@ -168,6 +171,8 @@
     <StatTile
       label="Fabric links"
       value={linksCount}
+      hint={linksDown > 0 ? `${linksDown} down · ${linksUp} up` : linksUp > 0 ? `${linksUp} up` : ''}
+      tone={linksDown > 0 ? 'danger' : linksUp > 0 ? 'success' : 'neutral'}
       href="/services/ip-fabric-link"
       loading={loadingCounts}
     />

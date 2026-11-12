@@ -21,6 +21,8 @@
   let switchCount = $derived(graph.switches.length);
   let linkCount = $derived(graph.links.length);
   let serverCount = $derived(graph.servers.length);
+  let linksUp = $derived(graph.links.filter((link) => link.status === 'up').length);
+  let linksDown = $derived(graph.links.filter((link) => link.status === 'down').length);
 
   function noConfig(name: string): boolean {
     return deviceByName.get(name)?.hasRunningConfig === false;
@@ -54,6 +56,12 @@
     <span class="pill"><span class="dot"></span>{graph.fabric}</span>
     <span class="pill"><span class="dot"></span>{switchCount} switches</span>
     <span class="pill"><span class="dot"></span>{linkCount} fabric links</span>
+    {#if linksUp > 0}
+      <span class="pill pill--up"><span class="dot"></span>{linksUp} up</span>
+    {/if}
+    {#if linksDown > 0}
+      <span class="pill pill--down"><span class="dot"></span>{linksDown} down</span>
+    {/if}
     <span class="pill"><span class="dot"></span>{serverCount} servers</span>
   </div>
 
@@ -80,9 +88,18 @@
             <a
               href={appHref(`/services/ip-fabric-link/${encodeURIComponent(link.routeId)}`)}
               class="topology__link-link"
-              aria-label={`Open fabric link ${link.lowerSwitch} ${link.lowerPort} ↔ ${link.upperSwitch} ${link.upperPort}`}
+              aria-label={`Open fabric link ${link.lowerSwitch} ${link.lowerPort} ↔ ${link.upperSwitch} ${link.upperPort}, status ${link.status}`}
             >
-              <line x1={link.x1} y1={link.y1} x2={link.x2} y2={link.y2} class="topology__link"></line>
+              <title>{`${link.lowerSwitch} ${link.lowerPort} ↔ ${link.upperSwitch} ${link.upperPort}: interfaces ${link.linkStatus}, eBGP ${link.bgpStatus}`}</title>
+              <line
+                x1={link.x1}
+                y1={link.y1}
+                x2={link.x2}
+                y2={link.y2}
+                class="topology__link"
+                class:topology__link--up={link.status === 'up'}
+                class:topology__link--down={link.status === 'down'}
+              ></line>
               <line x1={link.x1} y1={link.y1} x2={link.x2} y2={link.y2} class="topology__link-hit"></line>
               {@render portLabel(link.lowerLabel)}
               {@render portLabel(link.upperLabel)}
@@ -219,6 +236,17 @@
     pointer-events: none;
   }
 
+  .topology__link--up {
+    stroke: rgb(var(--sw-success-rgb) / 0.85);
+    stroke-width: 2;
+  }
+
+  .topology__link--down {
+    stroke: rgb(var(--sw-danger-rgb) / 0.9);
+    stroke-width: 2;
+    stroke-dasharray: 6 4;
+  }
+
   .topology__link--server {
     stroke: rgb(var(--sw-line-rgb) / 0.30);
     stroke-dasharray: 5 4;
@@ -303,6 +331,14 @@
 
   .topology__server:hover .topology__server-core {
     stroke: var(--sw-accent);
+  }
+
+  .pill--up {
+    color: var(--sw-success);
+  }
+
+  .pill--down {
+    color: var(--sw-danger);
   }
 
   .topology__note {

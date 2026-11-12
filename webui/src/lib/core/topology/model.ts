@@ -3,6 +3,7 @@ import { getFabricLinkRouteId } from '$lib/modules/ip-fabric-link/model';
 import { getFabricServerRouteId } from '$lib/modules/ip-fabric-server/model';
 
 export type SwitchRole = 'super-spine' | 'spine' | 'leaf';
+export type LinkStatus = 'up' | 'down' | 'unknown';
 
 export const TOPOLOGY_SWITCH_WIDTH = 132;
 export const TOPOLOGY_SWITCH_HEIGHT = 46;
@@ -58,6 +59,12 @@ export interface TopologyLink {
   y2: number;
   lowerLabel: TopologyPortLabel;
   upperLabel: TopologyPortLabel;
+  /** The oper-state of the interfaces on the link. */
+  linkStatus: LinkStatus;
+  /** The state of the eBGP session on the link. */
+  bgpStatus: LinkStatus;
+  /** Down if either is down, up only when both are up. */
+  status: LinkStatus;
 }
 
 export interface TopologyServerLink {
@@ -107,6 +114,17 @@ export interface FabricPayload {
 
 function compareNames(a: string, b: string): number {
   return a.localeCompare(b, undefined, { numeric: true });
+}
+
+function toStatus(value: string): LinkStatus {
+  return value === 'up' || value === 'down' ? value : 'unknown';
+}
+
+/** The status of a link as one: down if the interfaces or the session are down, up only when both are up. */
+export function combineStatus(linkStatus: LinkStatus, bgpStatus: LinkStatus): LinkStatus {
+  if (linkStatus === 'down' || bgpStatus === 'down') return 'down';
+  if (linkStatus === 'up' && bgpStatus === 'up') return 'up';
+  return 'unknown';
 }
 
 function isSwitchRole(value: string): value is SwitchRole {
@@ -257,6 +275,8 @@ export function buildFabricGraph(fabricApi: unknown): TopologyGraph {
     lowerPort: string;
     upper: TopologySwitch;
     upperPort: string;
+    linkStatus: LinkStatus;
+    bgpStatus: LinkStatus;
   }
   const rawLinks: RawLink[] = [];
   for (const entry of arrayAt(fabricApi, 'fabric-link')) {
@@ -271,7 +291,16 @@ export function buildFabricGraph(fabricApi: unknown): TopologyGraph {
       continue;
     }
     const routeId = getFabricLinkRouteId({ fabric, lowerSwitch: lowerName, lowerPort, upperSwitch: upperName, upperPort });
-    rawLinks.push({ id: routeId, routeId, lower, lowerPort, upper, upperPort });
+    rawLinks.push({
+      id: routeId,
+      routeId,
+      lower,
+      lowerPort,
+      upper,
+      upperPort,
+      linkStatus: toStatus(stringAt(entry, 'state', 'link-status')),
+      bgpStatus: toStatus(stringAt(entry, 'state', 'bgp-status'))
+    });
   }
 
   interface RawServerLink {
@@ -378,7 +407,10 @@ export function buildFabricGraph(fabricApi: unknown): TopologyGraph {
       x2,
       y2,
       lowerLabel: labels.place(link.lowerPort, x1, y1, x2, y2),
-      upperLabel: labels.place(link.upperPort, x2, y2, x1, y1)
+      upperLabel: labels.place(link.upperPort, x2, y2, x1, y1),
+      linkStatus: link.linkStatus,
+      bgpStatus: link.bgpStatus,
+      status: combineStatus(link.linkStatus, link.bgpStatus)
     };
   });
 

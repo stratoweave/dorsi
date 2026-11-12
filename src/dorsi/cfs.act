@@ -1,7 +1,11 @@
 import yang.adata
+import yang.gdata as gdata
+import stratoweave.ttt as ttt
 
 import dorsi.layers.base_0 as base
 import dorsi.layers.y_0 as y_0
+import dorsi.layers.y_0_oper as y_0_oper
+import dorsi.layers.y_1_oper as y_1_oper
 # TODO: this import is required by the compiler, maybe related to
 # https://github.com/actonlang/acton/issues/2390
 import yang.identityref
@@ -195,3 +199,66 @@ class Fabric(base.Fabric):
                 o.rfs.create(link.switch).server_port.create(link.switch_port, server=server.name, server_port=link.server_port, profile=server.connectivity.profile)
 
         return o
+
+
+# --- Fabric link state lift ---------------------------------------------------
+# Combine the two ends' RFS fabric-interface state into the state of the
+# fabric-link: up only when both ends are up (see combine_link_status). Served at
+# data/ip-fabric:ip-fabric/fabric/fabric-link
+
+def combine_link_status(left: ?str, right: ?str) -> ?str:
+    if left == "up" and right == "up":
+        return "up"
+    if left == "down" or right == "down":
+        return "down"
+    if left is None and right is None:
+        return None
+    return "unknown"
+
+
+actor FabricTransform(path: ttt.Path,
+                      update_oper: proc(?y_0_oper.ip_fabric__ip_fabric__fabric_entry)->None,
+                      lower_tree_provider: ?gdata.TreeProvider):
+    _oper = base.Fabric.new_state(path)
+    _subs = gdata.SubscriptionManager(lower_tree_provider!, str(path))
+
+    def on_rfs_state(root: ?y_1_oper.root, err: ?Exception, links: list[(str, str, str, str)]):
+        if err is not None:
+            print("cfs.FabricTransform RFS subscription error: {err}", err=True)
+            return
+        for lower, lower_port, upper, upper_port in links:
+            lower_oper: ?str = None
+            upper_oper: ?str = None
+            lower_bgp: ?str = None
+            upper_bgp: ?str = None
+            if root is not None:
+                for r in root.rfs:
+                    if r.name == lower:
+                        for fi in r.fabric_interface:
+                            if fi.name == lower_port:
+                                lower_oper = fi.state.oper_status
+                                lower_bgp = fi.state.bgp_status
+                    if r.name == upper:
+                        for fi in r.fabric_interface:
+                            if fi.name == upper_port:
+                                upper_oper = fi.state.oper_status
+                                upper_bgp = fi.state.bgp_status
+            link = _oper.fabric_link.create((lower, lower_port, upper, upper_port))
+            link.state.link_status = combine_link_status(lower_oper, upper_oper)
+            link.state.bgp_status = combine_link_status(lower_bgp, upper_bgp)
+        update_oper(_oper)
+
+    def on_conf(conf: y_0.ip_fabric__ip_fabric__fabric_entry):
+        links: list[(str, str, str, str)] = []
+        want: set[gdata.Delivery] = set()
+        subs: set[gdata.SubscriptionSpec] = set()
+        for link in conf.fabric_link:
+            links.append((link.lower_switch, link.lower_port, link.upper_switch, link.upper_port))
+            subs.add(y_1_oper.subs.rfs.entry(link.lower_switch).fabric_interface.entry(link.lower_port).state.subscribe(period=5.0))
+            subs.add(y_1_oper.subs.rfs.entry(link.upper_switch).fabric_interface.entry(link.upper_port).state.subscribe(period=5.0))
+        dst = y_1_oper.dst(lambda r, e: on_rfs_state(r, e, links))
+        want.add(dst.deliver(subs))
+        _subs.declare(want)
+
+    def shutdown():
+        pass

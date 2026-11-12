@@ -12,6 +12,7 @@ import yang.xml as yxml
 from dorsi.layers.y_1 import stratoweave_rfs__rfs__fabric_base_config_entry
 from dorsi.layers.y_1 import stratoweave_rfs__rfs__fabric_interface_entry
 from dorsi.layers.y_1 import stratoweave_rfs__rfs__server_port_entry
+from dorsi.layers.y_1_oper import stratoweave_rfs__rfs__fabric_interface_entry as stratoweave_rfs__rfs__fabric_interface_entry__oper
 from dorsi.layers.y_1 import SRC_DNODE
 from dorsi.layers.y_2_loose import root as output_root
 
@@ -51,6 +52,16 @@ class FabricInterface(ttt.RFSFunction):
     def input_type():
         """Return the modeled input type for this transform"""
         return stratoweave_rfs__rfs__fabric_interface_entry
+
+    @staticmethod
+    def state_type():
+        """Return the modeled operational state type for this transform"""
+        return stratoweave_rfs__rfs__fabric_interface_entry__oper
+
+    @staticmethod
+    def new_state(path: ttt.Path):
+        """Create modeled operational state for this transform path"""
+        return stratoweave_rfs__rfs__fabric_interface_entry__oper.from_gdata(ttt.path_key_data(path))
 
     mut def transform_wrapper(self, i: ygdata.Node, device_info: ttt.DeviceInfo, memory: ?ygdata.Node=None, dynstate: ?ygdata.Node=None, prev_output: ?ygdata.Node=None) -> (ygdata.Node, ?ygdata.Node):
         """Wrap the user provided transform method to convert from gdata to

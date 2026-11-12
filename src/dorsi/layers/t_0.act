@@ -12,7 +12,14 @@ import yang.gdata as ygdata
 import dorsi.cfs as cfs
 import dorsi.tmf as tmf
 
+from dorsi.layers.y_0 import ip_fabric__ip_fabric__fabric_entry
 
 def get_ttt(lower: ?ttt.Layer, dev_registry: swdev.DeviceRegistry, log_handler: ?logging.Handler=None) -> proc(ttt.Path,?ttt.Layer)->ttt.Node:
-    r = ttt.Container({ygdata.Id("http://stratoweave.org/yang/stratoweave-tmf", "tmf-store"): ttt.Container({ygdata.Id("http://stratoweave.org/yang/stratoweave-tmf", "tmf640"): ttt.Container({ygdata.Id("http://stratoweave.org/yang/stratoweave-tmf", "service"): ttt.List(ttt.Transform(tmf.Tmf640Store, None, None, lower, log_handler), [ygdata.Id("http://stratoweave.org/yang/stratoweave-tmf", "id")])})}, ns='http://stratoweave.org/yang/stratoweave-tmf', module='stratoweave-tmf'), ygdata.Id("http://example.com/ip-fabric", "ip-fabric"): ttt.Container({ygdata.Id("http://example.com/ip-fabric", "fabric"): ttt.List(ttt.Transform(cfs.Fabric, None, None, lower, log_handler), [ygdata.Id("http://example.com/ip-fabric", "name")])}, ns='http://example.com/ip-fabric', module='ip-fabric')})
+    r = ttt.Container({ygdata.Id("http://stratoweave.org/yang/stratoweave-tmf", "tmf-store"): ttt.Container({ygdata.Id("http://stratoweave.org/yang/stratoweave-tmf", "tmf640"): ttt.Container({ygdata.Id("http://stratoweave.org/yang/stratoweave-tmf", "service"): ttt.List(ttt.Transform(tmf.Tmf640Store, None, None, lower, log_handler), [ygdata.Id("http://stratoweave.org/yang/stratoweave-tmf", "id")])})}, ns='http://stratoweave.org/yang/stratoweave-tmf', module='stratoweave-tmf'), ygdata.Id("http://example.com/ip-fabric", "ip-fabric"): ttt.Container({ygdata.Id("http://example.com/ip-fabric", "fabric"): ttt.List(ttt.Transform(cfs.Fabric, FabricTransformCtor, None, lower, log_handler), [ygdata.Id("http://example.com/ip-fabric", "name")])}, ns='http://example.com/ip-fabric', module='ip-fabric')})
     return r
+
+def FabricTransformCtor(params: ttt.TransformActorParams) -> ttt.TransformActor:
+    update_oper_wrapper = yadata.ToGdataPrevWrapper(params.update_oper)
+    act = cfs.FabricTransform(params.path, update_oper_wrapper.update, params.lower_tree_provider)
+    return ttt.TransformActor(lambda c, l, m: act.on_conf(ip_fabric__ip_fabric__fabric_entry.from_gdata(c)),
+                              lambda m: act.shutdown())

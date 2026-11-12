@@ -838,6 +838,29 @@ SRC_YANG_1: str = r"""module ip-fabric {
         leaf upper-port {
           type string;
         }
+        container state {
+          config false;
+          description
+            "State of the link, lifted from the RFS fabric-interface entries
+             of its two ends. A status is up only when both ends are up, down
+             if either end is down and unknown when either is unavailable.";
+          leaf link-status {
+            type enumeration {
+              enum up;
+              enum down;
+              enum unknown;
+            }
+            description "Oper-state of the interfaces on the link.";
+          }
+          leaf bgp-status {
+            type enumeration {
+              enum up;
+              enum down;
+              enum unknown;
+            }
+            description "State of the eBGP session on the link.";
+          }
+        }
       }
 
       list server {

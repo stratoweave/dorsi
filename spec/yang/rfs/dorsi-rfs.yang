@@ -74,6 +74,29 @@ module dorsi-rfs {
                     mandatory true;
                 }
             }
+
+            container state {
+                config false;
+                description
+                    "Operational state of the fabric interface, polled from the
+                     device. oper-status is the interface oper-state and
+                     bgp-status is the state of the eBGP session on it: up when
+                     it is established, down for any other session state.";
+                leaf oper-status {
+                    type enumeration {
+                        enum up;
+                        enum down;
+                        enum unknown;
+                    }
+                }
+                leaf bgp-status {
+                    type enumeration {
+                        enum up;
+                        enum down;
+                        enum unknown;
+                    }
+                }
+            }
         }
         list server-port {
             description
