@@ -5,8 +5,6 @@
   import { lowercaseFirst } from '$lib/core/registry/types';
   import { fetchDevices, isPendingQueueItem, type DeviceSummary } from '$lib/core/orchestron/client';
   import { queuesPoll } from '$lib/core/orchestron/poll-store';
-  import TopologyMap from '$lib/core/topology/TopologyMap.svelte';
-  import { buildTopologyGraph } from '$lib/core/topology/model';
   import { restconfGetJson } from '$lib/core/restconf/client';
   import DeviceConfigStatus from '$lib/core/ui/DeviceConfigStatus.svelte';
   import EmptyState from '$lib/core/ui/EmptyState.svelte';
@@ -14,11 +12,7 @@
   import StatTile from '$lib/core/ui/StatTile.svelte';
   import StatusPill from '$lib/core/ui/StatusPill.svelte';
   import { onGlobalRefresh } from '$lib/core/util/global-refresh';
-  import { LatestRequest } from '$lib/core/util/latest-request';
   import { appHref } from '$lib/core/util/nav';
-  import { startPolling } from '$lib/core/util/poll';
-
-  import type { NetinfraPayload, TopologyGraph } from '$lib/core/topology/model';
 
   const modules = listServiceModules();
 
@@ -26,20 +20,14 @@
   let devices = $state.raw<DeviceSummary[]>([]);
   let loadingDevices = $state(true);
   let loadError = $state('');
-  let topologyGraph = $state.raw<TopologyGraph | null>(null);
-  let loadingTopology = $state(true);
-  let topologyError = $state('');
-  let topologyNote = $state('');
   let serviceCounts = $state.raw<Record<string, number | null>>({});
   let loadingCounts = $state(true);
 
   let pendingApprovals = $derived($queuesPoll.queues.filter(isPendingQueueItem).length);
   let queueLoaded = $derived($queuesPoll.loaded);
   let devicesWithoutConfig = $derived(devices.filter((device) => device.hasRunningConfig === false).length);
-  let linksUp = $derived(topologyGraph?.links.filter((link) => link.linkStatus === 'up').length ?? 0);
-  let linksDown = $derived(topologyGraph?.links.filter((link) => link.linkStatus === 'down').length ?? 0);
-  let linksTotal = $derived(topologyGraph?.links.length ?? 0);
-  let routersCount = $derived(serviceCounts['netinfra-router'] ?? null);
+  let switchesCount = $derived(serviceCounts['ip-fabric-switch'] ?? null);
+  let linksCount = $derived(serviceCounts['ip-fabric-link'] ?? null);
 
   async function loadDevices(): Promise<void> {
     try {
@@ -54,43 +42,7 @@
     }
   }
 
-  const topologyRequest = new LatestRequest();
-
-  async function loadTopology(): Promise<void> {
-    const isInitialLoad = topologyGraph === null;
-    const token = topologyRequest.begin();
-    try {
-      if (isInitialLoad) {
-        loadingTopology = true;
-      }
-      topologyNote = '';
-
-      const [netinfraResult] = await Promise.allSettled([
-        restconfGetJson<NetinfraPayload>('data/netinfra:netinfra')
-      ]);
-      if (!topologyRequest.isCurrent(token)) return;
-
-      if (netinfraResult.status !== 'fulfilled') {
-        const message = netinfraResult.reason instanceof Error
-          ? netinfraResult.reason.message
-          : 'Failed to load netinfra topology.';
-        if (isInitialLoad) {
-          topologyGraph = null;
-          topologyError = message;
-        } else {
-          topologyNote = `Refresh failed: ${message}`;
-        }
-        return;
-      }
-
-      topologyError = '';
-      topologyGraph = buildTopologyGraph(netinfraResult.value);
-    } finally {
-      if (topologyRequest.isCurrent(token)) loadingTopology = false;
-    }
-  }
-
-  /** One RESTCONF GET per distinct collection root; several modules share `netinfra`. */
+  /** One RESTCONF GET per distinct collection root; several modules share `ip-fabric`. */
   async function loadServiceCounts(): Promise<void> {
     const roots = new Map<string, Promise<unknown>>();
     const results = await Promise.all(
@@ -114,24 +66,17 @@
     loadingCounts = false;
   }
 
-  const TOPOLOGY_REFRESH_MS = 2000;
-
   onMount(() => {
     loadDevices();
-    loadTopology();
     loadServiceCounts();
 
     const offRefresh = onGlobalRefresh(() => {
       loadDevices();
-      loadTopology();
-      loadServiceCounts();
+        loadServiceCounts();
     });
-
-    const stopTopologyRefresh = startPolling(loadTopology, TOPOLOGY_REFRESH_MS, { immediate: false });
 
     return () => {
       offRefresh();
-      stopTopologyRefresh();
     };
   });
 </script>
@@ -140,7 +85,7 @@
   <div class="page-header page-header--flush">
     <div>
       <h1>Overview</h1>
-      <p>Live view of devices, backbone links, and pending changes.</p>
+      <p>Live view of devices, fabric services, and pending changes.</p>
     </div>
   </div>
 
@@ -162,39 +107,17 @@
       loading={!queueLoaded}
     />
     <StatTile
-      label="Backbone links"
-      value={linksTotal}
-      hint={linksDown > 0 ? `${linksDown} down · ${linksUp} up` : linksTotal > 0 ? `${linksUp} up` : ''}
-      tone={linksDown > 0 ? 'danger' : linksUp > 0 ? 'success' : 'neutral'}
-      href="/services/netinfra-backbone-link"
-      loading={loadingTopology}
-    />
-    <StatTile
-      label="Routers"
-      value={routersCount}
-      href="/services/netinfra-router"
+      label="Fabric switches"
+      value={switchesCount}
+      href="/services/ip-fabric-switch"
       loading={loadingCounts}
     />
-  </section>
-
-  <section class="overview__section" data-tour="topology">
-    <div class="section-head">
-      <h2>Network Topology</h2>
-    </div>
-
-    {#if loadingTopology}
-      <Skeleton height="320px" />
-    {:else if topologyError}
-      <EmptyState tone="danger" icon="alert" title="Topology unavailable" description={topologyError} />
-    {:else if topologyGraph && topologyGraph.routers.length === 0}
-      <EmptyState icon="services" title="No routers yet" description="Add a router service to start building the backbone.">
-        {#snippet action()}
-          <a class="btn btn-primary btn-sm" href={appHref('/services/netinfra-router/new')}>Create router</a>
-        {/snippet}
-      </EmptyState>
-    {:else if topologyGraph}
-      <TopologyMap graph={topologyGraph} note={topologyNote} />
-    {/if}
+    <StatTile
+      label="Fabric links"
+      value={linksCount}
+      href="/services/ip-fabric-link"
+      loading={loadingCounts}
+    />
   </section>
 
   <section class="overview__section" data-tour="devices-table">

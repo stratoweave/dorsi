@@ -76,7 +76,6 @@
     devices: 'Devices',
     operations: 'Operations',
     'config-queue': 'Config Queue',
-    'global-settings': 'Global Settings',
     layers: 'Layer configuration',
     configure: 'Apply Config',
     new: 'New'
@@ -230,17 +229,6 @@
               {serviceModule.title}
             </a>
           {/each}
-
-          <a
-            class="nav-item nav-item--sub"
-            class:active={currentPathname.startsWith('/global-settings')}
-            aria-current={ariaCurrent(currentPathname.startsWith('/global-settings'))}
-            href={appHref('/global-settings')}
-            data-tour="nav-global-settings"
-          >
-            <span class="nav-icon"><NavIcon name="settings" /></span>
-            Global Settings
-          </a>
         </div>
       </div>
     </nav>
@@ -303,10 +291,6 @@
     color: var(--sw-text-muted);
   }
 
-  .nav-item--sub .nav-icon {
-    margin-left: -28px;
-  }
-
   .cmdk-trigger {
     display: inline-flex;
     align-items: center;
@@ -331,10 +315,6 @@
 
     .nav-item--sub {
       padding-left: 12px;
-    }
-
-    .nav-item--sub .nav-icon {
-      margin-left: 0;
     }
   }
 </style>
