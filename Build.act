@@ -1,5 +1,5 @@
-name = "sorespo"
-fingerprint = 0x9221cfef6ab1263c
+name = "dorsi"
+fingerprint = 0xaedc8e3226cd51cf
 dependencies = {
     "rtrsecrets": (
         repo_url="https://github.com/stratoweave/rtrsecrets.git",

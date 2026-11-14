@@ -32,7 +32,7 @@ function demoStubs(): Plugin {
 }
 
 // Dev-mode API proxy: `vite dev` forwards the backend API prefixes to a
-// running SORESPO (`make dev-webui` exports STRATOWEAVE_API_ORIGIN). Anchored
+// running DORSI (`make dev-webui` exports STRATOWEAVE_API_ORIGIN). Anchored
 // regex keys so e.g. /device cannot swallow the UI's /devices route. The raw,
 // still percent-encoded path is forwarded as-is, which RESTCONF list keys
 // (%2F, %2C, %25, ...) depend on.

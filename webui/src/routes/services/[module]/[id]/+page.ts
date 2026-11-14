@@ -16,14 +16,15 @@ export const load: PageLoad = async ({ params, fetch, depends }) => {
   depends(`data:service:${params.module}:${params.id}`);
 
   try {
+    const pathKey = getRoutePathKey(serviceModule, params.id);
     const response = await restconfGetJson(
-      getListEntryPath(serviceModule.restconfRoot, getRoutePathKey(serviceModule, params.id)),
+      getListEntryPath(serviceModule.restconfRoot, pathKey),
       fetch
     );
     return {
       moduleId: serviceModule.id,
       serviceId: params.id,
-      draft: serviceModule.parse(response),
+      draft: serviceModule.parse(response, pathKey),
       loadError: ''
     };
   } catch (loadError) {

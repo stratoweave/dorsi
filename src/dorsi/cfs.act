@@ -1,0 +1,264 @@
+import yang.adata
+import yang.gdata as gdata
+import stratoweave.ttt as ttt
+
+import dorsi.layers.base_0 as base
+import dorsi.layers.y_0 as y_0
+import dorsi.layers.y_0_oper as y_0_oper
+import dorsi.layers.y_1_oper as y_1_oper
+# TODO: this import is required by the compiler, maybe related to
+# https://github.com/actonlang/acton/issues/2390
+import yang.identityref
+
+
+# --- IP fabric ----------------------------------------------------------------
+# Addressing and AS numbers are derived from the switch id so that the
+# switch and fabric-link transforms agree without sharing state:
+#   loopback        10.0.<id / 256>.<id % 256>/32
+#   point-to-point  10.100.0.0/16, one /31 per lower (switch, port) pair
+#   AS number       leaf: one per switch; spine: one per pod and plane;
+#                   super-spine: one per plane (RFC 7938 section 5.2.1)
+
+def _trailing_int(s: str, default: int) -> int:
+    """The number at the end of a name, such as 3 for 'pod-3' or
+    'ethernet-1/3'."""
+    n = len(s)
+    j = n
+    while j > 0 and s[j-1] in "0123456789":
+        j -= 1
+    if j == n:
+        return default
+    return int(s[j:])
+
+
+def fabric_loopback(switch_id: int) -> str:
+    return "10.0.{switch_id // 256}.{switch_id % 256}"
+
+
+def fabric_asn(role: str, switch_id: int, pod: str, plane: str) -> int:
+    if role == "leaf":
+        return 4200000000 + switch_id
+    if role == "spine":
+        return 4200100000 + _trailing_int(pod, 1) * 100 + _trailing_int(plane, 1)
+    return 4200200000 + _trailing_int(plane, 1)
+
+
+def fabric_link_addresses(lower_id: int, lower_port: str) -> (str, str):
+    offset = (lower_id * 64 + _trailing_int(lower_port, 0)) * 2
+    third = offset // 256
+    fourth = offset % 256
+    return ("10.100.{third}.{fourth}", "10.100.{third}.{fourth + 1}")
+
+
+def validate_fabric(f: y_0.ip_fabric__ip_fabric__fabric_entry) -> list[str]:
+    """The problems found in a fabric, an empty list when it is valid.
+
+    Checks the constraints of the ip-fabric model, which are not enforced
+    when the data is applied, and the limits of the addressing scheme."""
+    errors: list[str] = []
+    switches: dict[str, y_0.ip_fabric__ip_fabric__fabric__switch_entry] = {}
+    ids: dict[int, str] = {}
+    for sw in f.switch:
+        switches[sw.name] = sw
+        sid = int(sw.id)
+        if sid in ids:
+            errors.append("switches {ids[sid]} and {sw.name} have the same id {sid}")
+        else:
+            ids[sid] = sw.name
+        if sid > 511:
+            errors.append("switch {sw.name}: id {sid} is above 511, which the addressing scheme supports")
+
+    # A port is used by at most one fabric link or server link
+    used: dict[str, str] = {}
+
+    def use(switch: str, port: str, what: str):
+        key = "{switch}/{port}"
+        if key in used:
+            errors.append("{switch} port {port} is used by both {used[key]} and {what}")
+        else:
+            used[key] = what
+
+    for link in f.fabric_link:
+        what = "the link {link.lower_switch} [{link.lower_port}] <-> {link.upper_switch} [{link.upper_port}]"
+        lower = switches.get(link.lower_switch)
+        upper = switches.get(link.upper_switch)
+        if lower is None:
+            errors.append("{what}: switch {link.lower_switch} does not exist")
+        if upper is None:
+            errors.append("{what}: switch {link.upper_switch} does not exist")
+        use(link.lower_switch, link.lower_port, what)
+        use(link.upper_switch, link.upper_port, what)
+        if _trailing_int(link.lower_port, -1) < 0 or _trailing_int(link.lower_port, -1) > 63:
+            errors.append("{what}: the lower port must end in a number below 64, the addresses are derived from it")
+        if lower is not None and upper is not None:
+            if lower.role == "leaf" and upper.role == "spine":
+                if lower.pod != upper.pod:
+                    errors.append("{what}: leaf {lower.name} is in {lower.pod} and spine {upper.name} in {upper.pod}")
+            elif lower.role == "spine" and upper.role == "super-spine":
+                if lower.plane != upper.plane:
+                    errors.append("{what}: spine {lower.name} is in {lower.plane} and super-spine {upper.name} in {upper.plane}")
+            else:
+                errors.append("{what}: a link joins a leaf to a spine or a spine to a super-spine, not a {lower.role} to a {upper.role}")
+
+    # A five-stage fabric has a super-spine in every plane and a spine in every
+    # plane of every pod
+    planes: set[str] = set()
+    for sw in f.switch:
+        if sw.role == "super-spine":
+            planes.add(sw.plane)
+    if len(planes) > 0:
+        spine_planes: dict[str, set[str]] = {}
+        for sw in f.switch:
+            if sw.role == "spine":
+                if sw.pod not in spine_planes:
+                    spine_planes[sw.pod] = set()
+                spine_planes[sw.pod].add(sw.plane)
+                if sw.plane not in planes:
+                    errors.append("spine {sw.name}: there is no super-spine in {sw.plane}")
+        for pod, pod_planes in spine_planes.items():
+            for plane in planes:
+                if plane not in pod_planes:
+                    errors.append("{pod} has no spine in {plane}")
+
+    for server in f.server:
+        what = "server {server.name}"
+        profile = server.connectivity.profile
+        leaves: list[str] = []
+        server_ports: set[str] = set()
+        for link in server.connectivity.link:
+            use(link.switch, link.switch_port, "{what} [{link.server_port}]")
+            sw = switches.get(link.switch)
+            if sw is None:
+                errors.append("{what}: switch {link.switch} does not exist")
+            elif sw!.role != "leaf":
+                errors.append("{what}: {link.switch} is a {sw!.role}, a server links to a leaf")
+            if link.switch not in leaves:
+                leaves.append(link.switch)
+            if link.server_port in server_ports:
+                errors.append("{what}: port {link.server_port} is used by more than one link")
+            server_ports.add(link.server_port)
+        if profile == "single-homed" and len(leaves) != 1:
+            errors.append("{what}: a single-homed server links to one leaf, not {len(leaves)}")
+        if profile == "dual-homed" and len(leaves) != 2:
+            errors.append("{what}: a dual-homed server links to two leaves, not {len(leaves)}")
+    return errors
+
+
+class Fabric(base.Fabric):
+    """Transform of a complete fabric.
+
+    The transform sits on the fabric list entry and not on its switch and
+    fabric-link entries. A link needs the role, pod, plane and id of both of its
+    switches, and a sw:link can only select list entries by key. The switches
+    are nested below the fabric list, whose key such a link cannot supply.
+    """
+    def transform(self, i):
+        print("CFS fabric transform running", i.name)
+        errors = validate_fabric(i)
+        if len(errors) > 0:
+            raise ValueError("fabric {i.name} is invalid:\n  " + "\n  ".join(errors))
+        o = base.o_root()
+
+        switches = {}
+        for sw in i.switch:
+            switches[sw.name] = sw
+            dev = o.device.create(sw.name, type=sw.type)
+            dev.address.create("oob", address=sw.name)
+            dev.credentials.username = "clab"
+            dev.credentials.password = "clab@123"
+            dev.mock.enabled = sw.mock
+
+            rfs = o.rfs.create(sw.name)
+            base_config = rfs.fabric_base_config.create(u64(fabric_asn(sw.role, int(sw.id), sw.pod, sw.plane)))
+            base_config.role = sw.role
+            base_config.ipv4_address = fabric_loopback(int(sw.id))
+
+        for link in i.fabric_link:
+            print("CFS fabric-link %s [%s] <-> %s [%s]" % (link.lower_switch, link.lower_port, link.upper_switch, link.upper_port))
+            lower = switches[link.lower_switch]
+            upper = switches[link.upper_switch]
+            lower_asn = fabric_asn(lower.role, int(lower.id), lower.pod, lower.plane)
+            upper_asn = fabric_asn(upper.role, int(upper.id), upper.pod, upper.plane)
+            lower_addr, upper_addr = fabric_link_addresses(int(lower.id), link.lower_port)
+
+            li = o.rfs.create(link.lower_switch).fabric_interface.create(link.lower_port, ipv4_address=lower_addr)
+            li.remote.device = link.upper_switch
+            li.remote.interface = link.upper_port
+            li.bgp.peer_address = upper_addr
+            li.bgp.peer_asn = u64(upper_asn)
+
+            ui = o.rfs.create(link.upper_switch).fabric_interface.create(link.upper_port, ipv4_address=upper_addr)
+            ui.remote.device = link.lower_switch
+            ui.remote.interface = link.lower_port
+            ui.bgp.peer_address = lower_addr
+            ui.bgp.peer_asn = u64(lower_asn)
+
+        for server in i.server:
+            print("CFS fabric server", server.name, server.connectivity.profile)
+            for link in server.connectivity.link:
+                o.rfs.create(link.switch).server_port.create(link.switch_port, server=server.name, server_port=link.server_port, profile=server.connectivity.profile)
+
+        return o
+
+
+# --- Fabric link state lift ---------------------------------------------------
+# Combine the two ends' RFS fabric-interface state into the state of the
+# fabric-link: up only when both ends are up (see combine_link_status). Served at
+# data/ip-fabric:ip-fabric/fabric/fabric-link
+
+def combine_link_status(left: ?str, right: ?str) -> ?str:
+    if left == "up" and right == "up":
+        return "up"
+    if left == "down" or right == "down":
+        return "down"
+    if left is None and right is None:
+        return None
+    return "unknown"
+
+
+actor FabricTransform(path: ttt.Path,
+                      update_oper: proc(?y_0_oper.ip_fabric__ip_fabric__fabric_entry)->None,
+                      lower_tree_provider: ?gdata.TreeProvider):
+    _oper = base.Fabric.new_state(path)
+    _subs = gdata.SubscriptionManager(lower_tree_provider!, str(path))
+
+    def on_rfs_state(root: ?y_1_oper.root, err: ?Exception, links: list[(str, str, str, str)]):
+        if err is not None:
+            print("cfs.FabricTransform RFS subscription error: {err}", err=True)
+            return
+        for lower, lower_port, upper, upper_port in links:
+            lower_oper: ?str = None
+            upper_oper: ?str = None
+            lower_bgp: ?str = None
+            upper_bgp: ?str = None
+            if root is not None:
+                for r in root.rfs:
+                    if r.name == lower:
+                        for fi in r.fabric_interface:
+                            if fi.name == lower_port:
+                                lower_oper = fi.state.oper_status
+                                lower_bgp = fi.state.bgp_status
+                    if r.name == upper:
+                        for fi in r.fabric_interface:
+                            if fi.name == upper_port:
+                                upper_oper = fi.state.oper_status
+                                upper_bgp = fi.state.bgp_status
+            link = _oper.fabric_link.create((lower, lower_port, upper, upper_port))
+            link.state.link_status = combine_link_status(lower_oper, upper_oper)
+            link.state.bgp_status = combine_link_status(lower_bgp, upper_bgp)
+        update_oper(_oper)
+
+    def on_conf(conf: y_0.ip_fabric__ip_fabric__fabric_entry):
+        links: list[(str, str, str, str)] = []
+        want: set[gdata.Delivery] = set()
+        subs: set[gdata.SubscriptionSpec] = set()
+        for link in conf.fabric_link:
+            links.append((link.lower_switch, link.lower_port, link.upper_switch, link.upper_port))
+            subs.add(y_1_oper.subs.rfs.entry(link.lower_switch).fabric_interface.entry(link.lower_port).state.subscribe(period=5.0))
+            subs.add(y_1_oper.subs.rfs.entry(link.upper_switch).fabric_interface.entry(link.upper_port).state.subscribe(period=5.0))
+        dst = y_1_oper.dst(lambda r, e: on_rfs_state(r, e, links))
+        want.add(dst.deliver(subs))
+        _subs.declare(want)
+
+    def shutdown():
+        pass

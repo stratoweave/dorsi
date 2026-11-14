@@ -1,7 +1,7 @@
 // Per-device running/target configuration blobs for the /device/{id}/running,
 // /target and /diff endpoints. One network table drives the XML, JSON and
 // AData renderings so all formats tell the same story, consistent with the
-// netinfra/l3vpn fixtures (backbone p2p /30s, one VRF per attached site).
+// netinfra fixtures (backbone p2p /30s).
 
 interface BackboneIface {
   name: string;
@@ -9,16 +9,8 @@ interface BackboneIface {
   prefix: string;
 }
 
-interface VrfAttachment {
-  vpnId: string;
-  iface: string;
-  providerAddress: string;
-  asn: number;
-}
-
 interface DeviceNetwork {
   backbone: BackboneIface[];
-  vrfs: VrfAttachment[];
 }
 
 const DEVICE_NETWORK: Record<string, DeviceNetwork> = {
@@ -26,10 +18,6 @@ const DEVICE_NETWORK: Record<string, DeviceNetwork> = {
     backbone: [
       { name: 'ethernet-1/1', description: 'backbone to FRA-CORE-1 ethernet-1/1', prefix: '10.1.12.1/30' },
       { name: 'ethernet-1/2', description: 'backbone to STO-CORE-1 ethernet-1/1', prefix: '10.1.13.1/30' }
-    ],
-    vrfs: [
-      { vpnId: 'acme-65501', iface: 'ethernet-1/3.100', providerAddress: '10.201.1.1/30', asn: 65501 },
-      { vpnId: 'globex-65502', iface: 'ethernet-1/5.200', providerAddress: '10.205.1.1/30', asn: 65502 }
     ]
   },
   'FRA-CORE-1': {
@@ -37,38 +25,27 @@ const DEVICE_NETWORK: Record<string, DeviceNetwork> = {
       { name: 'ethernet-1/1', description: 'backbone to AMS-CORE-1 ethernet-1/1', prefix: '10.1.12.2/30' },
       { name: 'ethernet-1/2', description: 'backbone to STO-CORE-1 ethernet-1/2', prefix: '10.1.23.1/30' },
       { name: 'ethernet-1/3', description: 'backbone to LJU-CORE-1 ethernet-1/1', prefix: '10.1.24.1/30' }
-    ],
-    vrfs: [{ vpnId: 'acme-65501', iface: 'ethernet-1/4.100', providerAddress: '10.202.1.1/30', asn: 65501 }]
+    ]
   },
   'STO-CORE-1': {
     backbone: [
       { name: 'ethernet-1/1', description: 'backbone to AMS-CORE-1 ethernet-1/2', prefix: '10.1.13.2/30' },
       { name: 'ethernet-1/2', description: 'backbone to FRA-CORE-1 ethernet-1/2', prefix: '10.1.23.2/30' },
       { name: 'ethernet-1/3', description: 'backbone to LJU-CORE-1 ethernet-1/2', prefix: '10.1.34.1/30' }
-    ],
-    vrfs: [
-      { vpnId: 'acme-65501', iface: 'ethernet-1/4.100', providerAddress: '10.203.1.1/30', asn: 65501 },
-      { vpnId: 'globex-65502', iface: 'ethernet-1/5.200', providerAddress: '10.206.1.1/30', asn: 65502 }
     ]
   },
   'LJU-CORE-1': {
     backbone: [
       { name: 'ethernet-1/1', description: 'backbone to FRA-CORE-1 ethernet-1/3', prefix: '10.1.24.2/30' },
       { name: 'ethernet-1/2', description: 'backbone to STO-CORE-1 ethernet-1/3', prefix: '10.1.34.2/30' }
-    ],
-    vrfs: [{ vpnId: 'acme-65501', iface: 'ethernet-1/3.100', providerAddress: '10.204.1.1/30', asn: 65501 }]
+    ]
   }
 };
 
-const EMPTY_NETWORK: DeviceNetwork = { backbone: [], vrfs: [] };
+const EMPTY_NETWORK: DeviceNetwork = { backbone: [] };
 
 function networkFor(name: string): DeviceNetwork {
   return DEVICE_NETWORK[name] ?? EMPTY_NETWORK;
-}
-
-function splitIface(iface: string): { port: string; index: string } {
-  const [port, index = '0'] = iface.split('.');
-  return { port, index };
 }
 
 export function deviceConfigXml(name: string, id: number): string {
@@ -92,51 +69,6 @@ export function deviceConfigXml(name: string, id: number): string {
     )
     .join('\n');
 
-  const vrfIfaceXml = network.vrfs
-    .map((vrf) => {
-      const { port, index } = splitIface(vrf.iface);
-      return `  <interface xmlns="urn:nokia.com:srlinux:chassis:interfaces">
-    <name>${port}</name>
-    <subinterface>
-      <index>${index}</index>
-      <vlan>
-        <encap>
-          <single-tagged>
-            <vlan-id>${index}</vlan-id>
-          </single-tagged>
-        </encap>
-      </vlan>
-      <ipv4>
-        <address>
-          <ip-prefix>${vrf.providerAddress}</ip-prefix>
-        </address>
-      </ipv4>
-    </subinterface>
-  </interface>`;
-    })
-    .join('\n');
-
-  const vrfXml = network.vrfs
-    .map(
-      (vrf) => `  <network-instance xmlns="urn:nokia.com:srlinux:net-inst:network-instance">
-    <name>${vrf.vpnId}</name>
-    <type>ip-vrf</type>
-    <interface>
-      <name>${vrf.iface}</name>
-    </interface>
-    <protocols>
-      <bgp>
-        <autonomous-system>${vrf.asn}</autonomous-system>
-        <group>
-          <group-name>customer</group-name>
-          <peer-as>${vrf.asn}</peer-as>
-        </group>
-      </bgp>
-    </protocols>
-  </network-instance>`
-    )
-    .join('\n');
-
   return `<config>
   <system xmlns="urn:nokia.com:srlinux:general:system">
     <name>
@@ -155,7 +87,6 @@ export function deviceConfigXml(name: string, id: number): string {
     </subinterface>
   </interface>
 ${backboneXml}
-${vrfIfaceXml}
   <network-instance xmlns="urn:nokia.com:srlinux:net-inst:network-instance">
     <name>default</name>
     <type>default</type>
@@ -174,7 +105,6 @@ ${network.backbone.map((iface) => `    <interface>\n      <name>${iface.name}.0<
       </bgp>
     </protocols>
   </network-instance>
-${vrfXml}
 </config>`;
 }
 
@@ -191,20 +121,7 @@ export function deviceConfigObject(name: string, id: number): Record<string, unk
       description: iface.description,
       'admin-state': 'enable',
       subinterface: [{ index: 0, ipv4: { address: [{ 'ip-prefix': iface.prefix }] } }]
-    })),
-    ...network.vrfs.map((vrf) => {
-      const { port, index } = splitIface(vrf.iface);
-      return {
-        name: port,
-        subinterface: [
-          {
-            index: Number(index),
-            vlan: { encap: { 'single-tagged': { 'vlan-id': Number(index) } } },
-            ipv4: { address: [{ 'ip-prefix': vrf.providerAddress }] }
-          }
-        ]
-      };
-    })
+    }))
   ];
 
   const networkInstances: Record<string, unknown>[] = [
@@ -222,18 +139,7 @@ export function deviceConfigObject(name: string, id: number): Record<string, unk
           group: [{ 'group-name': 'ibgp', 'peer-as': 65001 }]
         }
       }
-    },
-    ...network.vrfs.map((vrf) => ({
-      name: vrf.vpnId,
-      type: 'ip-vrf',
-      interface: [{ name: vrf.iface }],
-      protocols: {
-        bgp: {
-          'autonomous-system': vrf.asn,
-          group: [{ 'group-name': 'customer', 'peer-as': vrf.asn }]
-        }
-      }
-    }))
+    }
   ];
 
   return {
@@ -258,15 +164,6 @@ export function deviceConfigAdata(name: string, id: number): string {
       `interface ${iface.name} {`,
       `    description: "${iface.description}"`,
       `    subinterface 0 { ipv4 { address ${iface.prefix} } }`,
-      `}`
-    );
-  }
-  for (const vrf of network.vrfs) {
-    lines.push(
-      `network-instance ${vrf.vpnId} {`,
-      `    type: ip-vrf`,
-      `    interface ${vrf.iface} { }`,
-      `    protocols { bgp { autonomous-system: ${vrf.asn} } }`,
       `}`
     );
   }

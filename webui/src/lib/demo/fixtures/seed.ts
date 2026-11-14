@@ -1,7 +1,7 @@
 import {
+  backboneInterfaceDiff,
   interfaceDescriptionDiff,
-  subinterfaceRemoveDiff,
-  vrfAddDiff
+  subinterfaceRemoveDiff
 } from '$lib/demo/fixtures/diffs';
 
 // Initial pending queue items and per-device config log history. Queue ids and
@@ -14,7 +14,6 @@ interface QueueSeed {
 
 export const INITIAL_QUEUE: Record<string, QueueSeed[]> = {
   'AMS-CORE-1': [
-    { diffXml: vrfAddDiff('acme-65501', 'ethernet-1/3.100', '10.201.1.1', 30, 65501) },
     { diffXml: interfaceDescriptionDiff('ethernet-1/1', 'backbone to FRA-CORE-1 ethernet-1/1') }
   ],
   'LJU-CORE-1': [{ diffXml: subinterfaceRemoveDiff('ethernet-1/4', '300') }]
@@ -34,7 +33,7 @@ export const INITIAL_LOG: Record<string, LogSeed[]> = {
     {
       event: 'sent',
       ageSeconds: 2 * HOUR,
-      conf_diff: vrfAddDiff('globex-65502', 'ethernet-1/5.200', '10.205.1.1', 30, 65502)
+      conf_diff: backboneInterfaceDiff('ethernet-1/1', 'FRA-CORE-1', 'ethernet-1/1')
     },
     {
       event: 'sent',
@@ -52,14 +51,14 @@ export const INITIAL_LOG: Record<string, LogSeed[]> = {
     {
       event: 'sent',
       ageSeconds: DAY + 6 * HOUR,
-      conf_diff: vrfAddDiff('acme-65501', 'ethernet-1/4.100', '10.202.1.1', 30, 65501)
+      conf_diff: backboneInterfaceDiff('ethernet-1/2', 'STO-CORE-1', 'ethernet-1/2')
     }
   ],
   'STO-CORE-1': [
     {
       event: 'sent',
       ageSeconds: 8 * HOUR,
-      conf_diff: vrfAddDiff('globex-65502', 'ethernet-1/5.200', '10.206.1.1', 30, 65502)
+      conf_diff: backboneInterfaceDiff('ethernet-1/3', 'LJU-CORE-1', 'ethernet-1/2')
     },
     { event: 'sent', ageSeconds: 2 * DAY }
   ],
@@ -67,7 +66,7 @@ export const INITIAL_LOG: Record<string, LogSeed[]> = {
     {
       event: 'sent',
       ageSeconds: 90 * 60,
-      conf_diff: vrfAddDiff('acme-65501', 'ethernet-1/3.100', '10.204.1.1', 30, 65501)
+      conf_diff: backboneInterfaceDiff('ethernet-1/1', 'FRA-CORE-1', 'ethernet-1/3')
     },
     { event: 'sent', ageSeconds: DAY + 16 * HOUR }
   ]

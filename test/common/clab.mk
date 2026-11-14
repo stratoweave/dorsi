@@ -1,7 +1,7 @@
 PROJECT_DIR:=$(realpath $(dir $(lastword $(MAKEFILE_LIST)))/../../)
 # Set this env var to empty string if you have local cRPD, XRd container images
 export IMAGE_PATH?=ghcr.io/stratoweave/
-# Host port for the sorespo HTTP port 80 (APIs + embedded Web UI) on sweave.
+# Host port for the dorsi HTTP port 80 (APIs + embedded Web UI) on sweave.
 export WEBUI_PORT?=3000
 # Docker publish spec (host address and port) for that port. Loopback by
 # default: the HTTP API has no authentication. To listen on all interfaces set

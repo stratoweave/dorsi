@@ -28,7 +28,9 @@ export interface ServiceModule<TDraft = unknown> {
   keyParam: string;
   keyLabel?: string;
   createDraft(): TDraft;
-  parse(input: unknown): TDraft;
+  /** `key` is the path key of the entry being loaded, for modules whose entry
+   * does not carry all of its key (a list below another keyed list). */
+  parse(input: unknown, key?: string | string[]): TDraft;
   cloneDraft?(draft: TDraft): TDraft;
   list?(input: unknown): ServiceListItem[];
   validate(draft: TDraft): ValidationResult;
@@ -82,7 +84,7 @@ export function getRoutePathKey<TDraft>(module: ServiceModule<TDraft>, id: strin
   return id;
 }
 
-/** "VPN services" -> "VPN services", "Sites" -> "sites": lowercase a leading capital unless it starts an acronym. */
+/** "Routers" -> "routers", "BGP peers" -> "BGP peers": lowercase a leading capital unless it starts an acronym. */
 export function lowercaseFirst(label: string): string {
   return label.replace(/^[A-Z](?=[a-z])/, (initial) => initial.toLowerCase());
 }

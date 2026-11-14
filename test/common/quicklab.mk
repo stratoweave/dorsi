@@ -1,7 +1,7 @@
 build-sweave-image:
-	docker build --build-arg http_proxy=$(http_proxy) --build-arg https_proxy=$(https_proxy) -t sorespo-sweave-base -f ../common/Dockerfile.sweave .
+	docker build --build-arg http_proxy=$(http_proxy) --build-arg https_proxy=$(https_proxy) -t dorsi-sweave-base -f ../common/Dockerfile.sweave .
 
-# The sweave container publishes the sorespo HTTP port 80 (APIs + embedded
+# The sweave container publishes the dorsi HTTP port 80 (APIs + embedded
 # Web UI) on 127.0.0.1:$(WEBUI_PORT) (see the `ports:` in each
 # *.clab.yml). Discover the actual host port at parse time so port overrides
 # keep working.
@@ -32,9 +32,9 @@ licenses/%:
 
 .PHONY: start
 start: build-sweave-image
-	$(CLAB_BIN) deploy --topo $(TESTENV:sorespo-%=%).clab.yml --log-level debug --reconfigure
+	$(CLAB_BIN) deploy --topo $(TESTENV:dorsi-%=%).clab.yml --log-level debug --reconfigure
 	@$(MAKE) --no-print-directory api-url
-	@echo "SORESPO Web UI: http://localhost:$(WEBUI_PORT)"
+	@echo "DORSI Web UI: http://localhost:$(WEBUI_PORT)"
 
 WEBUI_HOST ?= 127.0.0.1
 # Vite dev server port. The embedded UI already occupies WEBUI_PORT.
@@ -128,21 +128,23 @@ stop-dev-webui:
 
 .PHONY: stop
 stop:
-	$(CLAB_BIN) destroy --topo $(TESTENV:sorespo-%=%).clab.yml --log-level debug
+	$(CLAB_BIN) destroy --topo $(TESTENV:dorsi-%=%).clab.yml --log-level debug
 
-.PHONY: wait $(addprefix wait-,$(ROUTERS_XR) $(ROUTERS_CRPD) $(ROUTERS_SRL))
+.PHONY: wait $(addprefix wait-,$(ROUTERS_XR) $(ROUTERS_CRPD))
 WAIT?=60
-wait: $(addprefix platform-wait-,$(ROUTERS_XR) $(ROUTERS_CRPD) $(ROUTERS_SRL))
+wait: $(addprefix platform-wait-,$(ROUTERS_XR) $(ROUTERS_CRPD))
+
+# The configuration file sent to dorsi, one per lab directory
+CONFIG ?= ip-fabric.xml
 
 .PHONY: copy
 copy:
-	docker cp ../../out/bin/sorespo $(TESTENV)-sweave:/sorespo
-	docker cp l3vpn-svc.xml $(TESTENV)-sweave:/l3vpn-svc.xml
-	docker cp netinfra.xml $(TESTENV)-sweave:/netinfra.xml
+	docker cp ../../out/bin/dorsi $(TESTENV)-sweave:/dorsi
+	docker cp $(CONFIG) $(TESTENV)-sweave:/$(CONFIG)
 
 .PHONY: run
 run:
-	docker exec $(INTERACTIVE) $(TESTENV)-sweave /sorespo --rts-bt-dbg
+	docker exec $(INTERACTIVE) $(TESTENV)-sweave /dorsi --rts-bt-dbg
 
 ifndef CI
 INTERACTIVE=-it
@@ -152,19 +154,11 @@ endif
 
 .PHONY: run-and-configure
 run-and-configure:
-	docker exec $(INTERACTIVE) $(TESTENV)-sweave /sorespo $(EXIT_ON_DONE) netinfra.xml l3vpn-svc.xml --rts-bt-dbg
+	docker exec $(INTERACTIVE) $(TESTENV)-sweave /dorsi $(EXIT_ON_DONE) $(CONFIG) --rts-bt-dbg
 
 .PHONY: configure
 configure:
-	$(MAKE) send-config-wait FILE="netinfra.xml"
-	$(MAKE) send-config-wait FILE="l3vpn-svc.xml"
-
-.PHONY: configure-tmf640
-configure-tmf640:
-	settings=$$(jq -c '{"netinfra:global-settings": .["netinfra:netinfra"]["global-settings"]}' netinfra.json); \
-	curl -f -k -sS -X PUT -H "Content-Type: application/yang-data+json" -d "$$settings" $(STRATOWEAVE_API_ORIGIN)/restconf/data/netinfra:netinfra/global-settings
-	$(MAKE) send-config-tmf640-stream FILE="netinfra.json" FILTER="../common/netinfra-to-tmf640.jq"
-	$(MAKE) send-config-tmf640-stream FILE="l3vpn-svc.json" FILTER="../common/l3vpn-svc-to-tmf640.jq"
+	$(MAKE) send-config-wait FILE="$(CONFIG)"
 
 
 .PHONY: tutorial
@@ -273,69 +267,60 @@ upper = $(shell printf '%s' "$(1)" | tr '[:lower:]' '[:upper:]')
 # "target" is the StratoWeave's intended configuration, i.e. the configuration
 # *we* want on the device. Note how this is not NMDA-speak for "intended
 # configuration" of the device itself.
-.PHONY: $(addprefix get-target-,$(ROUTERS_XR) $(ROUTERS_CRPD) $(ROUTERS_SRL))
-$(addprefix get-target-,$(ROUTERS_XR) $(ROUTERS_CRPD) $(ROUTERS_SRL)):
+.PHONY: $(addprefix get-target-,$(ROUTERS_XR) $(ROUTERS_CRPD))
+$(addprefix get-target-,$(ROUTERS_XR) $(ROUTERS_CRPD)):
 	@curl $(STRATOWEAVE_API_ORIGIN)/device/$(call upper,$(subst get-target-,,$@))/target?format=$(DEVICE_CONFIG_FORMAT)
 
-.PHONY: $(addprefix get-target-adata-,$(ROUTERS_XR) $(ROUTERS_CRPD) $(ROUTERS_SRL))
-$(addprefix get-target-adata-,$(ROUTERS_XR) $(ROUTERS_CRPD) $(ROUTERS_SRL)):
+.PHONY: $(addprefix get-target-adata-,$(ROUTERS_XR) $(ROUTERS_CRPD))
+$(addprefix get-target-adata-,$(ROUTERS_XR) $(ROUTERS_CRPD)):
 	@$(MAKE) DEVICE_CONFIG_FORMAT=adata $(subst adata-,,$@)
 
 # "running" is the currently running configuration on the device, which in
 # NMDA-speak is the "intended configuration".
-.PHONY: $(addprefix get-running-,$(ROUTERS_XR) $(ROUTERS_CRPD) $(ROUTERS_SRL))
-$(addprefix get-running-,$(ROUTERS_XR) $(ROUTERS_CRPD) $(ROUTERS_SRL)):
+.PHONY: $(addprefix get-running-,$(ROUTERS_XR) $(ROUTERS_CRPD))
+$(addprefix get-running-,$(ROUTERS_XR) $(ROUTERS_CRPD)):
 	@curl $(STRATOWEAVE_API_ORIGIN)/device/$(call upper,$(subst get-running-,,$@))/running?format=$(DEVICE_CONFIG_FORMAT)
 
-.PHONY: $(addprefix get-running-adata-,$(ROUTERS_XR) $(ROUTERS_CRPD) $(ROUTERS_SRL))
-$(addprefix get-running-adata-,$(ROUTERS_XR) $(ROUTERS_CRPD) $(ROUTERS_SRL)):
+.PHONY: $(addprefix get-running-adata-,$(ROUTERS_XR) $(ROUTERS_CRPD))
+$(addprefix get-running-adata-,$(ROUTERS_XR) $(ROUTERS_CRPD)):
 	@$(MAKE) DEVICE_CONFIG_FORMAT=adata $(subst adata-,,$@)
 
-.PHONY: $(addprefix get-diff-,$(ROUTERS_XR) $(ROUTERS_CRPD) $(ROUTERS_SRL))
-$(addprefix get-diff-,$(ROUTERS_XR) $(ROUTERS_CRPD) $(ROUTERS_SRL)):
+.PHONY: $(addprefix get-diff-,$(ROUTERS_XR) $(ROUTERS_CRPD))
+$(addprefix get-diff-,$(ROUTERS_XR) $(ROUTERS_CRPD)):
 	@curl $(STRATOWEAVE_API_ORIGIN)/device/$(call upper,$(subst get-diff-,,$@))/diff?format=$(DEVICE_CONFIG_FORMAT)
 
-.PHONY: $(addprefix get-diff-adata-,$(ROUTERS_XR) $(ROUTERS_CRPD) $(ROUTERS_SRL))
-$(addprefix get-diff-adata-,$(ROUTERS_XR) $(ROUTERS_CRPD) $(ROUTERS_SRL)):
+.PHONY: $(addprefix get-diff-adata-,$(ROUTERS_XR) $(ROUTERS_CRPD))
+$(addprefix get-diff-adata-,$(ROUTERS_XR) $(ROUTERS_CRPD)):
 	@$(MAKE) DEVICE_CONFIG_FORMAT=adata $(subst adata-,,$@)
 
-.PHONY: $(addprefix resync-,$(ROUTERS_XR) $(ROUTERS_CRPD) $(ROUTERS_SRL))
-$(addprefix resync-,$(ROUTERS_XR) $(ROUTERS_CRPD) $(ROUTERS_SRL)):
+.PHONY: $(addprefix resync-,$(ROUTERS_XR) $(ROUTERS_CRPD))
+$(addprefix resync-,$(ROUTERS_XR) $(ROUTERS_CRPD)):
 	@curl $(STRATOWEAVE_API_ORIGIN)/device/$(call upper,$(subst resync-,,$@))/resync
 
-.PHONY: delete-config
-delete-config:
-	curl -f -X DELETE $(STRATOWEAVE_API_ORIGIN)/restconf/data/netinfra:netinfra/router=STO-CORE-1
+.PHONY: $(addprefix cli-,$(ROUTERS_XR) $(ROUTERS_CRPD))
+$(addprefix cli-,$(ROUTERS_XR) $(ROUTERS_CRPD)): cli-%: platform-cli-%
 
-.PHONY: $(addprefix cli-,$(ROUTERS_XR) $(ROUTERS_CRPD) $(ROUTERS_SRL) $(ROUTERS_FRR))
-$(addprefix cli-,$(ROUTERS_XR) $(ROUTERS_CRPD) $(ROUTERS_SRL) $(ROUTERS_FRR)): cli-%: platform-cli-%
-
-.PHONY: $(addprefix get-dev-config-,$(ROUTERS_XR) $(ROUTERS_CRPD) $(ROUTERS_SRL))
-$(addprefix get-dev-config-,$(ROUTERS_XR) $(ROUTERS_CRPD) $(ROUTERS_SRL)):
+.PHONY: $(addprefix get-dev-config-,$(ROUTERS_XR) $(ROUTERS_CRPD))
+$(addprefix get-dev-config-,$(ROUTERS_XR) $(ROUTERS_CRPD)):
 	docker run $(INTERACTIVE) --rm --network container:$(TESTENV)-sweave ghcr.io/stratoweave/ncurl --host $(@:get-dev-config-%=%) --port 830 --username clab --password clab@123 get-config
-
-.PHONY: test-restconf-get
-test-restconf-get:
-	curl -sS -f -H "Accept: application/yang-data+json" $(STRATOWEAVE_API_ORIGIN)/restconf/data/netinfra:netinfra/router=AMS-CORE-1 | jq '.["netinfra:router"][0].name' | grep -q "AMS-CORE-1"
 
 .PHONY: test
 test:
 	$(MAKE) test-ping
 	$(MAKE) test-get-config
-	$(MAKE) test-restconf-get
 
 .PHONY: test-ping
 test-ping::
 
 .PHONY: test-get-config
 test-get-config:
-	$(MAKE) $(addprefix get-dev-config-,$(ROUTERS_XR) $(ROUTERS_CRPD) $(ROUTERS_SRL))
+	$(MAKE) $(addprefix get-dev-config-,$(ROUTERS_XR) $(ROUTERS_CRPD))
 
 .PHONY: save-logs
-save-logs: $(addprefix save-logs-,$(ROUTERS_XR) $(ROUTERS_CRPD) $(ROUTERS_SRL))
+save-logs: $(addprefix save-logs-,$(ROUTERS_XR) $(ROUTERS_CRPD))
 
-.PHONY: $(addprefix save-logs-,$(ROUTERS_XR) $(ROUTERS_CRPD) $(ROUTERS_SRL))
-$(addprefix save-logs-,$(ROUTERS_XR) $(ROUTERS_CRPD) $(ROUTERS_SRL)):
+.PHONY: $(addprefix save-logs-,$(ROUTERS_XR) $(ROUTERS_CRPD))
+$(addprefix save-logs-,$(ROUTERS_XR) $(ROUTERS_CRPD)):
 	mkdir -p logs
 	docker logs --timestamps $(TESTENV)-$(@:save-logs-%=%) > logs/$(@:save-logs-%=%)_docker.log 2>&1
 	$(MAKE) get-dev-config-$(@:save-logs-%=%) > logs/$(@:save-logs-%=%)_netconf.log || true

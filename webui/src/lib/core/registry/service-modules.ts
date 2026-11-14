@@ -1,15 +1,13 @@
-import { module as l3vpnSite } from '$lib/modules/l3vpn-site/manifest';
-import { module as l3vpnVpnService } from '$lib/modules/l3vpn-vpn-service/manifest';
-import { module as netinfraBackboneLink } from '$lib/modules/netinfra-backbone-link/manifest';
-import { module as netinfraRouter } from '$lib/modules/netinfra-router/manifest';
+import { module as ipFabricLink } from '$lib/modules/ip-fabric-link/manifest';
+import { module as ipFabricServer } from '$lib/modules/ip-fabric-server/manifest';
+import { module as ipFabricSwitch } from '$lib/modules/ip-fabric-switch/manifest';
 
 import type { AnyServiceModule, ServiceModuleMeta } from '$lib/core/registry/types';
 
 export const serviceModules = {
-  'l3vpn-site': l3vpnSite,
-  'l3vpn-vpn-service': l3vpnVpnService,
-  'netinfra-backbone-link': netinfraBackboneLink,
-  'netinfra-router': netinfraRouter
+  'ip-fabric-link': ipFabricLink,
+  'ip-fabric-server': ipFabricServer,
+  'ip-fabric-switch': ipFabricSwitch
 } satisfies Record<string, AnyServiceModule>;
 
 export function listServiceModules(): AnyServiceModule[] {

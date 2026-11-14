@@ -1,0 +1,175 @@
+import yang.gdata as gdata
+import stratoweave.device as swdev
+
+import dorsi.layers.base_1 as base
+import dorsi.layers.y_1 as y_1
+import dorsi.layers.y_1_oper as y_1_oper
+
+from stratoweave.exception import UnsupportedDevice
+
+import dorsi.devices.NokiaSRLinux_25_3_2 as srl25
+import dorsi.devices.NokiaSRLinux_25_3_2_oper as srl25_oper
+from dorsi.devices.NokiaSRLinux_25_3_2_oper import root as srl25_oper_root
+
+
+def _link_description(remote_device: str, remote_interface: str) -> str:
+    return "Link to {remote_device} [{remote_interface}]"
+
+
+# --- IP fabric ----------------------------------------------------------------
+# Underlay of an IP fabric as described in RFC 7938: eBGP on every routed
+# point-to-point link, ECMP across all equal-cost paths and the loopback of
+# every switch advertised into BGP.
+_FABRIC_GROUP = "fabric"
+_FABRIC_EXPORT_POLICY = "export-loopbacks"
+_FABRIC_IMPORT_POLICY = "accept-all"
+_FABRIC_LOOPBACK_PREFIX_SET = "loopbacks"
+_FABRIC_ECMP_PATHS = 64
+
+class FabricBaseConfig(base.FabricBaseConfig):
+    def transform(self, i, di):
+        print("RFS /rfs{{{di.name}}}/fabric-base-config transform running {i.role}", err=True)
+
+        if "srl_nokia-system" in di.modules:
+            print("RFS /rfs{{{di.name}}}/fabric-base-config transform running {i.role} for Nokia SRLinux", err=True)
+            dev = srl25.root()
+            dev.system.name.host_name = di.name
+
+            # Loopback
+            index = dev.interface.create("system0").subinterface.create(0)
+            index.ipv4.admin_state = "enable"
+            index.ipv4.address.create("{i.ipv4_address}/32")
+
+            # Management
+            intf_mgmt = dev.interface.create("mgmt0", admin_state="enable")
+            intf_mgmt0 = intf_mgmt.subinterface.create(0, admin_state="enable")
+            intf_mgmt0.ipv4.admin_state = "enable"
+            intf_mgmt0.ipv6.admin_state = "enable"
+            ni_mgmt = dev.network_instance.create("mgmt", type=srl25.srl_nokia_network_instance_ip_vrf, admin_state="enable", description="Management network instance")
+            ni_mgmt.interface.create("mgmt0.0")
+
+            # BGP with ECMP; the group carries the loopback export policy
+            ni = dev.network_instance.create("default")
+            ni.interface.create("system0.0")
+            bgp = ni.protocols.create_bgp(autonomous_system=i.asn, router_id=i.ipv4_address)
+            af = bgp.afi_safi.create(srl25.srl_nokia_common_ipv4_unicast, admin_state="enable")
+            af.multipath.ebgp.maximum_paths = u64(_FABRIC_ECMP_PATHS)
+            group = bgp.group.create(_FABRIC_GROUP)
+            group.export_policy = [_FABRIC_EXPORT_POLICY]
+            group.import_policy = [_FABRIC_IMPORT_POLICY]
+
+            # Advertise the loopbacks and accept everything the fabric sends us
+            rp = dev.routing_policy
+            ps = rp.prefix_set.create(_FABRIC_LOOPBACK_PREFIX_SET)
+            ps.prefix.create(("10.0.0.0/16", "32..32"))
+            exp = rp.policy.create(_FABRIC_EXPORT_POLICY).statement.create("10")
+            exp.match.prefix.prefix_set = _FABRIC_LOOPBACK_PREFIX_SET
+            exp.action_.policy_result = "accept"
+            rp.policy.create(_FABRIC_IMPORT_POLICY).statement.create("10").action_.policy_result = "accept"
+
+            return dev
+
+        raise UnsupportedDevice()
+
+
+class FabricInterface(base.FabricInterface):
+    def transform(self, i, di):
+        print("RFS /rfs{{{di.name}}}/fabric-interface transform running [{i.name}] <-> {i.remote.device} [{i.remote.interface}]", err=True)
+        if_description = _link_description(i.remote.device, i.remote.interface)
+
+        if "srl_nokia-system" in di.modules:
+            print("RFS /rfs{{{di.name}}}/fabric-interface transform running [{i.name}] <-> {i.remote.device} [{i.remote.interface}] for Nokia SRLinux", err=True)
+            dev = srl25.root()
+
+            # Routed point-to-point interface
+            intf = dev.interface.create(i.name)
+            intf.description = if_description
+            intf.admin_state = "enable"
+            subif = intf.subinterface.create(0)
+            subif.admin_state = "enable"
+            subif.description = if_description
+            subif.ipv4.admin_state = "enable"
+            subif.ipv4.address.create("%s/%s" % (i.ipv4_address, str(i.ipv4_prefix_length)))
+
+            ni = dev.network_instance.create("default")
+            ni.interface.create("%s.0" % i.name)
+
+            # eBGP session to the other end of the link
+            bgp = ni.protocols.create_bgp()
+            bgp.neighbor.create(i.bgp.peer_address, peer_group=_FABRIC_GROUP, peer_as=i.bgp.peer_asn, admin_state="enable", description=if_description)
+
+            return dev
+
+        raise UnsupportedDevice()
+
+
+# --- Fabric interface oper-status ---------------------------------------------
+# Poll the oper-state of each fabric interface and the state of its eBGP session
+# from the device. The CFS FabricTransform lift combines the two ends of a link
+# into the state of the fabric-link.
+actor FabricInterfaceTransform(path, update_oper: proc(?y_1_oper.stratoweave_rfs__rfs__fabric_interface_entry)->None, dev: swdev.DeviceMgr):
+    _subs = gdata.SubscriptionManager(dev.tree_provider(), str(path))
+    _oper = base.FabricInterface.new_state(path)
+
+    def publish(oper_status: ?str, bgp_status: ?str):
+        _oper.state.oper_status = oper_status
+        _oper.state.bgp_status = bgp_status
+        update_oper(_oper)
+
+    def on_srl_state(root: ?srl25_oper_root, err: ?Exception, peer_address: str):
+        oper_status: ?str = None
+        bgp_status: ?str = None
+        if err is not None:
+            print("FabricInterfaceTransform subscription error: {err}", err=True)
+        elif root is not None:
+            for interface in root.interface:
+                raw = interface.oper_state
+                if raw == "up":
+                    oper_status = "up"
+                elif raw == "down":
+                    oper_status = "down"
+                elif raw is not None:
+                    oper_status = "unknown"
+            for ni in root.network_instance:
+                bgp = ni.protocols.bgp
+                if bgp is not None:
+                    for neighbor in bgp.neighbor:
+                        if neighbor.peer_address == peer_address:
+                            session = neighbor.session_state
+                            if session == "established":
+                                bgp_status = "up"
+                            elif session is not None:
+                                # idle, connect, active, opensent and openconfirm
+                                bgp_status = "down"
+        publish(oper_status, bgp_status)
+
+    def on_conf(conf: y_1.stratoweave_rfs__rfs__fabric_interface_entry):
+        want: set[gdata.Delivery] = set()
+        modset = dev.get_modules().0
+        if "srl_nokia-system" in modset:
+            peer_address = conf.bgp.peer_address
+            srl_dst = srl25_oper.dst(lambda r, e: on_srl_state(r, e, peer_address))
+            want.add(srl_dst.deliver({
+                srl25_oper.subs.interface.entry(conf.name).oper_state.subscribe(period=5.0),
+                srl25_oper.subs.network_instance.entry("default").protocols.bgp.neighbor.entry(peer_address).session_state.subscribe(period=5.0)
+            }))
+        _subs.declare(want)
+
+    def shutdown():
+        pass
+
+
+class ServerPort(base.ServerPort):
+    def transform(self, i, di):
+        print("RFS /rfs{{{di.name}}}/server-port transform running [{i.name}] <-> {i.server} [{i.server_port}] {i.profile}", err=True)
+        if_description = "Server {i.server} [{i.server_port}] ({i.profile})"
+
+        if "srl_nokia-system" in di.modules:
+            print("RFS /rfs{{{di.name}}}/server-port transform running [{i.name}] for Nokia SRLinux", err=True)
+            dev = srl25.root()
+            intf = dev.interface.create(i.name)
+            intf.description = if_description
+            intf.admin_state = "enable"
+            return dev
+
+        raise UnsupportedDevice()

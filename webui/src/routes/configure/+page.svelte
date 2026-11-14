@@ -180,8 +180,8 @@
       ondragleave={handleDragLeave}
       ondrop={handleDrop}
       placeholder={format === 'xml'
-        ? '<l3vpn-svc xmlns="urn:ietf:params:xml:ns:yang:ietf-l3vpn-svc">\n  ...\n</l3vpn-svc>'
-        : '{\n  "ietf-l3vpn-svc:l3vpn-svc": {\n    ...\n  }\n}'}
+        ? '<ip-fabric xmlns="http://example.com/ip-fabric">\n  ...\n</ip-fabric>'
+        : '{\n  "ip-fabric:ip-fabric": {\n    ...\n  }\n}'}
       spellcheck="false"
       autocapitalize="off"
       autocomplete="off"

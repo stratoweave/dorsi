@@ -1,0 +1,2 @@
+rejected: ValueError: fabric dc1 is invalid:
+  server bad: spine1 is a spine, a server links to a leaf
