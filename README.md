@@ -1,6 +1,4 @@
-<p align="left">
-  <img src="docs/images/DorsiTmpBlue.png" width="400"/>
-</p>
+# DORSI
 
 **DORSI** is a reference implementation of a network automation system built
 on [StratoWeave](https://github.com/stratoweave/stratoweave). It turns a short
@@ -24,9 +22,22 @@ heavy lifting so you can focus on building automation that makes sense.
 can use it to learn about network automation (development) or use it as a solid
 foundation for your own network automation system design.
 
-<p align="center">
-  <img src="docs/images/StratoWeaveDorsiCombined.png" alt="The relationship between the StratoWeave automation platform and the DORSI network service implementation" width="800"/>
-</p>
+```mermaid
+flowchart TB
+  subgraph SW["StratoWeave: platform"]
+    direction TB
+    NB["Northbound: RESTCONF and Web UI"]
+    subgraph D["DORSI: service automation"]
+      direction TB
+      CFS["CFS: ip-fabric"] --> RFS["RFS: fabric-base-config, fabric-interface, server-port"]
+      RFS --> DEV["Device: Nokia SR Linux"]
+    end
+    SB["Southbound: NETCONF"]
+    NB --> CFS
+    DEV --> SB
+  end
+  SB --> NET[("Switches")]
+```
 
 DORSI was formerly known as SORESPO.
 
@@ -80,14 +91,29 @@ from the switch `id`:
 | AS number | private 4-byte: one per leaf, one per spine pod and plane, one per super-spine plane |
 
 The addressing limits are a switch `id` up to 511 and a lower port number below
-64. On SR Linux every switch gets a loopback, a BGP instance with ECMP, a policy
-that advertises only the loopbacks, and for every link an interface with its /31
-and an eBGP session. Server-facing leaf ports are enabled and described.
+64. On SR Linux every switch gets a hostname, a loopback, a BGP instance with
+ECMP, a policy that advertises only the loopbacks, and for every link an
+interface with its /31 and an eBGP session. Server-facing leaf ports are enabled
+and described. LLDP is enabled globally and on the management, fabric and server
+ports.
+
+Every switch is also registered as a device in DORSI, reached by its name with
+the lab credentials of the [`test/`](test/README.md) environments. Set `mock` on
+a switch to run it against a simulated device instead of a real one.
 
 The fabric is validated before it is applied: tiers must be adjacent and in the
 same pod or plane, a port may be used once, servers connect to leaves and match
 their profile, and a five-stage fabric needs a super-spine and a spine in every
 plane. An invalid fabric is rejected as a whole with every problem listed.
+
+#### Live state
+
+DORSI also reports the state of the fabric. Every five seconds it polls each
+fabric interface on the device: its oper-state and the state of the eBGP session
+on it. The CFS lifts the two ends of a link into read-only `state` of the
+`fabric-link`, with `link-status` and `bgp-status` each `up`, `down` or
+`unknown`. A status is `up` only when both ends are up, `down` if either end is
+down, and `unknown` when either end cannot be read.
 
 Out of scope for now: the **overlay** (EVPN/VXLAN). A dual-homed server has two
 configured ports, but surviving the loss of a leaf needs an overlay.
@@ -104,7 +130,8 @@ configured ports, but surviving the loss of a leaf needs an overlay.
   been deployed: ten SR Linux nodes need much more memory than the 3-stage lab,
   which already needs about 9 GB.
 * Not covered: server-to-server traffic, link and leaf failures, and live
-  changes to a running fabric.
+  changes to a running fabric. The live state is covered by the build but has not
+  been checked against a failing link.
 
 ### Service automation layering
 
@@ -133,10 +160,12 @@ implemented, as few or many as necessary can be used.
 ```
 
 A *transform* turns the data of one layer into the data of the layer below. For
-the fabric, the CFS transform `Fabric` (`src/dorsi/cfs.act`) derives the devices
-and the RFS entries `fabric-base-config`, `fabric-interface` and `server-port`,
-and the RFS transforms (`src/dorsi/rfs.act`) render them as device
-configuration.
+the fabric, the CFS transform `Fabric` (`src/dorsi/cfs.act`) validates the
+fabric, derives the devices and the RFS entries `fabric-base-config`,
+`fabric-interface` and `server-port`, and the RFS transforms
+(`src/dorsi/rfs.act`) render them as device configuration. State flows the other
+way: `FabricInterfaceTransform` polls the device and `FabricTransform` lifts the
+result into the `fabric-link` state.
 
 ### Vendors
 
@@ -155,10 +184,12 @@ only. Device models for Cisco IOS XR and Juniper cRPD are generated as well
 * **Labs:** see [test/README.md](test/README.md). Pick a free `WEBUI_PORT` when
   more than one lab runs.
 
-The Web UI is embedded in the `dorsi` binary. Under *Services* it has editors
-for fabric switches, links and servers (of an existing fabric); a new fabric needs at least two switches and one link at once,
-so it is created through RESTCONF or a startup file. `make gen-webui` rebuilds
-the embedded assets and needs [bun](https://bun.sh).
+The Web UI is embedded in the `dorsi` binary. Its start page draws the topology
+of the fabric with the live link and BGP state. Under *Services* it has editors
+for fabric switches, links and servers (of an existing fabric). A new fabric
+needs at least two switches and one link at once, so it is created through
+RESTCONF or a startup file. `make gen-webui` rebuilds the embedded assets and
+needs [bun](https://bun.sh).
 
 ## Repository layout
 
