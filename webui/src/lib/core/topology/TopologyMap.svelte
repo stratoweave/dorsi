@@ -23,6 +23,7 @@
   let serverCount = $derived(graph.servers.length);
   let linksUp = $derived(graph.links.filter((link) => link.status === 'up').length);
   let linksDown = $derived(graph.links.filter((link) => link.status === 'down').length);
+  let linksMiscabled = $derived(graph.links.filter((link) => link.cablingStatus === 'mismatch').length);
 
   function noConfig(name: string): boolean {
     return deviceByName.get(name)?.hasRunningConfig === false;
@@ -62,6 +63,9 @@
     {#if linksDown > 0}
       <span class="pill pill--down"><span class="dot"></span>{linksDown} down</span>
     {/if}
+    {#if linksMiscabled > 0}
+      <span class="pill pill--miscabled"><span class="dot"></span>{linksMiscabled} miscabled</span>
+    {/if}
     <span class="pill"><span class="dot"></span>{serverCount} servers</span>
   </div>
 
@@ -90,7 +94,7 @@
               class="topology__link-link"
               aria-label={`Open fabric link ${link.lowerSwitch} ${link.lowerPort} ↔ ${link.upperSwitch} ${link.upperPort}, status ${link.status}`}
             >
-              <title>{`${link.lowerSwitch} ${link.lowerPort} ↔ ${link.upperSwitch} ${link.upperPort}: interfaces ${link.linkStatus}, eBGP ${link.bgpStatus}`}</title>
+              <title>{`${link.lowerSwitch} ${link.lowerPort} ↔ ${link.upperSwitch} ${link.upperPort}: interfaces ${link.linkStatus}, eBGP ${link.bgpStatus}${link.cablingStatus ? `, cabling ${link.cablingStatus}` : ''}`}</title>
               <line
                 x1={link.x1}
                 y1={link.y1}
@@ -99,6 +103,7 @@
                 class="topology__link"
                 class:topology__link--up={link.status === 'up'}
                 class:topology__link--down={link.status === 'down'}
+                class:topology__link--miscabled={link.cablingStatus === 'mismatch'}
               ></line>
               <line x1={link.x1} y1={link.y1} x2={link.x2} y2={link.y2} class="topology__link-hit"></line>
               {@render portLabel(link.lowerLabel)}
@@ -247,6 +252,13 @@
     stroke-dasharray: 6 4;
   }
 
+  /* After --down: a miscabled link is usually down too, the cabling is the cause */
+  .topology__link--miscabled {
+    stroke: var(--sw-warning);
+    stroke-width: 2.4;
+    stroke-dasharray: 2 4;
+  }
+
   .topology__link--server {
     stroke: rgb(var(--sw-line-rgb) / 0.30);
     stroke-dasharray: 5 4;
@@ -339,6 +351,10 @@
 
   .pill--down {
     color: var(--sw-danger);
+  }
+
+  .pill--miscabled {
+    color: var(--sw-warning);
   }
 
   .topology__note {

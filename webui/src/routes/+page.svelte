@@ -5,8 +5,10 @@
   import { lowercaseFirst } from '$lib/core/registry/types';
   import { fetchDevices, isPendingQueueItem, type DeviceSummary } from '$lib/core/orchestron/client';
   import { queuesPoll } from '$lib/core/orchestron/poll-store';
+  import FabricProblems from '$lib/core/topology/FabricProblems.svelte';
   import TopologyMap from '$lib/core/topology/TopologyMap.svelte';
   import { buildTopologyGraphs } from '$lib/core/topology/model';
+  import { fabricProblems } from '$lib/core/topology/problems';
   import { restconfGetJson } from '$lib/core/restconf/client';
   import DeviceConfigStatus from '$lib/core/ui/DeviceConfigStatus.svelte';
   import EmptyState from '$lib/core/ui/EmptyState.svelte';
@@ -41,6 +43,9 @@
   let allLinks = $derived((topologyGraphs ?? []).flatMap((graph) => graph.links));
   let linksUp = $derived(allLinks.filter((link) => link.status === 'up').length);
   let linksDown = $derived(allLinks.filter((link) => link.status === 'down').length);
+  let problems = $derived(fabricProblems(topologyGraphs ?? []));
+  let errorCount = $derived(problems.filter((problem) => problem.severity === 'danger').length);
+  let liveState = $derived(allLinks.some((link) => link.linkStatus !== 'unknown' || link.bgpStatus !== 'unknown'));
 
   async function loadDevices(): Promise<void> {
     try {
@@ -176,7 +181,23 @@
       href="/services/ip-fabric-link"
       loading={loadingCounts}
     />
+    <StatTile
+      label="Problems"
+      value={problems.length}
+      hint={problems.length === 0 ? (liveState ? 'None detected' : 'No live state') : errorCount > 0 ? `${errorCount} error${errorCount === 1 ? '' : 's'}` : 'Warnings only'}
+      tone={errorCount > 0 ? 'danger' : problems.length > 0 ? 'warning' : 'neutral'}
+      loading={loadingTopology}
+    />
   </section>
+
+  {#if !loadingTopology && !topologyError && topologyGraphs && topologyGraphs.length > 0}
+    <section class="overview__section" aria-label="Problems">
+      <div class="section-head">
+        <h2>Problems</h2>
+      </div>
+      <FabricProblems {problems} {liveState} showFabric={topologyGraphs.length > 1} />
+    </section>
+  {/if}
 
   <section class="overview__section" data-tour="topology">
     <div class="section-head">
