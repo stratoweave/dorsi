@@ -216,6 +216,40 @@ def combine_link_status(left: ?str, right: ?str) -> ?str:
     return "unknown"
 
 
+def _is_device(seen: str, expected: str) -> bool:
+    """Whether the LLDP system name `seen` is the switch `expected`, which it
+    is also when the switch reports a fully qualified name."""
+    return seen == expected or seen.startswith(expected + ".")
+
+
+def end_cabling_status(oper: ?str, seen_device: ?str, seen_interface: ?str, expected_device: str, expected_interface: str) -> ?str:
+    """Whether one end of a link sees the switch and port it should over LLDP.
+    None when the end is not up, LLDP needs a working link."""
+    if oper != "up":
+        return None
+    if seen_device is None and seen_interface is None:
+        return "no-neighbor"
+    if seen_device is not None and seen_interface is not None:
+        if _is_device(seen_device, expected_device) and seen_interface == expected_interface:
+            return "ok"
+    return "mismatch"
+
+
+def combine_cabling_status(left: ?str, right: ?str) -> ?str:
+    """The cabling of a link from that of its two ends. One end that sees the
+    other is enough to know where the cable goes, an end that sees another
+    port says it goes elsewhere."""
+    if left == "mismatch" or right == "mismatch":
+        return "mismatch"
+    if left == "ok" or right == "ok":
+        return "ok"
+    if left == "no-neighbor" or right == "no-neighbor":
+        return "no-neighbor"
+    if left is None and right is None:
+        return None
+    return "unknown"
+
+
 actor FabricTransform(path: ttt.Path,
                       update_oper: proc(?y_0_oper.ip_fabric__ip_fabric__fabric_entry)->None,
                       lower_tree_provider: ?gdata.TreeProvider):
@@ -231,6 +265,10 @@ actor FabricTransform(path: ttt.Path,
             upper_oper: ?str = None
             lower_bgp: ?str = None
             upper_bgp: ?str = None
+            lower_seen_device: ?str = None
+            lower_seen_interface: ?str = None
+            upper_seen_device: ?str = None
+            upper_seen_interface: ?str = None
             if root is not None:
                 for r in root.rfs:
                     if r.name == lower:
@@ -238,14 +276,25 @@ actor FabricTransform(path: ttt.Path,
                             if fi.name == lower_port:
                                 lower_oper = fi.state.oper_status
                                 lower_bgp = fi.state.bgp_status
+                                lower_seen_device = fi.state.lldp_neighbor.device
+                                lower_seen_interface = fi.state.lldp_neighbor.interface
                     if r.name == upper:
                         for fi in r.fabric_interface:
                             if fi.name == upper_port:
                                 upper_oper = fi.state.oper_status
                                 upper_bgp = fi.state.bgp_status
+                                upper_seen_device = fi.state.lldp_neighbor.device
+                                upper_seen_interface = fi.state.lldp_neighbor.interface
             link = _oper.fabric_link.create((lower, lower_port, upper, upper_port))
             link.state.link_status = combine_link_status(lower_oper, upper_oper)
             link.state.bgp_status = combine_link_status(lower_bgp, upper_bgp)
+            link.state.cabling_status = combine_cabling_status(
+                end_cabling_status(lower_oper, lower_seen_device, lower_seen_interface, upper, upper_port),
+                end_cabling_status(upper_oper, upper_seen_device, upper_seen_interface, lower, lower_port))
+            link.state.lower_neighbor.device = lower_seen_device
+            link.state.lower_neighbor.interface = lower_seen_interface
+            link.state.upper_neighbor.device = upper_seen_device
+            link.state.upper_neighbor.interface = upper_seen_interface
         update_oper(_oper)
 
     def on_conf(conf: y_0.ip_fabric__ip_fabric__fabric_entry):

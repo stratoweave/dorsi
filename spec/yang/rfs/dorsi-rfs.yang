@@ -96,6 +96,20 @@ module dorsi-rfs {
                         enum unknown;
                     }
                 }
+                container lldp-neighbor {
+                    description
+                        "The neighbor that LLDP reports on the interface, which
+                         is where the cable actually goes. Empty when no LLDP
+                         neighbor is seen.";
+                    leaf device {
+                        description "System name of the neighbor.";
+                        type string;
+                    }
+                    leaf interface {
+                        description "Port ID of the neighbor.";
+                        type string;
+                    }
+                }
             }
         }
         list server-port {

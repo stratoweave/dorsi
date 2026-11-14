@@ -131,6 +131,44 @@ module ip-fabric {
             }
             description "State of the eBGP session on the link.";
           }
+          leaf cabling-status {
+            type enumeration {
+              enum ok {
+                description "An end sees the other end over LLDP.";
+              }
+              enum mismatch {
+                description
+                  "An end sees a different switch or port than the link
+                   describes: the cable is plugged in elsewhere.";
+              }
+              enum no-neighbor {
+                description "The ends that are up see no LLDP neighbor.";
+              }
+              enum unknown;
+            }
+            description
+              "Whether the cable joins the ports the link describes, from the
+               LLDP neighbors of its two ends. An end that is not up is left
+               out, LLDP needs a working link.";
+          }
+          container lower-neighbor {
+            description "The LLDP neighbor that the lower end sees.";
+            leaf device {
+              type string;
+            }
+            leaf interface {
+              type string;
+            }
+          }
+          container upper-neighbor {
+            description "The LLDP neighbor that the upper end sees.";
+            leaf device {
+              type string;
+            }
+            leaf interface {
+              type string;
+            }
+          }
         }
       }
 
