@@ -102,7 +102,6 @@
 
   .problem__detail {
     color: var(--sw-text-primary);
-    font-family: var(--sw-font-mono);
   }
 
   .problem__hint {
