@@ -22,7 +22,8 @@
   let linkCount = $derived(graph.links.length);
   let serverCount = $derived(graph.servers.length);
   let linksUp = $derived(graph.links.filter((link) => link.status === 'up').length);
-  let linksDown = $derived(graph.links.filter((link) => link.status === 'down').length);
+  // A miscabled link is usually down too; it counts once, as miscabled
+  let linksDown = $derived(graph.links.filter((link) => link.status === 'down' && link.cablingStatus !== 'mismatch').length);
   let linksMiscabled = $derived(graph.links.filter((link) => link.cablingStatus === 'mismatch').length);
 
   function noConfig(name: string): boolean {

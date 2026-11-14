@@ -42,7 +42,13 @@
   let linksCount = $derived(serviceCounts['ip-fabric-link'] ?? null);
   let allLinks = $derived((topologyGraphs ?? []).flatMap((graph) => graph.links));
   let linksUp = $derived(allLinks.filter((link) => link.status === 'up').length);
-  let linksDown = $derived(allLinks.filter((link) => link.status === 'down').length);
+  // A miscabled link is usually down too; it counts once, as miscabled
+  let linksDown = $derived(allLinks.filter((link) => link.status === 'down' && link.cablingStatus !== 'mismatch').length);
+  let miscabledFabric = $derived(allLinks.filter((link) => link.cablingStatus === 'mismatch').length);
+  let miscabledServer = $derived(
+    (topologyGraphs ?? []).flatMap((graph) => graph.servers.flatMap((server) => server.links)).filter((link) => link.cablingStatus === 'mismatch').length
+  );
+  let miscabled = $derived(miscabledFabric + miscabledServer);
   let problems = $derived(fabricProblems(topologyGraphs ?? []));
   let errorCount = $derived(problems.filter((problem) => problem.severity === 'danger').length);
   let liveState = $derived(allLinks.some((link) => link.linkStatus !== 'unknown' || link.bgpStatus !== 'unknown'));
@@ -176,10 +182,17 @@
     <StatTile
       label="Fabric links"
       value={linksCount}
-      hint={linksDown > 0 ? `${linksDown} down · ${linksUp} up` : linksUp > 0 ? `${linksUp} up` : ''}
-      tone={linksDown > 0 ? 'danger' : linksUp > 0 ? 'success' : 'neutral'}
+      hint={linksDown > 0 || miscabledFabric > 0 ? `${linksUp} of ${allLinks.length} up` : linksUp > 0 ? `${linksUp} up` : ''}
+      tone={linksDown > 0 || miscabledFabric > 0 ? 'danger' : linksUp > 0 ? 'success' : 'neutral'}
       href="/services/ip-fabric-link"
       loading={loadingCounts}
+    />
+    <StatTile
+      label="Miscabled links"
+      value={liveState ? miscabled : null}
+      hint={!liveState ? 'No live state' : miscabled === 0 ? 'Cabled as described' : `${miscabledFabric} fabric · ${miscabledServer} server`}
+      tone={miscabled > 0 ? 'danger' : 'neutral'}
+      loading={loadingTopology}
     />
     <StatTile
       label="Problems"
@@ -313,10 +326,23 @@
     gap: 24px;
   }
 
+  /* Six tiles: one row, or two even rows of three, or three of two */
   .stat-grid {
     display: grid;
     gap: 12px;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+
+  @media (max-width: 1280px) {
+    .stat-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 640px) {
+    .stat-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
   }
 
   .overview__section {
