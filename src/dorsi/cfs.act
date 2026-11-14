@@ -204,7 +204,9 @@ class Fabric(base.Fabric):
 # --- Fabric link state lift ---------------------------------------------------
 # Combine the two ends' RFS fabric-interface state into the state of the
 # fabric-link: up only when both ends are up (see combine_link_status). Served at
-# data/ip-fabric:ip-fabric/fabric/fabric-link
+# data/ip-fabric:ip-fabric/fabric/fabric-link. A server link has one end DORSI
+# can read, its leaf port, whose RFS server-port state becomes the state of the
+# link at data/ip-fabric:ip-fabric/fabric/server/connectivity/link.
 
 def combine_link_status(left: ?str, right: ?str) -> ?str:
     if left == "up" and right == "up":
@@ -250,13 +252,45 @@ def combine_cabling_status(left: ?str, right: ?str) -> ?str:
     return "unknown"
 
 
+def _is_mac_address(s: str) -> bool:
+    """Whether `s` reads as a MAC address, such as aa:c1:ab:76:ef:bc."""
+    if len(s) != 17:
+        return False
+    for i in range(17):
+        c = s[i]
+        if i % 3 == 2:
+            if c != ":" and c != "-":
+                return False
+        elif c not in "0123456789abcdefABCDEF":
+            return False
+    return True
+
+
+def server_cabling_status(oper: ?str, seen_device: ?str, seen_interface: ?str, server: str, server_port: str) -> ?str:
+    """Whether the leaf port of a server link sees the server port over LLDP.
+
+    None when the port is not up or sees no neighbor: many servers send no
+    LLDP. Linux lldpd sends the MAC address as the port ID unless set up
+    otherwise, so the port is only compared when it is not one."""
+    if oper != "up":
+        return None
+    if seen_device is not None:
+        if not _is_device(seen_device, server):
+            return "mismatch"
+        if seen_interface is not None:
+            if not _is_mac_address(seen_interface) and seen_interface != server_port:
+                return "mismatch"
+        return "ok"
+    return None
+
+
 actor FabricTransform(path: ttt.Path,
                       update_oper: proc(?y_0_oper.ip_fabric__ip_fabric__fabric_entry)->None,
                       lower_tree_provider: ?gdata.TreeProvider):
     _oper = base.Fabric.new_state(path)
     _subs = gdata.SubscriptionManager(lower_tree_provider!, str(path))
 
-    def on_rfs_state(root: ?y_1_oper.root, err: ?Exception, links: list[(str, str, str, str)]):
+    def on_rfs_state(root: ?y_1_oper.root, err: ?Exception, links: list[(str, str, str, str)], server_links: list[(str, str, str, str)]):
         if err is not None:
             print("cfs.FabricTransform RFS subscription error: {err}", err=True)
             return
@@ -295,17 +329,39 @@ actor FabricTransform(path: ttt.Path,
             link.state.lower_neighbor.interface = lower_seen_interface
             link.state.upper_neighbor.device = upper_seen_device
             link.state.upper_neighbor.interface = upper_seen_interface
+        for server, switch, switch_port, server_port in server_links:
+            oper: ?str = None
+            seen_device: ?str = None
+            seen_interface: ?str = None
+            if root is not None:
+                for r in root.rfs:
+                    if r.name == switch:
+                        for sp in r.server_port:
+                            if sp.name == switch_port:
+                                oper = sp.state.oper_status
+                                seen_device = sp.state.lldp_neighbor.device
+                                seen_interface = sp.state.lldp_neighbor.interface
+            server_link = _oper.server.create(server).connectivity.link.create((switch, switch_port))
+            server_link.state.link_status = oper
+            server_link.state.cabling_status = server_cabling_status(oper, seen_device, seen_interface, server, server_port)
+            server_link.state.neighbor.device = seen_device
+            server_link.state.neighbor.interface = seen_interface
         update_oper(_oper)
 
     def on_conf(conf: y_0.ip_fabric__ip_fabric__fabric_entry):
         links: list[(str, str, str, str)] = []
+        server_links: list[(str, str, str, str)] = []
         want: set[gdata.Delivery] = set()
         subs: set[gdata.SubscriptionSpec] = set()
         for link in conf.fabric_link:
             links.append((link.lower_switch, link.lower_port, link.upper_switch, link.upper_port))
             subs.add(y_1_oper.subs.rfs.entry(link.lower_switch).fabric_interface.entry(link.lower_port).state.subscribe(period=5.0))
             subs.add(y_1_oper.subs.rfs.entry(link.upper_switch).fabric_interface.entry(link.upper_port).state.subscribe(period=5.0))
-        dst = y_1_oper.dst(lambda r, e: on_rfs_state(r, e, links))
+        for server in conf.server:
+            for link in server.connectivity.link:
+                server_links.append((server.name, link.switch, link.switch_port, link.server_port))
+                subs.add(y_1_oper.subs.rfs.entry(link.switch).server_port.entry(link.switch_port).state.subscribe(period=5.0))
+        dst = y_1_oper.dst(lambda r, e: on_rfs_state(r, e, links, server_links))
         want.add(dst.deliver(subs))
         _subs.declare(want)
 

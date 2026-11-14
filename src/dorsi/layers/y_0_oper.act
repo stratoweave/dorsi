@@ -247,7 +247,15 @@ DMust(condition="../../../switch[name=current()/switch]/role='leaf'", descriptio
             ], ordered_by='system', children=[
             DLeaf(module='ip-fabric', namespace='http://example.com/ip-fabric', prefix='ipf', name='switch', config=True, is_key=True, mandatory=False, type=DTypeLeafref(name='leafref', description=None, reference=None, units=None, exts=[], builtin_type='leafref', default=None, path=yxpath.AbsoluteLocationPath([yxpath.NodeTestStep(None, 'ip-fabric', []), yxpath.NodeTestStep(None, 'fabric', []), yxpath.NodeTestStep(None, 'switch', []), yxpath.NodeTestStep(None, 'name', [])]), require_instance=False, target_type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[]))),
             DLeaf(module='ip-fabric', namespace='http://example.com/ip-fabric', prefix='ipf', name='switch-port', config=True, is_key=True, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
-            DLeaf(module='ip-fabric', namespace='http://example.com/ip-fabric', prefix='ipf', name='server-port', config=True, is_key=False, mandatory=True, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[]))
+            DLeaf(module='ip-fabric', namespace='http://example.com/ip-fabric', prefix='ipf', name='server-port', config=True, is_key=False, mandatory=True, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
+            DContainer(module='ip-fabric', namespace='http://example.com/ip-fabric', prefix='ipf', name='state', config=False, description='State of the link, lifted from the RFS server-port entry of\nits leaf port.', presence=False, children=[
+                DLeaf(module='ip-fabric', namespace='http://example.com/ip-fabric', prefix='ipf', name='link-status', config=False, description='Oper-state of the leaf port.', is_key=False, mandatory=False, type=DTypeEnum(name='enumeration', description=None, reference=None, units=None, exts=[], builtin_type='enumeration', default=None, name_to_val={'up':0, 'down':1, 'unknown':2})),
+                DLeaf(module='ip-fabric', namespace='http://example.com/ip-fabric', prefix='ipf', name='cabling-status', config=False, description='Whether the cable joins the leaf port to the server port,\nfrom the LLDP neighbor of the leaf port. Not reported when\nthe server sends no LLDP; the port is only compared when\nthe server sends its name, not its MAC address.', is_key=False, mandatory=False, type=DTypeEnum(name='enumeration', description=None, reference=None, units=None, exts=[], builtin_type='enumeration', default=None, name_to_val={'ok':0, 'mismatch':1})),
+                DContainer(module='ip-fabric', namespace='http://example.com/ip-fabric', prefix='ipf', name='neighbor', config=False, description='The LLDP neighbor that the leaf port sees.', presence=False, children=[
+                    DLeaf(module='ip-fabric', namespace='http://example.com/ip-fabric', prefix='ipf', name='device', config=False, is_key=False, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
+                    DLeaf(module='ip-fabric', namespace='http://example.com/ip-fabric', prefix='ipf', name='interface', config=False, is_key=False, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[]))
+                ])
+            ])
         ])
     ])
 ])
@@ -968,6 +976,46 @@ SRC_YANG_1: str = r"""module ip-fabric {
             leaf server-port {
               type string;
               mandatory true;
+            }
+            container state {
+              config false;
+              description
+                "State of the link, lifted from the RFS server-port entry of
+                 its leaf port.";
+              leaf link-status {
+                type enumeration {
+                  enum up;
+                  enum down;
+                  enum unknown;
+                }
+                description "Oper-state of the leaf port.";
+              }
+              leaf cabling-status {
+                type enumeration {
+                  enum ok {
+                    description "The leaf port sees the server over LLDP.";
+                  }
+                  enum mismatch {
+                    description
+                      "The leaf port sees another system, or another port of
+                       the server: the cable is plugged in elsewhere.";
+                  }
+                }
+                description
+                  "Whether the cable joins the leaf port to the server port,
+                   from the LLDP neighbor of the leaf port. Not reported when
+                   the server sends no LLDP; the port is only compared when
+                   the server sends its name, not its MAC address.";
+              }
+              container neighbor {
+                description "The LLDP neighbor that the leaf port sees.";
+                leaf device {
+                  type string;
+                }
+                leaf interface {
+                  type string;
+                }
+              }
             }
           }
         }
@@ -4509,28 +4557,78 @@ class ip_fabric__ip_fabric__fabric__fabric_link(yadata.MKeyedList[(lower_switch:
 
 
 _breaker46: None = None
+class ip_fabric__ip_fabric__fabric__server__connectivity__link__state__neighbor(yadata.MNode):
+    device: ?str
+    interface: ?str
+
+    mut def __init__(self, device: ?str=None, interface: ?str=None) -> None:
+        self.device = device
+        self.interface = interface
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['ip-fabric:ip-fabric', 'fabric', 'server', 'connectivity', 'link', 'state', 'neighbor'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> ip_fabric__ip_fabric__fabric__server__connectivity__link__state__neighbor:
+        if n is not None:
+            return ip_fabric__ip_fabric__fabric__server__connectivity__link__state__neighbor(device=n.get_opt_str(ygdata.Id(NS_ip_fabric, 'device')), interface=n.get_opt_str(ygdata.Id(NS_ip_fabric, 'interface')))
+        return ip_fabric__ip_fabric__fabric__server__connectivity__link__state__neighbor()
+
+    mut def copy(self) -> ip_fabric__ip_fabric__fabric__server__connectivity__link__state__neighbor:
+        """Create a deep copy of this adata object"""
+        return ip_fabric__ip_fabric__fabric__server__connectivity__link__state__neighbor.from_gdata(self.to_gdata())
+
+
+_breaker47: None = None
+class ip_fabric__ip_fabric__fabric__server__connectivity__link__state(yadata.MNode):
+    link_status: ?str
+    cabling_status: ?str
+    neighbor: ip_fabric__ip_fabric__fabric__server__connectivity__link__state__neighbor
+
+    mut def __init__(self, link_status: ?str=None, cabling_status: ?str=None, neighbor: ?ip_fabric__ip_fabric__fabric__server__connectivity__link__state__neighbor=None) -> None:
+        self.link_status = link_status
+        self.cabling_status = cabling_status
+        self.neighbor = neighbor if neighbor is not None else ip_fabric__ip_fabric__fabric__server__connectivity__link__state__neighbor()
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['ip-fabric:ip-fabric', 'fabric', 'server', 'connectivity', 'link', 'state'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> ip_fabric__ip_fabric__fabric__server__connectivity__link__state:
+        if n is not None:
+            return ip_fabric__ip_fabric__fabric__server__connectivity__link__state(link_status=n.get_opt_str(ygdata.Id(NS_ip_fabric, 'link-status')), cabling_status=n.get_opt_str(ygdata.Id(NS_ip_fabric, 'cabling-status')), neighbor=ip_fabric__ip_fabric__fabric__server__connectivity__link__state__neighbor.from_gdata(n.get_opt_cnt(ygdata.Id(NS_ip_fabric, 'neighbor'))))
+        return ip_fabric__ip_fabric__fabric__server__connectivity__link__state()
+
+    mut def copy(self) -> ip_fabric__ip_fabric__fabric__server__connectivity__link__state:
+        """Create a deep copy of this adata object"""
+        return ip_fabric__ip_fabric__fabric__server__connectivity__link__state.from_gdata(self.to_gdata())
+
+
+_breaker48: None = None
 class ip_fabric__ip_fabric__fabric__server__connectivity__link_entry(yadata.MNode):
     switch: str
     switch_port: str
     server_port: ?str
+    state: ip_fabric__ip_fabric__fabric__server__connectivity__link__state
 
-    mut def __init__(self, switch: str, switch_port: str, server_port: ?str=None) -> None:
+    mut def __init__(self, switch: str, switch_port: str, server_port: ?str=None, state: ?ip_fabric__ip_fabric__fabric__server__connectivity__link__state=None) -> None:
         self.switch = switch
         self.switch_port = switch_port
         self.server_port = server_port
+        self.state = state if state is not None else ip_fabric__ip_fabric__fabric__server__connectivity__link__state()
 
     mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
         return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['ip-fabric:ip-fabric', 'fabric', 'server', 'connectivity', 'link'], prev=prev)
 
     @staticmethod
     mut def from_gdata(n: ygdata.Node) -> ip_fabric__ip_fabric__fabric__server__connectivity__link_entry:
-        return ip_fabric__ip_fabric__fabric__server__connectivity__link_entry(switch=n.get_str(ygdata.Id(NS_ip_fabric, 'switch')), switch_port=n.get_str(ygdata.Id(NS_ip_fabric, 'switch-port')), server_port=n.get_opt_str(ygdata.Id(NS_ip_fabric, 'server-port')))
+        return ip_fabric__ip_fabric__fabric__server__connectivity__link_entry(switch=n.get_str(ygdata.Id(NS_ip_fabric, 'switch')), switch_port=n.get_str(ygdata.Id(NS_ip_fabric, 'switch-port')), server_port=n.get_opt_str(ygdata.Id(NS_ip_fabric, 'server-port')), state=ip_fabric__ip_fabric__fabric__server__connectivity__link__state.from_gdata(n.get_opt_cnt(ygdata.Id(NS_ip_fabric, 'state'))))
 
     mut def copy(self) -> ip_fabric__ip_fabric__fabric__server__connectivity__link_entry:
         """Create a deep copy of this adata object"""
         return ip_fabric__ip_fabric__fabric__server__connectivity__link_entry.from_gdata(self.to_gdata())
 
-_breaker47: None = None
+_breaker49: None = None
 class ip_fabric__ip_fabric__fabric__server__connectivity__link(yadata.MKeyedList[(switch: str, switch_port: str), ip_fabric__ip_fabric__fabric__server__connectivity__link_entry]):
     mut def __init__(self, elements: list[ip_fabric__ip_fabric__fabric__server__connectivity__link_entry]=[]) -> None:
         yadata.MKeyedList.__init__(self, lambda e: (switch=e.switch, switch_port=e.switch_port), elements)
@@ -4563,7 +4661,7 @@ class ip_fabric__ip_fabric__fabric__server__connectivity__link(yadata.MKeyedList
         return ip_fabric__ip_fabric__fabric__server__connectivity__link(elements=copied_elements)
 
 
-_breaker48: None = None
+_breaker50: None = None
 class ip_fabric__ip_fabric__fabric__server__connectivity(yadata.MNode):
     profile: ?str
     link: ip_fabric__ip_fabric__fabric__server__connectivity__link
@@ -4586,7 +4684,7 @@ class ip_fabric__ip_fabric__fabric__server__connectivity(yadata.MNode):
         return ip_fabric__ip_fabric__fabric__server__connectivity.from_gdata(self.to_gdata())
 
 
-_breaker49: None = None
+_breaker51: None = None
 class ip_fabric__ip_fabric__fabric__server_entry(yadata.MNode):
     name: str
     connectivity: ip_fabric__ip_fabric__fabric__server__connectivity
@@ -4606,7 +4704,7 @@ class ip_fabric__ip_fabric__fabric__server_entry(yadata.MNode):
         """Create a deep copy of this adata object"""
         return ip_fabric__ip_fabric__fabric__server_entry.from_gdata(self.to_gdata())
 
-_breaker50: None = None
+_breaker52: None = None
 class ip_fabric__ip_fabric__fabric__server(yadata.MKeyedList[str, ip_fabric__ip_fabric__fabric__server_entry]):
     mut def __init__(self, elements: list[ip_fabric__ip_fabric__fabric__server_entry]=[]) -> None:
         yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
@@ -4637,7 +4735,7 @@ class ip_fabric__ip_fabric__fabric__server(yadata.MKeyedList[str, ip_fabric__ip_
         return ip_fabric__ip_fabric__fabric__server(elements=copied_elements)
 
 
-_breaker51: None = None
+_breaker53: None = None
 class ip_fabric__ip_fabric__fabric_entry(yadata.MNode):
     name: str
     switch: ip_fabric__ip_fabric__fabric__switch
@@ -4661,7 +4759,7 @@ class ip_fabric__ip_fabric__fabric_entry(yadata.MNode):
         """Create a deep copy of this adata object"""
         return ip_fabric__ip_fabric__fabric_entry.from_gdata(self.to_gdata())
 
-_breaker52: None = None
+_breaker54: None = None
 class ip_fabric__ip_fabric__fabric(yadata.MKeyedList[str, ip_fabric__ip_fabric__fabric_entry]):
     mut def __init__(self, elements: list[ip_fabric__ip_fabric__fabric_entry]=[]) -> None:
         yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
@@ -4692,7 +4790,7 @@ class ip_fabric__ip_fabric__fabric(yadata.MKeyedList[str, ip_fabric__ip_fabric__
         return ip_fabric__ip_fabric__fabric(elements=copied_elements)
 
 
-_breaker53: None = None
+_breaker55: None = None
 class ip_fabric__ip_fabric(yadata.MNode):
     fabric: ip_fabric__ip_fabric__fabric
 
@@ -4713,7 +4811,7 @@ class ip_fabric__ip_fabric(yadata.MNode):
         return ip_fabric__ip_fabric.from_gdata(self.to_gdata())
 
 
-_breaker54: None = None
+_breaker56: None = None
 class root(yadata.MNode):
     tmf_store: stratoweave_tmf__tmf_store
     ip_fabric: ip_fabric__ip_fabric
@@ -4762,7 +4860,7 @@ def _present(n: ?ygdata.Node) -> ?ygdata.Node:
             return n
     return None
 
-_breaker55: None = None
+_breaker57: None = None
 class stratoweave_tmf__tmf_store__tmf640__service__feature__constraint_entry_subs(SubscriptionNode):
     id: SubscriptionNode
     href: SubscriptionNode
@@ -4784,7 +4882,7 @@ class stratoweave_tmf__tmf_store__tmf640__service__feature__constraint_entry_sub
         direct: list[SubscriptionNode] = [self.id, self.href, self.name, self.version, self.type, self.referredType]
         return direct
 
-_breaker56: None = None
+_breaker58: None = None
 proc def stratoweave_tmf__tmf_store__tmf640__service__feature__constraint_deliver(cb: action(?(service_id: str, feature_id: str, constraint_id: str), ?stratoweave_tmf__tmf_store__tmf640__service__feature__constraint_entry, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(service_id: str, feature_id: str, constraint_id: str) = None
     inst: ?stratoweave_tmf__tmf_store__tmf640__service__feature__constraint_entry = None
@@ -4837,7 +4935,7 @@ class stratoweave_tmf__tmf_store__tmf640__service__feature__constraint_subs(Subs
         direct: list[SubscriptionNode] = [self.id, self.href, self.name, self.version, self.type, self.referredType]
         return direct
 
-_breaker57: None = None
+_breaker59: None = None
 class stratoweave_tmf__tmf_store__tmf640__service__feature__featureCharacteristic__characteristicRelationship_entry_subs(SubscriptionNode):
     id: SubscriptionNode
     relationshipType: SubscriptionNode
@@ -4853,7 +4951,7 @@ class stratoweave_tmf__tmf_store__tmf640__service__feature__featureCharacteristi
         direct: list[SubscriptionNode] = [self.id, self.relationshipType, self.type]
         return direct
 
-_breaker58: None = None
+_breaker60: None = None
 proc def stratoweave_tmf__tmf_store__tmf640__service__feature__featureCharacteristic__characteristicRelationship_deliver(cb: action(?(service_id: str, feature_id: str, featureCharacteristic_id: str, characteristicRelationship_id: str), ?stratoweave_tmf__tmf_store__tmf640__service__feature__featureCharacteristic__characteristicRelationship_entry, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(service_id: str, feature_id: str, featureCharacteristic_id: str, characteristicRelationship_id: str) = None
     inst: ?stratoweave_tmf__tmf_store__tmf640__service__feature__featureCharacteristic__characteristicRelationship_entry = None
@@ -4901,7 +4999,7 @@ class stratoweave_tmf__tmf_store__tmf640__service__feature__featureCharacteristi
         direct: list[SubscriptionNode] = [self.id, self.relationshipType, self.type]
         return direct
 
-_breaker59: None = None
+_breaker61: None = None
 class stratoweave_tmf__tmf_store__tmf640__service__feature__featureCharacteristic_entry_subs(SubscriptionNode):
     id: SubscriptionNode
     name: SubscriptionNode
@@ -4919,7 +5017,7 @@ class stratoweave_tmf__tmf_store__tmf640__service__feature__featureCharacteristi
         direct: list[SubscriptionNode] = [self.id, self.name, self.characteristicRelationship, self.type]
         return direct
 
-_breaker60: None = None
+_breaker62: None = None
 proc def stratoweave_tmf__tmf_store__tmf640__service__feature__featureCharacteristic_deliver(cb: action(?(service_id: str, feature_id: str, featureCharacteristic_id: str), ?stratoweave_tmf__tmf_store__tmf640__service__feature__featureCharacteristic_entry, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(service_id: str, feature_id: str, featureCharacteristic_id: str) = None
     inst: ?stratoweave_tmf__tmf_store__tmf640__service__feature__featureCharacteristic_entry = None
@@ -4968,7 +5066,7 @@ class stratoweave_tmf__tmf_store__tmf640__service__feature__featureCharacteristi
         direct: list[SubscriptionNode] = [self.id, self.name, self.characteristicRelationship, self.type]
         return direct
 
-_breaker61: None = None
+_breaker63: None = None
 proc def stratoweave_tmf__tmf_store__tmf640__service__feature__featureRelationship__validFor_deliver(cb: action(?(service_id: str, feature_id: str, featureRelationship_id: str), ?stratoweave_tmf__tmf_store__tmf640__service__feature__featureRelationship__validFor, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(service_id: str, feature_id: str, featureRelationship_id: str) = None
     inst: ?stratoweave_tmf__tmf_store__tmf640__service__feature__featureRelationship__validFor = None
@@ -5010,7 +5108,7 @@ class stratoweave_tmf__tmf_store__tmf640__service__feature__featureRelationship_
         after a change or None when it is gone, and an error."""
         return ygdata.Dst(lambda n, err: stratoweave_tmf__tmf_store__tmf640__service__feature__featureRelationship__validFor_deliver(cb, n, err), root=self.filt())
 
-_breaker62: None = None
+_breaker64: None = None
 class stratoweave_tmf__tmf_store__tmf640__service__feature__featureRelationship_entry_subs(SubscriptionNode):
     id: SubscriptionNode
     name: SubscriptionNode
@@ -5030,7 +5128,7 @@ class stratoweave_tmf__tmf_store__tmf640__service__feature__featureRelationship_
         direct: list[SubscriptionNode] = [self.id, self.name, self.relationshipType, self.validFor, self.type]
         return direct
 
-_breaker63: None = None
+_breaker65: None = None
 proc def stratoweave_tmf__tmf_store__tmf640__service__feature__featureRelationship_deliver(cb: action(?(service_id: str, feature_id: str, featureRelationship_id: str), ?stratoweave_tmf__tmf_store__tmf640__service__feature__featureRelationship_entry, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(service_id: str, feature_id: str, featureRelationship_id: str) = None
     inst: ?stratoweave_tmf__tmf_store__tmf640__service__feature__featureRelationship_entry = None
@@ -5081,7 +5179,7 @@ class stratoweave_tmf__tmf_store__tmf640__service__feature__featureRelationship_
         direct: list[SubscriptionNode] = [self.id, self.name, self.relationshipType, self.validFor, self.type]
         return direct
 
-_breaker64: None = None
+_breaker66: None = None
 class stratoweave_tmf__tmf_store__tmf640__service__feature_entry_subs(SubscriptionNode):
     id: SubscriptionNode
     isBundle: SubscriptionNode
@@ -5107,7 +5205,7 @@ class stratoweave_tmf__tmf_store__tmf640__service__feature_entry_subs(Subscripti
         direct: list[SubscriptionNode] = [self.id, self.isBundle, self.isEnabled, self.name, self.constraint, self.featureCharacteristic, self.featureRelationship, self.type]
         return direct
 
-_breaker65: None = None
+_breaker67: None = None
 proc def stratoweave_tmf__tmf_store__tmf640__service__feature_deliver(cb: action(?(service_id: str, feature_id: str), ?stratoweave_tmf__tmf_store__tmf640__service__feature_entry, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(service_id: str, feature_id: str) = None
     inst: ?stratoweave_tmf__tmf_store__tmf640__service__feature_entry = None
@@ -5163,7 +5261,7 @@ class stratoweave_tmf__tmf_store__tmf640__service__feature_subs(SubscriptionNode
         direct: list[SubscriptionNode] = [self.id, self.isBundle, self.isEnabled, self.name, self.constraint, self.featureCharacteristic, self.featureRelationship, self.type]
         return direct
 
-_breaker66: None = None
+_breaker68: None = None
 class stratoweave_tmf__tmf_store__tmf640__service__note_entry_subs(SubscriptionNode):
     id: SubscriptionNode
     author: SubscriptionNode
@@ -5183,7 +5281,7 @@ class stratoweave_tmf__tmf_store__tmf640__service__note_entry_subs(SubscriptionN
         direct: list[SubscriptionNode] = [self.id, self.author, self.date, self.text, self.type]
         return direct
 
-_breaker67: None = None
+_breaker69: None = None
 proc def stratoweave_tmf__tmf_store__tmf640__service__note_deliver(cb: action(?(service_id: str, note_id: str), ?stratoweave_tmf__tmf_store__tmf640__service__note_entry, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(service_id: str, note_id: str) = None
     inst: ?stratoweave_tmf__tmf_store__tmf640__service__note_entry = None
@@ -5233,7 +5331,7 @@ class stratoweave_tmf__tmf_store__tmf640__service__note_subs(SubscriptionNode):
         direct: list[SubscriptionNode] = [self.id, self.author, self.date, self.text, self.type]
         return direct
 
-_breaker68: None = None
+_breaker70: None = None
 class stratoweave_tmf__tmf_store__tmf640__service__place_entry_subs(SubscriptionNode):
     id: SubscriptionNode
     href: SubscriptionNode
@@ -5255,7 +5353,7 @@ class stratoweave_tmf__tmf_store__tmf640__service__place_entry_subs(Subscription
         direct: list[SubscriptionNode] = [self.id, self.href, self.name, self.role, self.type, self.referredType]
         return direct
 
-_breaker69: None = None
+_breaker71: None = None
 proc def stratoweave_tmf__tmf_store__tmf640__service__place_deliver(cb: action(?(service_id: str, place_id: str), ?stratoweave_tmf__tmf_store__tmf640__service__place_entry, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(service_id: str, place_id: str) = None
     inst: ?stratoweave_tmf__tmf_store__tmf640__service__place_entry = None
@@ -5307,7 +5405,7 @@ class stratoweave_tmf__tmf_store__tmf640__service__place_subs(SubscriptionNode):
         direct: list[SubscriptionNode] = [self.id, self.href, self.name, self.role, self.type, self.referredType]
         return direct
 
-_breaker70: None = None
+_breaker72: None = None
 class stratoweave_tmf__tmf_store__tmf640__service__relatedEntity_entry_subs(SubscriptionNode):
     id: SubscriptionNode
     href: SubscriptionNode
@@ -5329,7 +5427,7 @@ class stratoweave_tmf__tmf_store__tmf640__service__relatedEntity_entry_subs(Subs
         direct: list[SubscriptionNode] = [self.id, self.href, self.name, self.role, self.type, self.referredType]
         return direct
 
-_breaker71: None = None
+_breaker73: None = None
 proc def stratoweave_tmf__tmf_store__tmf640__service__relatedEntity_deliver(cb: action(?(service_id: str, relatedEntity_id: str), ?stratoweave_tmf__tmf_store__tmf640__service__relatedEntity_entry, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(service_id: str, relatedEntity_id: str) = None
     inst: ?stratoweave_tmf__tmf_store__tmf640__service__relatedEntity_entry = None
@@ -5381,7 +5479,7 @@ class stratoweave_tmf__tmf_store__tmf640__service__relatedEntity_subs(Subscripti
         direct: list[SubscriptionNode] = [self.id, self.href, self.name, self.role, self.type, self.referredType]
         return direct
 
-_breaker72: None = None
+_breaker74: None = None
 class stratoweave_tmf__tmf_store__tmf640__service__relatedParty_entry_subs(SubscriptionNode):
     id: SubscriptionNode
     href: SubscriptionNode
@@ -5403,7 +5501,7 @@ class stratoweave_tmf__tmf_store__tmf640__service__relatedParty_entry_subs(Subsc
         direct: list[SubscriptionNode] = [self.id, self.href, self.name, self.role, self.type, self.referredType]
         return direct
 
-_breaker73: None = None
+_breaker75: None = None
 proc def stratoweave_tmf__tmf_store__tmf640__service__relatedParty_deliver(cb: action(?(service_id: str, relatedParty_id: str), ?stratoweave_tmf__tmf_store__tmf640__service__relatedParty_entry, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(service_id: str, relatedParty_id: str) = None
     inst: ?stratoweave_tmf__tmf_store__tmf640__service__relatedParty_entry = None
@@ -5455,7 +5553,7 @@ class stratoweave_tmf__tmf_store__tmf640__service__relatedParty_subs(Subscriptio
         direct: list[SubscriptionNode] = [self.id, self.href, self.name, self.role, self.type, self.referredType]
         return direct
 
-_breaker74: None = None
+_breaker76: None = None
 class stratoweave_tmf__tmf_store__tmf640__service__serviceCharacteristic__characteristicRelationship_entry_subs(SubscriptionNode):
     id: SubscriptionNode
     relationshipType: SubscriptionNode
@@ -5471,7 +5569,7 @@ class stratoweave_tmf__tmf_store__tmf640__service__serviceCharacteristic__charac
         direct: list[SubscriptionNode] = [self.id, self.relationshipType, self.type]
         return direct
 
-_breaker75: None = None
+_breaker77: None = None
 proc def stratoweave_tmf__tmf_store__tmf640__service__serviceCharacteristic__characteristicRelationship_deliver(cb: action(?(service_id: str, serviceCharacteristic_id: str, characteristicRelationship_id: str), ?stratoweave_tmf__tmf_store__tmf640__service__serviceCharacteristic__characteristicRelationship_entry, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(service_id: str, serviceCharacteristic_id: str, characteristicRelationship_id: str) = None
     inst: ?stratoweave_tmf__tmf_store__tmf640__service__serviceCharacteristic__characteristicRelationship_entry = None
@@ -5518,7 +5616,7 @@ class stratoweave_tmf__tmf_store__tmf640__service__serviceCharacteristic__charac
         direct: list[SubscriptionNode] = [self.id, self.relationshipType, self.type]
         return direct
 
-_breaker76: None = None
+_breaker78: None = None
 class stratoweave_tmf__tmf_store__tmf640__service__serviceCharacteristic_entry_subs(SubscriptionNode):
     id: SubscriptionNode
     name: SubscriptionNode
@@ -5536,7 +5634,7 @@ class stratoweave_tmf__tmf_store__tmf640__service__serviceCharacteristic_entry_s
         direct: list[SubscriptionNode] = [self.id, self.name, self.characteristicRelationship, self.type]
         return direct
 
-_breaker77: None = None
+_breaker79: None = None
 proc def stratoweave_tmf__tmf_store__tmf640__service__serviceCharacteristic_deliver(cb: action(?(service_id: str, serviceCharacteristic_id: str), ?stratoweave_tmf__tmf_store__tmf640__service__serviceCharacteristic_entry, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(service_id: str, serviceCharacteristic_id: str) = None
     inst: ?stratoweave_tmf__tmf_store__tmf640__service__serviceCharacteristic_entry = None
@@ -5584,7 +5682,7 @@ class stratoweave_tmf__tmf_store__tmf640__service__serviceCharacteristic_subs(Su
         direct: list[SubscriptionNode] = [self.id, self.name, self.characteristicRelationship, self.type]
         return direct
 
-_breaker78: None = None
+_breaker80: None = None
 class stratoweave_tmf__tmf_store__tmf640__service__serviceOrderItem_entry_subs(SubscriptionNode):
     itemId: SubscriptionNode
     role: SubscriptionNode
@@ -5608,7 +5706,7 @@ class stratoweave_tmf__tmf_store__tmf640__service__serviceOrderItem_entry_subs(S
         direct: list[SubscriptionNode] = [self.itemId, self.role, self.serviceOrderHref, self.serviceOrderId, self.itemAction, self.type, self.referredType]
         return direct
 
-_breaker79: None = None
+_breaker81: None = None
 proc def stratoweave_tmf__tmf_store__tmf640__service__serviceOrderItem_deliver(cb: action(?(service_id: str, serviceOrderItem_itemId: str), ?stratoweave_tmf__tmf_store__tmf640__service__serviceOrderItem_entry, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(service_id: str, serviceOrderItem_itemId: str) = None
     inst: ?stratoweave_tmf__tmf_store__tmf640__service__serviceOrderItem_entry = None
@@ -5662,7 +5760,7 @@ class stratoweave_tmf__tmf_store__tmf640__service__serviceOrderItem_subs(Subscri
         direct: list[SubscriptionNode] = [self.itemId, self.role, self.serviceOrderHref, self.serviceOrderId, self.itemAction, self.type, self.referredType]
         return direct
 
-_breaker80: None = None
+_breaker82: None = None
 class stratoweave_tmf__tmf_store__tmf640__service__serviceRelationship__ServiceRelationshipCharacteristic__characteristicRelationship_entry_subs(SubscriptionNode):
     id: SubscriptionNode
     relationshipType: SubscriptionNode
@@ -5678,7 +5776,7 @@ class stratoweave_tmf__tmf_store__tmf640__service__serviceRelationship__ServiceR
         direct: list[SubscriptionNode] = [self.id, self.relationshipType, self.type]
         return direct
 
-_breaker81: None = None
+_breaker83: None = None
 proc def stratoweave_tmf__tmf_store__tmf640__service__serviceRelationship__ServiceRelationshipCharacteristic__characteristicRelationship_deliver(cb: action(?(service_id: str, serviceRelationship_service: str, ServiceRelationshipCharacteristic_id: str, characteristicRelationship_id: str), ?stratoweave_tmf__tmf_store__tmf640__service__serviceRelationship__ServiceRelationshipCharacteristic__characteristicRelationship_entry, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(service_id: str, serviceRelationship_service: str, ServiceRelationshipCharacteristic_id: str, characteristicRelationship_id: str) = None
     inst: ?stratoweave_tmf__tmf_store__tmf640__service__serviceRelationship__ServiceRelationshipCharacteristic__characteristicRelationship_entry = None
@@ -5726,7 +5824,7 @@ class stratoweave_tmf__tmf_store__tmf640__service__serviceRelationship__ServiceR
         direct: list[SubscriptionNode] = [self.id, self.relationshipType, self.type]
         return direct
 
-_breaker82: None = None
+_breaker84: None = None
 class stratoweave_tmf__tmf_store__tmf640__service__serviceRelationship__ServiceRelationshipCharacteristic_entry_subs(SubscriptionNode):
     id: SubscriptionNode
     name: SubscriptionNode
@@ -5744,7 +5842,7 @@ class stratoweave_tmf__tmf_store__tmf640__service__serviceRelationship__ServiceR
         direct: list[SubscriptionNode] = [self.id, self.name, self.characteristicRelationship, self.type]
         return direct
 
-_breaker83: None = None
+_breaker85: None = None
 proc def stratoweave_tmf__tmf_store__tmf640__service__serviceRelationship__ServiceRelationshipCharacteristic_deliver(cb: action(?(service_id: str, serviceRelationship_service: str, ServiceRelationshipCharacteristic_id: str), ?stratoweave_tmf__tmf_store__tmf640__service__serviceRelationship__ServiceRelationshipCharacteristic_entry, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(service_id: str, serviceRelationship_service: str, ServiceRelationshipCharacteristic_id: str) = None
     inst: ?stratoweave_tmf__tmf_store__tmf640__service__serviceRelationship__ServiceRelationshipCharacteristic_entry = None
@@ -5793,7 +5891,7 @@ class stratoweave_tmf__tmf_store__tmf640__service__serviceRelationship__ServiceR
         direct: list[SubscriptionNode] = [self.id, self.name, self.characteristicRelationship, self.type]
         return direct
 
-_breaker84: None = None
+_breaker86: None = None
 class stratoweave_tmf__tmf_store__tmf640__service__serviceRelationship_entry_subs(SubscriptionNode):
     service: SubscriptionNode
     relationshipType: SubscriptionNode
@@ -5811,7 +5909,7 @@ class stratoweave_tmf__tmf_store__tmf640__service__serviceRelationship_entry_sub
         direct: list[SubscriptionNode] = [self.service, self.relationshipType, self.ServiceRelationshipCharacteristic, self.type]
         return direct
 
-_breaker85: None = None
+_breaker87: None = None
 proc def stratoweave_tmf__tmf_store__tmf640__service__serviceRelationship_deliver(cb: action(?(service_id: str, serviceRelationship_service: str), ?stratoweave_tmf__tmf_store__tmf640__service__serviceRelationship_entry, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(service_id: str, serviceRelationship_service: str) = None
     inst: ?stratoweave_tmf__tmf_store__tmf640__service__serviceRelationship_entry = None
@@ -5859,7 +5957,7 @@ class stratoweave_tmf__tmf_store__tmf640__service__serviceRelationship_subs(Subs
         direct: list[SubscriptionNode] = [self.service, self.relationshipType, self.ServiceRelationshipCharacteristic, self.type]
         return direct
 
-_breaker86: None = None
+_breaker88: None = None
 proc def stratoweave_tmf__tmf_store__tmf640__service__serviceSpecification_deliver(cb: action(?(service_id: str), ?stratoweave_tmf__tmf_store__tmf640__service__serviceSpecification, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(service_id: str) = None
     inst: ?stratoweave_tmf__tmf_store__tmf640__service__serviceSpecification = None
@@ -5905,7 +6003,7 @@ class stratoweave_tmf__tmf_store__tmf640__service__serviceSpecification_subs(Sub
         after a change or None when it is gone, and an error."""
         return ygdata.Dst(lambda n, err: stratoweave_tmf__tmf_store__tmf640__service__serviceSpecification_deliver(cb, n, err), root=self.filt())
 
-_breaker87: None = None
+_breaker89: None = None
 class stratoweave_tmf__tmf_store__tmf640__service__supportingResource_entry_subs(SubscriptionNode):
     id: SubscriptionNode
     href: SubscriptionNode
@@ -5925,7 +6023,7 @@ class stratoweave_tmf__tmf_store__tmf640__service__supportingResource_entry_subs
         direct: list[SubscriptionNode] = [self.id, self.href, self.name, self.type, self.referredType]
         return direct
 
-_breaker88: None = None
+_breaker90: None = None
 proc def stratoweave_tmf__tmf_store__tmf640__service__supportingResource_deliver(cb: action(?(service_id: str, supportingResource_id: str), ?stratoweave_tmf__tmf_store__tmf640__service__supportingResource_entry, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(service_id: str, supportingResource_id: str) = None
     inst: ?stratoweave_tmf__tmf_store__tmf640__service__supportingResource_entry = None
@@ -5975,7 +6073,7 @@ class stratoweave_tmf__tmf_store__tmf640__service__supportingResource_subs(Subsc
         direct: list[SubscriptionNode] = [self.id, self.href, self.name, self.type, self.referredType]
         return direct
 
-_breaker89: None = None
+_breaker91: None = None
 class stratoweave_tmf__tmf_store__tmf640__service_entry_subs(SubscriptionNode):
     id: SubscriptionNode
     href: SubscriptionNode
@@ -6039,7 +6137,7 @@ class stratoweave_tmf__tmf_store__tmf640__service_entry_subs(SubscriptionNode):
         direct: list[SubscriptionNode] = [self.id, self.href, self.category, self.description, self.endDate, self.hasStarted, self.isBundle, self.isServiceEnabled, self.isStateful, self.name, self.serviceDate, self.serviceType, self.startDate, self.startMode, self.feature, self.note, self.place, self.relatedEntity, self.relatedParty, self.serviceCharacteristic, self.serviceOrderItem, self.serviceRelationship, self.serviceSpecification, self.state, self.supportingResource, self.supportingService, self.type]
         return direct
 
-_breaker90: None = None
+_breaker92: None = None
 proc def stratoweave_tmf__tmf_store__tmf640__service_deliver(cb: action(?(service_id: str), ?stratoweave_tmf__tmf_store__tmf640__service_entry, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(service_id: str) = None
     inst: ?stratoweave_tmf__tmf_store__tmf640__service_entry = None
@@ -6132,7 +6230,7 @@ class stratoweave_tmf__tmf_store__tmf640__service_subs(SubscriptionNode):
         direct: list[SubscriptionNode] = [self.id, self.href, self.category, self.description, self.endDate, self.hasStarted, self.isBundle, self.isServiceEnabled, self.isStateful, self.name, self.serviceDate, self.serviceType, self.startDate, self.startMode, self.feature, self.note, self.place, self.relatedEntity, self.relatedParty, self.serviceCharacteristic, self.serviceOrderItem, self.serviceRelationship, self.serviceSpecification, self.state, self.supportingResource, self.supportingService, self.type]
         return direct
 
-_breaker91: None = None
+_breaker93: None = None
 proc def stratoweave_tmf__tmf_store__tmf640_deliver(cb: action(?stratoweave_tmf__tmf_store__tmf640, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     inst: ?stratoweave_tmf__tmf_store__tmf640 = None
     if n is not None:
@@ -6164,7 +6262,7 @@ class stratoweave_tmf__tmf_store__tmf640_subs(SubscriptionNode):
         and an error."""
         return ygdata.Dst(lambda n, err: stratoweave_tmf__tmf_store__tmf640_deliver(cb, n, err), root=self.filt())
 
-_breaker92: None = None
+_breaker94: None = None
 proc def stratoweave_tmf__tmf_store_deliver(cb: action(?stratoweave_tmf__tmf_store, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     inst: ?stratoweave_tmf__tmf_store = None
     if n is not None:
@@ -6195,7 +6293,7 @@ class stratoweave_tmf__tmf_store_subs(SubscriptionNode):
         and an error."""
         return ygdata.Dst(lambda n, err: stratoweave_tmf__tmf_store_deliver(cb, n, err), root=self.filt())
 
-_breaker93: None = None
+_breaker95: None = None
 class ip_fabric__ip_fabric__fabric__switch_entry_subs(SubscriptionNode):
     name: SubscriptionNode
     id: SubscriptionNode
@@ -6219,7 +6317,7 @@ class ip_fabric__ip_fabric__fabric__switch_entry_subs(SubscriptionNode):
         direct: list[SubscriptionNode] = [self.name, self.id, self.type, self.mock, self.role, self.pod, self.plane]
         return direct
 
-_breaker94: None = None
+_breaker96: None = None
 proc def ip_fabric__ip_fabric__fabric__switch_deliver(cb: action(?(fabric_name: str, switch_name: str), ?ip_fabric__ip_fabric__fabric__switch_entry, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(fabric_name: str, switch_name: str) = None
     inst: ?ip_fabric__ip_fabric__fabric__switch_entry = None
@@ -6272,7 +6370,7 @@ class ip_fabric__ip_fabric__fabric__switch_subs(SubscriptionNode):
         direct: list[SubscriptionNode] = [self.name, self.id, self.type, self.mock, self.role, self.pod, self.plane]
         return direct
 
-_breaker95: None = None
+_breaker97: None = None
 proc def ip_fabric__ip_fabric__fabric__fabric_link__state__lower_neighbor_deliver(cb: action(?(fabric_name: str, fabric_link_lower_switch: str, fabric_link_lower_port: str, fabric_link_upper_switch: str, fabric_link_upper_port: str), ?ip_fabric__ip_fabric__fabric__fabric_link__state__lower_neighbor, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(fabric_name: str, fabric_link_lower_switch: str, fabric_link_lower_port: str, fabric_link_upper_switch: str, fabric_link_upper_port: str) = None
     inst: ?ip_fabric__ip_fabric__fabric__fabric_link__state__lower_neighbor = None
@@ -6311,7 +6409,7 @@ class ip_fabric__ip_fabric__fabric__fabric_link__state__lower_neighbor_subs(Subs
         after a change or None when it is gone, and an error."""
         return ygdata.Dst(lambda n, err: ip_fabric__ip_fabric__fabric__fabric_link__state__lower_neighbor_deliver(cb, n, err), root=self.filt())
 
-_breaker96: None = None
+_breaker98: None = None
 proc def ip_fabric__ip_fabric__fabric__fabric_link__state__upper_neighbor_deliver(cb: action(?(fabric_name: str, fabric_link_lower_switch: str, fabric_link_lower_port: str, fabric_link_upper_switch: str, fabric_link_upper_port: str), ?ip_fabric__ip_fabric__fabric__fabric_link__state__upper_neighbor, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(fabric_name: str, fabric_link_lower_switch: str, fabric_link_lower_port: str, fabric_link_upper_switch: str, fabric_link_upper_port: str) = None
     inst: ?ip_fabric__ip_fabric__fabric__fabric_link__state__upper_neighbor = None
@@ -6350,7 +6448,7 @@ class ip_fabric__ip_fabric__fabric__fabric_link__state__upper_neighbor_subs(Subs
         after a change or None when it is gone, and an error."""
         return ygdata.Dst(lambda n, err: ip_fabric__ip_fabric__fabric__fabric_link__state__upper_neighbor_deliver(cb, n, err), root=self.filt())
 
-_breaker97: None = None
+_breaker99: None = None
 proc def ip_fabric__ip_fabric__fabric__fabric_link__state_deliver(cb: action(?(fabric_name: str, fabric_link_lower_switch: str, fabric_link_lower_port: str, fabric_link_upper_switch: str, fabric_link_upper_port: str), ?ip_fabric__ip_fabric__fabric__fabric_link__state, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(fabric_name: str, fabric_link_lower_switch: str, fabric_link_lower_port: str, fabric_link_upper_switch: str, fabric_link_upper_port: str) = None
     inst: ?ip_fabric__ip_fabric__fabric__fabric_link__state = None
@@ -6394,7 +6492,7 @@ class ip_fabric__ip_fabric__fabric__fabric_link__state_subs(SubscriptionNode):
         after a change or None when it is gone, and an error."""
         return ygdata.Dst(lambda n, err: ip_fabric__ip_fabric__fabric__fabric_link__state_deliver(cb, n, err), root=self.filt())
 
-_breaker98: None = None
+_breaker100: None = None
 class ip_fabric__ip_fabric__fabric__fabric_link_entry_subs(SubscriptionNode):
     lower_switch: SubscriptionNode
     lower_port: SubscriptionNode
@@ -6414,7 +6512,7 @@ class ip_fabric__ip_fabric__fabric__fabric_link_entry_subs(SubscriptionNode):
         direct: list[SubscriptionNode] = [self.lower_switch, self.lower_port, self.upper_switch, self.upper_port, self.state]
         return direct
 
-_breaker99: None = None
+_breaker101: None = None
 proc def ip_fabric__ip_fabric__fabric__fabric_link_deliver(cb: action(?(fabric_name: str, fabric_link_lower_switch: str, fabric_link_lower_port: str, fabric_link_upper_switch: str, fabric_link_upper_port: str), ?ip_fabric__ip_fabric__fabric__fabric_link_entry, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(fabric_name: str, fabric_link_lower_switch: str, fabric_link_lower_port: str, fabric_link_upper_switch: str, fabric_link_upper_port: str) = None
     inst: ?ip_fabric__ip_fabric__fabric__fabric_link_entry = None
@@ -6466,23 +6564,108 @@ class ip_fabric__ip_fabric__fabric__fabric_link_subs(SubscriptionNode):
         direct: list[SubscriptionNode] = [self.lower_switch, self.lower_port, self.upper_switch, self.upper_port, self.state]
         return direct
 
-_breaker100: None = None
+_breaker102: None = None
+proc def ip_fabric__ip_fabric__fabric__server__connectivity__link__state__neighbor_deliver(cb: action(?(fabric_name: str, server_name: str, link_switch: str, link_switch_port: str), ?ip_fabric__ip_fabric__fabric__server__connectivity__link__state__neighbor, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
+    keys: ?(fabric_name: str, server_name: str, link_switch: str, link_switch_port: str) = None
+    inst: ?ip_fabric__ip_fabric__fabric__server__connectivity__link__state__neighbor = None
+    if n is not None:
+        try:
+            c1 = _at(n, ygdata.Id(NS_ip_fabric, 'ip-fabric'))
+            e2 = _one(_at(c1, ygdata.Id(NS_ip_fabric, 'fabric')), 'fabric')
+            e3 = _one(_at(e2, ygdata.Id(NS_ip_fabric, 'server')), 'server')
+            c4 = _at(e3, ygdata.Id(NS_ip_fabric, 'connectivity'))
+            e5 = _one(_at(c4, ygdata.Id(NS_ip_fabric, 'link')), 'link')
+            c6 = _at(e5, ygdata.Id(NS_ip_fabric, 'state'))
+            c7 = _at(c6, ygdata.Id(NS_ip_fabric, 'neighbor'))
+            keys = (fabric_name=e2.get_str(ygdata.Id(NS_ip_fabric, 'name')), server_name=e3.get_str(ygdata.Id(NS_ip_fabric, 'name')), link_switch=e5.get_str(ygdata.Id(NS_ip_fabric, 'switch')), link_switch_port=e5.get_str(ygdata.Id(NS_ip_fabric, 'switch-port')))
+            here = _present(c7)
+            if here is not None:
+                inst = ip_fabric__ip_fabric__fabric__server__connectivity__link__state__neighbor.from_gdata(here)
+        except Exception as e:
+            cb(None, None, e)
+            return
+    cb(keys, inst, err)
+
+class ip_fabric__ip_fabric__fabric__server__connectivity__link__state__neighbor_subs(SubscriptionNode):
+    device: SubscriptionNode
+    interface: SubscriptionNode
+
+    pure def __init__(self, path: ?SubscriptionPath=None) -> None:
+        SubscriptionNode.__init__(self, path)
+        self.device = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_ip_fabric, 'device'), parent=path))
+        self.interface = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_ip_fabric, 'interface'), parent=path))
+
+    pure def _direct_children(self) -> list[SubscriptionNode]:
+        direct: list[SubscriptionNode] = [self.device, self.interface]
+        return direct
+
+    def dst(self, cb: action(?(fabric_name: str, server_name: str, link_switch: str, link_switch_port: str), ?ip_fabric__ip_fabric__fabric__server__connectivity__link__state__neighbor, ?Exception) -> None) -> ygdata.Dst:
+        """A destination rooted here: cb gets, one instance at a time,
+        the keys of the lists on the way down, this container as it is
+        after a change or None when it is gone, and an error."""
+        return ygdata.Dst(lambda n, err: ip_fabric__ip_fabric__fabric__server__connectivity__link__state__neighbor_deliver(cb, n, err), root=self.filt())
+
+_breaker103: None = None
+proc def ip_fabric__ip_fabric__fabric__server__connectivity__link__state_deliver(cb: action(?(fabric_name: str, server_name: str, link_switch: str, link_switch_port: str), ?ip_fabric__ip_fabric__fabric__server__connectivity__link__state, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
+    keys: ?(fabric_name: str, server_name: str, link_switch: str, link_switch_port: str) = None
+    inst: ?ip_fabric__ip_fabric__fabric__server__connectivity__link__state = None
+    if n is not None:
+        try:
+            c1 = _at(n, ygdata.Id(NS_ip_fabric, 'ip-fabric'))
+            e2 = _one(_at(c1, ygdata.Id(NS_ip_fabric, 'fabric')), 'fabric')
+            e3 = _one(_at(e2, ygdata.Id(NS_ip_fabric, 'server')), 'server')
+            c4 = _at(e3, ygdata.Id(NS_ip_fabric, 'connectivity'))
+            e5 = _one(_at(c4, ygdata.Id(NS_ip_fabric, 'link')), 'link')
+            c6 = _at(e5, ygdata.Id(NS_ip_fabric, 'state'))
+            keys = (fabric_name=e2.get_str(ygdata.Id(NS_ip_fabric, 'name')), server_name=e3.get_str(ygdata.Id(NS_ip_fabric, 'name')), link_switch=e5.get_str(ygdata.Id(NS_ip_fabric, 'switch')), link_switch_port=e5.get_str(ygdata.Id(NS_ip_fabric, 'switch-port')))
+            here = _present(c6)
+            if here is not None:
+                inst = ip_fabric__ip_fabric__fabric__server__connectivity__link__state.from_gdata(here)
+        except Exception as e:
+            cb(None, None, e)
+            return
+    cb(keys, inst, err)
+
+class ip_fabric__ip_fabric__fabric__server__connectivity__link__state_subs(SubscriptionNode):
+    link_status: SubscriptionNode
+    cabling_status: SubscriptionNode
+    neighbor: ip_fabric__ip_fabric__fabric__server__connectivity__link__state__neighbor_subs
+
+    pure def __init__(self, path: ?SubscriptionPath=None) -> None:
+        SubscriptionNode.__init__(self, path)
+        self.link_status = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_ip_fabric, 'link-status'), parent=path))
+        self.cabling_status = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_ip_fabric, 'cabling-status'), parent=path))
+        self.neighbor = ip_fabric__ip_fabric__fabric__server__connectivity__link__state__neighbor_subs(SubscriptionPath(ygdata.Id(NS_ip_fabric, 'neighbor'), parent=path))
+
+    pure def _direct_children(self) -> list[SubscriptionNode]:
+        direct: list[SubscriptionNode] = [self.link_status, self.cabling_status, self.neighbor]
+        return direct
+
+    def dst(self, cb: action(?(fabric_name: str, server_name: str, link_switch: str, link_switch_port: str), ?ip_fabric__ip_fabric__fabric__server__connectivity__link__state, ?Exception) -> None) -> ygdata.Dst:
+        """A destination rooted here: cb gets, one instance at a time,
+        the keys of the lists on the way down, this container as it is
+        after a change or None when it is gone, and an error."""
+        return ygdata.Dst(lambda n, err: ip_fabric__ip_fabric__fabric__server__connectivity__link__state_deliver(cb, n, err), root=self.filt())
+
+_breaker104: None = None
 class ip_fabric__ip_fabric__fabric__server__connectivity__link_entry_subs(SubscriptionNode):
     switch: SubscriptionNode
     switch_port: SubscriptionNode
     server_port: SubscriptionNode
+    state: ip_fabric__ip_fabric__fabric__server__connectivity__link__state_subs
 
     pure def __init__(self, path: ?SubscriptionPath=None) -> None:
         SubscriptionNode.__init__(self, path)
         self.switch = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_ip_fabric, 'switch'), parent=path))
         self.switch_port = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_ip_fabric, 'switch-port'), parent=path))
         self.server_port = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_ip_fabric, 'server-port'), parent=path))
+        self.state = ip_fabric__ip_fabric__fabric__server__connectivity__link__state_subs(SubscriptionPath(ygdata.Id(NS_ip_fabric, 'state'), parent=path))
 
     pure def _direct_children(self) -> list[SubscriptionNode]:
-        direct: list[SubscriptionNode] = [self.switch, self.switch_port, self.server_port]
+        direct: list[SubscriptionNode] = [self.switch, self.switch_port, self.server_port, self.state]
         return direct
 
-_breaker101: None = None
+_breaker105: None = None
 proc def ip_fabric__ip_fabric__fabric__server__connectivity__link_deliver(cb: action(?(fabric_name: str, server_name: str, link_switch: str, link_switch_port: str), ?ip_fabric__ip_fabric__fabric__server__connectivity__link_entry, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(fabric_name: str, server_name: str, link_switch: str, link_switch_port: str) = None
     inst: ?ip_fabric__ip_fabric__fabric__server__connectivity__link_entry = None
@@ -6506,11 +6689,13 @@ class ip_fabric__ip_fabric__fabric__server__connectivity__link_subs(Subscription
     switch: SubscriptionNode
     switch_port: SubscriptionNode
     server_port: SubscriptionNode
+    state: ip_fabric__ip_fabric__fabric__server__connectivity__link__state_subs
     pure def __init__(self, path: ?SubscriptionPath=None) -> None:
         SubscriptionNode.__init__(self, path)
         self.switch = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_ip_fabric, 'switch'), parent=path))
         self.switch_port = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_ip_fabric, 'switch-port'), parent=path))
         self.server_port = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_ip_fabric, 'server-port'), parent=path))
+        self.state = ip_fabric__ip_fabric__fabric__server__connectivity__link__state_subs(SubscriptionPath(ygdata.Id(NS_ip_fabric, 'state'), parent=path))
 
     pure def entry(self, switch: str, switch_port: str) -> ip_fabric__ip_fabric__fabric__server__connectivity__link_entry_subs:
         predicates = [
@@ -6527,10 +6712,10 @@ class ip_fabric__ip_fabric__fabric__server__connectivity__link_subs(Subscription
         return ygdata.Dst(lambda n, err: ip_fabric__ip_fabric__fabric__server__connectivity__link_deliver(cb, n, err), root=self.filt())
 
     pure def _direct_children(self) -> list[SubscriptionNode]:
-        direct: list[SubscriptionNode] = [self.switch, self.switch_port, self.server_port]
+        direct: list[SubscriptionNode] = [self.switch, self.switch_port, self.server_port, self.state]
         return direct
 
-_breaker102: None = None
+_breaker106: None = None
 proc def ip_fabric__ip_fabric__fabric__server__connectivity_deliver(cb: action(?(fabric_name: str, server_name: str), ?ip_fabric__ip_fabric__fabric__server__connectivity, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(fabric_name: str, server_name: str) = None
     inst: ?ip_fabric__ip_fabric__fabric__server__connectivity = None
@@ -6568,7 +6753,7 @@ class ip_fabric__ip_fabric__fabric__server__connectivity_subs(SubscriptionNode):
         after a change or None when it is gone, and an error."""
         return ygdata.Dst(lambda n, err: ip_fabric__ip_fabric__fabric__server__connectivity_deliver(cb, n, err), root=self.filt())
 
-_breaker103: None = None
+_breaker107: None = None
 class ip_fabric__ip_fabric__fabric__server_entry_subs(SubscriptionNode):
     name: SubscriptionNode
     connectivity: ip_fabric__ip_fabric__fabric__server__connectivity_subs
@@ -6582,7 +6767,7 @@ class ip_fabric__ip_fabric__fabric__server_entry_subs(SubscriptionNode):
         direct: list[SubscriptionNode] = [self.name, self.connectivity]
         return direct
 
-_breaker104: None = None
+_breaker108: None = None
 proc def ip_fabric__ip_fabric__fabric__server_deliver(cb: action(?(fabric_name: str, server_name: str), ?ip_fabric__ip_fabric__fabric__server_entry, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(fabric_name: str, server_name: str) = None
     inst: ?ip_fabric__ip_fabric__fabric__server_entry = None
@@ -6625,7 +6810,7 @@ class ip_fabric__ip_fabric__fabric__server_subs(SubscriptionNode):
         direct: list[SubscriptionNode] = [self.name, self.connectivity]
         return direct
 
-_breaker105: None = None
+_breaker109: None = None
 class ip_fabric__ip_fabric__fabric_entry_subs(SubscriptionNode):
     name: SubscriptionNode
     switch: ip_fabric__ip_fabric__fabric__switch_subs
@@ -6643,7 +6828,7 @@ class ip_fabric__ip_fabric__fabric_entry_subs(SubscriptionNode):
         direct: list[SubscriptionNode] = [self.name, self.switch, self.fabric_link, self.server]
         return direct
 
-_breaker106: None = None
+_breaker110: None = None
 proc def ip_fabric__ip_fabric__fabric_deliver(cb: action(?(fabric_name: str), ?ip_fabric__ip_fabric__fabric_entry, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     keys: ?(fabric_name: str) = None
     inst: ?ip_fabric__ip_fabric__fabric_entry = None
@@ -6689,7 +6874,7 @@ class ip_fabric__ip_fabric__fabric_subs(SubscriptionNode):
         direct: list[SubscriptionNode] = [self.name, self.switch, self.fabric_link, self.server]
         return direct
 
-_breaker107: None = None
+_breaker111: None = None
 proc def ip_fabric__ip_fabric_deliver(cb: action(?ip_fabric__ip_fabric, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
     inst: ?ip_fabric__ip_fabric = None
     if n is not None:
@@ -6720,7 +6905,7 @@ class ip_fabric__ip_fabric_subs(SubscriptionNode):
         and an error."""
         return ygdata.Dst(lambda n, err: ip_fabric__ip_fabric_deliver(cb, n, err), root=self.filt())
 
-_breaker108: None = None
+_breaker112: None = None
 class root_subs(SubscriptionNode):
     tmf_store: stratoweave_tmf__tmf_store_subs
     ip_fabric: ip_fabric__ip_fabric_subs

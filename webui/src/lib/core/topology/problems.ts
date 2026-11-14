@@ -1,4 +1,4 @@
-import type { LldpNeighbor, TopologyGraph, TopologyLink } from '$lib/core/topology/model';
+import type { LldpNeighbor, TopologyGraph, TopologyLink, TopologyServer, TopologyServerLink } from '$lib/core/topology/model';
 
 export type ProblemSeverity = 'danger' | 'warning';
 
@@ -124,13 +124,57 @@ function silentSwitchProblem(fabric: string, name: string): FabricProblem {
   };
 }
 
+function serverLinkName(link: TopologyServerLink, server: string): string {
+  return `${link.switchName} ${link.switchPort} ↔ ${server} ${link.serverPort}`;
+}
+
+/** The problems of the links of one server. Only the leaf end of a server link can be read. */
+function serverProblems(fabric: string, server: TopologyServer, silent: Set<string>): FabricProblem[] {
+  const base = { fabric, href: `/services/ip-fabric-server/${encodeURIComponent(server.routeId)}` };
+  const working = server.links.filter((link) => link.linkStatus === 'up' && link.cablingStatus !== 'mismatch');
+  const problems: FabricProblem[] = [];
+  for (const link of server.links) {
+    if (silent.has(link.switchName)) continue;
+    if (link.cablingStatus === 'mismatch' && link.neighbor) {
+      problems.push({
+        ...base,
+        id: `${server.name}|${link.id}|cabling`,
+        severity: 'danger',
+        title: `Miscabled server link ${serverLinkName(link, server.name)}`,
+        detail: [`${link.switchName} ${link.switchPort} sees ${sees(link.neighbor)}, expected ${server.name} ${link.serverPort}.`],
+        hint: 'The cable is plugged into another server or server port than the fabric describes. Move it, or change the server link if the cabling is right.'
+      });
+    } else if (link.linkStatus === 'down') {
+      const others = working.map((other) => other.switchName).filter((name) => name !== link.switchName);
+      problems.push({
+        ...base,
+        id: `${server.name}|${link.id}|link`,
+        // A server that still has a working link has lost redundancy, not its connection
+        severity: working.length > 0 ? 'warning' : 'danger',
+        title: `Server link down ${serverLinkName(link, server.name)}`,
+        detail: [
+          `The leaf port ${link.switchName} ${link.switchPort} is down.`,
+          working.length === 0
+            ? `${server.name} has no working link to the fabric.`
+            : others.length > 0
+              ? `${server.name} still reaches the fabric through ${[...new Set(others)].join(', ')}, without redundancy.`
+              : `${server.name} still reaches the fabric through its other link to ${link.switchName}.`
+        ],
+        hint: 'Check the cable and the network interface of the server.'
+      });
+    }
+  }
+  return problems;
+}
+
 function graphProblems(graph: TopologyGraph): FabricProblem[] {
   const silent = new Set(silentSwitches(graph));
   // The links of a silent switch are only half known, what is seen of them follows from it
   const links = graph.links.filter((link) => !silent.has(link.lowerSwitch) && !silent.has(link.upperSwitch));
   return [
     ...[...silent].map((name) => silentSwitchProblem(graph.fabric, name)),
-    ...links.flatMap((link) => linkProblems(graph.fabric, link))
+    ...links.flatMap((link) => linkProblems(graph.fabric, link)),
+    ...graph.servers.flatMap((server) => serverProblems(graph.fabric, server, silent))
   ];
 }
 

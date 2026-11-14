@@ -20,7 +20,7 @@
 {#if problems.length === 0 && !liveState}
   <EmptyState compact icon="alert" title="No live state yet" description="No fabric link reports its state, so problems cannot be detected. The devices may be unreachable or mocked." />
 {:else if problems.length === 0}
-  <EmptyState compact icon="check" title="No problems detected" description="Every fabric link with live state is up, has its eBGP session and is cabled as described." />
+  <EmptyState compact icon="check" title="No problems detected" description="Every fabric and server link with live state is up and cabled as described, and every fabric link has its eBGP session." />
 {:else}
   <ul class="problems card">
     {#each problems as problem (problem.id)}

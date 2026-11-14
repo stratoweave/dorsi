@@ -38,3 +38,19 @@ def _test_combine_link_status():
     testing.assertEqual(cfs.combine_link_status("up", "down"), "down")
     testing.assertEqual(cfs.combine_link_status("up", None), "unknown")
     testing.assertEqual(cfs.combine_link_status(None, None), None)
+
+def _test_server_cabling_matches():
+    testing.assertEqual(cfs.server_cabling_status("up", "server1", "eth1", "server1", "eth1"), "ok")
+
+def _test_server_cabling_mac_port_id():
+    testing.assertEqual(cfs.server_cabling_status("up", "server1", "aa:c1:ab:76:ef:bc", "server1", "eth1"), "ok")
+
+def _test_server_cabling_other_server():
+    testing.assertEqual(cfs.server_cabling_status("up", "server2", "eth1", "server1", "eth1"), "mismatch")
+
+def _test_server_cabling_other_port():
+    testing.assertEqual(cfs.server_cabling_status("up", "server1", "eth2", "server1", "eth1"), "mismatch")
+
+def _test_server_cabling_no_lldp():
+    testing.assertEqual(cfs.server_cabling_status("up", None, None, "server1", "eth1"), None)
+    testing.assertEqual(cfs.server_cabling_status("down", "server2", "eth1", "server1", "eth1"), None)

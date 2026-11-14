@@ -114,7 +114,15 @@
           {#each graph.servers as server (server.name)}
             {#each server.links as link (link.id)}
               <g class="topology__server-link-group">
-                <line x1={link.x1} y1={link.y1} x2={link.x2} y2={link.y2} class="topology__link topology__link--server"></line>
+                <line
+                  x1={link.x1}
+                  y1={link.y1}
+                  x2={link.x2}
+                  y2={link.y2}
+                  class="topology__link topology__link--server"
+                  class:topology__link--down={link.linkStatus === 'down'}
+                  class:topology__link--miscabled={link.cablingStatus === 'mismatch'}
+                ></line>
                 {@render portLabel(link.serverLabel)}
                 {@render portLabel(link.switchLabel)}
               </g>
@@ -262,6 +270,18 @@
   .topology__link--server {
     stroke: rgb(var(--sw-line-rgb) / 0.30);
     stroke-dasharray: 5 4;
+  }
+
+  .topology__link--server.topology__link--down {
+    stroke: rgb(var(--sw-danger-rgb) / 0.9);
+    stroke-width: 2;
+    stroke-dasharray: 6 4;
+  }
+
+  .topology__link--server.topology__link--miscabled {
+    stroke: var(--sw-warning);
+    stroke-width: 2.4;
+    stroke-dasharray: 2 4;
   }
 
   .topology__link-hit {

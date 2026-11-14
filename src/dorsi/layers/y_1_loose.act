@@ -293,6 +293,33 @@ SRC_YANG_0: str = r"""module dorsi-rfs {
                 type string;
                 mandatory true;
             }
+
+            container state {
+                config false;
+                description
+                    "Operational state of the leaf port, polled from the
+                     device.";
+                leaf oper-status {
+                    type enumeration {
+                        enum up;
+                        enum down;
+                        enum unknown;
+                    }
+                }
+                container lldp-neighbor {
+                    description
+                        "The neighbor that LLDP reports on the port. Empty when
+                         the server sends no LLDP, which many do not.";
+                    leaf device {
+                        description "System name of the neighbor.";
+                        type string;
+                    }
+                    leaf interface {
+                        description "Port ID of the neighbor.";
+                        type string;
+                    }
+                }
+            }
         }
   }
 }

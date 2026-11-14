@@ -126,6 +126,14 @@ link is up but no end sees an LLDP neighbor. The Web UI lists these as
 sessions that are down on a working link and switches that DORSI gets no state
 from.
 
+A server link has one end DORSI can read: its leaf port. Its oper-state and
+LLDP neighbor become the `state` of the server link. Many servers send no LLDP,
+so a server link is only checked when its leaf port sees a neighbor: the system
+name must be the server, and the port ID the server port unless it is a MAC
+address, which Linux `lldpd` sends by default. A server link that is down is an
+error when the server has no working link left, and a warning when a
+dual-homed server has only lost its redundancy.
+
 Out of scope for now: the **overlay** (EVPN/VXLAN). A dual-homed server has two
 configured ports, but surviving the loss of a leaf needs an overlay.
 

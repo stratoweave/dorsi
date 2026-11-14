@@ -955,6 +955,46 @@ SRC_YANG_1: str = r"""module ip-fabric {
               type string;
               mandatory true;
             }
+            container state {
+              config false;
+              description
+                "State of the link, lifted from the RFS server-port entry of
+                 its leaf port.";
+              leaf link-status {
+                type enumeration {
+                  enum up;
+                  enum down;
+                  enum unknown;
+                }
+                description "Oper-state of the leaf port.";
+              }
+              leaf cabling-status {
+                type enumeration {
+                  enum ok {
+                    description "The leaf port sees the server over LLDP.";
+                  }
+                  enum mismatch {
+                    description
+                      "The leaf port sees another system, or another port of
+                       the server: the cable is plugged in elsewhere.";
+                  }
+                }
+                description
+                  "Whether the cable joins the leaf port to the server port,
+                   from the LLDP neighbor of the leaf port. Not reported when
+                   the server sends no LLDP; the port is only compared when
+                   the server sends its name, not its MAC address.";
+              }
+              container neighbor {
+                description "The LLDP neighbor that the leaf port sees.";
+                leaf device {
+                  type string;
+                }
+                leaf interface {
+                  type string;
+                }
+              }
+            }
           }
         }
       }

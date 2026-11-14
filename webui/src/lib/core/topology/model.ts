@@ -89,6 +89,12 @@ export interface TopologyServerLink {
   y2: number;
   switchLabel: TopologyPortLabel;
   serverLabel: TopologyPortLabel;
+  /** The oper-state of the leaf port. */
+  linkStatus: LinkStatus;
+  /** '' when the server sends no LLDP. */
+  cablingStatus: CablingStatus;
+  /** What the leaf port sees over LLDP. */
+  neighbor: LldpNeighbor | null;
 }
 
 export interface TopologyServer {
@@ -336,6 +342,9 @@ export function buildFabricGraph(fabricApi: unknown): TopologyGraph {
     leaf: TopologySwitch;
     switchPort: string;
     serverPort: string;
+    linkStatus: LinkStatus;
+    cablingStatus: CablingStatus;
+    neighbor: LldpNeighbor | null;
   }
   const rawServers: { name: string; profile: string; links: RawServerLink[] }[] = [];
   if (hasServers) {
@@ -352,7 +361,16 @@ export function buildFabricGraph(fabricApi: unknown): TopologyGraph {
           warnings.push(`Server ${name} is linked to ${switchName}, which is not on the map.`);
           continue;
         }
-        links.push({ id: `${name},${switchName},${switchPort}`, server: name, leaf, switchPort, serverPort });
+        links.push({
+          id: `${name},${switchName},${switchPort}`,
+          server: name,
+          leaf,
+          switchPort,
+          serverPort,
+          linkStatus: toStatus(stringAt(link, 'state', 'link-status')),
+          cablingStatus: toCablingStatus(stringAt(link, 'state', 'cabling-status')),
+          neighbor: toNeighbor(at(link, 'state', 'neighbor'))
+        });
       }
       rawServers.push({ name, profile: stringAt(entry, 'connectivity', 'profile') || 'dual-homed', links });
     }
@@ -463,7 +481,10 @@ export function buildFabricGraph(fabricApi: unknown): TopologyGraph {
         x2,
         y2,
         serverLabel: labels.place(link.serverPort, x1, y1, x2, y2),
-        switchLabel: labels.place(link.switchPort, x2, y2, x1, y1)
+        switchLabel: labels.place(link.switchPort, x2, y2, x1, y1),
+        linkStatus: link.linkStatus,
+        cablingStatus: link.cablingStatus,
+        neighbor: link.neighbor
       });
     }
   }
