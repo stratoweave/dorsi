@@ -2,6 +2,7 @@
 # YANG module (prefix) and namespace:
 #   srl_nokia-bgp (srl_nokia-bgp)                   urn:nokia.com:srlinux:bgp:bgp
 #   srl_nokia-interfaces (srl_nokia-if)             urn:nokia.com:srlinux:chassis:interfaces
+#   srl_nokia-lldp (srl_nokia-lldp)                 urn:nokia.com:srlinux:lldp:lldp
 #   srl_nokia-network-instance (srl_nokia-netinst)  urn:nokia.com:srlinux:net-inst:network-instance
 #   srl_nokia-system-name (srl_nokia-system-name)   urn:nokia.com:srlinux:chassis:system-name
 # Top node: /
@@ -10,14 +11,29 @@ leaf1 = root()
 # Container: /system/name (srl_nokia-system-name)
 leaf1.system.name.host_name = 'leaf1'
 
+# P-container: /system/lldp (srl_nokia-lldp)
+lldp = leaf1.system.create_lldp(admin_state='enable')
+
+# List /system/lldp/interface element: 'ethernet-1/1'
+interface_element = lldp.interface.create('ethernet-1/1', admin_state='enable')
+
+# List /system/lldp/interface element: 'ethernet-1/49'
+interface_element = lldp.interface.create('ethernet-1/49', admin_state='enable')
+
+# List /system/lldp/interface element: 'ethernet-1/50'
+interface_element = lldp.interface.create('ethernet-1/50', admin_state='enable')
+
+# List /system/lldp/interface element: 'mgmt0'
+interface_element = lldp.interface.create('mgmt0', admin_state='enable')
+
 # List /interface (srl_nokia-interfaces) element: 'ethernet-1/1'
-interface_element = leaf1.interface.create('ethernet-1/1', description='Server server1 [eth1] (dual-homed)', admin_state='enable')
+interface_element_2 = leaf1.interface.create('ethernet-1/1', description='Server server1 [eth1] (dual-homed)', admin_state='enable')
 
 # List /interface (srl_nokia-interfaces) element: 'ethernet-1/49'
-interface_element = leaf1.interface.create('ethernet-1/49', description='Link to spine1 [ethernet-1/1]', admin_state='enable')
+interface_element_2 = leaf1.interface.create('ethernet-1/49', description='Link to spine1 [ethernet-1/1]', admin_state='enable')
 
 # List /interface[name='ethernet-1/49']/subinterface element: 0
-subinterface_element = interface_element.subinterface.create(u64(0), description='Link to spine1 [ethernet-1/1]', admin_state='enable')
+subinterface_element = interface_element_2.subinterface.create(u64(0), description='Link to spine1 [ethernet-1/1]', admin_state='enable')
 
 # Container: /interface[name='ethernet-1/49']/subinterface[index='0']/ipv4
 subinterface_element.ipv4.admin_state = 'enable'
@@ -26,10 +42,10 @@ subinterface_element.ipv4.admin_state = 'enable'
 address_element = subinterface_element.ipv4.address.create('10.100.0.226/31')
 
 # List /interface (srl_nokia-interfaces) element: 'ethernet-1/50'
-interface_element = leaf1.interface.create('ethernet-1/50', description='Link to spine2 [ethernet-1/1]', admin_state='enable')
+interface_element_2 = leaf1.interface.create('ethernet-1/50', description='Link to spine2 [ethernet-1/1]', admin_state='enable')
 
 # List /interface[name='ethernet-1/50']/subinterface element: 0
-subinterface_element = interface_element.subinterface.create(u64(0), description='Link to spine2 [ethernet-1/1]', admin_state='enable')
+subinterface_element = interface_element_2.subinterface.create(u64(0), description='Link to spine2 [ethernet-1/1]', admin_state='enable')
 
 # Container: /interface[name='ethernet-1/50']/subinterface[index='0']/ipv4
 subinterface_element.ipv4.admin_state = 'enable'
@@ -38,10 +54,10 @@ subinterface_element.ipv4.admin_state = 'enable'
 address_element = subinterface_element.ipv4.address.create('10.100.0.228/31')
 
 # List /interface (srl_nokia-interfaces) element: 'mgmt0'
-interface_element = leaf1.interface.create('mgmt0', admin_state='enable')
+interface_element_2 = leaf1.interface.create('mgmt0', admin_state='enable')
 
 # List /interface[name='mgmt0']/subinterface element: 0
-subinterface_element = interface_element.subinterface.create(u64(0), admin_state='enable')
+subinterface_element = interface_element_2.subinterface.create(u64(0), admin_state='enable')
 
 # Container: /interface[name='mgmt0']/subinterface[index='0']/ipv4
 subinterface_element.ipv4.admin_state = 'enable'
@@ -50,10 +66,10 @@ subinterface_element.ipv4.admin_state = 'enable'
 subinterface_element.ipv6.admin_state = 'enable'
 
 # List /interface (srl_nokia-interfaces) element: 'system0'
-interface_element = leaf1.interface.create('system0')
+interface_element_2 = leaf1.interface.create('system0')
 
 # List /interface[name='system0']/subinterface element: 0
-subinterface_element = interface_element.subinterface.create(u64(0))
+subinterface_element = interface_element_2.subinterface.create(u64(0))
 
 # Container: /interface[name='system0']/subinterface[index='0']/ipv4
 subinterface_element.ipv4.admin_state = 'enable'
@@ -65,13 +81,13 @@ address_element = subinterface_element.ipv4.address.create('10.0.0.1/32')
 network_instance_element = leaf1.network_instance.create('default')
 
 # List /network-instance[name='default']/interface element: 'ethernet-1/49.0'
-interface_element_2 = network_instance_element.interface.create('ethernet-1/49.0')
+interface_element_3 = network_instance_element.interface.create('ethernet-1/49.0')
 
 # List /network-instance[name='default']/interface element: 'ethernet-1/50.0'
-interface_element_2 = network_instance_element.interface.create('ethernet-1/50.0')
+interface_element_3 = network_instance_element.interface.create('ethernet-1/50.0')
 
 # List /network-instance[name='default']/interface element: 'system0.0'
-interface_element_2 = network_instance_element.interface.create('system0.0')
+interface_element_3 = network_instance_element.interface.create('system0.0')
 
 # P-container: /network-instance[name='default']/protocols/bgp (srl_nokia-bgp)
 bgp = network_instance_element.protocols.create_bgp(autonomous_system=u64(4200000001), router_id='10.0.0.1')
@@ -97,7 +113,7 @@ neighbor_element = bgp.neighbor.create('10.100.0.229', admin_state='enable', des
 network_instance_element = leaf1.network_instance.create('mgmt', type=Identityref('ip-vrf', ns='urn:nokia.com:srlinux:net-inst:network-instance', mod='srl_nokia-network-instance', pfx='srl_nokia-netinst'), admin_state='enable', description='Management network instance')
 
 # List /network-instance[name='mgmt']/interface element: 'mgmt0.0'
-interface_element_2 = network_instance_element.interface.create('mgmt0.0')
+interface_element_3 = network_instance_element.interface.create('mgmt0.0')
 
 # List /routing-policy/prefix-set element: 'loopbacks'
 prefix_set_element = leaf1.routing_policy.prefix_set.create('loopbacks')
@@ -130,6 +146,7 @@ statement_element.action_.policy_result = 'accept'
 # YANG module (prefix) and namespace:
 #   srl_nokia-bgp (srl_nokia-bgp)                   urn:nokia.com:srlinux:bgp:bgp
 #   srl_nokia-interfaces (srl_nokia-if)             urn:nokia.com:srlinux:chassis:interfaces
+#   srl_nokia-lldp (srl_nokia-lldp)                 urn:nokia.com:srlinux:lldp:lldp
 #   srl_nokia-network-instance (srl_nokia-netinst)  urn:nokia.com:srlinux:net-inst:network-instance
 #   srl_nokia-system-name (srl_nokia-system-name)   urn:nokia.com:srlinux:chassis:system-name
 # Top node: /
@@ -138,17 +155,35 @@ leaf2 = root()
 # Container: /system/name (srl_nokia-system-name)
 leaf2.system.name.host_name = 'leaf2'
 
+# P-container: /system/lldp (srl_nokia-lldp)
+lldp = leaf2.system.create_lldp(admin_state='enable')
+
+# List /system/lldp/interface element: 'ethernet-1/1'
+interface_element = lldp.interface.create('ethernet-1/1', admin_state='enable')
+
+# List /system/lldp/interface element: 'ethernet-1/2'
+interface_element = lldp.interface.create('ethernet-1/2', admin_state='enable')
+
+# List /system/lldp/interface element: 'ethernet-1/49'
+interface_element = lldp.interface.create('ethernet-1/49', admin_state='enable')
+
+# List /system/lldp/interface element: 'ethernet-1/50'
+interface_element = lldp.interface.create('ethernet-1/50', admin_state='enable')
+
+# List /system/lldp/interface element: 'mgmt0'
+interface_element = lldp.interface.create('mgmt0', admin_state='enable')
+
 # List /interface (srl_nokia-interfaces) element: 'ethernet-1/1'
-interface_element = leaf2.interface.create('ethernet-1/1', description='Server server1 [eth2] (dual-homed)', admin_state='enable')
+interface_element_2 = leaf2.interface.create('ethernet-1/1', description='Server server1 [eth2] (dual-homed)', admin_state='enable')
 
 # List /interface (srl_nokia-interfaces) element: 'ethernet-1/2'
-interface_element = leaf2.interface.create('ethernet-1/2', description='Server server2 [eth1] (dual-homed)', admin_state='enable')
+interface_element_2 = leaf2.interface.create('ethernet-1/2', description='Server server2 [eth1] (dual-homed)', admin_state='enable')
 
 # List /interface (srl_nokia-interfaces) element: 'ethernet-1/49'
-interface_element = leaf2.interface.create('ethernet-1/49', description='Link to spine1 [ethernet-1/2]', admin_state='enable')
+interface_element_2 = leaf2.interface.create('ethernet-1/49', description='Link to spine1 [ethernet-1/2]', admin_state='enable')
 
 # List /interface[name='ethernet-1/49']/subinterface element: 0
-subinterface_element = interface_element.subinterface.create(u64(0), description='Link to spine1 [ethernet-1/2]', admin_state='enable')
+subinterface_element = interface_element_2.subinterface.create(u64(0), description='Link to spine1 [ethernet-1/2]', admin_state='enable')
 
 # Container: /interface[name='ethernet-1/49']/subinterface[index='0']/ipv4
 subinterface_element.ipv4.admin_state = 'enable'
@@ -157,10 +192,10 @@ subinterface_element.ipv4.admin_state = 'enable'
 address_element = subinterface_element.ipv4.address.create('10.100.1.98/31')
 
 # List /interface (srl_nokia-interfaces) element: 'ethernet-1/50'
-interface_element = leaf2.interface.create('ethernet-1/50', description='Link to spine2 [ethernet-1/2]', admin_state='enable')
+interface_element_2 = leaf2.interface.create('ethernet-1/50', description='Link to spine2 [ethernet-1/2]', admin_state='enable')
 
 # List /interface[name='ethernet-1/50']/subinterface element: 0
-subinterface_element = interface_element.subinterface.create(u64(0), description='Link to spine2 [ethernet-1/2]', admin_state='enable')
+subinterface_element = interface_element_2.subinterface.create(u64(0), description='Link to spine2 [ethernet-1/2]', admin_state='enable')
 
 # Container: /interface[name='ethernet-1/50']/subinterface[index='0']/ipv4
 subinterface_element.ipv4.admin_state = 'enable'
@@ -169,10 +204,10 @@ subinterface_element.ipv4.admin_state = 'enable'
 address_element = subinterface_element.ipv4.address.create('10.100.1.100/31')
 
 # List /interface (srl_nokia-interfaces) element: 'mgmt0'
-interface_element = leaf2.interface.create('mgmt0', admin_state='enable')
+interface_element_2 = leaf2.interface.create('mgmt0', admin_state='enable')
 
 # List /interface[name='mgmt0']/subinterface element: 0
-subinterface_element = interface_element.subinterface.create(u64(0), admin_state='enable')
+subinterface_element = interface_element_2.subinterface.create(u64(0), admin_state='enable')
 
 # Container: /interface[name='mgmt0']/subinterface[index='0']/ipv4
 subinterface_element.ipv4.admin_state = 'enable'
@@ -181,10 +216,10 @@ subinterface_element.ipv4.admin_state = 'enable'
 subinterface_element.ipv6.admin_state = 'enable'
 
 # List /interface (srl_nokia-interfaces) element: 'system0'
-interface_element = leaf2.interface.create('system0')
+interface_element_2 = leaf2.interface.create('system0')
 
 # List /interface[name='system0']/subinterface element: 0
-subinterface_element = interface_element.subinterface.create(u64(0))
+subinterface_element = interface_element_2.subinterface.create(u64(0))
 
 # Container: /interface[name='system0']/subinterface[index='0']/ipv4
 subinterface_element.ipv4.admin_state = 'enable'
@@ -196,13 +231,13 @@ address_element = subinterface_element.ipv4.address.create('10.0.0.2/32')
 network_instance_element = leaf2.network_instance.create('default')
 
 # List /network-instance[name='default']/interface element: 'ethernet-1/49.0'
-interface_element_2 = network_instance_element.interface.create('ethernet-1/49.0')
+interface_element_3 = network_instance_element.interface.create('ethernet-1/49.0')
 
 # List /network-instance[name='default']/interface element: 'ethernet-1/50.0'
-interface_element_2 = network_instance_element.interface.create('ethernet-1/50.0')
+interface_element_3 = network_instance_element.interface.create('ethernet-1/50.0')
 
 # List /network-instance[name='default']/interface element: 'system0.0'
-interface_element_2 = network_instance_element.interface.create('system0.0')
+interface_element_3 = network_instance_element.interface.create('system0.0')
 
 # P-container: /network-instance[name='default']/protocols/bgp (srl_nokia-bgp)
 bgp = network_instance_element.protocols.create_bgp(autonomous_system=u64(4200000002), router_id='10.0.0.2')
@@ -228,7 +263,7 @@ neighbor_element = bgp.neighbor.create('10.100.1.99', admin_state='enable', desc
 network_instance_element = leaf2.network_instance.create('mgmt', type=Identityref('ip-vrf', ns='urn:nokia.com:srlinux:net-inst:network-instance', mod='srl_nokia-network-instance', pfx='srl_nokia-netinst'), admin_state='enable', description='Management network instance')
 
 # List /network-instance[name='mgmt']/interface element: 'mgmt0.0'
-interface_element_2 = network_instance_element.interface.create('mgmt0.0')
+interface_element_3 = network_instance_element.interface.create('mgmt0.0')
 
 # List /routing-policy/prefix-set element: 'loopbacks'
 prefix_set_element = leaf2.routing_policy.prefix_set.create('loopbacks')
@@ -261,6 +296,7 @@ statement_element.action_.policy_result = 'accept'
 # YANG module (prefix) and namespace:
 #   srl_nokia-bgp (srl_nokia-bgp)                   urn:nokia.com:srlinux:bgp:bgp
 #   srl_nokia-interfaces (srl_nokia-if)             urn:nokia.com:srlinux:chassis:interfaces
+#   srl_nokia-lldp (srl_nokia-lldp)                 urn:nokia.com:srlinux:lldp:lldp
 #   srl_nokia-network-instance (srl_nokia-netinst)  urn:nokia.com:srlinux:net-inst:network-instance
 #   srl_nokia-system-name (srl_nokia-system-name)   urn:nokia.com:srlinux:chassis:system-name
 # Top node: /
@@ -269,17 +305,35 @@ leaf3 = root()
 # Container: /system/name (srl_nokia-system-name)
 leaf3.system.name.host_name = 'leaf3'
 
+# P-container: /system/lldp (srl_nokia-lldp)
+lldp = leaf3.system.create_lldp(admin_state='enable')
+
+# List /system/lldp/interface element: 'ethernet-1/1'
+interface_element = lldp.interface.create('ethernet-1/1', admin_state='enable')
+
+# List /system/lldp/interface element: 'ethernet-1/2'
+interface_element = lldp.interface.create('ethernet-1/2', admin_state='enable')
+
+# List /system/lldp/interface element: 'ethernet-1/49'
+interface_element = lldp.interface.create('ethernet-1/49', admin_state='enable')
+
+# List /system/lldp/interface element: 'ethernet-1/50'
+interface_element = lldp.interface.create('ethernet-1/50', admin_state='enable')
+
+# List /system/lldp/interface element: 'mgmt0'
+interface_element = lldp.interface.create('mgmt0', admin_state='enable')
+
 # List /interface (srl_nokia-interfaces) element: 'ethernet-1/1'
-interface_element = leaf3.interface.create('ethernet-1/1', description='Server server2 [eth2] (dual-homed)', admin_state='enable')
+interface_element_2 = leaf3.interface.create('ethernet-1/1', description='Server server2 [eth2] (dual-homed)', admin_state='enable')
 
 # List /interface (srl_nokia-interfaces) element: 'ethernet-1/2'
-interface_element = leaf3.interface.create('ethernet-1/2', description='Server server3 [eth1] (single-homed)', admin_state='enable')
+interface_element_2 = leaf3.interface.create('ethernet-1/2', description='Server server3 [eth1] (single-homed)', admin_state='enable')
 
 # List /interface (srl_nokia-interfaces) element: 'ethernet-1/49'
-interface_element = leaf3.interface.create('ethernet-1/49', description='Link to spine1 [ethernet-1/3]', admin_state='enable')
+interface_element_2 = leaf3.interface.create('ethernet-1/49', description='Link to spine1 [ethernet-1/3]', admin_state='enable')
 
 # List /interface[name='ethernet-1/49']/subinterface element: 0
-subinterface_element = interface_element.subinterface.create(u64(0), description='Link to spine1 [ethernet-1/3]', admin_state='enable')
+subinterface_element = interface_element_2.subinterface.create(u64(0), description='Link to spine1 [ethernet-1/3]', admin_state='enable')
 
 # Container: /interface[name='ethernet-1/49']/subinterface[index='0']/ipv4
 subinterface_element.ipv4.admin_state = 'enable'
@@ -288,10 +342,10 @@ subinterface_element.ipv4.admin_state = 'enable'
 address_element = subinterface_element.ipv4.address.create('10.100.1.226/31')
 
 # List /interface (srl_nokia-interfaces) element: 'ethernet-1/50'
-interface_element = leaf3.interface.create('ethernet-1/50', description='Link to spine2 [ethernet-1/3]', admin_state='enable')
+interface_element_2 = leaf3.interface.create('ethernet-1/50', description='Link to spine2 [ethernet-1/3]', admin_state='enable')
 
 # List /interface[name='ethernet-1/50']/subinterface element: 0
-subinterface_element = interface_element.subinterface.create(u64(0), description='Link to spine2 [ethernet-1/3]', admin_state='enable')
+subinterface_element = interface_element_2.subinterface.create(u64(0), description='Link to spine2 [ethernet-1/3]', admin_state='enable')
 
 # Container: /interface[name='ethernet-1/50']/subinterface[index='0']/ipv4
 subinterface_element.ipv4.admin_state = 'enable'
@@ -300,10 +354,10 @@ subinterface_element.ipv4.admin_state = 'enable'
 address_element = subinterface_element.ipv4.address.create('10.100.1.228/31')
 
 # List /interface (srl_nokia-interfaces) element: 'mgmt0'
-interface_element = leaf3.interface.create('mgmt0', admin_state='enable')
+interface_element_2 = leaf3.interface.create('mgmt0', admin_state='enable')
 
 # List /interface[name='mgmt0']/subinterface element: 0
-subinterface_element = interface_element.subinterface.create(u64(0), admin_state='enable')
+subinterface_element = interface_element_2.subinterface.create(u64(0), admin_state='enable')
 
 # Container: /interface[name='mgmt0']/subinterface[index='0']/ipv4
 subinterface_element.ipv4.admin_state = 'enable'
@@ -312,10 +366,10 @@ subinterface_element.ipv4.admin_state = 'enable'
 subinterface_element.ipv6.admin_state = 'enable'
 
 # List /interface (srl_nokia-interfaces) element: 'system0'
-interface_element = leaf3.interface.create('system0')
+interface_element_2 = leaf3.interface.create('system0')
 
 # List /interface[name='system0']/subinterface element: 0
-subinterface_element = interface_element.subinterface.create(u64(0))
+subinterface_element = interface_element_2.subinterface.create(u64(0))
 
 # Container: /interface[name='system0']/subinterface[index='0']/ipv4
 subinterface_element.ipv4.admin_state = 'enable'
@@ -327,13 +381,13 @@ address_element = subinterface_element.ipv4.address.create('10.0.0.3/32')
 network_instance_element = leaf3.network_instance.create('default')
 
 # List /network-instance[name='default']/interface element: 'ethernet-1/49.0'
-interface_element_2 = network_instance_element.interface.create('ethernet-1/49.0')
+interface_element_3 = network_instance_element.interface.create('ethernet-1/49.0')
 
 # List /network-instance[name='default']/interface element: 'ethernet-1/50.0'
-interface_element_2 = network_instance_element.interface.create('ethernet-1/50.0')
+interface_element_3 = network_instance_element.interface.create('ethernet-1/50.0')
 
 # List /network-instance[name='default']/interface element: 'system0.0'
-interface_element_2 = network_instance_element.interface.create('system0.0')
+interface_element_3 = network_instance_element.interface.create('system0.0')
 
 # P-container: /network-instance[name='default']/protocols/bgp (srl_nokia-bgp)
 bgp = network_instance_element.protocols.create_bgp(autonomous_system=u64(4200000003), router_id='10.0.0.3')
@@ -359,7 +413,7 @@ neighbor_element = bgp.neighbor.create('10.100.1.229', admin_state='enable', des
 network_instance_element = leaf3.network_instance.create('mgmt', type=Identityref('ip-vrf', ns='urn:nokia.com:srlinux:net-inst:network-instance', mod='srl_nokia-network-instance', pfx='srl_nokia-netinst'), admin_state='enable', description='Management network instance')
 
 # List /network-instance[name='mgmt']/interface element: 'mgmt0.0'
-interface_element_2 = network_instance_element.interface.create('mgmt0.0')
+interface_element_3 = network_instance_element.interface.create('mgmt0.0')
 
 # List /routing-policy/prefix-set element: 'loopbacks'
 prefix_set_element = leaf3.routing_policy.prefix_set.create('loopbacks')
@@ -392,6 +446,7 @@ statement_element.action_.policy_result = 'accept'
 # YANG module (prefix) and namespace:
 #   srl_nokia-bgp (srl_nokia-bgp)                   urn:nokia.com:srlinux:bgp:bgp
 #   srl_nokia-interfaces (srl_nokia-if)             urn:nokia.com:srlinux:chassis:interfaces
+#   srl_nokia-lldp (srl_nokia-lldp)                 urn:nokia.com:srlinux:lldp:lldp
 #   srl_nokia-network-instance (srl_nokia-netinst)  urn:nokia.com:srlinux:net-inst:network-instance
 #   srl_nokia-system-name (srl_nokia-system-name)   urn:nokia.com:srlinux:chassis:system-name
 # Top node: /
@@ -400,11 +455,26 @@ spine1 = root()
 # Container: /system/name (srl_nokia-system-name)
 spine1.system.name.host_name = 'spine1'
 
+# P-container: /system/lldp (srl_nokia-lldp)
+lldp = spine1.system.create_lldp(admin_state='enable')
+
+# List /system/lldp/interface element: 'ethernet-1/1'
+interface_element = lldp.interface.create('ethernet-1/1', admin_state='enable')
+
+# List /system/lldp/interface element: 'ethernet-1/2'
+interface_element = lldp.interface.create('ethernet-1/2', admin_state='enable')
+
+# List /system/lldp/interface element: 'ethernet-1/3'
+interface_element = lldp.interface.create('ethernet-1/3', admin_state='enable')
+
+# List /system/lldp/interface element: 'mgmt0'
+interface_element = lldp.interface.create('mgmt0', admin_state='enable')
+
 # List /interface (srl_nokia-interfaces) element: 'ethernet-1/1'
-interface_element = spine1.interface.create('ethernet-1/1', description='Link to leaf1 [ethernet-1/49]', admin_state='enable')
+interface_element_2 = spine1.interface.create('ethernet-1/1', description='Link to leaf1 [ethernet-1/49]', admin_state='enable')
 
 # List /interface[name='ethernet-1/1']/subinterface element: 0
-subinterface_element = interface_element.subinterface.create(u64(0), description='Link to leaf1 [ethernet-1/49]', admin_state='enable')
+subinterface_element = interface_element_2.subinterface.create(u64(0), description='Link to leaf1 [ethernet-1/49]', admin_state='enable')
 
 # Container: /interface[name='ethernet-1/1']/subinterface[index='0']/ipv4
 subinterface_element.ipv4.admin_state = 'enable'
@@ -413,10 +483,10 @@ subinterface_element.ipv4.admin_state = 'enable'
 address_element = subinterface_element.ipv4.address.create('10.100.0.227/31')
 
 # List /interface (srl_nokia-interfaces) element: 'ethernet-1/2'
-interface_element = spine1.interface.create('ethernet-1/2', description='Link to leaf2 [ethernet-1/49]', admin_state='enable')
+interface_element_2 = spine1.interface.create('ethernet-1/2', description='Link to leaf2 [ethernet-1/49]', admin_state='enable')
 
 # List /interface[name='ethernet-1/2']/subinterface element: 0
-subinterface_element = interface_element.subinterface.create(u64(0), description='Link to leaf2 [ethernet-1/49]', admin_state='enable')
+subinterface_element = interface_element_2.subinterface.create(u64(0), description='Link to leaf2 [ethernet-1/49]', admin_state='enable')
 
 # Container: /interface[name='ethernet-1/2']/subinterface[index='0']/ipv4
 subinterface_element.ipv4.admin_state = 'enable'
@@ -425,10 +495,10 @@ subinterface_element.ipv4.admin_state = 'enable'
 address_element = subinterface_element.ipv4.address.create('10.100.1.99/31')
 
 # List /interface (srl_nokia-interfaces) element: 'ethernet-1/3'
-interface_element = spine1.interface.create('ethernet-1/3', description='Link to leaf3 [ethernet-1/49]', admin_state='enable')
+interface_element_2 = spine1.interface.create('ethernet-1/3', description='Link to leaf3 [ethernet-1/49]', admin_state='enable')
 
 # List /interface[name='ethernet-1/3']/subinterface element: 0
-subinterface_element = interface_element.subinterface.create(u64(0), description='Link to leaf3 [ethernet-1/49]', admin_state='enable')
+subinterface_element = interface_element_2.subinterface.create(u64(0), description='Link to leaf3 [ethernet-1/49]', admin_state='enable')
 
 # Container: /interface[name='ethernet-1/3']/subinterface[index='0']/ipv4
 subinterface_element.ipv4.admin_state = 'enable'
@@ -437,10 +507,10 @@ subinterface_element.ipv4.admin_state = 'enable'
 address_element = subinterface_element.ipv4.address.create('10.100.1.227/31')
 
 # List /interface (srl_nokia-interfaces) element: 'mgmt0'
-interface_element = spine1.interface.create('mgmt0', admin_state='enable')
+interface_element_2 = spine1.interface.create('mgmt0', admin_state='enable')
 
 # List /interface[name='mgmt0']/subinterface element: 0
-subinterface_element = interface_element.subinterface.create(u64(0), admin_state='enable')
+subinterface_element = interface_element_2.subinterface.create(u64(0), admin_state='enable')
 
 # Container: /interface[name='mgmt0']/subinterface[index='0']/ipv4
 subinterface_element.ipv4.admin_state = 'enable'
@@ -449,10 +519,10 @@ subinterface_element.ipv4.admin_state = 'enable'
 subinterface_element.ipv6.admin_state = 'enable'
 
 # List /interface (srl_nokia-interfaces) element: 'system0'
-interface_element = spine1.interface.create('system0')
+interface_element_2 = spine1.interface.create('system0')
 
 # List /interface[name='system0']/subinterface element: 0
-subinterface_element = interface_element.subinterface.create(u64(0))
+subinterface_element = interface_element_2.subinterface.create(u64(0))
 
 # Container: /interface[name='system0']/subinterface[index='0']/ipv4
 subinterface_element.ipv4.admin_state = 'enable'
@@ -464,16 +534,16 @@ address_element = subinterface_element.ipv4.address.create('10.0.0.11/32')
 network_instance_element = spine1.network_instance.create('default')
 
 # List /network-instance[name='default']/interface element: 'ethernet-1/1.0'
-interface_element_2 = network_instance_element.interface.create('ethernet-1/1.0')
+interface_element_3 = network_instance_element.interface.create('ethernet-1/1.0')
 
 # List /network-instance[name='default']/interface element: 'ethernet-1/2.0'
-interface_element_2 = network_instance_element.interface.create('ethernet-1/2.0')
+interface_element_3 = network_instance_element.interface.create('ethernet-1/2.0')
 
 # List /network-instance[name='default']/interface element: 'ethernet-1/3.0'
-interface_element_2 = network_instance_element.interface.create('ethernet-1/3.0')
+interface_element_3 = network_instance_element.interface.create('ethernet-1/3.0')
 
 # List /network-instance[name='default']/interface element: 'system0.0'
-interface_element_2 = network_instance_element.interface.create('system0.0')
+interface_element_3 = network_instance_element.interface.create('system0.0')
 
 # P-container: /network-instance[name='default']/protocols/bgp (srl_nokia-bgp)
 bgp = network_instance_element.protocols.create_bgp(autonomous_system=u64(4200100101), router_id='10.0.0.11')
@@ -502,7 +572,7 @@ neighbor_element = bgp.neighbor.create('10.100.1.98', admin_state='enable', desc
 network_instance_element = spine1.network_instance.create('mgmt', type=Identityref('ip-vrf', ns='urn:nokia.com:srlinux:net-inst:network-instance', mod='srl_nokia-network-instance', pfx='srl_nokia-netinst'), admin_state='enable', description='Management network instance')
 
 # List /network-instance[name='mgmt']/interface element: 'mgmt0.0'
-interface_element_2 = network_instance_element.interface.create('mgmt0.0')
+interface_element_3 = network_instance_element.interface.create('mgmt0.0')
 
 # List /routing-policy/prefix-set element: 'loopbacks'
 prefix_set_element = spine1.routing_policy.prefix_set.create('loopbacks')
@@ -535,6 +605,7 @@ statement_element.action_.policy_result = 'accept'
 # YANG module (prefix) and namespace:
 #   srl_nokia-bgp (srl_nokia-bgp)                   urn:nokia.com:srlinux:bgp:bgp
 #   srl_nokia-interfaces (srl_nokia-if)             urn:nokia.com:srlinux:chassis:interfaces
+#   srl_nokia-lldp (srl_nokia-lldp)                 urn:nokia.com:srlinux:lldp:lldp
 #   srl_nokia-network-instance (srl_nokia-netinst)  urn:nokia.com:srlinux:net-inst:network-instance
 #   srl_nokia-system-name (srl_nokia-system-name)   urn:nokia.com:srlinux:chassis:system-name
 # Top node: /
@@ -543,11 +614,26 @@ spine2 = root()
 # Container: /system/name (srl_nokia-system-name)
 spine2.system.name.host_name = 'spine2'
 
+# P-container: /system/lldp (srl_nokia-lldp)
+lldp = spine2.system.create_lldp(admin_state='enable')
+
+# List /system/lldp/interface element: 'ethernet-1/1'
+interface_element = lldp.interface.create('ethernet-1/1', admin_state='enable')
+
+# List /system/lldp/interface element: 'ethernet-1/2'
+interface_element = lldp.interface.create('ethernet-1/2', admin_state='enable')
+
+# List /system/lldp/interface element: 'ethernet-1/3'
+interface_element = lldp.interface.create('ethernet-1/3', admin_state='enable')
+
+# List /system/lldp/interface element: 'mgmt0'
+interface_element = lldp.interface.create('mgmt0', admin_state='enable')
+
 # List /interface (srl_nokia-interfaces) element: 'ethernet-1/1'
-interface_element = spine2.interface.create('ethernet-1/1', description='Link to leaf1 [ethernet-1/50]', admin_state='enable')
+interface_element_2 = spine2.interface.create('ethernet-1/1', description='Link to leaf1 [ethernet-1/50]', admin_state='enable')
 
 # List /interface[name='ethernet-1/1']/subinterface element: 0
-subinterface_element = interface_element.subinterface.create(u64(0), description='Link to leaf1 [ethernet-1/50]', admin_state='enable')
+subinterface_element = interface_element_2.subinterface.create(u64(0), description='Link to leaf1 [ethernet-1/50]', admin_state='enable')
 
 # Container: /interface[name='ethernet-1/1']/subinterface[index='0']/ipv4
 subinterface_element.ipv4.admin_state = 'enable'
@@ -556,10 +642,10 @@ subinterface_element.ipv4.admin_state = 'enable'
 address_element = subinterface_element.ipv4.address.create('10.100.0.229/31')
 
 # List /interface (srl_nokia-interfaces) element: 'ethernet-1/2'
-interface_element = spine2.interface.create('ethernet-1/2', description='Link to leaf2 [ethernet-1/50]', admin_state='enable')
+interface_element_2 = spine2.interface.create('ethernet-1/2', description='Link to leaf2 [ethernet-1/50]', admin_state='enable')
 
 # List /interface[name='ethernet-1/2']/subinterface element: 0
-subinterface_element = interface_element.subinterface.create(u64(0), description='Link to leaf2 [ethernet-1/50]', admin_state='enable')
+subinterface_element = interface_element_2.subinterface.create(u64(0), description='Link to leaf2 [ethernet-1/50]', admin_state='enable')
 
 # Container: /interface[name='ethernet-1/2']/subinterface[index='0']/ipv4
 subinterface_element.ipv4.admin_state = 'enable'
@@ -568,10 +654,10 @@ subinterface_element.ipv4.admin_state = 'enable'
 address_element = subinterface_element.ipv4.address.create('10.100.1.101/31')
 
 # List /interface (srl_nokia-interfaces) element: 'ethernet-1/3'
-interface_element = spine2.interface.create('ethernet-1/3', description='Link to leaf3 [ethernet-1/50]', admin_state='enable')
+interface_element_2 = spine2.interface.create('ethernet-1/3', description='Link to leaf3 [ethernet-1/50]', admin_state='enable')
 
 # List /interface[name='ethernet-1/3']/subinterface element: 0
-subinterface_element = interface_element.subinterface.create(u64(0), description='Link to leaf3 [ethernet-1/50]', admin_state='enable')
+subinterface_element = interface_element_2.subinterface.create(u64(0), description='Link to leaf3 [ethernet-1/50]', admin_state='enable')
 
 # Container: /interface[name='ethernet-1/3']/subinterface[index='0']/ipv4
 subinterface_element.ipv4.admin_state = 'enable'
@@ -580,10 +666,10 @@ subinterface_element.ipv4.admin_state = 'enable'
 address_element = subinterface_element.ipv4.address.create('10.100.1.229/31')
 
 # List /interface (srl_nokia-interfaces) element: 'mgmt0'
-interface_element = spine2.interface.create('mgmt0', admin_state='enable')
+interface_element_2 = spine2.interface.create('mgmt0', admin_state='enable')
 
 # List /interface[name='mgmt0']/subinterface element: 0
-subinterface_element = interface_element.subinterface.create(u64(0), admin_state='enable')
+subinterface_element = interface_element_2.subinterface.create(u64(0), admin_state='enable')
 
 # Container: /interface[name='mgmt0']/subinterface[index='0']/ipv4
 subinterface_element.ipv4.admin_state = 'enable'
@@ -592,10 +678,10 @@ subinterface_element.ipv4.admin_state = 'enable'
 subinterface_element.ipv6.admin_state = 'enable'
 
 # List /interface (srl_nokia-interfaces) element: 'system0'
-interface_element = spine2.interface.create('system0')
+interface_element_2 = spine2.interface.create('system0')
 
 # List /interface[name='system0']/subinterface element: 0
-subinterface_element = interface_element.subinterface.create(u64(0))
+subinterface_element = interface_element_2.subinterface.create(u64(0))
 
 # Container: /interface[name='system0']/subinterface[index='0']/ipv4
 subinterface_element.ipv4.admin_state = 'enable'
@@ -607,16 +693,16 @@ address_element = subinterface_element.ipv4.address.create('10.0.0.12/32')
 network_instance_element = spine2.network_instance.create('default')
 
 # List /network-instance[name='default']/interface element: 'ethernet-1/1.0'
-interface_element_2 = network_instance_element.interface.create('ethernet-1/1.0')
+interface_element_3 = network_instance_element.interface.create('ethernet-1/1.0')
 
 # List /network-instance[name='default']/interface element: 'ethernet-1/2.0'
-interface_element_2 = network_instance_element.interface.create('ethernet-1/2.0')
+interface_element_3 = network_instance_element.interface.create('ethernet-1/2.0')
 
 # List /network-instance[name='default']/interface element: 'ethernet-1/3.0'
-interface_element_2 = network_instance_element.interface.create('ethernet-1/3.0')
+interface_element_3 = network_instance_element.interface.create('ethernet-1/3.0')
 
 # List /network-instance[name='default']/interface element: 'system0.0'
-interface_element_2 = network_instance_element.interface.create('system0.0')
+interface_element_3 = network_instance_element.interface.create('system0.0')
 
 # P-container: /network-instance[name='default']/protocols/bgp (srl_nokia-bgp)
 bgp = network_instance_element.protocols.create_bgp(autonomous_system=u64(4200100101), router_id='10.0.0.12')
@@ -645,7 +731,7 @@ neighbor_element = bgp.neighbor.create('10.100.1.228', admin_state='enable', des
 network_instance_element = spine2.network_instance.create('mgmt', type=Identityref('ip-vrf', ns='urn:nokia.com:srlinux:net-inst:network-instance', mod='srl_nokia-network-instance', pfx='srl_nokia-netinst'), admin_state='enable', description='Management network instance')
 
 # List /network-instance[name='mgmt']/interface element: 'mgmt0.0'
-interface_element_2 = network_instance_element.interface.create('mgmt0.0')
+interface_element_3 = network_instance_element.interface.create('mgmt0.0')
 
 # List /routing-policy/prefix-set element: 'loopbacks'
 prefix_set_element = spine2.routing_policy.prefix_set.create('loopbacks')

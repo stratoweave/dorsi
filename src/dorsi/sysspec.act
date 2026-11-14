@@ -254,6 +254,9 @@ generated_device_types: dict[str, swdev.DeviceType] = {
             schema_transforms=[
                 swds.filter_schema([
                     '/srl_nokia-system:system/name/host-name',
+                    '/srl_nokia-system:system/lldp/admin-state',
+                    '/srl_nokia-system:system/lldp/interface/name',
+                    '/srl_nokia-system:system/lldp/interface/admin-state',
                     '/srl_nokia-if:interface/name',
                     '/srl_nokia-if:interface/description',
                     '/srl_nokia-if:interface/admin-state',
