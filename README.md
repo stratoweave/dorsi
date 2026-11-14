@@ -113,15 +113,18 @@ fabric interface on the device: its oper-state and the state of the eBGP session
 on it. The CFS lifts the two ends of a link into read-only `state` of the
 `fabric-link`, with `link-status` and `bgp-status` each `up`, `down` or
 `unknown`. A status is `up` only when both ends are up, `down` if either end is
-down, and `unknown` when either end cannot be read.
+down, and `unknown` when either end cannot be read. A device that stops
+answering does not fail the poll, so an end that has delivered no state for 20
+seconds is no longer reported and its links read as `unknown`.
 
 The same poll reads the LLDP neighbor of each fabric interface, which shows
 where the cable actually goes. The `fabric-link` state has the neighbor each end
 sees and a `cabling-status`: `ok` when an end sees the switch and port the link
 describes, `mismatch` when an end sees another one, and `no-neighbor` when the
 link is up but no end sees an LLDP neighbor. The Web UI lists these as
-*Problems* on its start page, together with links that are down and eBGP
-sessions that are down on a working link.
+*Problems* on its start page, together with links that are down, eBGP
+sessions that are down on a working link and switches that DORSI gets no state
+from.
 
 Out of scope for now: the **overlay** (EVPN/VXLAN). A dual-homed server has two
 configured ports, but surviving the loss of a leaf needs an overlay.

@@ -27,7 +27,7 @@
       <li class="problem" class:problem--danger={problem.severity === 'danger'} class:problem--warning={problem.severity === 'warning'}>
         <div class="problem__head">
           <StatusPill tone={problem.severity} label={problem.severity === 'danger' ? 'Error' : 'Warning'} />
-          <a class="problem__title" href={appHref(`/services/ip-fabric-link/${encodeURIComponent(problem.linkRouteId)}`)}>{problem.title}</a>
+          <a class="problem__title" href={appHref(problem.href)}>{problem.title}</a>
           {#if showFabric}
             <span class="problem__fabric">{problem.fabric}</span>
           {/if}

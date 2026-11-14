@@ -1,3 +1,5 @@
+import time
+
 import yang.gdata as gdata
 import stratoweave.device as swdev
 
@@ -114,9 +116,28 @@ class FabricInterface(base.FabricInterface):
 # Poll the oper-state of each fabric interface, the state of its eBGP session
 # and its LLDP neighbor from the device. The CFS FabricTransform lift combines
 # the two ends of a link into the state of the fabric-link.
+_POLL_PERIOD = 5.0
+# A device that stops answering does not fail the poll, the poll just never
+# returns. After this long without a delivery the state is no longer reported,
+# so that it reads as unknown instead of the last state seen.
+_STALE_AFTER_NS = 20 * 1000000000
+
 actor FabricInterfaceTransform(path, update_oper: proc(?y_1_oper.stratoweave_rfs__rfs__fabric_interface_entry)->None, dev: swdev.DeviceMgr):
     _subs = gdata.SubscriptionManager(dev.tree_provider(), str(path))
     _oper = base.FabricInterface.new_state(path)
+    var _last_delivery: ?int = None
+    var _stale = False
+    var _running = True
+
+    def _watchdog():
+        if not _running:
+            return
+        last = _last_delivery
+        if last is not None and not _stale and time.monotonic_ns() - last > _STALE_AFTER_NS:
+            print("FabricInterfaceTransform {path}: no state from the device for {_STALE_AFTER_NS // 1000000000} s, reporting it as unknown", err=True)
+            _stale = True
+            publish(None, None, None, None)
+        after _POLL_PERIOD: _watchdog()
 
     def publish(oper_status: ?str, bgp_status: ?str, neighbor_device: ?str, neighbor_interface: ?str):
         _oper.state.oper_status = oper_status
@@ -163,6 +184,8 @@ actor FabricInterfaceTransform(path, update_oper: proc(?y_1_oper.stratoweave_rfs
                             port_id = neighbor.port_id
                             if port_id is not None:
                                 neighbor_interface = str(port_id)
+        _last_delivery = time.monotonic_ns()
+        _stale = False
         publish(oper_status, bgp_status, neighbor_device, neighbor_interface)
 
     def on_conf(conf: y_1.stratoweave_rfs__rfs__fabric_interface_entry):
@@ -172,15 +195,17 @@ actor FabricInterfaceTransform(path, update_oper: proc(?y_1_oper.stratoweave_rfs
             peer_address = conf.bgp.peer_address
             srl_dst = srl25_oper.dst(lambda r, e: on_srl_state(r, e, peer_address))
             want.add(srl_dst.deliver({
-                srl25_oper.subs.interface.entry(conf.name).oper_state.subscribe(period=5.0),
-                srl25_oper.subs.network_instance.entry("default").protocols.bgp.neighbor.entry(peer_address).session_state.subscribe(period=5.0),
-                srl25_oper.subs.system.lldp.interface.entry(conf.name).neighbor.system_name.subscribe(period=5.0),
-                srl25_oper.subs.system.lldp.interface.entry(conf.name).neighbor.port_id.subscribe(period=5.0)
+                srl25_oper.subs.interface.entry(conf.name).oper_state.subscribe(period=_POLL_PERIOD),
+                srl25_oper.subs.network_instance.entry("default").protocols.bgp.neighbor.entry(peer_address).session_state.subscribe(period=_POLL_PERIOD),
+                srl25_oper.subs.system.lldp.interface.entry(conf.name).neighbor.system_name.subscribe(period=_POLL_PERIOD),
+                srl25_oper.subs.system.lldp.interface.entry(conf.name).neighbor.port_id.subscribe(period=_POLL_PERIOD)
             }))
         _subs.declare(want)
 
     def shutdown():
-        pass
+        _running = False
+
+    after _POLL_PERIOD: _watchdog()
 
 
 class ServerPort(base.ServerPort):

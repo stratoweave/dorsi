@@ -11,7 +11,8 @@ export interface FabricProblem {
   detail: string[];
   /** What to check first. */
   hint: string;
-  linkRouteId: string;
+  /** The page of the link or switch, for appHref. */
+  href: string;
 }
 
 function linkName(link: TopologyLink): string {
@@ -44,7 +45,7 @@ function mismatchedEnds(link: TopologyLink): string[] {
 
 /** The problems of one link, the cause first: a miscabled link also has its eBGP session down. */
 function linkProblems(fabric: string, link: TopologyLink): FabricProblem[] {
-  const base = { fabric, linkRouteId: link.routeId };
+  const base = { fabric, href: `/services/ip-fabric-link/${encodeURIComponent(link.routeId)}` };
   if (link.cablingStatus === 'mismatch') {
     const detail = mismatchedEnds(link);
     if (detail.length === 0) detail.push(`${linkName(link)}: an end sees another switch or port over LLDP.`);
@@ -94,11 +95,50 @@ function linkProblems(fabric: string, link: TopologyLink): FabricProblem[] {
   return problems;
 }
 
+/**
+ * The switches DORSI gets no state from: every link of the switch has an
+ * unknown status while other links of the fabric are known. The status of a
+ * link is unknown when one of its ends cannot be read, and the one switch that
+ * all such links share is the one that does not answer.
+ */
+function silentSwitches(graph: TopologyGraph): string[] {
+  const known = (link: TopologyLink) => link.linkStatus !== 'unknown';
+  if (!graph.links.some(known)) return [];
+  return graph.switches
+    .map((node) => node.name)
+    .filter((name) => {
+      const links = graph.links.filter((link) => link.lowerSwitch === name || link.upperSwitch === name);
+      return links.length > 0 && !links.some(known);
+    });
+}
+
+function silentSwitchProblem(fabric: string, name: string): FabricProblem {
+  return {
+    id: `${fabric}|${name}|silent`,
+    severity: 'danger',
+    fabric,
+    title: `No state from ${name}`,
+    detail: [`DORSI gets no state from ${name}, so the state of its links is unknown.`],
+    hint: 'Check that the switch is running and that its management address answers NETCONF.',
+    href: `/devices/${encodeURIComponent(name)}`
+  };
+}
+
+function graphProblems(graph: TopologyGraph): FabricProblem[] {
+  const silent = new Set(silentSwitches(graph));
+  // The links of a silent switch are only half known, what is seen of them follows from it
+  const links = graph.links.filter((link) => !silent.has(link.lowerSwitch) && !silent.has(link.upperSwitch));
+  return [
+    ...[...silent].map((name) => silentSwitchProblem(graph.fabric, name)),
+    ...links.flatMap((link) => linkProblems(graph.fabric, link))
+  ];
+}
+
 const SEVERITY_ORDER: Record<ProblemSeverity, number> = { danger: 0, warning: 1 };
 
 /** Every problem in the fabrics, the most severe first. */
 export function fabricProblems(graphs: TopologyGraph[]): FabricProblem[] {
   return graphs
-    .flatMap((graph) => graph.links.flatMap((link) => linkProblems(graph.fabric, link)))
+    .flatMap(graphProblems)
     .sort((a, b) => SEVERITY_ORDER[a.severity] - SEVERITY_ORDER[b.severity]);
 }
