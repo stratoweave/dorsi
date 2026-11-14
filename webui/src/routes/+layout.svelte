@@ -10,7 +10,7 @@
   import CommandPalette from '$lib/core/command-palette/CommandPalette.svelte';
   import { isPendingQueueItem } from '$lib/core/orchestron/client';
   import { queuesPoll, refreshQueues } from '$lib/core/orchestron/poll-store';
-  import { getServiceModule, listServiceModuleMeta } from '$lib/core/registry/service-modules';
+  import { getServiceModule } from '$lib/core/registry/service-modules';
   import { formatServiceRouteId } from '$lib/core/registry/types';
   import LiveIndicator from '$lib/core/ui/LiveIndicator.svelte';
   import NavIcon from '$lib/core/ui/NavIcon.svelte';
@@ -21,8 +21,6 @@
   import logoUrl from '$lib/assets/stratoweave-logo.svg';
 
   let { children }: { children?: Snippet } = $props();
-
-  const serviceModules = listServiceModuleMeta();
 
   let totalPendingCount = $derived($queuesPoll.queues.filter(isPendingQueueItem).length);
   let paletteOpen = $state(false);
@@ -217,19 +215,6 @@
           <span class="nav-icon"><NavIcon name="services" /></span>
           Service Modules
         </a>
-
-        <div class="nav-subsection">
-          {#each serviceModules as serviceModule (serviceModule.id)}
-            <a
-              class="nav-item nav-item--sub"
-              class:active={currentPathname.startsWith(`/services/${serviceModule.id}`)}
-              aria-current={ariaCurrent(currentPathname.startsWith(`/services/${serviceModule.id}`))}
-              href={appHref(`/services/${serviceModule.id}`)}
-            >
-              {serviceModule.title}
-            </a>
-          {/each}
-        </div>
       </div>
     </nav>
   </aside>
@@ -278,19 +263,6 @@
 {/if}
 
 <style>
-  .nav-subsection {
-    display: grid;
-    gap: 2px;
-    margin-top: 4px;
-    padding-left: 12px;
-  }
-
-  .nav-item--sub {
-    font-size: 12px;
-    padding-left: 28px;
-    color: var(--sw-text-muted);
-  }
-
   .cmdk-trigger {
     display: inline-flex;
     align-items: center;
@@ -306,15 +278,5 @@
     font-family: var(--sw-font-mono);
     font-size: 11px;
     color: var(--sw-text-muted);
-  }
-
-  @media (max-width: 960px) {
-    .nav-subsection {
-      display: contents;
-    }
-
-    .nav-item--sub {
-      padding-left: 12px;
-    }
   }
 </style>
