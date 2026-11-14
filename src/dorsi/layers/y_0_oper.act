@@ -221,6 +221,7 @@ DMust(condition="(../switch[name=current()/lower-switch]/role='leaf' and\n   ../
     DContainer(module='ip-fabric', namespace='http://example.com/ip-fabric', prefix='ipf', name='state', config=False, description='State of the link, lifted from the RFS fabric-interface entries\nof its two ends. A status is up only when both ends are up, down\nif either end is down and unknown when either is unavailable.', presence=False, children=[
         DLeaf(module='ip-fabric', namespace='http://example.com/ip-fabric', prefix='ipf', name='link-status', config=False, description='Oper-state of the interfaces on the link.', is_key=False, mandatory=False, type=DTypeEnum(name='enumeration', description=None, reference=None, units=None, exts=[], builtin_type='enumeration', default=None, name_to_val={'up':0, 'down':1, 'unknown':2})),
         DLeaf(module='ip-fabric', namespace='http://example.com/ip-fabric', prefix='ipf', name='bgp-status', config=False, description='State of the eBGP session on the link.', is_key=False, mandatory=False, type=DTypeEnum(name='enumeration', description=None, reference=None, units=None, exts=[], builtin_type='enumeration', default=None, name_to_val={'up':0, 'down':1, 'unknown':2})),
+        DLeaf(module='ip-fabric', namespace='http://example.com/ip-fabric', prefix='ipf', name='bgp-down-seconds', config=False, description='How long bgp-status has been down without a break while\nlink-status is up, as of the last poll. A session can take up\nto its connect-retry time (120 seconds by default on SR Linux)\nto establish after the link comes up or the configuration\nchanges, so some time down is expected. Not reported when\nbgp-status is not down or link-status is not up.', is_key=False, mandatory=False, type=DTypeIntegerUnsigned(name='uint32', description=None, reference=None, units=None, exts=[], builtin_type='uint32', default=None, ranges=Ranges([(0, 4294967295)])), units='seconds'),
         DLeaf(module='ip-fabric', namespace='http://example.com/ip-fabric', prefix='ipf', name='cabling-status', config=False, description='Whether the cable joins the ports the link describes, from the\nLLDP neighbors of its two ends. An end that is not up is left\nout, LLDP needs a working link.', is_key=False, mandatory=False, type=DTypeEnum(name='enumeration', description=None, reference=None, units=None, exts=[], builtin_type='enumeration', default=None, name_to_val={'ok':0, 'mismatch':1, 'no-neighbor':2, 'unknown':3})),
         DContainer(module='ip-fabric', namespace='http://example.com/ip-fabric', prefix='ipf', name='lower-neighbor', config=False, description='The LLDP neighbor that the lower end sees.', presence=False, children=[
             DLeaf(module='ip-fabric', namespace='http://example.com/ip-fabric', prefix='ipf', name='device', config=False, is_key=False, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
@@ -881,6 +882,17 @@ SRC_YANG_1: str = r"""module ip-fabric {
               enum unknown;
             }
             description "State of the eBGP session on the link.";
+          }
+          leaf bgp-down-seconds {
+            type uint32;
+            units seconds;
+            description
+              "How long bgp-status has been down without a break while
+               link-status is up, as of the last poll. A session can take up
+               to its connect-retry time (120 seconds by default on SR Linux)
+               to establish after the link comes up or the configuration
+               changes, so some time down is expected. Not reported when
+               bgp-status is not down or link-status is not up.";
           }
           leaf cabling-status {
             type enumeration {
@@ -4474,13 +4486,15 @@ _breaker43: None = None
 class ip_fabric__ip_fabric__fabric__fabric_link__state(yadata.MNode):
     link_status: ?str
     bgp_status: ?str
+    bgp_down_seconds: ?u64
     cabling_status: ?str
     lower_neighbor: ip_fabric__ip_fabric__fabric__fabric_link__state__lower_neighbor
     upper_neighbor: ip_fabric__ip_fabric__fabric__fabric_link__state__upper_neighbor
 
-    mut def __init__(self, link_status: ?str=None, bgp_status: ?str=None, cabling_status: ?str=None, lower_neighbor: ?ip_fabric__ip_fabric__fabric__fabric_link__state__lower_neighbor=None, upper_neighbor: ?ip_fabric__ip_fabric__fabric__fabric_link__state__upper_neighbor=None) -> None:
+    mut def __init__(self, link_status: ?str=None, bgp_status: ?str=None, bgp_down_seconds: ?u64=None, cabling_status: ?str=None, lower_neighbor: ?ip_fabric__ip_fabric__fabric__fabric_link__state__lower_neighbor=None, upper_neighbor: ?ip_fabric__ip_fabric__fabric__fabric_link__state__upper_neighbor=None) -> None:
         self.link_status = link_status
         self.bgp_status = bgp_status
+        self.bgp_down_seconds = bgp_down_seconds
         self.cabling_status = cabling_status
         self.lower_neighbor = lower_neighbor if lower_neighbor is not None else ip_fabric__ip_fabric__fabric__fabric_link__state__lower_neighbor()
         self.upper_neighbor = upper_neighbor if upper_neighbor is not None else ip_fabric__ip_fabric__fabric__fabric_link__state__upper_neighbor()
@@ -4491,7 +4505,7 @@ class ip_fabric__ip_fabric__fabric__fabric_link__state(yadata.MNode):
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> ip_fabric__ip_fabric__fabric__fabric_link__state:
         if n is not None:
-            return ip_fabric__ip_fabric__fabric__fabric_link__state(link_status=n.get_opt_str(ygdata.Id(NS_ip_fabric, 'link-status')), bgp_status=n.get_opt_str(ygdata.Id(NS_ip_fabric, 'bgp-status')), cabling_status=n.get_opt_str(ygdata.Id(NS_ip_fabric, 'cabling-status')), lower_neighbor=ip_fabric__ip_fabric__fabric__fabric_link__state__lower_neighbor.from_gdata(n.get_opt_cnt(ygdata.Id(NS_ip_fabric, 'lower-neighbor'))), upper_neighbor=ip_fabric__ip_fabric__fabric__fabric_link__state__upper_neighbor.from_gdata(n.get_opt_cnt(ygdata.Id(NS_ip_fabric, 'upper-neighbor'))))
+            return ip_fabric__ip_fabric__fabric__fabric_link__state(link_status=n.get_opt_str(ygdata.Id(NS_ip_fabric, 'link-status')), bgp_status=n.get_opt_str(ygdata.Id(NS_ip_fabric, 'bgp-status')), bgp_down_seconds=n.get_opt_u64(ygdata.Id(NS_ip_fabric, 'bgp-down-seconds')), cabling_status=n.get_opt_str(ygdata.Id(NS_ip_fabric, 'cabling-status')), lower_neighbor=ip_fabric__ip_fabric__fabric__fabric_link__state__lower_neighbor.from_gdata(n.get_opt_cnt(ygdata.Id(NS_ip_fabric, 'lower-neighbor'))), upper_neighbor=ip_fabric__ip_fabric__fabric__fabric_link__state__upper_neighbor.from_gdata(n.get_opt_cnt(ygdata.Id(NS_ip_fabric, 'upper-neighbor'))))
         return ip_fabric__ip_fabric__fabric__fabric_link__state()
 
     mut def copy(self) -> ip_fabric__ip_fabric__fabric__fabric_link__state:
@@ -6470,6 +6484,7 @@ proc def ip_fabric__ip_fabric__fabric__fabric_link__state_deliver(cb: action(?(f
 class ip_fabric__ip_fabric__fabric__fabric_link__state_subs(SubscriptionNode):
     link_status: SubscriptionNode
     bgp_status: SubscriptionNode
+    bgp_down_seconds: SubscriptionNode
     cabling_status: SubscriptionNode
     lower_neighbor: ip_fabric__ip_fabric__fabric__fabric_link__state__lower_neighbor_subs
     upper_neighbor: ip_fabric__ip_fabric__fabric__fabric_link__state__upper_neighbor_subs
@@ -6478,12 +6493,13 @@ class ip_fabric__ip_fabric__fabric__fabric_link__state_subs(SubscriptionNode):
         SubscriptionNode.__init__(self, path)
         self.link_status = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_ip_fabric, 'link-status'), parent=path))
         self.bgp_status = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_ip_fabric, 'bgp-status'), parent=path))
+        self.bgp_down_seconds = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_ip_fabric, 'bgp-down-seconds'), parent=path))
         self.cabling_status = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_ip_fabric, 'cabling-status'), parent=path))
         self.lower_neighbor = ip_fabric__ip_fabric__fabric__fabric_link__state__lower_neighbor_subs(SubscriptionPath(ygdata.Id(NS_ip_fabric, 'lower-neighbor'), parent=path))
         self.upper_neighbor = ip_fabric__ip_fabric__fabric__fabric_link__state__upper_neighbor_subs(SubscriptionPath(ygdata.Id(NS_ip_fabric, 'upper-neighbor'), parent=path))
 
     pure def _direct_children(self) -> list[SubscriptionNode]:
-        direct: list[SubscriptionNode] = [self.link_status, self.bgp_status, self.cabling_status, self.lower_neighbor, self.upper_neighbor]
+        direct: list[SubscriptionNode] = [self.link_status, self.bgp_status, self.bgp_down_seconds, self.cabling_status, self.lower_neighbor, self.upper_neighbor]
         return direct
 
     def dst(self, cb: action(?(fabric_name: str, fabric_link_lower_switch: str, fabric_link_lower_port: str, fabric_link_upper_switch: str, fabric_link_upper_port: str), ?ip_fabric__ip_fabric__fabric__fabric_link__state, ?Exception) -> None) -> ygdata.Dst:

@@ -65,6 +65,8 @@ export interface TopologyLink {
   linkStatus: LinkStatus;
   /** The state of the eBGP session on the link. */
   bgpStatus: LinkStatus;
+  /** How long the session has been down without a break; null when it is not down or not reported. */
+  bgpDownSeconds: number | null;
   /** Down if either is down, up only when both are up. */
   status: LinkStatus;
   cablingStatus: CablingStatus;
@@ -304,6 +306,7 @@ export function buildFabricGraph(fabricApi: unknown): TopologyGraph {
     upperPort: string;
     linkStatus: LinkStatus;
     bgpStatus: LinkStatus;
+    bgpDownSeconds: number | null;
     cablingStatus: CablingStatus;
     lowerNeighbor: LldpNeighbor | null;
     upperNeighbor: LldpNeighbor | null;
@@ -330,6 +333,7 @@ export function buildFabricGraph(fabricApi: unknown): TopologyGraph {
       upperPort,
       linkStatus: toStatus(stringAt(entry, 'state', 'link-status')),
       bgpStatus: toStatus(stringAt(entry, 'state', 'bgp-status')),
+      bgpDownSeconds: numberAt(entry, 'state', 'bgp-down-seconds'),
       cablingStatus: toCablingStatus(stringAt(entry, 'state', 'cabling-status')),
       lowerNeighbor: toNeighbor(at(entry, 'state', 'lower-neighbor')),
       upperNeighbor: toNeighbor(at(entry, 'state', 'upper-neighbor'))
@@ -455,6 +459,7 @@ export function buildFabricGraph(fabricApi: unknown): TopologyGraph {
       upperLabel: labels.place(link.upperPort, x2, y2, x1, y1),
       linkStatus: link.linkStatus,
       bgpStatus: link.bgpStatus,
+      bgpDownSeconds: link.bgpDownSeconds,
       status: combineStatus(link.linkStatus, link.bgpStatus),
       cablingStatus: link.cablingStatus,
       lowerNeighbor: link.lowerNeighbor,

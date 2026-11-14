@@ -43,6 +43,14 @@ function mismatchedEnds(link: TopologyLink): string[] {
   return out;
 }
 
+/**
+ * A session can take up to its connect-retry time, 120 seconds by default on
+ * SR Linux, to establish after its link comes up or the configuration
+ * changes; it is only a problem once it stays down this long on a working
+ * link. A backend that does not report how long counts as past it.
+ */
+const BGP_GRACE_SECONDS = 120;
+
 /** The problems of one link, the cause first: a miscabled link also has its eBGP session down. */
 function linkProblems(fabric: string, link: TopologyLink): FabricProblem[] {
   const base = { fabric, href: `/services/ip-fabric-link/${encodeURIComponent(link.routeId)}` };
@@ -70,16 +78,16 @@ function linkProblems(fabric: string, link: TopologyLink): FabricProblem[] {
     }];
   }
   const problems: FabricProblem[] = [];
-  if (link.linkStatus === 'up' && link.bgpStatus === 'down') {
+  if (link.linkStatus === 'up' && link.bgpStatus === 'down' && (link.bgpDownSeconds ?? BGP_GRACE_SECONDS) >= BGP_GRACE_SECONDS) {
     problems.push({
       ...base,
       id: `${link.id}|bgp`,
       severity: 'danger',
       title: `eBGP down ${linkName(link)}`,
-      detail: ['The interfaces are up, but the eBGP session does not establish.'],
+      detail: [`The interfaces are up, but the eBGP session has not established for ${link.bgpDownSeconds ?? BGP_GRACE_SECONDS} s.`],
       hint: link.cablingStatus === 'ok'
-        ? 'The cabling is right: check the addresses and AS numbers in the configuration of both switches.'
-        : 'Check the cabling and the addresses and AS numbers on both switches.'
+        ? 'The cabling is right: check that the session is enabled on both switches and that their addresses and AS numbers match.'
+        : 'Check the cabling, that the session is enabled on both switches and that their addresses and AS numbers match.'
     });
   }
   if (link.cablingStatus === 'no-neighbor') {

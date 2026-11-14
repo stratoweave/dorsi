@@ -124,7 +124,10 @@ describes, `mismatch` when an end sees another one, and `no-neighbor` when the
 link is up but no end sees an LLDP neighbor. The Web UI lists these as
 *Problems* on its start page, together with links that are down, eBGP
 sessions that are down on a working link and switches that DORSI gets no state
-from.
+from. A session can take up to its connect-retry time (120 seconds by default on
+SR Linux) to establish after its link comes up, so the `fabric-link` state has
+`bgp-down-seconds`, how long the session has been down on a working link, and
+the Web UI only lists a session once it has been down for 120 seconds.
 
 A server link has one end DORSI can read: its leaf port. Its oper-state and
 LLDP neighbor become the `state` of the server link. Many servers send no LLDP,

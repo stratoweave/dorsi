@@ -860,6 +860,17 @@ SRC_YANG_1: str = r"""module ip-fabric {
             }
             description "State of the eBGP session on the link.";
           }
+          leaf bgp-down-seconds {
+            type uint32;
+            units seconds;
+            description
+              "How long bgp-status has been down without a break while
+               link-status is up, as of the last poll. A session can take up
+               to its connect-retry time (120 seconds by default on SR Linux)
+               to establish after the link comes up or the configuration
+               changes, so some time down is expected. Not reported when
+               bgp-status is not down or link-status is not up.";
+          }
           leaf cabling-status {
             type enumeration {
               enum ok {

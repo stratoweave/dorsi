@@ -1,3 +1,5 @@
+import time
+
 import yang.adata
 import yang.gdata as gdata
 import stratoweave.ttt as ttt
@@ -218,6 +220,18 @@ def combine_link_status(left: ?str, right: ?str) -> ?str:
     return "unknown"
 
 
+def down_since(status: ?str, since: ?int, now: int) -> ?int:
+    """When a status went down: `since` from the last poll while it stays
+    down, `now` when it has just gone down, None when it is read as anything
+    else. A status that cannot be read, None or unknown, says nothing new and
+    keeps `since`."""
+    if status == "down":
+        return since if since is not None else now
+    if status is None or status == "unknown":
+        return since
+    return None
+
+
 def _is_device(seen: str, expected: str) -> bool:
     """Whether the LLDP system name `seen` is the switch `expected`, which it
     is also when the switch reports a fully qualified name."""
@@ -289,11 +303,15 @@ actor FabricTransform(path: ttt.Path,
                       lower_tree_provider: ?gdata.TreeProvider):
     _oper = base.Fabric.new_state(path)
     _subs = gdata.SubscriptionManager(lower_tree_provider!, str(path))
+    # Monotonic time in ns at which the eBGP session of a link went down, by link
+    var _bgp_down_since: dict[str, int] = {}
 
     def on_rfs_state(root: ?y_1_oper.root, err: ?Exception, links: list[(str, str, str, str)], server_links: list[(str, str, str, str)]):
         if err is not None:
             print("cfs.FabricTransform RFS subscription error: {err}", err=True)
             return
+        now = time.monotonic_ns()
+        bgp_down_since: dict[str, int] = {}
         for lower, lower_port, upper, upper_port in links:
             lower_oper: ?str = None
             upper_oper: ?str = None
@@ -322,6 +340,20 @@ actor FabricTransform(path: ttt.Path,
             link = _oper.fabric_link.create((lower, lower_port, upper, upper_port))
             link.state.link_status = combine_link_status(lower_oper, upper_oper)
             link.state.bgp_status = combine_link_status(lower_bgp, upper_bgp)
+            # Only the time the session is down on a working link counts: it
+            # cannot come up before the link does
+            key = "{lower}|{lower_port}|{upper}|{upper_port}"
+            since = _bgp_down_since.get(key)
+            if link.state.link_status == "up":
+                since = down_since(link.state.bgp_status, since, now)
+            elif link.state.link_status == "down":
+                since = None
+            if since is not None:
+                bgp_down_since[key] = since
+            if since is not None and link.state.link_status == "up" and link.state.bgp_status == "down":
+                link.state.bgp_down_seconds = u64((now - since) // 1000000000)
+            else:
+                link.state.bgp_down_seconds = None
             link.state.cabling_status = combine_cabling_status(
                 end_cabling_status(lower_oper, lower_seen_device, lower_seen_interface, upper, upper_port),
                 end_cabling_status(upper_oper, upper_seen_device, upper_seen_interface, lower, lower_port))
@@ -346,6 +378,7 @@ actor FabricTransform(path: ttt.Path,
             server_link.state.cabling_status = server_cabling_status(oper, seen_device, seen_interface, server, server_port)
             server_link.state.neighbor.device = seen_device
             server_link.state.neighbor.interface = seen_interface
+        _bgp_down_since = bgp_down_since
         update_oper(_oper)
 
     def on_conf(conf: y_0.ip_fabric__ip_fabric__fabric_entry):
