@@ -7,6 +7,8 @@ labs/development environments which you can run:
   are IP fabric labs of Nokia SR Linux switches and servers (3-stage and 5-stage Clos).
   * `fabric-3stage` needs about 9 GB of memory and has been run. `fabric-5stage` needs
     much more and has not been deployed.
+* **[fabric-3stage-mixed](fabric-3stage-mixed/README.md)** is `fabric-3stage` with leaf3
+  and spine2 running Arista cEOS. Its image has to be downloaded and imported by hand.
 
 The SR Linux image (`ghcr.io/nokia/srlinux`) is public, no account or license is
 needed.

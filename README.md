@@ -95,15 +95,18 @@ The addressing limits are a switch `id` up to 511 and a lower port number below
 ECMP, a policy that advertises only the loopbacks, and for every link an
 interface with its /31 and an eBGP session. Server-facing leaf ports are enabled
 and described. LLDP is enabled globally and on the management, fabric and server
-ports.
+ports. Arista EOS gets the same through OpenConfig, with `ip routing` turned on
+and the connected routes redistributed into BGP, of which the policy lets only
+the loopbacks out.
 
 Every switch is also registered as a device in DORSI, reached with the lab
 credentials of the [`test/`](test/README.md) environments at its
 `management-address`, or by its name when it has none. A device type that does
-not take its management address from DHCP (all but SR Linux) keeps it in
-configuration DORSI manages, so it needs a `management-address`: DORSI
-configures it on the management interface and would otherwise remove it. Set
-`mock` on a switch to run it against a simulated device instead of a real one.
+not take its management address from DHCP (all but SR Linux, Arista EOS among
+them) keeps it in configuration DORSI manages, so it needs a
+`management-address`: DORSI configures it on the management interface and
+would otherwise remove it. Set `mock` on a switch to run it against a simulated
+device instead of a real one.
 
 The fabric is validated before it is applied: tiers must be adjacent and in the
 same pod or plane, a port may be used once, servers connect to leaves and match
@@ -195,10 +198,16 @@ result into the `fabric-link` state.
 
 ### Vendors
 
-The service stack is designed to be vendor-neutral, but the IP fabric is
+The service stack is designed to be vendor-neutral. The IP fabric is
 implemented for [Nokia SR Linux](https://www.nokia.com/ip-networks/service-router-linux-NOS/)
-only. Device models for Cisco IOS XR and Juniper cRPD are generated as well
-(`spec/yang/`), but no service uses them yet.
+and Arista EOS (`AristaEOS_4_36_3_2M`, configured through OpenConfig, see
+[`spec/yang/AristaEOS_4_36_3_2M`](spec/yang/AristaEOS_4_36_3_2M/README.md)),
+and one fabric can mix them. Device models for Cisco IOS XR and Juniper cRPD are
+generated as well (`spec/yang/`), but no service uses them yet. A new vendor
+needs its models in `spec/yang/` with a filter in `spec/src/dorsi_gen.act`, a
+branch in each RFS transform (`src/dorsi/rfs.act`) that also puts the
+`management-address` on its management interface, and, if it takes that
+address from DHCP, an entry in `DHCP_MANAGEMENT_TYPES` (`src/dorsi/cfs.act`).
 
 ## Running it
 

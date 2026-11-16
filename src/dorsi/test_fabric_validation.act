@@ -18,6 +18,15 @@ def _test_valid_three_stage():
 def _test_valid_five_stage():
     testing.assertEqual(cfs.validate_fabric(_fabric(fabrics.five_stage())), [])
 
+def _test_valid_three_stage_mixed():
+    testing.assertEqual(cfs.validate_fabric(_fabric(fabrics.three_stage_mixed())), [])
+
+def _test_eos_without_management_address():
+    f = _fabric(fabrics.three_stage_mixed())
+    sw = f.switch.get("leaf3")!
+    sw.management_address = None
+    _single_error(f, "a AristaEOS_4_36_3_2M switch needs a management-address")
+
 def _test_management_address_required():
     f = _fabric(fabrics.three_stage())
     sw = f.switch.get("leaf1")!

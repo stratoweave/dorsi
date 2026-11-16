@@ -9,6 +9,9 @@ import dorsi.layers.y_1_oper as y_1_oper
 
 from stratoweave.exception import UnsupportedDevice
 
+import dorsi.devices.AristaEOS_4_36_3_2M as eos436
+import dorsi.devices.AristaEOS_4_36_3_2M_oper as eos436_oper
+from dorsi.devices.AristaEOS_4_36_3_2M_oper import root as eos436_oper_root
 import dorsi.devices.NokiaSRLinux_25_3_2 as srl25
 import dorsi.devices.NokiaSRLinux_25_3_2_oper as srl25_oper
 from dorsi.devices.NokiaSRLinux_25_3_2_oper import root as srl25_oper_root
@@ -27,6 +30,63 @@ _FABRIC_EXPORT_POLICY = "export-loopbacks"
 _FABRIC_IMPORT_POLICY = "accept-all"
 _FABRIC_LOOPBACK_PREFIX_SET = "loopbacks"
 _FABRIC_ECMP_PATHS = 64
+
+# Arista EOS is configured through OpenConfig. SR Linux can serve OpenConfig
+# too, so EOS is told apart by a module only EOS has.
+_EOS_MODULE = "arista-netinst-augments"
+
+
+def _eos_default_ni(dev: eos436.root):
+    ni = dev.network_instances.network_instance.create("default")
+    ni.config.name = "default"
+    ni.config.type = eos436.openconfig_network_instance_types_DEFAULT_INSTANCE
+    return ni
+
+
+def _eos_bgp(ni):
+    proto = ni.protocols.protocol.create((eos436.openconfig_policy_types_BGP, "BGP"))
+    proto.config.identifier = eos436.openconfig_policy_types_BGP
+    proto.config.name = "BGP"
+    return proto.bgp
+
+
+def _eos_interface(dev: eos436.root, name: str, if_type, description: ?str):
+    intf = dev.interfaces.interface.create(name)
+    intf.config.name = name
+    intf.config.type = if_type
+    intf.config.description = description
+    intf.config.enabled = True
+    return intf
+
+
+def _eos_ipv4_address(intf, address: str, prefix_length: u64, description: ?str):
+    """An address on subinterface 0, which makes an Ethernet port a routed
+    port (no switchport)."""
+    subif = intf.subinterfaces.subinterface.create(0)
+    subif.config.index = 0
+    subif.config.description = description
+    subif.config.enabled = True
+    subif.ipv4.config.enabled = True
+    addr = subif.ipv4.addresses.address.create(address)
+    addr.config.ip = address
+    addr.config.prefix_length = prefix_length
+
+
+def _eos_lldp_interface(dev: eos436.root, name: str):
+    lldp_if = dev.lldp.interfaces.interface.create(name)
+    lldp_if.config.name = name
+    lldp_if.config.enabled = True
+
+
+def _eos_policy(dev: eos436.root, name: str):
+    """A policy of one statement '10' that accepts the routes it matches.
+    EOS turns it into an RCF function."""
+    policy = dev.routing_policy.policy_definitions.policy_definition.create(name)
+    policy.config.name = name
+    statement = policy.statements.statement.create("10")
+    statement.config.name = "10"
+    statement.actions.config.policy_result = "ACCEPT_ROUTE"
+    return statement
 
 class FabricBaseConfig(base.FabricBaseConfig):
     def transform(self, i, di):
@@ -77,6 +137,66 @@ class FabricBaseConfig(base.FabricBaseConfig):
 
             return dev
 
+        if _EOS_MODULE in di.modules:
+            print("RFS /rfs{{{di.name}}}/fabric-base-config transform running {i.role} for Arista EOS", err=True)
+            dev = eos436.root()
+            dev.system.config.hostname = di.name
+            dev.lldp.config.enabled = True
+
+            # Management. Its address is in the interfaces dorsi manages, so it
+            # has to be in the target or dorsi removes it.
+            mgmt = i.management_address
+            if mgmt is not None:
+                # address/prefix-length, validated by the CFS
+                parts: list[str] = mgmt.split("/")
+                intf_mgmt = _eos_interface(dev, "Management0", eos436.iana_if_type_ethernetCsmacd, None)
+                _eos_ipv4_address(intf_mgmt, parts[0], u64(int(parts[1])), None)
+
+            # Loopback
+            lo = _eos_interface(dev, "Loopback0", eos436.iana_if_type_softwareLoopback, None)
+            _eos_ipv4_address(lo, i.ipv4_address, 32, None)
+
+            # Routing is off on a fresh cEOS (no ip routing)
+            ni = _eos_default_ni(dev)
+            ni.config.ipv4_routing_enabled = True
+
+            # BGP with ECMP; the group carries the loopback export policy
+            bgp = _eos_bgp(ni)
+            bgp.global.config.as_ = i.asn
+            bgp.global.config.router_id = i.ipv4_address
+            af = bgp.global.afi_safis.afi_safi.create(eos436.openconfig_bgp_types_IPV4_UNICAST)
+            af.config.afi_safi_name = eos436.openconfig_bgp_types_IPV4_UNICAST
+            af.config.enabled = True
+            af.use_multiple_paths.ebgp.config.maximum_paths = u64(_FABRIC_ECMP_PATHS)
+            group = bgp.peer_groups.peer_group.create(_FABRIC_GROUP)
+            group.config.peer_group_name = _FABRIC_GROUP
+            group.apply_policy.config.export_policy = [_FABRIC_EXPORT_POLICY]
+            group.apply_policy.config.import_policy = [_FABRIC_IMPORT_POLICY]
+            group_af = group.afi_safis.afi_safi.create(eos436.openconfig_bgp_types_IPV4_UNICAST)
+            group_af.config.afi_safi_name = eos436.openconfig_bgp_types_IPV4_UNICAST
+            group_af.config.enabled = True
+
+            # EOS advertises only routes in BGP: redistribute the connected
+            # routes, of which the export policy lets only the loopbacks out
+            tc_key = (eos436.openconfig_policy_types_DIRECTLY_CONNECTED, eos436.openconfig_policy_types_BGP, eos436.openconfig_types_IPV4)
+            tc = ni.table_connections.table_connection.create(tc_key)
+            tc.config.src_protocol = eos436.openconfig_policy_types_DIRECTLY_CONNECTED
+            tc.config.dst_protocol = eos436.openconfig_policy_types_BGP
+            tc.config.address_family = eos436.openconfig_types_IPV4
+
+            # Advertise the loopbacks and accept everything the fabric sends us
+            ps = dev.routing_policy.defined_sets.prefix_sets.prefix_set.create(_FABRIC_LOOPBACK_PREFIX_SET)
+            ps.config.name = _FABRIC_LOOPBACK_PREFIX_SET
+            ps.config.mode = "IPV4"
+            prefix = ps.prefixes.prefix.create(("10.0.0.0/16", "32..32"))
+            prefix.config.ip_prefix = "10.0.0.0/16"
+            prefix.config.masklength_range = "32..32"
+            exp = _eos_policy(dev, _FABRIC_EXPORT_POLICY)
+            exp.conditions.match_prefix_set.config.prefix_set = _FABRIC_LOOPBACK_PREFIX_SET
+            _eos_policy(dev, _FABRIC_IMPORT_POLICY)
+
+            return dev
+
         raise UnsupportedDevice()
 
 
@@ -107,6 +227,27 @@ class FabricInterface(base.FabricInterface):
             # eBGP session to the other end of the link
             bgp = ni.protocols.create_bgp()
             bgp.neighbor.create(i.bgp.peer_address, peer_group=_FABRIC_GROUP, peer_as=i.bgp.peer_asn, admin_state="enable", description=if_description)
+
+            return dev
+
+        if _EOS_MODULE in di.modules:
+            print("RFS /rfs{{{di.name}}}/fabric-interface transform running [{i.name}] <-> {i.remote.device} [{i.remote.interface}] for Arista EOS", err=True)
+            dev = eos436.root()
+
+            # Routed point-to-point interface
+            intf = _eos_interface(dev, i.name, eos436.iana_if_type_ethernetCsmacd, if_description)
+            _eos_ipv4_address(intf, i.ipv4_address, i.ipv4_prefix_length, if_description)
+
+            _eos_lldp_interface(dev, i.name)
+
+            # eBGP session to the other end of the link
+            bgp = _eos_bgp(_eos_default_ni(dev))
+            neighbor = bgp.neighbors.neighbor.create(i.bgp.peer_address)
+            neighbor.config.neighbor_address = i.bgp.peer_address
+            neighbor.config.peer_group = _FABRIC_GROUP
+            neighbor.config.peer_as = i.bgp.peer_asn
+            neighbor.config.enabled = True
+            neighbor.config.description = if_description
 
             return dev
 
@@ -154,6 +295,38 @@ def _srl_port_subscriptions(name: str) -> set[gdata.SubscriptionSpec]:
         srl25_oper.subs.interface.entry(name).oper_state.subscribe(period=_POLL_PERIOD),
         srl25_oper.subs.system.lldp.interface.entry(name).neighbor.system_name.subscribe(period=_POLL_PERIOD),
         srl25_oper.subs.system.lldp.interface.entry(name).neighbor.port_id.subscribe(period=_POLL_PERIOD)
+    }
+
+
+def _eos_oper_status(root: eos436_oper_root) -> ?str:
+    """The oper-status of the one interface subscribed to."""
+    for interface in root.interfaces.interface:
+        raw = interface.state.oper_status
+        if raw == "UP":
+            return "up"
+        if raw == "DOWN" or raw == "LOWER_LAYER_DOWN":
+            return "down"
+        if raw is not None:
+            return "unknown"
+    return None
+
+
+def _eos_lldp_neighbor(root: eos436_oper_root) -> (?str, ?str):
+    """System name and port ID of the LLDP neighbor of the one interface
+    subscribed to, like _srl_lldp_neighbor."""
+    for lldp_if in root.lldp.interfaces.interface:
+        for neighbor in lldp_if.neighbors.neighbor:
+            return (neighbor.state.system_name, neighbor.state.port_id)
+    return (None, None)
+
+
+def _eos_port_subscriptions(name: str) -> set[gdata.SubscriptionSpec]:
+    # The whole LLDP entry of the interface: EOS fails a filter that names the
+    # neighbors when an interface has none ("unexpected element neighbors"),
+    # and one that names neighbor leaves without the key id.
+    return {
+        eos436_oper.subs.interfaces.interface.entry(name).state.oper_status.subscribe(period=_POLL_PERIOD),
+        eos436_oper.subs.lldp.interfaces.interface.entry(name).subscribe(period=_POLL_PERIOD)
     }
 
 
@@ -206,6 +379,30 @@ actor FabricInterfaceTransform(path, update_oper: proc(?y_1_oper.stratoweave_rfs
         _stale = False
         publish(oper_status, bgp_status, neighbor_device, neighbor_interface)
 
+    def on_eos_state(root: ?eos436_oper_root, err: ?Exception, peer_address: str):
+        oper_status: ?str = None
+        bgp_status: ?str = None
+        neighbor_device: ?str = None
+        neighbor_interface: ?str = None
+        if err is not None:
+            print("FabricInterfaceTransform subscription error: {err}", err=True)
+        elif root is not None:
+            oper_status = _eos_oper_status(root)
+            for ni in root.network_instances.network_instance:
+                for proto in ni.protocols.protocol:
+                    for neighbor in proto.bgp.neighbors.neighbor:
+                        if neighbor.neighbor_address == peer_address:
+                            session = neighbor.state.session_state
+                            if session == "ESTABLISHED":
+                                bgp_status = "up"
+                            elif session is not None:
+                                # IDLE, CONNECT, ACTIVE, OPENSENT and OPENCONFIRM
+                                bgp_status = "down"
+            neighbor_device, neighbor_interface = _eos_lldp_neighbor(root)
+        _last_delivery = time.monotonic_ns()
+        _stale = False
+        publish(oper_status, bgp_status, neighbor_device, neighbor_interface)
+
     def on_conf(conf: y_1.stratoweave_rfs__rfs__fabric_interface_entry):
         want: set[gdata.Delivery] = set()
         modset = dev.get_modules().0
@@ -215,6 +412,13 @@ actor FabricInterfaceTransform(path, update_oper: proc(?y_1_oper.stratoweave_rfs
             subs = _srl_port_subscriptions(conf.name)
             subs.add(srl25_oper.subs.network_instance.entry("default").protocols.bgp.neighbor.entry(peer_address).session_state.subscribe(period=_POLL_PERIOD))
             want.add(srl_dst.deliver(subs))
+        elif _EOS_MODULE in modset:
+            peer_address = conf.bgp.peer_address
+            eos_dst = eos436_oper.dst(lambda r, e: on_eos_state(r, e, peer_address))
+            subs = _eos_port_subscriptions(conf.name)
+            bgp = eos436_oper.subs.network_instances.network_instance.entry("default").protocols.protocol.entry(eos436.openconfig_policy_types_BGP, "BGP").bgp
+            subs.add(bgp.neighbors.neighbor.entry(peer_address).state.session_state.subscribe(period=_POLL_PERIOD))
+            want.add(eos_dst.deliver(subs))
         _subs.declare(want)
 
     def shutdown():
@@ -235,6 +439,13 @@ class ServerPort(base.ServerPort):
             intf.description = if_description
             intf.admin_state = "enable"
             dev.system.create_lldp().interface.create(i.name, admin_state="enable")
+            return dev
+
+        if _EOS_MODULE in di.modules:
+            print("RFS /rfs{{{di.name}}}/server-port transform running [{i.name}] for Arista EOS", err=True)
+            dev = eos436.root()
+            _eos_interface(dev, i.name, eos436.iana_if_type_ethernetCsmacd, if_description)
+            _eos_lldp_interface(dev, i.name)
             return dev
 
         raise UnsupportedDevice()
@@ -276,12 +487,28 @@ actor ServerPortTransform(path, update_oper: proc(?y_1_oper.stratoweave_rfs__rfs
         _stale = False
         publish(oper_status, neighbor_device, neighbor_interface)
 
+    def on_eos_state(root: ?eos436_oper_root, err: ?Exception):
+        oper_status: ?str = None
+        neighbor_device: ?str = None
+        neighbor_interface: ?str = None
+        if err is not None:
+            print("ServerPortTransform subscription error: {err}", err=True)
+        elif root is not None:
+            oper_status = _eos_oper_status(root)
+            neighbor_device, neighbor_interface = _eos_lldp_neighbor(root)
+        _last_delivery = time.monotonic_ns()
+        _stale = False
+        publish(oper_status, neighbor_device, neighbor_interface)
+
     def on_conf(conf: y_1.stratoweave_rfs__rfs__server_port_entry):
         want: set[gdata.Delivery] = set()
         modset = dev.get_modules().0
         if "srl_nokia-system" in modset:
             srl_dst = srl25_oper.dst(lambda r, e: on_srl_state(r, e))
             want.add(srl_dst.deliver(_srl_port_subscriptions(conf.name)))
+        elif _EOS_MODULE in modset:
+            eos_dst = eos436_oper.dst(lambda r, e: on_eos_state(r, e))
+            want.add(eos_dst.deliver(_eos_port_subscriptions(conf.name)))
         _subs.declare(want)
 
     def shutdown():

@@ -1,0 +1,1030 @@
+# device leaf1
+# YANG module (prefix) and namespace:
+#   srl_nokia-bgp (srl_nokia-bgp)                   urn:nokia.com:srlinux:bgp:bgp
+#   srl_nokia-interfaces (srl_nokia-if)             urn:nokia.com:srlinux:chassis:interfaces
+#   srl_nokia-lldp (srl_nokia-lldp)                 urn:nokia.com:srlinux:lldp:lldp
+#   srl_nokia-network-instance (srl_nokia-netinst)  urn:nokia.com:srlinux:net-inst:network-instance
+#   srl_nokia-system-name (srl_nokia-system-name)   urn:nokia.com:srlinux:chassis:system-name
+# Top node: /
+leaf1 = root()
+
+# Container: /system/name (srl_nokia-system-name)
+leaf1.system.name.host_name = 'leaf1'
+
+# P-container: /system/lldp (srl_nokia-lldp)
+lldp = leaf1.system.create_lldp(admin_state='enable')
+
+# List /system/lldp/interface element: 'ethernet-1/1'
+interface_element = lldp.interface.create('ethernet-1/1', admin_state='enable')
+
+# List /system/lldp/interface element: 'ethernet-1/49'
+interface_element = lldp.interface.create('ethernet-1/49', admin_state='enable')
+
+# List /system/lldp/interface element: 'ethernet-1/50'
+interface_element = lldp.interface.create('ethernet-1/50', admin_state='enable')
+
+# List /system/lldp/interface element: 'mgmt0'
+interface_element = lldp.interface.create('mgmt0', admin_state='enable')
+
+# List /interface (srl_nokia-interfaces) element: 'ethernet-1/1'
+interface_element_2 = leaf1.interface.create('ethernet-1/1', description='Server server1 [eth1] (dual-homed)', admin_state='enable')
+
+# List /interface (srl_nokia-interfaces) element: 'ethernet-1/49'
+interface_element_2 = leaf1.interface.create('ethernet-1/49', description='Link to spine1 [ethernet-1/1]', admin_state='enable')
+
+# List /interface[name='ethernet-1/49']/subinterface element: 0
+subinterface_element = interface_element_2.subinterface.create(u64(0), description='Link to spine1 [ethernet-1/1]', admin_state='enable')
+
+# Container: /interface[name='ethernet-1/49']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# List /interface[name='ethernet-1/49']/subinterface[index='0']/ipv4/address element: '10.100.0.226/31'
+address_element = subinterface_element.ipv4.address.create('10.100.0.226/31')
+
+# List /interface (srl_nokia-interfaces) element: 'ethernet-1/50'
+interface_element_2 = leaf1.interface.create('ethernet-1/50', description='Link to spine2 [Ethernet1]', admin_state='enable')
+
+# List /interface[name='ethernet-1/50']/subinterface element: 0
+subinterface_element = interface_element_2.subinterface.create(u64(0), description='Link to spine2 [Ethernet1]', admin_state='enable')
+
+# Container: /interface[name='ethernet-1/50']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# List /interface[name='ethernet-1/50']/subinterface[index='0']/ipv4/address element: '10.100.0.228/31'
+address_element = subinterface_element.ipv4.address.create('10.100.0.228/31')
+
+# List /interface (srl_nokia-interfaces) element: 'mgmt0'
+interface_element_2 = leaf1.interface.create('mgmt0', admin_state='enable')
+
+# List /interface[name='mgmt0']/subinterface element: 0
+subinterface_element = interface_element_2.subinterface.create(u64(0), admin_state='enable')
+
+# Container: /interface[name='mgmt0']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# Container: /interface[name='mgmt0']/subinterface[index='0']/ipv6
+subinterface_element.ipv6.admin_state = 'enable'
+
+# List /interface (srl_nokia-interfaces) element: 'system0'
+interface_element_2 = leaf1.interface.create('system0')
+
+# List /interface[name='system0']/subinterface element: 0
+subinterface_element = interface_element_2.subinterface.create(u64(0))
+
+# Container: /interface[name='system0']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# List /interface[name='system0']/subinterface[index='0']/ipv4/address element: '10.0.0.1/32'
+address_element = subinterface_element.ipv4.address.create('10.0.0.1/32')
+
+# List /network-instance (srl_nokia-network-instance) element: 'default'
+network_instance_element = leaf1.network_instance.create('default')
+
+# List /network-instance[name='default']/interface element: 'ethernet-1/49.0'
+interface_element_3 = network_instance_element.interface.create('ethernet-1/49.0')
+
+# List /network-instance[name='default']/interface element: 'ethernet-1/50.0'
+interface_element_3 = network_instance_element.interface.create('ethernet-1/50.0')
+
+# List /network-instance[name='default']/interface element: 'system0.0'
+interface_element_3 = network_instance_element.interface.create('system0.0')
+
+# P-container: /network-instance[name='default']/protocols/bgp (srl_nokia-bgp)
+bgp = network_instance_element.protocols.create_bgp(autonomous_system=u64(4200000001), router_id='10.0.0.1')
+
+# List /network-instance[name='default']/protocols/bgp/afi-safi element: Identityref('ipv4-unicast', ns='urn:nokia.com:srlinux:general:common', mod='srl_nokia-common', pfx='srl_nokia-comm')
+afi_safi_element = bgp.afi_safi.create(Identityref('ipv4-unicast', ns='urn:nokia.com:srlinux:general:common', mod='srl_nokia-common', pfx='srl_nokia-comm'), admin_state='enable')
+
+# Container: /network-instance[name='default']/protocols/bgp/afi-safi[afi-safi-name='Identityref(\'ipv4-unicast\', ns=\'urn:nokia.com:srlinux:general:common\', mod=\'srl_nokia-common\', pfx=\'srl_nokia-comm\')']/multipath/ebgp
+afi_safi_element.multipath.ebgp.maximum_paths = u64(64)
+
+# List /network-instance[name='default']/protocols/bgp/group element: 'fabric'
+group_element = bgp.group.create('fabric')
+group_element.export_policy = ['export-loopbacks']
+group_element.import_policy = ['accept-all']
+
+# List /network-instance[name='default']/protocols/bgp/neighbor element: '10.100.0.227'
+neighbor_element = bgp.neighbor.create('10.100.0.227', admin_state='enable', description='Link to spine1 [ethernet-1/1]', peer_as=u64(4200100101), peer_group='fabric')
+
+# List /network-instance[name='default']/protocols/bgp/neighbor element: '10.100.0.229'
+neighbor_element = bgp.neighbor.create('10.100.0.229', admin_state='enable', description='Link to spine2 [Ethernet1]', peer_as=u64(4200100101), peer_group='fabric')
+
+# List /network-instance (srl_nokia-network-instance) element: 'mgmt'
+network_instance_element = leaf1.network_instance.create('mgmt', type=Identityref('ip-vrf', ns='urn:nokia.com:srlinux:net-inst:network-instance', mod='srl_nokia-network-instance', pfx='srl_nokia-netinst'), admin_state='enable', description='Management network instance')
+
+# List /network-instance[name='mgmt']/interface element: 'mgmt0.0'
+interface_element_3 = network_instance_element.interface.create('mgmt0.0')
+
+# List /routing-policy/prefix-set element: 'loopbacks'
+prefix_set_element = leaf1.routing_policy.prefix_set.create('loopbacks')
+
+# List /routing-policy/prefix-set[name='loopbacks']/prefix element: '10.0.0.0/16', '32..32'
+prefix_element = prefix_set_element.prefix.create((ip_prefix='10.0.0.0/16', mask_length_range='32..32'))
+
+# List /routing-policy/policy element: 'accept-all'
+policy_element = leaf1.routing_policy.policy.create('accept-all')
+
+# List /routing-policy/policy[name='accept-all']/statement element: '10'
+statement_element = policy_element.statement.create('10')
+
+# Container: /routing-policy/policy[name='accept-all']/statement[name='10']/action
+statement_element.action_.policy_result = 'accept'
+
+# List /routing-policy/policy element: 'export-loopbacks'
+policy_element = leaf1.routing_policy.policy.create('export-loopbacks')
+
+# List /routing-policy/policy[name='export-loopbacks']/statement element: '10'
+statement_element = policy_element.statement.create('10')
+
+# Container: /routing-policy/policy[name='export-loopbacks']/statement[name='10']/match/prefix
+statement_element.match.prefix.prefix_set = 'loopbacks'
+
+# Container: /routing-policy/policy[name='export-loopbacks']/statement[name='10']/action
+statement_element.action_.policy_result = 'accept'
+
+# device leaf2
+# YANG module (prefix) and namespace:
+#   srl_nokia-bgp (srl_nokia-bgp)                   urn:nokia.com:srlinux:bgp:bgp
+#   srl_nokia-interfaces (srl_nokia-if)             urn:nokia.com:srlinux:chassis:interfaces
+#   srl_nokia-lldp (srl_nokia-lldp)                 urn:nokia.com:srlinux:lldp:lldp
+#   srl_nokia-network-instance (srl_nokia-netinst)  urn:nokia.com:srlinux:net-inst:network-instance
+#   srl_nokia-system-name (srl_nokia-system-name)   urn:nokia.com:srlinux:chassis:system-name
+# Top node: /
+leaf2 = root()
+
+# Container: /system/name (srl_nokia-system-name)
+leaf2.system.name.host_name = 'leaf2'
+
+# P-container: /system/lldp (srl_nokia-lldp)
+lldp = leaf2.system.create_lldp(admin_state='enable')
+
+# List /system/lldp/interface element: 'ethernet-1/1'
+interface_element = lldp.interface.create('ethernet-1/1', admin_state='enable')
+
+# List /system/lldp/interface element: 'ethernet-1/2'
+interface_element = lldp.interface.create('ethernet-1/2', admin_state='enable')
+
+# List /system/lldp/interface element: 'ethernet-1/49'
+interface_element = lldp.interface.create('ethernet-1/49', admin_state='enable')
+
+# List /system/lldp/interface element: 'ethernet-1/50'
+interface_element = lldp.interface.create('ethernet-1/50', admin_state='enable')
+
+# List /system/lldp/interface element: 'mgmt0'
+interface_element = lldp.interface.create('mgmt0', admin_state='enable')
+
+# List /interface (srl_nokia-interfaces) element: 'ethernet-1/1'
+interface_element_2 = leaf2.interface.create('ethernet-1/1', description='Server server1 [eth2] (dual-homed)', admin_state='enable')
+
+# List /interface (srl_nokia-interfaces) element: 'ethernet-1/2'
+interface_element_2 = leaf2.interface.create('ethernet-1/2', description='Server server2 [eth1] (dual-homed)', admin_state='enable')
+
+# List /interface (srl_nokia-interfaces) element: 'ethernet-1/49'
+interface_element_2 = leaf2.interface.create('ethernet-1/49', description='Link to spine1 [ethernet-1/2]', admin_state='enable')
+
+# List /interface[name='ethernet-1/49']/subinterface element: 0
+subinterface_element = interface_element_2.subinterface.create(u64(0), description='Link to spine1 [ethernet-1/2]', admin_state='enable')
+
+# Container: /interface[name='ethernet-1/49']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# List /interface[name='ethernet-1/49']/subinterface[index='0']/ipv4/address element: '10.100.1.98/31'
+address_element = subinterface_element.ipv4.address.create('10.100.1.98/31')
+
+# List /interface (srl_nokia-interfaces) element: 'ethernet-1/50'
+interface_element_2 = leaf2.interface.create('ethernet-1/50', description='Link to spine2 [Ethernet2]', admin_state='enable')
+
+# List /interface[name='ethernet-1/50']/subinterface element: 0
+subinterface_element = interface_element_2.subinterface.create(u64(0), description='Link to spine2 [Ethernet2]', admin_state='enable')
+
+# Container: /interface[name='ethernet-1/50']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# List /interface[name='ethernet-1/50']/subinterface[index='0']/ipv4/address element: '10.100.1.100/31'
+address_element = subinterface_element.ipv4.address.create('10.100.1.100/31')
+
+# List /interface (srl_nokia-interfaces) element: 'mgmt0'
+interface_element_2 = leaf2.interface.create('mgmt0', admin_state='enable')
+
+# List /interface[name='mgmt0']/subinterface element: 0
+subinterface_element = interface_element_2.subinterface.create(u64(0), admin_state='enable')
+
+# Container: /interface[name='mgmt0']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# Container: /interface[name='mgmt0']/subinterface[index='0']/ipv6
+subinterface_element.ipv6.admin_state = 'enable'
+
+# List /interface (srl_nokia-interfaces) element: 'system0'
+interface_element_2 = leaf2.interface.create('system0')
+
+# List /interface[name='system0']/subinterface element: 0
+subinterface_element = interface_element_2.subinterface.create(u64(0))
+
+# Container: /interface[name='system0']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# List /interface[name='system0']/subinterface[index='0']/ipv4/address element: '10.0.0.2/32'
+address_element = subinterface_element.ipv4.address.create('10.0.0.2/32')
+
+# List /network-instance (srl_nokia-network-instance) element: 'default'
+network_instance_element = leaf2.network_instance.create('default')
+
+# List /network-instance[name='default']/interface element: 'ethernet-1/49.0'
+interface_element_3 = network_instance_element.interface.create('ethernet-1/49.0')
+
+# List /network-instance[name='default']/interface element: 'ethernet-1/50.0'
+interface_element_3 = network_instance_element.interface.create('ethernet-1/50.0')
+
+# List /network-instance[name='default']/interface element: 'system0.0'
+interface_element_3 = network_instance_element.interface.create('system0.0')
+
+# P-container: /network-instance[name='default']/protocols/bgp (srl_nokia-bgp)
+bgp = network_instance_element.protocols.create_bgp(autonomous_system=u64(4200000002), router_id='10.0.0.2')
+
+# List /network-instance[name='default']/protocols/bgp/afi-safi element: Identityref('ipv4-unicast', ns='urn:nokia.com:srlinux:general:common', mod='srl_nokia-common', pfx='srl_nokia-comm')
+afi_safi_element = bgp.afi_safi.create(Identityref('ipv4-unicast', ns='urn:nokia.com:srlinux:general:common', mod='srl_nokia-common', pfx='srl_nokia-comm'), admin_state='enable')
+
+# Container: /network-instance[name='default']/protocols/bgp/afi-safi[afi-safi-name='Identityref(\'ipv4-unicast\', ns=\'urn:nokia.com:srlinux:general:common\', mod=\'srl_nokia-common\', pfx=\'srl_nokia-comm\')']/multipath/ebgp
+afi_safi_element.multipath.ebgp.maximum_paths = u64(64)
+
+# List /network-instance[name='default']/protocols/bgp/group element: 'fabric'
+group_element = bgp.group.create('fabric')
+group_element.export_policy = ['export-loopbacks']
+group_element.import_policy = ['accept-all']
+
+# List /network-instance[name='default']/protocols/bgp/neighbor element: '10.100.1.101'
+neighbor_element = bgp.neighbor.create('10.100.1.101', admin_state='enable', description='Link to spine2 [Ethernet2]', peer_as=u64(4200100101), peer_group='fabric')
+
+# List /network-instance[name='default']/protocols/bgp/neighbor element: '10.100.1.99'
+neighbor_element = bgp.neighbor.create('10.100.1.99', admin_state='enable', description='Link to spine1 [ethernet-1/2]', peer_as=u64(4200100101), peer_group='fabric')
+
+# List /network-instance (srl_nokia-network-instance) element: 'mgmt'
+network_instance_element = leaf2.network_instance.create('mgmt', type=Identityref('ip-vrf', ns='urn:nokia.com:srlinux:net-inst:network-instance', mod='srl_nokia-network-instance', pfx='srl_nokia-netinst'), admin_state='enable', description='Management network instance')
+
+# List /network-instance[name='mgmt']/interface element: 'mgmt0.0'
+interface_element_3 = network_instance_element.interface.create('mgmt0.0')
+
+# List /routing-policy/prefix-set element: 'loopbacks'
+prefix_set_element = leaf2.routing_policy.prefix_set.create('loopbacks')
+
+# List /routing-policy/prefix-set[name='loopbacks']/prefix element: '10.0.0.0/16', '32..32'
+prefix_element = prefix_set_element.prefix.create((ip_prefix='10.0.0.0/16', mask_length_range='32..32'))
+
+# List /routing-policy/policy element: 'accept-all'
+policy_element = leaf2.routing_policy.policy.create('accept-all')
+
+# List /routing-policy/policy[name='accept-all']/statement element: '10'
+statement_element = policy_element.statement.create('10')
+
+# Container: /routing-policy/policy[name='accept-all']/statement[name='10']/action
+statement_element.action_.policy_result = 'accept'
+
+# List /routing-policy/policy element: 'export-loopbacks'
+policy_element = leaf2.routing_policy.policy.create('export-loopbacks')
+
+# List /routing-policy/policy[name='export-loopbacks']/statement element: '10'
+statement_element = policy_element.statement.create('10')
+
+# Container: /routing-policy/policy[name='export-loopbacks']/statement[name='10']/match/prefix
+statement_element.match.prefix.prefix_set = 'loopbacks'
+
+# Container: /routing-policy/policy[name='export-loopbacks']/statement[name='10']/action
+statement_element.action_.policy_result = 'accept'
+
+# device leaf3
+# YANG module (prefix) and namespace:
+#   arista-netinst-augments (arista-network-instances-augments)  http://arista.com/yang/openconfig/network-instances/augments
+# Top node: /
+leaf3 = root()
+
+# List /interfaces/interface element: 'Ethernet1'
+interface_element = leaf3.interfaces.interface.create('Ethernet1')
+
+# Container: /interfaces/interface[name='Ethernet1']/config
+interface_element.config.name = 'Ethernet1'
+interface_element.config.type = Identityref('ethernetCsmacd', ns='urn:ietf:params:xml:ns:yang:iana-if-type', mod='iana-if-type', pfx='ianaift')
+interface_element.config.description = 'Server server2 [eth2] (dual-homed)'
+interface_element.config.enabled = True
+
+# List /interfaces/interface element: 'Ethernet2'
+interface_element = leaf3.interfaces.interface.create('Ethernet2')
+
+# Container: /interfaces/interface[name='Ethernet2']/config
+interface_element.config.name = 'Ethernet2'
+interface_element.config.type = Identityref('ethernetCsmacd', ns='urn:ietf:params:xml:ns:yang:iana-if-type', mod='iana-if-type', pfx='ianaift')
+interface_element.config.description = 'Server server3 [eth1] (single-homed)'
+interface_element.config.enabled = True
+
+# List /interfaces/interface element: 'Ethernet49'
+interface_element = leaf3.interfaces.interface.create('Ethernet49')
+
+# Container: /interfaces/interface[name='Ethernet49']/config
+interface_element.config.name = 'Ethernet49'
+interface_element.config.type = Identityref('ethernetCsmacd', ns='urn:ietf:params:xml:ns:yang:iana-if-type', mod='iana-if-type', pfx='ianaift')
+interface_element.config.description = 'Link to spine1 [ethernet-1/3]'
+interface_element.config.enabled = True
+
+# List /interfaces/interface[name='Ethernet49']/subinterfaces/subinterface element: 0
+subinterface_element = interface_element.subinterfaces.subinterface.create(u64(0))
+
+# Container: /interfaces/interface[name='Ethernet49']/subinterfaces/subinterface[index='0']/config
+subinterface_element.config.index = u64(0)
+subinterface_element.config.description = 'Link to spine1 [ethernet-1/3]'
+subinterface_element.config.enabled = True
+
+# List /interfaces/interface[name='Ethernet49']/subinterfaces/subinterface[index='0']/ipv4/addresses/address element: '10.100.1.226'
+address_element = subinterface_element.ipv4.addresses.address.create('10.100.1.226')
+
+# Container: /interfaces/interface[name='Ethernet49']/subinterfaces/subinterface[index='0']/ipv4/addresses/address[ip='10.100.1.226']/config
+address_element.config.ip = '10.100.1.226'
+address_element.config.prefix_length = u64(31)
+
+# Container: /interfaces/interface[name='Ethernet49']/subinterfaces/subinterface[index='0']/ipv4/config
+subinterface_element.ipv4.config.enabled = True
+
+# List /interfaces/interface element: 'Ethernet50'
+interface_element = leaf3.interfaces.interface.create('Ethernet50')
+
+# Container: /interfaces/interface[name='Ethernet50']/config
+interface_element.config.name = 'Ethernet50'
+interface_element.config.type = Identityref('ethernetCsmacd', ns='urn:ietf:params:xml:ns:yang:iana-if-type', mod='iana-if-type', pfx='ianaift')
+interface_element.config.description = 'Link to spine2 [Ethernet3]'
+interface_element.config.enabled = True
+
+# List /interfaces/interface[name='Ethernet50']/subinterfaces/subinterface element: 0
+subinterface_element = interface_element.subinterfaces.subinterface.create(u64(0))
+
+# Container: /interfaces/interface[name='Ethernet50']/subinterfaces/subinterface[index='0']/config
+subinterface_element.config.index = u64(0)
+subinterface_element.config.description = 'Link to spine2 [Ethernet3]'
+subinterface_element.config.enabled = True
+
+# List /interfaces/interface[name='Ethernet50']/subinterfaces/subinterface[index='0']/ipv4/addresses/address element: '10.100.1.228'
+address_element = subinterface_element.ipv4.addresses.address.create('10.100.1.228')
+
+# Container: /interfaces/interface[name='Ethernet50']/subinterfaces/subinterface[index='0']/ipv4/addresses/address[ip='10.100.1.228']/config
+address_element.config.ip = '10.100.1.228'
+address_element.config.prefix_length = u64(31)
+
+# Container: /interfaces/interface[name='Ethernet50']/subinterfaces/subinterface[index='0']/ipv4/config
+subinterface_element.ipv4.config.enabled = True
+
+# List /interfaces/interface element: 'Loopback0'
+interface_element = leaf3.interfaces.interface.create('Loopback0')
+
+# Container: /interfaces/interface[name='Loopback0']/config
+interface_element.config.name = 'Loopback0'
+interface_element.config.type = Identityref('softwareLoopback', ns='urn:ietf:params:xml:ns:yang:iana-if-type', mod='iana-if-type', pfx='ianaift')
+interface_element.config.enabled = True
+
+# List /interfaces/interface[name='Loopback0']/subinterfaces/subinterface element: 0
+subinterface_element = interface_element.subinterfaces.subinterface.create(u64(0))
+
+# Container: /interfaces/interface[name='Loopback0']/subinterfaces/subinterface[index='0']/config
+subinterface_element.config.index = u64(0)
+subinterface_element.config.enabled = True
+
+# List /interfaces/interface[name='Loopback0']/subinterfaces/subinterface[index='0']/ipv4/addresses/address element: '10.0.0.3'
+address_element = subinterface_element.ipv4.addresses.address.create('10.0.0.3')
+
+# Container: /interfaces/interface[name='Loopback0']/subinterfaces/subinterface[index='0']/ipv4/addresses/address[ip='10.0.0.3']/config
+address_element.config.ip = '10.0.0.3'
+address_element.config.prefix_length = u64(32)
+
+# Container: /interfaces/interface[name='Loopback0']/subinterfaces/subinterface[index='0']/ipv4/config
+subinterface_element.ipv4.config.enabled = True
+
+# List /interfaces/interface element: 'Management0'
+interface_element = leaf3.interfaces.interface.create('Management0')
+
+# Container: /interfaces/interface[name='Management0']/config
+interface_element.config.name = 'Management0'
+interface_element.config.type = Identityref('ethernetCsmacd', ns='urn:ietf:params:xml:ns:yang:iana-if-type', mod='iana-if-type', pfx='ianaift')
+interface_element.config.enabled = True
+
+# List /interfaces/interface[name='Management0']/subinterfaces/subinterface element: 0
+subinterface_element = interface_element.subinterfaces.subinterface.create(u64(0))
+
+# Container: /interfaces/interface[name='Management0']/subinterfaces/subinterface[index='0']/config
+subinterface_element.config.index = u64(0)
+subinterface_element.config.enabled = True
+
+# List /interfaces/interface[name='Management0']/subinterfaces/subinterface[index='0']/ipv4/addresses/address element: '172.31.36.13'
+address_element = subinterface_element.ipv4.addresses.address.create('172.31.36.13')
+
+# Container: /interfaces/interface[name='Management0']/subinterfaces/subinterface[index='0']/ipv4/addresses/address[ip='172.31.36.13']/config
+address_element.config.ip = '172.31.36.13'
+address_element.config.prefix_length = u64(24)
+
+# Container: /interfaces/interface[name='Management0']/subinterfaces/subinterface[index='0']/ipv4/config
+subinterface_element.ipv4.config.enabled = True
+
+# List /routing-policy/defined-sets/prefix-sets/prefix-set element: 'loopbacks'
+prefix_set_element = leaf3.routing_policy.defined_sets.prefix_sets.prefix_set.create('loopbacks')
+
+# Container: /routing-policy/defined-sets/prefix-sets/prefix-set[name='loopbacks']/config
+prefix_set_element.config.name = 'loopbacks'
+prefix_set_element.config.mode = 'IPV4'
+
+# List /routing-policy/defined-sets/prefix-sets/prefix-set[name='loopbacks']/prefixes/prefix element: '10.0.0.0/16', '32..32'
+prefix_element = prefix_set_element.prefixes.prefix.create((ip_prefix='10.0.0.0/16', masklength_range='32..32'))
+
+# Container: /routing-policy/defined-sets/prefix-sets/prefix-set[name='loopbacks']/prefixes/prefix[ip-prefix='10.0.0.0/16',masklength-range='32..32']/config
+prefix_element.config.ip_prefix = '10.0.0.0/16'
+prefix_element.config.masklength_range = '32..32'
+
+# List /routing-policy/policy-definitions/policy-definition element: 'accept-all'
+policy_definition_element = leaf3.routing_policy.policy_definitions.policy_definition.create('accept-all')
+
+# Container: /routing-policy/policy-definitions/policy-definition[name='accept-all']/config
+policy_definition_element.config.name = 'accept-all'
+
+# List /routing-policy/policy-definitions/policy-definition[name='accept-all']/statements/statement element: '10'
+statement_element = policy_definition_element.statements.statement.create('10')
+
+# Container: /routing-policy/policy-definitions/policy-definition[name='accept-all']/statements/statement[name='10']/config
+statement_element.config.name = '10'
+
+# Container: /routing-policy/policy-definitions/policy-definition[name='accept-all']/statements/statement[name='10']/actions/config
+statement_element.actions.config.policy_result = 'ACCEPT_ROUTE'
+
+# List /routing-policy/policy-definitions/policy-definition element: 'export-loopbacks'
+policy_definition_element = leaf3.routing_policy.policy_definitions.policy_definition.create('export-loopbacks')
+
+# Container: /routing-policy/policy-definitions/policy-definition[name='export-loopbacks']/config
+policy_definition_element.config.name = 'export-loopbacks'
+
+# List /routing-policy/policy-definitions/policy-definition[name='export-loopbacks']/statements/statement element: '10'
+statement_element = policy_definition_element.statements.statement.create('10')
+
+# Container: /routing-policy/policy-definitions/policy-definition[name='export-loopbacks']/statements/statement[name='10']/config
+statement_element.config.name = '10'
+
+# Container: /routing-policy/policy-definitions/policy-definition[name='export-loopbacks']/statements/statement[name='10']/conditions/match-prefix-set/config
+statement_element.conditions.match_prefix_set.config.prefix_set = 'loopbacks'
+
+# Container: /routing-policy/policy-definitions/policy-definition[name='export-loopbacks']/statements/statement[name='10']/actions/config
+statement_element.actions.config.policy_result = 'ACCEPT_ROUTE'
+
+# List /network-instances/network-instance element: 'default'
+network_instance_element = leaf3.network_instances.network_instance.create('default')
+
+# Container: /network-instances/network-instance[name='default']/config
+network_instance_element.config.name = 'default'
+network_instance_element.config.type = Identityref('DEFAULT_INSTANCE', ns='http://openconfig.net/yang/network-instance-types', mod='openconfig-network-instance-types', pfx='oc-ni-types')
+network_instance_element.config.ipv4_routing_enabled = True  # arista-netinst-augments
+
+# List /network-instances/network-instance[name='default']/table-connections/table-connection element: Identityref('DIRECTLY_CONNECTED', ns='http://openconfig.net/yang/policy-types', mod='openconfig-policy-types', pfx='oc-pol-types'), Identityref('BGP', ns='http://openconfig.net/yang/policy-types', mod='openconfig-policy-types', pfx='oc-pol-types'), Identityref('IPV4', ns='http://openconfig.net/yang/openconfig-types', mod='openconfig-types', pfx='oc-types')
+table_connection_element = network_instance_element.table_connections.table_connection.create((src_protocol=Identityref('DIRECTLY_CONNECTED', ns='http://openconfig.net/yang/policy-types', mod='openconfig-policy-types', pfx='oc-pol-types'), dst_protocol=Identityref('BGP', ns='http://openconfig.net/yang/policy-types', mod='openconfig-policy-types', pfx='oc-pol-types'), address_family=Identityref('IPV4', ns='http://openconfig.net/yang/openconfig-types', mod='openconfig-types', pfx='oc-types')))
+
+# Container: /network-instances/network-instance[name='default']/table-connections/table-connection[src-protocol='Identityref(\'DIRECTLY_CONNECTED\', ns=\'http://openconfig.net/yang/policy-types\', mod=\'openconfig-policy-types\', pfx=\'oc-pol-types\')',dst-protocol='Identityref(\'BGP\', ns=\'http://openconfig.net/yang/policy-types\', mod=\'openconfig-policy-types\', pfx=\'oc-pol-types\')',address-family='Identityref(\'IPV4\', ns=\'http://openconfig.net/yang/openconfig-types\', mod=\'openconfig-types\', pfx=\'oc-types\')']/config
+table_connection_element.config.src_protocol = Identityref('DIRECTLY_CONNECTED', ns='http://openconfig.net/yang/policy-types', mod='openconfig-policy-types', pfx='oc-pol-types')
+table_connection_element.config.address_family = Identityref('IPV4', ns='http://openconfig.net/yang/openconfig-types', mod='openconfig-types', pfx='oc-types')
+table_connection_element.config.dst_protocol = Identityref('BGP', ns='http://openconfig.net/yang/policy-types', mod='openconfig-policy-types', pfx='oc-pol-types')
+
+# List /network-instances/network-instance[name='default']/protocols/protocol element: Identityref('BGP', ns='http://openconfig.net/yang/policy-types', mod='openconfig-policy-types', pfx='oc-pol-types'), 'BGP'
+protocol_element = network_instance_element.protocols.protocol.create((identifier=Identityref('BGP', ns='http://openconfig.net/yang/policy-types', mod='openconfig-policy-types', pfx='oc-pol-types'), name='BGP'))
+
+# Container: /network-instances/network-instance[name='default']/protocols/protocol[identifier='Identityref(\'BGP\', ns=\'http://openconfig.net/yang/policy-types\', mod=\'openconfig-policy-types\', pfx=\'oc-pol-types\')',name='BGP']/config
+protocol_element.config.identifier = Identityref('BGP', ns='http://openconfig.net/yang/policy-types', mod='openconfig-policy-types', pfx='oc-pol-types')
+protocol_element.config.name = 'BGP'
+
+# Container: /network-instances/network-instance[name='default']/protocols/protocol[identifier='Identityref(\'BGP\', ns=\'http://openconfig.net/yang/policy-types\', mod=\'openconfig-policy-types\', pfx=\'oc-pol-types\')',name='BGP']/bgp/global/config
+protocol_element.bgp.global.config.as_ = u64(4200000003)
+protocol_element.bgp.global.config.router_id = '10.0.0.3'
+
+# List /network-instances/network-instance[name='default']/protocols/protocol[identifier='Identityref(\'BGP\', ns=\'http://openconfig.net/yang/policy-types\', mod=\'openconfig-policy-types\', pfx=\'oc-pol-types\')',name='BGP']/bgp/global/afi-safis/afi-safi element: Identityref('IPV4_UNICAST', ns='http://openconfig.net/yang/bgp-types', mod='openconfig-bgp-types', pfx='oc-bgp-types')
+afi_safi_element = protocol_element.bgp.global.afi_safis.afi_safi.create(Identityref('IPV4_UNICAST', ns='http://openconfig.net/yang/bgp-types', mod='openconfig-bgp-types', pfx='oc-bgp-types'))
+
+# Container: /network-instances/network-instance[name='default']/protocols/protocol[identifier='Identityref(\'BGP\', ns=\'http://openconfig.net/yang/policy-types\', mod=\'openconfig-policy-types\', pfx=\'oc-pol-types\')',name='BGP']/bgp/global/afi-safis/afi-safi[afi-safi-name='Identityref(\'IPV4_UNICAST\', ns=\'http://openconfig.net/yang/bgp-types\', mod=\'openconfig-bgp-types\', pfx=\'oc-bgp-types\')']/config
+afi_safi_element.config.afi_safi_name = Identityref('IPV4_UNICAST', ns='http://openconfig.net/yang/bgp-types', mod='openconfig-bgp-types', pfx='oc-bgp-types')
+afi_safi_element.config.enabled = True
+
+# Container: /network-instances/network-instance[name='default']/protocols/protocol[identifier='Identityref(\'BGP\', ns=\'http://openconfig.net/yang/policy-types\', mod=\'openconfig-policy-types\', pfx=\'oc-pol-types\')',name='BGP']/bgp/global/afi-safis/afi-safi[afi-safi-name='Identityref(\'IPV4_UNICAST\', ns=\'http://openconfig.net/yang/bgp-types\', mod=\'openconfig-bgp-types\', pfx=\'oc-bgp-types\')']/use-multiple-paths/ebgp/config
+afi_safi_element.use_multiple_paths.ebgp.config.maximum_paths = u64(64)
+
+# List /network-instances/network-instance[name='default']/protocols/protocol[identifier='Identityref(\'BGP\', ns=\'http://openconfig.net/yang/policy-types\', mod=\'openconfig-policy-types\', pfx=\'oc-pol-types\')',name='BGP']/bgp/neighbors/neighbor element: '10.100.1.227'
+neighbor_element = protocol_element.bgp.neighbors.neighbor.create('10.100.1.227')
+
+# Container: /network-instances/network-instance[name='default']/protocols/protocol[identifier='Identityref(\'BGP\', ns=\'http://openconfig.net/yang/policy-types\', mod=\'openconfig-policy-types\', pfx=\'oc-pol-types\')',name='BGP']/bgp/neighbors/neighbor[neighbor-address='10.100.1.227']/config
+neighbor_element.config.peer_group = 'fabric'
+neighbor_element.config.neighbor_address = '10.100.1.227'
+neighbor_element.config.enabled = True
+neighbor_element.config.peer_as = u64(4200100101)
+neighbor_element.config.description = 'Link to spine1 [ethernet-1/3]'
+
+# List /network-instances/network-instance[name='default']/protocols/protocol[identifier='Identityref(\'BGP\', ns=\'http://openconfig.net/yang/policy-types\', mod=\'openconfig-policy-types\', pfx=\'oc-pol-types\')',name='BGP']/bgp/neighbors/neighbor element: '10.100.1.229'
+neighbor_element = protocol_element.bgp.neighbors.neighbor.create('10.100.1.229')
+
+# Container: /network-instances/network-instance[name='default']/protocols/protocol[identifier='Identityref(\'BGP\', ns=\'http://openconfig.net/yang/policy-types\', mod=\'openconfig-policy-types\', pfx=\'oc-pol-types\')',name='BGP']/bgp/neighbors/neighbor[neighbor-address='10.100.1.229']/config
+neighbor_element.config.peer_group = 'fabric'
+neighbor_element.config.neighbor_address = '10.100.1.229'
+neighbor_element.config.enabled = True
+neighbor_element.config.peer_as = u64(4200100101)
+neighbor_element.config.description = 'Link to spine2 [Ethernet3]'
+
+# List /network-instances/network-instance[name='default']/protocols/protocol[identifier='Identityref(\'BGP\', ns=\'http://openconfig.net/yang/policy-types\', mod=\'openconfig-policy-types\', pfx=\'oc-pol-types\')',name='BGP']/bgp/peer-groups/peer-group element: 'fabric'
+peer_group_element = protocol_element.bgp.peer_groups.peer_group.create('fabric')
+
+# Container: /network-instances/network-instance[name='default']/protocols/protocol[identifier='Identityref(\'BGP\', ns=\'http://openconfig.net/yang/policy-types\', mod=\'openconfig-policy-types\', pfx=\'oc-pol-types\')',name='BGP']/bgp/peer-groups/peer-group[peer-group-name='fabric']/config
+peer_group_element.config.peer_group_name = 'fabric'
+
+# Container: /network-instances/network-instance[name='default']/protocols/protocol[identifier='Identityref(\'BGP\', ns=\'http://openconfig.net/yang/policy-types\', mod=\'openconfig-policy-types\', pfx=\'oc-pol-types\')',name='BGP']/bgp/peer-groups/peer-group[peer-group-name='fabric']/apply-policy/config
+peer_group_element.apply_policy.config.import_policy = ['accept-all']
+peer_group_element.apply_policy.config.export_policy = ['export-loopbacks']
+
+# List /network-instances/network-instance[name='default']/protocols/protocol[identifier='Identityref(\'BGP\', ns=\'http://openconfig.net/yang/policy-types\', mod=\'openconfig-policy-types\', pfx=\'oc-pol-types\')',name='BGP']/bgp/peer-groups/peer-group[peer-group-name='fabric']/afi-safis/afi-safi element: Identityref('IPV4_UNICAST', ns='http://openconfig.net/yang/bgp-types', mod='openconfig-bgp-types', pfx='oc-bgp-types')
+afi_safi_element_2 = peer_group_element.afi_safis.afi_safi.create(Identityref('IPV4_UNICAST', ns='http://openconfig.net/yang/bgp-types', mod='openconfig-bgp-types', pfx='oc-bgp-types'))
+
+# Container: /network-instances/network-instance[name='default']/protocols/protocol[identifier='Identityref(\'BGP\', ns=\'http://openconfig.net/yang/policy-types\', mod=\'openconfig-policy-types\', pfx=\'oc-pol-types\')',name='BGP']/bgp/peer-groups/peer-group[peer-group-name='fabric']/afi-safis/afi-safi[afi-safi-name='Identityref(\'IPV4_UNICAST\', ns=\'http://openconfig.net/yang/bgp-types\', mod=\'openconfig-bgp-types\', pfx=\'oc-bgp-types\')']/config
+afi_safi_element_2.config.afi_safi_name = Identityref('IPV4_UNICAST', ns='http://openconfig.net/yang/bgp-types', mod='openconfig-bgp-types', pfx='oc-bgp-types')
+afi_safi_element_2.config.enabled = True
+
+# Container: /system/config
+leaf3.system.config.hostname = 'leaf3'
+
+# Container: /lldp/config
+leaf3.lldp.config.enabled = True
+
+# List /lldp/interfaces/interface element: 'Ethernet1'
+interface_element_2 = leaf3.lldp.interfaces.interface.create('Ethernet1')
+
+# Container: /lldp/interfaces/interface[name='Ethernet1']/config
+interface_element_2.config.name = 'Ethernet1'
+interface_element_2.config.enabled = True
+
+# List /lldp/interfaces/interface element: 'Ethernet2'
+interface_element_2 = leaf3.lldp.interfaces.interface.create('Ethernet2')
+
+# Container: /lldp/interfaces/interface[name='Ethernet2']/config
+interface_element_2.config.name = 'Ethernet2'
+interface_element_2.config.enabled = True
+
+# List /lldp/interfaces/interface element: 'Ethernet49'
+interface_element_2 = leaf3.lldp.interfaces.interface.create('Ethernet49')
+
+# Container: /lldp/interfaces/interface[name='Ethernet49']/config
+interface_element_2.config.name = 'Ethernet49'
+interface_element_2.config.enabled = True
+
+# List /lldp/interfaces/interface element: 'Ethernet50'
+interface_element_2 = leaf3.lldp.interfaces.interface.create('Ethernet50')
+
+# Container: /lldp/interfaces/interface[name='Ethernet50']/config
+interface_element_2.config.name = 'Ethernet50'
+interface_element_2.config.enabled = True
+
+# device spine1
+# YANG module (prefix) and namespace:
+#   srl_nokia-bgp (srl_nokia-bgp)                   urn:nokia.com:srlinux:bgp:bgp
+#   srl_nokia-interfaces (srl_nokia-if)             urn:nokia.com:srlinux:chassis:interfaces
+#   srl_nokia-lldp (srl_nokia-lldp)                 urn:nokia.com:srlinux:lldp:lldp
+#   srl_nokia-network-instance (srl_nokia-netinst)  urn:nokia.com:srlinux:net-inst:network-instance
+#   srl_nokia-system-name (srl_nokia-system-name)   urn:nokia.com:srlinux:chassis:system-name
+# Top node: /
+spine1 = root()
+
+# Container: /system/name (srl_nokia-system-name)
+spine1.system.name.host_name = 'spine1'
+
+# P-container: /system/lldp (srl_nokia-lldp)
+lldp = spine1.system.create_lldp(admin_state='enable')
+
+# List /system/lldp/interface element: 'ethernet-1/1'
+interface_element = lldp.interface.create('ethernet-1/1', admin_state='enable')
+
+# List /system/lldp/interface element: 'ethernet-1/2'
+interface_element = lldp.interface.create('ethernet-1/2', admin_state='enable')
+
+# List /system/lldp/interface element: 'ethernet-1/3'
+interface_element = lldp.interface.create('ethernet-1/3', admin_state='enable')
+
+# List /system/lldp/interface element: 'mgmt0'
+interface_element = lldp.interface.create('mgmt0', admin_state='enable')
+
+# List /interface (srl_nokia-interfaces) element: 'ethernet-1/1'
+interface_element_2 = spine1.interface.create('ethernet-1/1', description='Link to leaf1 [ethernet-1/49]', admin_state='enable')
+
+# List /interface[name='ethernet-1/1']/subinterface element: 0
+subinterface_element = interface_element_2.subinterface.create(u64(0), description='Link to leaf1 [ethernet-1/49]', admin_state='enable')
+
+# Container: /interface[name='ethernet-1/1']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# List /interface[name='ethernet-1/1']/subinterface[index='0']/ipv4/address element: '10.100.0.227/31'
+address_element = subinterface_element.ipv4.address.create('10.100.0.227/31')
+
+# List /interface (srl_nokia-interfaces) element: 'ethernet-1/2'
+interface_element_2 = spine1.interface.create('ethernet-1/2', description='Link to leaf2 [ethernet-1/49]', admin_state='enable')
+
+# List /interface[name='ethernet-1/2']/subinterface element: 0
+subinterface_element = interface_element_2.subinterface.create(u64(0), description='Link to leaf2 [ethernet-1/49]', admin_state='enable')
+
+# Container: /interface[name='ethernet-1/2']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# List /interface[name='ethernet-1/2']/subinterface[index='0']/ipv4/address element: '10.100.1.99/31'
+address_element = subinterface_element.ipv4.address.create('10.100.1.99/31')
+
+# List /interface (srl_nokia-interfaces) element: 'ethernet-1/3'
+interface_element_2 = spine1.interface.create('ethernet-1/3', description='Link to leaf3 [Ethernet49]', admin_state='enable')
+
+# List /interface[name='ethernet-1/3']/subinterface element: 0
+subinterface_element = interface_element_2.subinterface.create(u64(0), description='Link to leaf3 [Ethernet49]', admin_state='enable')
+
+# Container: /interface[name='ethernet-1/3']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# List /interface[name='ethernet-1/3']/subinterface[index='0']/ipv4/address element: '10.100.1.227/31'
+address_element = subinterface_element.ipv4.address.create('10.100.1.227/31')
+
+# List /interface (srl_nokia-interfaces) element: 'mgmt0'
+interface_element_2 = spine1.interface.create('mgmt0', admin_state='enable')
+
+# List /interface[name='mgmt0']/subinterface element: 0
+subinterface_element = interface_element_2.subinterface.create(u64(0), admin_state='enable')
+
+# Container: /interface[name='mgmt0']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# Container: /interface[name='mgmt0']/subinterface[index='0']/ipv6
+subinterface_element.ipv6.admin_state = 'enable'
+
+# List /interface (srl_nokia-interfaces) element: 'system0'
+interface_element_2 = spine1.interface.create('system0')
+
+# List /interface[name='system0']/subinterface element: 0
+subinterface_element = interface_element_2.subinterface.create(u64(0))
+
+# Container: /interface[name='system0']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# List /interface[name='system0']/subinterface[index='0']/ipv4/address element: '10.0.0.11/32'
+address_element = subinterface_element.ipv4.address.create('10.0.0.11/32')
+
+# List /network-instance (srl_nokia-network-instance) element: 'default'
+network_instance_element = spine1.network_instance.create('default')
+
+# List /network-instance[name='default']/interface element: 'ethernet-1/1.0'
+interface_element_3 = network_instance_element.interface.create('ethernet-1/1.0')
+
+# List /network-instance[name='default']/interface element: 'ethernet-1/2.0'
+interface_element_3 = network_instance_element.interface.create('ethernet-1/2.0')
+
+# List /network-instance[name='default']/interface element: 'ethernet-1/3.0'
+interface_element_3 = network_instance_element.interface.create('ethernet-1/3.0')
+
+# List /network-instance[name='default']/interface element: 'system0.0'
+interface_element_3 = network_instance_element.interface.create('system0.0')
+
+# P-container: /network-instance[name='default']/protocols/bgp (srl_nokia-bgp)
+bgp = network_instance_element.protocols.create_bgp(autonomous_system=u64(4200100101), router_id='10.0.0.11')
+
+# List /network-instance[name='default']/protocols/bgp/afi-safi element: Identityref('ipv4-unicast', ns='urn:nokia.com:srlinux:general:common', mod='srl_nokia-common', pfx='srl_nokia-comm')
+afi_safi_element = bgp.afi_safi.create(Identityref('ipv4-unicast', ns='urn:nokia.com:srlinux:general:common', mod='srl_nokia-common', pfx='srl_nokia-comm'), admin_state='enable')
+
+# Container: /network-instance[name='default']/protocols/bgp/afi-safi[afi-safi-name='Identityref(\'ipv4-unicast\', ns=\'urn:nokia.com:srlinux:general:common\', mod=\'srl_nokia-common\', pfx=\'srl_nokia-comm\')']/multipath/ebgp
+afi_safi_element.multipath.ebgp.maximum_paths = u64(64)
+
+# List /network-instance[name='default']/protocols/bgp/group element: 'fabric'
+group_element = bgp.group.create('fabric')
+group_element.export_policy = ['export-loopbacks']
+group_element.import_policy = ['accept-all']
+
+# List /network-instance[name='default']/protocols/bgp/neighbor element: '10.100.0.226'
+neighbor_element = bgp.neighbor.create('10.100.0.226', admin_state='enable', description='Link to leaf1 [ethernet-1/49]', peer_as=u64(4200000001), peer_group='fabric')
+
+# List /network-instance[name='default']/protocols/bgp/neighbor element: '10.100.1.226'
+neighbor_element = bgp.neighbor.create('10.100.1.226', admin_state='enable', description='Link to leaf3 [Ethernet49]', peer_as=u64(4200000003), peer_group='fabric')
+
+# List /network-instance[name='default']/protocols/bgp/neighbor element: '10.100.1.98'
+neighbor_element = bgp.neighbor.create('10.100.1.98', admin_state='enable', description='Link to leaf2 [ethernet-1/49]', peer_as=u64(4200000002), peer_group='fabric')
+
+# List /network-instance (srl_nokia-network-instance) element: 'mgmt'
+network_instance_element = spine1.network_instance.create('mgmt', type=Identityref('ip-vrf', ns='urn:nokia.com:srlinux:net-inst:network-instance', mod='srl_nokia-network-instance', pfx='srl_nokia-netinst'), admin_state='enable', description='Management network instance')
+
+# List /network-instance[name='mgmt']/interface element: 'mgmt0.0'
+interface_element_3 = network_instance_element.interface.create('mgmt0.0')
+
+# List /routing-policy/prefix-set element: 'loopbacks'
+prefix_set_element = spine1.routing_policy.prefix_set.create('loopbacks')
+
+# List /routing-policy/prefix-set[name='loopbacks']/prefix element: '10.0.0.0/16', '32..32'
+prefix_element = prefix_set_element.prefix.create((ip_prefix='10.0.0.0/16', mask_length_range='32..32'))
+
+# List /routing-policy/policy element: 'accept-all'
+policy_element = spine1.routing_policy.policy.create('accept-all')
+
+# List /routing-policy/policy[name='accept-all']/statement element: '10'
+statement_element = policy_element.statement.create('10')
+
+# Container: /routing-policy/policy[name='accept-all']/statement[name='10']/action
+statement_element.action_.policy_result = 'accept'
+
+# List /routing-policy/policy element: 'export-loopbacks'
+policy_element = spine1.routing_policy.policy.create('export-loopbacks')
+
+# List /routing-policy/policy[name='export-loopbacks']/statement element: '10'
+statement_element = policy_element.statement.create('10')
+
+# Container: /routing-policy/policy[name='export-loopbacks']/statement[name='10']/match/prefix
+statement_element.match.prefix.prefix_set = 'loopbacks'
+
+# Container: /routing-policy/policy[name='export-loopbacks']/statement[name='10']/action
+statement_element.action_.policy_result = 'accept'
+
+# device spine2
+# YANG module (prefix) and namespace:
+#   arista-netinst-augments (arista-network-instances-augments)  http://arista.com/yang/openconfig/network-instances/augments
+# Top node: /
+spine2 = root()
+
+# List /interfaces/interface element: 'Ethernet1'
+interface_element = spine2.interfaces.interface.create('Ethernet1')
+
+# Container: /interfaces/interface[name='Ethernet1']/config
+interface_element.config.name = 'Ethernet1'
+interface_element.config.type = Identityref('ethernetCsmacd', ns='urn:ietf:params:xml:ns:yang:iana-if-type', mod='iana-if-type', pfx='ianaift')
+interface_element.config.description = 'Link to leaf1 [ethernet-1/50]'
+interface_element.config.enabled = True
+
+# List /interfaces/interface[name='Ethernet1']/subinterfaces/subinterface element: 0
+subinterface_element = interface_element.subinterfaces.subinterface.create(u64(0))
+
+# Container: /interfaces/interface[name='Ethernet1']/subinterfaces/subinterface[index='0']/config
+subinterface_element.config.index = u64(0)
+subinterface_element.config.description = 'Link to leaf1 [ethernet-1/50]'
+subinterface_element.config.enabled = True
+
+# List /interfaces/interface[name='Ethernet1']/subinterfaces/subinterface[index='0']/ipv4/addresses/address element: '10.100.0.229'
+address_element = subinterface_element.ipv4.addresses.address.create('10.100.0.229')
+
+# Container: /interfaces/interface[name='Ethernet1']/subinterfaces/subinterface[index='0']/ipv4/addresses/address[ip='10.100.0.229']/config
+address_element.config.ip = '10.100.0.229'
+address_element.config.prefix_length = u64(31)
+
+# Container: /interfaces/interface[name='Ethernet1']/subinterfaces/subinterface[index='0']/ipv4/config
+subinterface_element.ipv4.config.enabled = True
+
+# List /interfaces/interface element: 'Ethernet2'
+interface_element = spine2.interfaces.interface.create('Ethernet2')
+
+# Container: /interfaces/interface[name='Ethernet2']/config
+interface_element.config.name = 'Ethernet2'
+interface_element.config.type = Identityref('ethernetCsmacd', ns='urn:ietf:params:xml:ns:yang:iana-if-type', mod='iana-if-type', pfx='ianaift')
+interface_element.config.description = 'Link to leaf2 [ethernet-1/50]'
+interface_element.config.enabled = True
+
+# List /interfaces/interface[name='Ethernet2']/subinterfaces/subinterface element: 0
+subinterface_element = interface_element.subinterfaces.subinterface.create(u64(0))
+
+# Container: /interfaces/interface[name='Ethernet2']/subinterfaces/subinterface[index='0']/config
+subinterface_element.config.index = u64(0)
+subinterface_element.config.description = 'Link to leaf2 [ethernet-1/50]'
+subinterface_element.config.enabled = True
+
+# List /interfaces/interface[name='Ethernet2']/subinterfaces/subinterface[index='0']/ipv4/addresses/address element: '10.100.1.101'
+address_element = subinterface_element.ipv4.addresses.address.create('10.100.1.101')
+
+# Container: /interfaces/interface[name='Ethernet2']/subinterfaces/subinterface[index='0']/ipv4/addresses/address[ip='10.100.1.101']/config
+address_element.config.ip = '10.100.1.101'
+address_element.config.prefix_length = u64(31)
+
+# Container: /interfaces/interface[name='Ethernet2']/subinterfaces/subinterface[index='0']/ipv4/config
+subinterface_element.ipv4.config.enabled = True
+
+# List /interfaces/interface element: 'Ethernet3'
+interface_element = spine2.interfaces.interface.create('Ethernet3')
+
+# Container: /interfaces/interface[name='Ethernet3']/config
+interface_element.config.name = 'Ethernet3'
+interface_element.config.type = Identityref('ethernetCsmacd', ns='urn:ietf:params:xml:ns:yang:iana-if-type', mod='iana-if-type', pfx='ianaift')
+interface_element.config.description = 'Link to leaf3 [Ethernet50]'
+interface_element.config.enabled = True
+
+# List /interfaces/interface[name='Ethernet3']/subinterfaces/subinterface element: 0
+subinterface_element = interface_element.subinterfaces.subinterface.create(u64(0))
+
+# Container: /interfaces/interface[name='Ethernet3']/subinterfaces/subinterface[index='0']/config
+subinterface_element.config.index = u64(0)
+subinterface_element.config.description = 'Link to leaf3 [Ethernet50]'
+subinterface_element.config.enabled = True
+
+# List /interfaces/interface[name='Ethernet3']/subinterfaces/subinterface[index='0']/ipv4/addresses/address element: '10.100.1.229'
+address_element = subinterface_element.ipv4.addresses.address.create('10.100.1.229')
+
+# Container: /interfaces/interface[name='Ethernet3']/subinterfaces/subinterface[index='0']/ipv4/addresses/address[ip='10.100.1.229']/config
+address_element.config.ip = '10.100.1.229'
+address_element.config.prefix_length = u64(31)
+
+# Container: /interfaces/interface[name='Ethernet3']/subinterfaces/subinterface[index='0']/ipv4/config
+subinterface_element.ipv4.config.enabled = True
+
+# List /interfaces/interface element: 'Loopback0'
+interface_element = spine2.interfaces.interface.create('Loopback0')
+
+# Container: /interfaces/interface[name='Loopback0']/config
+interface_element.config.name = 'Loopback0'
+interface_element.config.type = Identityref('softwareLoopback', ns='urn:ietf:params:xml:ns:yang:iana-if-type', mod='iana-if-type', pfx='ianaift')
+interface_element.config.enabled = True
+
+# List /interfaces/interface[name='Loopback0']/subinterfaces/subinterface element: 0
+subinterface_element = interface_element.subinterfaces.subinterface.create(u64(0))
+
+# Container: /interfaces/interface[name='Loopback0']/subinterfaces/subinterface[index='0']/config
+subinterface_element.config.index = u64(0)
+subinterface_element.config.enabled = True
+
+# List /interfaces/interface[name='Loopback0']/subinterfaces/subinterface[index='0']/ipv4/addresses/address element: '10.0.0.12'
+address_element = subinterface_element.ipv4.addresses.address.create('10.0.0.12')
+
+# Container: /interfaces/interface[name='Loopback0']/subinterfaces/subinterface[index='0']/ipv4/addresses/address[ip='10.0.0.12']/config
+address_element.config.ip = '10.0.0.12'
+address_element.config.prefix_length = u64(32)
+
+# Container: /interfaces/interface[name='Loopback0']/subinterfaces/subinterface[index='0']/ipv4/config
+subinterface_element.ipv4.config.enabled = True
+
+# List /interfaces/interface element: 'Management0'
+interface_element = spine2.interfaces.interface.create('Management0')
+
+# Container: /interfaces/interface[name='Management0']/config
+interface_element.config.name = 'Management0'
+interface_element.config.type = Identityref('ethernetCsmacd', ns='urn:ietf:params:xml:ns:yang:iana-if-type', mod='iana-if-type', pfx='ianaift')
+interface_element.config.enabled = True
+
+# List /interfaces/interface[name='Management0']/subinterfaces/subinterface element: 0
+subinterface_element = interface_element.subinterfaces.subinterface.create(u64(0))
+
+# Container: /interfaces/interface[name='Management0']/subinterfaces/subinterface[index='0']/config
+subinterface_element.config.index = u64(0)
+subinterface_element.config.enabled = True
+
+# List /interfaces/interface[name='Management0']/subinterfaces/subinterface[index='0']/ipv4/addresses/address element: '172.31.36.22'
+address_element = subinterface_element.ipv4.addresses.address.create('172.31.36.22')
+
+# Container: /interfaces/interface[name='Management0']/subinterfaces/subinterface[index='0']/ipv4/addresses/address[ip='172.31.36.22']/config
+address_element.config.ip = '172.31.36.22'
+address_element.config.prefix_length = u64(24)
+
+# Container: /interfaces/interface[name='Management0']/subinterfaces/subinterface[index='0']/ipv4/config
+subinterface_element.ipv4.config.enabled = True
+
+# List /routing-policy/defined-sets/prefix-sets/prefix-set element: 'loopbacks'
+prefix_set_element = spine2.routing_policy.defined_sets.prefix_sets.prefix_set.create('loopbacks')
+
+# Container: /routing-policy/defined-sets/prefix-sets/prefix-set[name='loopbacks']/config
+prefix_set_element.config.name = 'loopbacks'
+prefix_set_element.config.mode = 'IPV4'
+
+# List /routing-policy/defined-sets/prefix-sets/prefix-set[name='loopbacks']/prefixes/prefix element: '10.0.0.0/16', '32..32'
+prefix_element = prefix_set_element.prefixes.prefix.create((ip_prefix='10.0.0.0/16', masklength_range='32..32'))
+
+# Container: /routing-policy/defined-sets/prefix-sets/prefix-set[name='loopbacks']/prefixes/prefix[ip-prefix='10.0.0.0/16',masklength-range='32..32']/config
+prefix_element.config.ip_prefix = '10.0.0.0/16'
+prefix_element.config.masklength_range = '32..32'
+
+# List /routing-policy/policy-definitions/policy-definition element: 'accept-all'
+policy_definition_element = spine2.routing_policy.policy_definitions.policy_definition.create('accept-all')
+
+# Container: /routing-policy/policy-definitions/policy-definition[name='accept-all']/config
+policy_definition_element.config.name = 'accept-all'
+
+# List /routing-policy/policy-definitions/policy-definition[name='accept-all']/statements/statement element: '10'
+statement_element = policy_definition_element.statements.statement.create('10')
+
+# Container: /routing-policy/policy-definitions/policy-definition[name='accept-all']/statements/statement[name='10']/config
+statement_element.config.name = '10'
+
+# Container: /routing-policy/policy-definitions/policy-definition[name='accept-all']/statements/statement[name='10']/actions/config
+statement_element.actions.config.policy_result = 'ACCEPT_ROUTE'
+
+# List /routing-policy/policy-definitions/policy-definition element: 'export-loopbacks'
+policy_definition_element = spine2.routing_policy.policy_definitions.policy_definition.create('export-loopbacks')
+
+# Container: /routing-policy/policy-definitions/policy-definition[name='export-loopbacks']/config
+policy_definition_element.config.name = 'export-loopbacks'
+
+# List /routing-policy/policy-definitions/policy-definition[name='export-loopbacks']/statements/statement element: '10'
+statement_element = policy_definition_element.statements.statement.create('10')
+
+# Container: /routing-policy/policy-definitions/policy-definition[name='export-loopbacks']/statements/statement[name='10']/config
+statement_element.config.name = '10'
+
+# Container: /routing-policy/policy-definitions/policy-definition[name='export-loopbacks']/statements/statement[name='10']/conditions/match-prefix-set/config
+statement_element.conditions.match_prefix_set.config.prefix_set = 'loopbacks'
+
+# Container: /routing-policy/policy-definitions/policy-definition[name='export-loopbacks']/statements/statement[name='10']/actions/config
+statement_element.actions.config.policy_result = 'ACCEPT_ROUTE'
+
+# List /network-instances/network-instance element: 'default'
+network_instance_element = spine2.network_instances.network_instance.create('default')
+
+# Container: /network-instances/network-instance[name='default']/config
+network_instance_element.config.name = 'default'
+network_instance_element.config.type = Identityref('DEFAULT_INSTANCE', ns='http://openconfig.net/yang/network-instance-types', mod='openconfig-network-instance-types', pfx='oc-ni-types')
+network_instance_element.config.ipv4_routing_enabled = True  # arista-netinst-augments
+
+# List /network-instances/network-instance[name='default']/table-connections/table-connection element: Identityref('DIRECTLY_CONNECTED', ns='http://openconfig.net/yang/policy-types', mod='openconfig-policy-types', pfx='oc-pol-types'), Identityref('BGP', ns='http://openconfig.net/yang/policy-types', mod='openconfig-policy-types', pfx='oc-pol-types'), Identityref('IPV4', ns='http://openconfig.net/yang/openconfig-types', mod='openconfig-types', pfx='oc-types')
+table_connection_element = network_instance_element.table_connections.table_connection.create((src_protocol=Identityref('DIRECTLY_CONNECTED', ns='http://openconfig.net/yang/policy-types', mod='openconfig-policy-types', pfx='oc-pol-types'), dst_protocol=Identityref('BGP', ns='http://openconfig.net/yang/policy-types', mod='openconfig-policy-types', pfx='oc-pol-types'), address_family=Identityref('IPV4', ns='http://openconfig.net/yang/openconfig-types', mod='openconfig-types', pfx='oc-types')))
+
+# Container: /network-instances/network-instance[name='default']/table-connections/table-connection[src-protocol='Identityref(\'DIRECTLY_CONNECTED\', ns=\'http://openconfig.net/yang/policy-types\', mod=\'openconfig-policy-types\', pfx=\'oc-pol-types\')',dst-protocol='Identityref(\'BGP\', ns=\'http://openconfig.net/yang/policy-types\', mod=\'openconfig-policy-types\', pfx=\'oc-pol-types\')',address-family='Identityref(\'IPV4\', ns=\'http://openconfig.net/yang/openconfig-types\', mod=\'openconfig-types\', pfx=\'oc-types\')']/config
+table_connection_element.config.src_protocol = Identityref('DIRECTLY_CONNECTED', ns='http://openconfig.net/yang/policy-types', mod='openconfig-policy-types', pfx='oc-pol-types')
+table_connection_element.config.address_family = Identityref('IPV4', ns='http://openconfig.net/yang/openconfig-types', mod='openconfig-types', pfx='oc-types')
+table_connection_element.config.dst_protocol = Identityref('BGP', ns='http://openconfig.net/yang/policy-types', mod='openconfig-policy-types', pfx='oc-pol-types')
+
+# List /network-instances/network-instance[name='default']/protocols/protocol element: Identityref('BGP', ns='http://openconfig.net/yang/policy-types', mod='openconfig-policy-types', pfx='oc-pol-types'), 'BGP'
+protocol_element = network_instance_element.protocols.protocol.create((identifier=Identityref('BGP', ns='http://openconfig.net/yang/policy-types', mod='openconfig-policy-types', pfx='oc-pol-types'), name='BGP'))
+
+# Container: /network-instances/network-instance[name='default']/protocols/protocol[identifier='Identityref(\'BGP\', ns=\'http://openconfig.net/yang/policy-types\', mod=\'openconfig-policy-types\', pfx=\'oc-pol-types\')',name='BGP']/config
+protocol_element.config.identifier = Identityref('BGP', ns='http://openconfig.net/yang/policy-types', mod='openconfig-policy-types', pfx='oc-pol-types')
+protocol_element.config.name = 'BGP'
+
+# Container: /network-instances/network-instance[name='default']/protocols/protocol[identifier='Identityref(\'BGP\', ns=\'http://openconfig.net/yang/policy-types\', mod=\'openconfig-policy-types\', pfx=\'oc-pol-types\')',name='BGP']/bgp/global/config
+protocol_element.bgp.global.config.as_ = u64(4200100101)
+protocol_element.bgp.global.config.router_id = '10.0.0.12'
+
+# List /network-instances/network-instance[name='default']/protocols/protocol[identifier='Identityref(\'BGP\', ns=\'http://openconfig.net/yang/policy-types\', mod=\'openconfig-policy-types\', pfx=\'oc-pol-types\')',name='BGP']/bgp/global/afi-safis/afi-safi element: Identityref('IPV4_UNICAST', ns='http://openconfig.net/yang/bgp-types', mod='openconfig-bgp-types', pfx='oc-bgp-types')
+afi_safi_element = protocol_element.bgp.global.afi_safis.afi_safi.create(Identityref('IPV4_UNICAST', ns='http://openconfig.net/yang/bgp-types', mod='openconfig-bgp-types', pfx='oc-bgp-types'))
+
+# Container: /network-instances/network-instance[name='default']/protocols/protocol[identifier='Identityref(\'BGP\', ns=\'http://openconfig.net/yang/policy-types\', mod=\'openconfig-policy-types\', pfx=\'oc-pol-types\')',name='BGP']/bgp/global/afi-safis/afi-safi[afi-safi-name='Identityref(\'IPV4_UNICAST\', ns=\'http://openconfig.net/yang/bgp-types\', mod=\'openconfig-bgp-types\', pfx=\'oc-bgp-types\')']/config
+afi_safi_element.config.afi_safi_name = Identityref('IPV4_UNICAST', ns='http://openconfig.net/yang/bgp-types', mod='openconfig-bgp-types', pfx='oc-bgp-types')
+afi_safi_element.config.enabled = True
+
+# Container: /network-instances/network-instance[name='default']/protocols/protocol[identifier='Identityref(\'BGP\', ns=\'http://openconfig.net/yang/policy-types\', mod=\'openconfig-policy-types\', pfx=\'oc-pol-types\')',name='BGP']/bgp/global/afi-safis/afi-safi[afi-safi-name='Identityref(\'IPV4_UNICAST\', ns=\'http://openconfig.net/yang/bgp-types\', mod=\'openconfig-bgp-types\', pfx=\'oc-bgp-types\')']/use-multiple-paths/ebgp/config
+afi_safi_element.use_multiple_paths.ebgp.config.maximum_paths = u64(64)
+
+# List /network-instances/network-instance[name='default']/protocols/protocol[identifier='Identityref(\'BGP\', ns=\'http://openconfig.net/yang/policy-types\', mod=\'openconfig-policy-types\', pfx=\'oc-pol-types\')',name='BGP']/bgp/neighbors/neighbor element: '10.100.0.228'
+neighbor_element = protocol_element.bgp.neighbors.neighbor.create('10.100.0.228')
+
+# Container: /network-instances/network-instance[name='default']/protocols/protocol[identifier='Identityref(\'BGP\', ns=\'http://openconfig.net/yang/policy-types\', mod=\'openconfig-policy-types\', pfx=\'oc-pol-types\')',name='BGP']/bgp/neighbors/neighbor[neighbor-address='10.100.0.228']/config
+neighbor_element.config.peer_group = 'fabric'
+neighbor_element.config.neighbor_address = '10.100.0.228'
+neighbor_element.config.enabled = True
+neighbor_element.config.peer_as = u64(4200000001)
+neighbor_element.config.description = 'Link to leaf1 [ethernet-1/50]'
+
+# List /network-instances/network-instance[name='default']/protocols/protocol[identifier='Identityref(\'BGP\', ns=\'http://openconfig.net/yang/policy-types\', mod=\'openconfig-policy-types\', pfx=\'oc-pol-types\')',name='BGP']/bgp/neighbors/neighbor element: '10.100.1.100'
+neighbor_element = protocol_element.bgp.neighbors.neighbor.create('10.100.1.100')
+
+# Container: /network-instances/network-instance[name='default']/protocols/protocol[identifier='Identityref(\'BGP\', ns=\'http://openconfig.net/yang/policy-types\', mod=\'openconfig-policy-types\', pfx=\'oc-pol-types\')',name='BGP']/bgp/neighbors/neighbor[neighbor-address='10.100.1.100']/config
+neighbor_element.config.peer_group = 'fabric'
+neighbor_element.config.neighbor_address = '10.100.1.100'
+neighbor_element.config.enabled = True
+neighbor_element.config.peer_as = u64(4200000002)
+neighbor_element.config.description = 'Link to leaf2 [ethernet-1/50]'
+
+# List /network-instances/network-instance[name='default']/protocols/protocol[identifier='Identityref(\'BGP\', ns=\'http://openconfig.net/yang/policy-types\', mod=\'openconfig-policy-types\', pfx=\'oc-pol-types\')',name='BGP']/bgp/neighbors/neighbor element: '10.100.1.228'
+neighbor_element = protocol_element.bgp.neighbors.neighbor.create('10.100.1.228')
+
+# Container: /network-instances/network-instance[name='default']/protocols/protocol[identifier='Identityref(\'BGP\', ns=\'http://openconfig.net/yang/policy-types\', mod=\'openconfig-policy-types\', pfx=\'oc-pol-types\')',name='BGP']/bgp/neighbors/neighbor[neighbor-address='10.100.1.228']/config
+neighbor_element.config.peer_group = 'fabric'
+neighbor_element.config.neighbor_address = '10.100.1.228'
+neighbor_element.config.enabled = True
+neighbor_element.config.peer_as = u64(4200000003)
+neighbor_element.config.description = 'Link to leaf3 [Ethernet50]'
+
+# List /network-instances/network-instance[name='default']/protocols/protocol[identifier='Identityref(\'BGP\', ns=\'http://openconfig.net/yang/policy-types\', mod=\'openconfig-policy-types\', pfx=\'oc-pol-types\')',name='BGP']/bgp/peer-groups/peer-group element: 'fabric'
+peer_group_element = protocol_element.bgp.peer_groups.peer_group.create('fabric')
+
+# Container: /network-instances/network-instance[name='default']/protocols/protocol[identifier='Identityref(\'BGP\', ns=\'http://openconfig.net/yang/policy-types\', mod=\'openconfig-policy-types\', pfx=\'oc-pol-types\')',name='BGP']/bgp/peer-groups/peer-group[peer-group-name='fabric']/config
+peer_group_element.config.peer_group_name = 'fabric'
+
+# Container: /network-instances/network-instance[name='default']/protocols/protocol[identifier='Identityref(\'BGP\', ns=\'http://openconfig.net/yang/policy-types\', mod=\'openconfig-policy-types\', pfx=\'oc-pol-types\')',name='BGP']/bgp/peer-groups/peer-group[peer-group-name='fabric']/apply-policy/config
+peer_group_element.apply_policy.config.import_policy = ['accept-all']
+peer_group_element.apply_policy.config.export_policy = ['export-loopbacks']
+
+# List /network-instances/network-instance[name='default']/protocols/protocol[identifier='Identityref(\'BGP\', ns=\'http://openconfig.net/yang/policy-types\', mod=\'openconfig-policy-types\', pfx=\'oc-pol-types\')',name='BGP']/bgp/peer-groups/peer-group[peer-group-name='fabric']/afi-safis/afi-safi element: Identityref('IPV4_UNICAST', ns='http://openconfig.net/yang/bgp-types', mod='openconfig-bgp-types', pfx='oc-bgp-types')
+afi_safi_element_2 = peer_group_element.afi_safis.afi_safi.create(Identityref('IPV4_UNICAST', ns='http://openconfig.net/yang/bgp-types', mod='openconfig-bgp-types', pfx='oc-bgp-types'))
+
+# Container: /network-instances/network-instance[name='default']/protocols/protocol[identifier='Identityref(\'BGP\', ns=\'http://openconfig.net/yang/policy-types\', mod=\'openconfig-policy-types\', pfx=\'oc-pol-types\')',name='BGP']/bgp/peer-groups/peer-group[peer-group-name='fabric']/afi-safis/afi-safi[afi-safi-name='Identityref(\'IPV4_UNICAST\', ns=\'http://openconfig.net/yang/bgp-types\', mod=\'openconfig-bgp-types\', pfx=\'oc-bgp-types\')']/config
+afi_safi_element_2.config.afi_safi_name = Identityref('IPV4_UNICAST', ns='http://openconfig.net/yang/bgp-types', mod='openconfig-bgp-types', pfx='oc-bgp-types')
+afi_safi_element_2.config.enabled = True
+
+# Container: /system/config
+spine2.system.config.hostname = 'spine2'
+
+# Container: /lldp/config
+spine2.lldp.config.enabled = True
+
+# List /lldp/interfaces/interface element: 'Ethernet1'
+interface_element_2 = spine2.lldp.interfaces.interface.create('Ethernet1')
+
+# Container: /lldp/interfaces/interface[name='Ethernet1']/config
+interface_element_2.config.name = 'Ethernet1'
+interface_element_2.config.enabled = True
+
+# List /lldp/interfaces/interface element: 'Ethernet2'
+interface_element_2 = spine2.lldp.interfaces.interface.create('Ethernet2')
+
+# Container: /lldp/interfaces/interface[name='Ethernet2']/config
+interface_element_2.config.name = 'Ethernet2'
+interface_element_2.config.enabled = True
+
+# List /lldp/interfaces/interface element: 'Ethernet3'
+interface_element_2 = spine2.lldp.interfaces.interface.create('Ethernet3')
+
+# Container: /lldp/interfaces/interface[name='Ethernet3']/config
+interface_element_2.config.name = 'Ethernet3'
+interface_element_2.config.enabled = True
