@@ -7,9 +7,10 @@ import dorsi.layers.y_0 as cfs_layer
 import stratoweave.test_rig as swts
 
 SRL = "NokiaSRLinux_25_3_2"
+EOS = "AristaEOS_4_36_3_2M"
 
-def add_switch(fabric: cfs_layer.ip_fabric__ip_fabric__fabric_entry, name: str, id: u64, role: str, pod: ?str=None, plane: ?str=None, management_address: ?str=None):
-    s = fabric.switch.create(name, id, SRL, role)
+def add_switch(fabric: cfs_layer.ip_fabric__ip_fabric__fabric_entry, name: str, id: u64, role: str, pod: ?str=None, plane: ?str=None, device_type: str=SRL, management_address: ?str=None):
+    s = fabric.switch.create(name, id, device_type, role)
     s.mock = True
     s.management_address = management_address
     if pod is not None:
@@ -49,6 +50,28 @@ def three_stage():
         add_link(f, leaf, "ethernet-1/49", "spine1", "ethernet-1/{n + 1}")
         add_link(f, leaf, "ethernet-1/50", "spine2", "ethernet-1/{n + 1}")
     add_servers(f)
+    return root
+
+# The three-stage Clos of the fabric-3stage-mixed lab: leaf3 and spine2 run
+# Arista EOS (ports EthernetN), the rest SR Linux. It has every kind of link:
+# SR Linux to EOS both ways and EOS to EOS (leaf3 to spine2). EOS keeps its
+# management address in configuration, so the EOS switches have one.
+def three_stage_mixed():
+    root = _empty_root()
+    f = root.ip_fabric.fabric.create("dc1")
+    add_switch(f, "leaf1", 1, "leaf")
+    add_switch(f, "leaf2", 2, "leaf")
+    add_switch(f, "leaf3", 3, "leaf", device_type=EOS, management_address="172.31.36.13/24")
+    add_switch(f, "spine1", 11, "spine")
+    add_switch(f, "spine2", 12, "spine", device_type=EOS, management_address="172.31.36.22/24")
+    for n, leaf in enumerate(["leaf1", "leaf2"]):
+        add_link(f, leaf, "ethernet-1/49", "spine1", "ethernet-1/{n + 1}")
+        add_link(f, leaf, "ethernet-1/50", "spine2", "Ethernet{n + 1}")
+    add_link(f, "leaf3", "Ethernet49", "spine1", "ethernet-1/3")
+    add_link(f, "leaf3", "Ethernet50", "spine2", "Ethernet3")
+    add_server(f, "server1", "dual-homed", [("leaf1", "ethernet-1/1", "eth1"), ("leaf2", "ethernet-1/1", "eth2")])
+    add_server(f, "server2", "dual-homed", [("leaf2", "ethernet-1/2", "eth1"), ("leaf3", "Ethernet1", "eth2")])
+    add_server(f, "server3", "single-homed", [("leaf3", "Ethernet2", "eth1")])
     return root
 
 # Five-stage Clos: two pods, each with two leaves and one spine per plane.
@@ -98,6 +121,10 @@ actor FabricTester(t: testing.AsyncT, input_config: gdata.Node):
 actor _test_fabric_three_stage(t: testing.AsyncT):
     t.timeout(30.0)
     FabricTester(t, three_stage().to_gdata())
+
+actor _test_fabric_three_stage_mixed(t: testing.AsyncT):
+    t.timeout(30.0)
+    FabricTester(t, three_stage_mixed().to_gdata())
 
 actor _test_fabric_five_stage(t: testing.AsyncT):
     t.timeout(30.0)
