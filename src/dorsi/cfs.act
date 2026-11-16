@@ -52,6 +52,39 @@ def fabric_link_addresses(lower_id: int, lower_port: str) -> (str, str):
     return ("10.100.{third}.{fourth}", "10.100.{third}.{fourth + 1}")
 
 
+# Device types that take their management address from DHCP. The address is
+# not in configuration dorsi manages, so they need no management-address.
+# Every other type, a new one too, needs it: its address sits in configuration
+# dorsi owns, which would otherwise drop it and cut dorsi off from the device.
+DHCP_MANAGEMENT_TYPES = {"NokiaSRLinux_25_3_2"}
+
+
+def _decimal_at_most(s: str, max_digits: int, max_value: int) -> bool:
+    """Whether s is a decimal number of at most max_digits digits and
+    max_value."""
+    if len(s) == 0 or len(s) > max_digits:
+        return False
+    for c in s:
+        if c not in "0123456789":
+            return False
+    return int(s) <= max_value
+
+
+def parse_management_address(s: str) -> ?(address: str, prefix_length: int):
+    """The address and prefix length of an IPv4 address such as
+    172.20.20.11/24, None if it is not one."""
+    parts: list[str] = s.split("/")
+    if len(parts) != 2 or not _decimal_at_most(parts[1], 2, 32):
+        return None
+    octets: list[str] = parts[0].split(".")
+    if len(octets) != 4:
+        return None
+    for octet in octets:
+        if not _decimal_at_most(octet, 3, 255):
+            return None
+    return (address=parts[0], prefix_length=int(parts[1]))
+
+
 def validate_fabric(f: y_0.ip_fabric__ip_fabric__fabric_entry) -> list[str]:
     """The problems found in a fabric, an empty list when it is valid.
 
@@ -69,6 +102,12 @@ def validate_fabric(f: y_0.ip_fabric__ip_fabric__fabric_entry) -> list[str]:
             ids[sid] = sw.name
         if sid > 511:
             errors.append("switch {sw.name}: id {sid} is above 511, which the addressing scheme supports")
+        mgmt = sw.management_address
+        if mgmt is not None:
+            if parse_management_address(mgmt) is None:
+                errors.append("switch {sw.name}: management-address {mgmt} is not an IPv4 address with a prefix length, such as 172.20.20.11/24")
+        elif sw.type not in DHCP_MANAGEMENT_TYPES:
+            errors.append("switch {sw.name}: a {sw.type} switch needs a management-address, or dorsi removes the address from its management interface")
 
     # A port is used by at most one fabric link or server link
     used: dict[str, str] = {}
@@ -165,7 +204,15 @@ class Fabric(base.Fabric):
         for sw in i.switch:
             switches[sw.name] = sw
             dev = o.device.create(sw.name, type=sw.type)
-            dev.address.create("oob", address=sw.name)
+            # Connect where the management interface is kept, so that a wrong
+            # address fails to connect instead of cutting dorsi off later
+            address = sw.name
+            mgmt_address = sw.management_address
+            if mgmt_address is not None:
+                mgmt = parse_management_address(mgmt_address)
+                if mgmt is not None:
+                    address = mgmt.address
+            dev.address.create("oob", address=address)
             dev.credentials.username = "clab"
             dev.credentials.password = "clab@123"
             dev.mock.enabled = sw.mock
@@ -174,6 +221,7 @@ class Fabric(base.Fabric):
             base_config = rfs.fabric_base_config.create(u64(fabric_asn(sw.role, int(sw.id), sw.pod, sw.plane)))
             base_config.role = sw.role
             base_config.ipv4_address = fabric_loopback(int(sw.id))
+            base_config.management_address = sw.management_address
 
         for link in i.fabric_link:
             print("CFS fabric-link %s [%s] <-> %s [%s]" % (link.lower_switch, link.lower_port, link.upper_switch, link.upper_port))

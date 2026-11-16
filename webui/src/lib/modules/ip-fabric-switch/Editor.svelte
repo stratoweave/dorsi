@@ -4,7 +4,7 @@
   import FieldSelect from '$lib/core/ui/FieldSelect.svelte';
   import FieldText from '$lib/core/ui/FieldText.svelte';
   import Section from '$lib/core/ui/Section.svelte';
-  import { SWITCH_ROLES } from '$lib/modules/ip-fabric-switch/model';
+  import { DHCP_MANAGEMENT_TYPES, SWITCH_ROLES } from '$lib/modules/ip-fabric-switch/model';
 
   import type { FabricSwitchDraft, FabricSwitchRole } from '$lib/modules/ip-fabric-switch/model';
 
@@ -80,6 +80,19 @@
         yangType="string"
         mono={true}
         onchange={(value) => patch({ type: value })}
+        ontouch={() => ontouch?.()}
+      />
+      <FieldText
+        label="Management address"
+        required={!DHCP_MANAGEMENT_TYPES.includes(draft.type.trim())}
+        value={draft.managementAddress}
+        error={errors.managementAddress}
+        {validationKey}
+        placeholder="e.g., 172.20.20.11/24"
+        yangType="string"
+        mono={true}
+        help="dorsi connects here and keeps it on the management interface. Not needed on platforms that take it from DHCP (SR Linux)."
+        onchange={(value) => patch({ managementAddress: value })}
         ontouch={() => ontouch?.()}
       />
     </div>

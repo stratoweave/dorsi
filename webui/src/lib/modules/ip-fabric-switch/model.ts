@@ -14,10 +14,22 @@ export interface FabricSwitchDraft {
   role: FabricSwitchRole;
   pod: string;
   plane: string;
+  managementAddress: string;
   mock: boolean;
 }
 
 export const SWITCH_ROLES: FabricSwitchRole[] = ['leaf', 'spine', 'super-spine'];
+
+// Platforms that take their management address from DHCP and need no
+// management-address (DHCP_MANAGEMENT_TYPES in src/dorsi/cfs.act).
+export const DHCP_MANAGEMENT_TYPES = ['NokiaSRLinux_25_3_2'];
+
+function isIpv4WithPrefix(value: string): boolean {
+  const match = /^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})\/(\d{1,2})$/.exec(value);
+  if (!match) return false;
+  const octets = match.slice(1, 5).map(Number);
+  return octets.every((octet) => octet <= 255) && Number(match[5]) <= 32;
+}
 
 export function createFabricSwitchDraft(): FabricSwitchDraft {
   return {
@@ -28,6 +40,7 @@ export function createFabricSwitchDraft(): FabricSwitchDraft {
     role: 'leaf',
     pod: '',
     plane: '',
+    managementAddress: '',
     mock: false
   };
 }
@@ -62,6 +75,7 @@ function draftFromEntry(fabric: string, entry: unknown): FabricSwitchDraft {
     role: toRole(stringAt(entry, 'role')),
     pod: stringAt(entry, 'pod'),
     plane: stringAt(entry, 'plane'),
+    managementAddress: stringAt(entry, 'management-address'),
     mock: booleanAt(entry, 'mock')
   };
 }
@@ -110,6 +124,10 @@ export function serializeFabricSwitchDraft(draft: FabricSwitchDraft): unknown {
     body.plane = draft.plane.trim();
   }
 
+  if (draft.managementAddress.trim()) {
+    body['management-address'] = draft.managementAddress.trim();
+  }
+
   return body;
 }
 
@@ -125,6 +143,14 @@ export function validateFabricSwitchDraft(draft: FabricSwitchDraft): ValidationR
     errors.id = 'Switch id is required.';
   } else if (draft.id > 511) {
     errors.id = 'Switch id must be at most 511, the addressing scheme does not go further.';
+  }
+
+  const managementAddress = draft.managementAddress.trim();
+  if (managementAddress && !isIpv4WithPrefix(managementAddress)) {
+    errors.managementAddress = 'An IPv4 address with a prefix length, such as 172.20.20.11/24.';
+  } else if (!managementAddress && draft.type.trim() && !DHCP_MANAGEMENT_TYPES.includes(draft.type.trim())) {
+    errors.managementAddress =
+      'Required for this platform: it keeps the management address in configuration dorsi manages.';
   }
 
   if (draft.role === 'super-spine' && draft.pod.trim()) {

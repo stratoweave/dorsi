@@ -52,6 +52,16 @@ module ip-fabric {
           type boolean;
           default false;
         }
+        leaf management-address {
+          type string;
+          description
+            "IPv4 address and prefix length of the management interface,
+             such as 172.20.20.11/24. dorsi connects to the switch at this
+             address and keeps it on the management interface. Required for
+             every device type that does not take its management address
+             from DHCP: such a device holds the address in configuration that
+             dorsi manages, and would lose it without this leaf.";
+        }
         leaf role {
           type enumeration {
             enum leaf;
