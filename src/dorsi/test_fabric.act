@@ -8,9 +8,10 @@ import stratoweave.test_rig as swts
 
 SRL = "NokiaSRLinux_25_3_2"
 
-def add_switch(fabric: cfs_layer.ip_fabric__ip_fabric__fabric_entry, name: str, id: u64, role: str, pod: ?str=None, plane: ?str=None):
+def add_switch(fabric: cfs_layer.ip_fabric__ip_fabric__fabric_entry, name: str, id: u64, role: str, pod: ?str=None, plane: ?str=None, management_address: ?str=None):
     s = fabric.switch.create(name, id, SRL, role)
     s.mock = True
+    s.management_address = management_address
     if pod is not None:
         s.pod = pod
     if plane is not None:

@@ -97,9 +97,13 @@ interface with its /31 and an eBGP session. Server-facing leaf ports are enabled
 and described. LLDP is enabled globally and on the management, fabric and server
 ports.
 
-Every switch is also registered as a device in DORSI, reached by its name with
-the lab credentials of the [`test/`](test/README.md) environments. Set `mock` on
-a switch to run it against a simulated device instead of a real one.
+Every switch is also registered as a device in DORSI, reached with the lab
+credentials of the [`test/`](test/README.md) environments at its
+`management-address`, or by its name when it has none. A device type that does
+not take its management address from DHCP (all but SR Linux) keeps it in
+configuration DORSI manages, so it needs a `management-address`: DORSI
+configures it on the management interface and would otherwise remove it. Set
+`mock` on a switch to run it against a simulated device instead of a real one.
 
 The fabric is validated before it is applied: tiers must be adjacent and in the
 same pod or plane, a port may be used once, servers connect to leaves and match

@@ -35,6 +35,13 @@ module dorsi-rfs {
                 type string;
                 mandatory true;
             }
+            leaf management-address {
+                description
+                    "Address and prefix length of the management interface,
+                     such as 172.20.20.11/24. Absent on a device that takes
+                     its management address from DHCP.";
+                type string;
+            }
         }
         list fabric-interface {
             description
