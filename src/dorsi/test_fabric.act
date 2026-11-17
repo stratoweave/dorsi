@@ -177,12 +177,26 @@ def five_stage_srl():
     return root
 
 # TransformTester takes its snapshot as soon as the CFS commit completes, which
-# can be before the device configuration exists. Wait for it to settle.
+# can be before the device configuration exists. Wait for it to settle: until
+# the snapshot has not changed for two seconds. On a busy machine a device can
+# get its configuration in parts, with a pause between them while the mock
+# device connects, so a fixed or shorter wait can catch it half done.
 actor FabricTester(t: testing.AsyncT, input_config: gdata.Node):
     tr = swts.TestRig.build(sysspec.SYSSPEC, t.log_handler)
+    var last: ?str = None
+    var unchanged = 0
 
     def snapshot():
-        t.success(tr.device_adata_snapshot())
+        current = tr.device_adata_snapshot()
+        if current == last:
+            unchanged += 1
+            if unchanged >= 2:
+                t.success(current)
+                return
+        else:
+            last = current
+            unchanged = 0
+        after 1.0: snapshot()
 
     def cont(r: value):
         if isinstance(r, Exception):
