@@ -163,11 +163,15 @@ configured ports, but surviving the loss of a leaf needs an overlay.
 * A 5-stage fabric of SR Linux and Arista EOS with five switches has been run
   in [`test/fabric-5stage-mixed`](test/fabric-5stage-mixed/README.md): all eBGP
   sessions come up and every loopback is reachable across all five stages.
+  [`test/fabric-5stage-mixed-srlss`](test/fabric-5stage-mixed-srlss/README.md)
+  runs it with an SR Linux super-spine and two parallel links, on which link
+  and switch failures have been tested: traffic moves to the other link
+  without loss, and DORSI reports the failures and the recovery.
   The full 5-stage lab ([`test/fabric-5stage`](test/fabric-5stage/README.md))
   has not been deployed: ten SR Linux nodes need much more memory than the
   3-stage lab, which already needs about 9 GB.
-* Not covered: server-to-server traffic, link and leaf failures, and live
-  changes to a running fabric. The live state is covered by the build but has not
+* Not covered: server-to-server traffic and live changes to a running
+  fabric. The live state is covered by the build but has not
   been checked against a failing link.
 
 ### Service automation layering

@@ -1,0 +1,74 @@
+name: dorsi-fabric-5stage-mixed-srlss
+prefix: __lab-name
+
+# Fixed management addresses: ip-fabric.xml gives the cEOS switches theirs as
+# management-address, which dorsi keeps on Management0 and connects to.
+mgmt:
+  network: dorsi-fabric-5stage-mixed-srlss
+  ipv4-subnet: 172.31.38.0/24
+  ipv6-subnet: auto
+
+topology:
+  kinds:
+    nokia_srlinux:
+      image: ghcr.io/nokia/srlinux:25.3.2
+      image-pull-policy: if-not-present
+      startup-config: srl-startup.conf
+    # cEOS-lab is not in a public registry: download it from arista.com and
+    # `docker import` it under this name (see ../fabric-3stage-mixed/README.md).
+    arista_ceos:
+      image: ceos:4.36.3.2M
+      image-pull-policy: never
+      startup-config: ceos-startup.partial.cfg
+  nodes:
+    leaf1:
+      mgmt-ipv4: 172.31.38.11
+      kind: arista_ceos
+    leaf2:
+      mgmt-ipv4: 172.31.38.12
+      kind: nokia_srlinux
+    spine1:
+      mgmt-ipv4: 172.31.38.21
+      kind: nokia_srlinux
+    spine2:
+      mgmt-ipv4: 172.31.38.22
+      kind: arista_ceos
+    superspine1:
+      mgmt-ipv4: 172.31.38.31
+      kind: nokia_srlinux
+    server1:
+      mgmt-ipv4: 172.31.38.41
+      kind: linux
+      image: ghcr.io/srl-labs/network-multitool
+      image-pull-policy: if-not-present
+    server2:
+      mgmt-ipv4: 172.31.38.42
+      kind: linux
+      image: ghcr.io/srl-labs/network-multitool
+      image-pull-policy: if-not-present
+    server3:
+      mgmt-ipv4: 172.31.38.43
+      kind: linux
+      image: ghcr.io/srl-labs/network-multitool
+      image-pull-policy: if-not-present
+    sweave:
+      mgmt-ipv4: 172.31.38.10
+      kind: linux
+      image: dorsi-sweave-base
+      image-pull-policy: if-not-present
+      ports:
+        # The dorsi binary serves the APIs and the embedded Web UI on :80.
+        - "${WEBUI_PUBLISH}:80/tcp"
+        - "830/tcp"
+
+  # cEOS maps the container interface ethN to EthernetN.
+  links:
+    - endpoints: ["leaf1:eth49", "spine1:e1-1"]
+    - endpoints: ["leaf1:eth50", "spine1:e1-2"]
+    - endpoints: ["leaf2:e1-49", "spine2:eth1"]
+    - endpoints: ["spine1:e1-31", "superspine1:e1-1"]
+    - endpoints: ["spine2:eth31", "superspine1:e1-2"]
+    - endpoints: ["server1:eth1", "leaf1:eth1"]
+    - endpoints: ["server1:eth2", "leaf2:e1-1"]
+    - endpoints: ["server2:eth1", "leaf2:e1-2"]
+    - endpoints: ["server3:eth1", "leaf1:eth2"]
