@@ -105,8 +105,13 @@ credentials of the [`test/`](test/README.md) environments at its
 not take its management address from DHCP (all but SR Linux, Arista EOS among
 them) keeps it in configuration DORSI manages, so it needs a
 `management-address`: DORSI configures it on the management interface and
-would otherwise remove it. Set `mock` on a switch to run it against a simulated
-device instead of a real one.
+would otherwise remove it. On Arista EOS the management interface sits in a VRF
+of its own, `MGMT`, so that the default route of the management network never
+carries fabric traffic when the fabric loses a route. The switch has to start
+with Management0 in that VRF (moving it drops the NETCONF session); DORSI keeps
+it there, together with `management-gateway`, the default route of the VRF,
+which it would otherwise remove too. Set `mock` on a switch to run it against a
+simulated device instead of a real one.
 
 The fabric is validated before it is applied: tiers must be adjacent and in the
 same pod or plane, a port may be used once, servers connect to leaves and match

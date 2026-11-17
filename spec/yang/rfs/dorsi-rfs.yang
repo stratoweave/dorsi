@@ -42,6 +42,12 @@ module dorsi-rfs {
                      its management address from DHCP.";
                 type string;
             }
+            leaf management-gateway {
+                description
+                    "Gateway of the management network, such as 172.20.20.1,
+                     the default route of the management VRF.";
+                type string;
+            }
         }
         list fabric-interface {
             description

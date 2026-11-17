@@ -467,6 +467,41 @@ statement_element.conditions.match_prefix_set.config.prefix_set = 'loopbacks'
 # Container: /routing-policy/policy-definitions/policy-definition[name='export-loopbacks']/statements/statement[name='10']/actions/config
 statement_element.actions.config.policy_result = 'ACCEPT_ROUTE'
 
+# List /network-instances/network-instance element: 'MGMT'
+network_instance_element = leaf3.network_instances.network_instance.create('MGMT')
+
+# Container: /network-instances/network-instance[name='MGMT']/config
+network_instance_element.config.name = 'MGMT'
+network_instance_element.config.type = Identityref('L3VRF', ns='http://openconfig.net/yang/network-instance-types', mod='openconfig-network-instance-types', pfx='oc-ni-types')
+
+# List /network-instances/network-instance[name='MGMT']/interfaces/interface element: 'Management0'
+interface_element_2 = network_instance_element.interfaces.interface.create('Management0')
+
+# Container: /network-instances/network-instance[name='MGMT']/interfaces/interface[id='Management0']/config
+interface_element_2.config.id = 'Management0'
+interface_element_2.config.interface = 'Management0'
+interface_element_2.config.subinterface = u64(0)
+
+# List /network-instances/network-instance[name='MGMT']/protocols/protocol element: Identityref('STATIC', ns='http://openconfig.net/yang/policy-types', mod='openconfig-policy-types', pfx='oc-pol-types'), 'STATIC'
+protocol_element = network_instance_element.protocols.protocol.create((identifier=Identityref('STATIC', ns='http://openconfig.net/yang/policy-types', mod='openconfig-policy-types', pfx='oc-pol-types'), name='STATIC'))
+
+# Container: /network-instances/network-instance[name='MGMT']/protocols/protocol[identifier='Identityref(\'STATIC\', ns=\'http://openconfig.net/yang/policy-types\', mod=\'openconfig-policy-types\', pfx=\'oc-pol-types\')',name='STATIC']/config
+protocol_element.config.identifier = Identityref('STATIC', ns='http://openconfig.net/yang/policy-types', mod='openconfig-policy-types', pfx='oc-pol-types')
+protocol_element.config.name = 'STATIC'
+
+# List /network-instances/network-instance[name='MGMT']/protocols/protocol[identifier='Identityref(\'STATIC\', ns=\'http://openconfig.net/yang/policy-types\', mod=\'openconfig-policy-types\', pfx=\'oc-pol-types\')',name='STATIC']/static-routes/static element: '0.0.0.0/0'
+static_element = protocol_element.static_routes.static.create('0.0.0.0/0')
+
+# Container: /network-instances/network-instance[name='MGMT']/protocols/protocol[identifier='Identityref(\'STATIC\', ns=\'http://openconfig.net/yang/policy-types\', mod=\'openconfig-policy-types\', pfx=\'oc-pol-types\')',name='STATIC']/static-routes/static[prefix='0.0.0.0/0']/config
+static_element.config.prefix = '0.0.0.0/0'
+
+# List /network-instances/network-instance[name='MGMT']/protocols/protocol[identifier='Identityref(\'STATIC\', ns=\'http://openconfig.net/yang/policy-types\', mod=\'openconfig-policy-types\', pfx=\'oc-pol-types\')',name='STATIC']/static-routes/static[prefix='0.0.0.0/0']/next-hops/next-hop element: 'AUTO_1_172-31-36-1'
+next_hop_element = static_element.next_hops.next_hop.create('AUTO_1_172-31-36-1')
+
+# Container: /network-instances/network-instance[name='MGMT']/protocols/protocol[identifier='Identityref(\'STATIC\', ns=\'http://openconfig.net/yang/policy-types\', mod=\'openconfig-policy-types\', pfx=\'oc-pol-types\')',name='STATIC']/static-routes/static[prefix='0.0.0.0/0']/next-hops/next-hop[index='AUTO_1_172-31-36-1']/config
+next_hop_element.config.index = 'AUTO_1_172-31-36-1'
+next_hop_element.config.next_hop = '172.31.36.1'
+
 # List /network-instances/network-instance element: 'default'
 network_instance_element = leaf3.network_instances.network_instance.create('default')
 
@@ -548,32 +583,32 @@ leaf3.system.config.hostname = 'leaf3'
 leaf3.lldp.config.enabled = True
 
 # List /lldp/interfaces/interface element: 'Ethernet1'
-interface_element_2 = leaf3.lldp.interfaces.interface.create('Ethernet1')
+interface_element_3 = leaf3.lldp.interfaces.interface.create('Ethernet1')
 
 # Container: /lldp/interfaces/interface[name='Ethernet1']/config
-interface_element_2.config.name = 'Ethernet1'
-interface_element_2.config.enabled = True
+interface_element_3.config.name = 'Ethernet1'
+interface_element_3.config.enabled = True
 
 # List /lldp/interfaces/interface element: 'Ethernet2'
-interface_element_2 = leaf3.lldp.interfaces.interface.create('Ethernet2')
+interface_element_3 = leaf3.lldp.interfaces.interface.create('Ethernet2')
 
 # Container: /lldp/interfaces/interface[name='Ethernet2']/config
-interface_element_2.config.name = 'Ethernet2'
-interface_element_2.config.enabled = True
+interface_element_3.config.name = 'Ethernet2'
+interface_element_3.config.enabled = True
 
 # List /lldp/interfaces/interface element: 'Ethernet49'
-interface_element_2 = leaf3.lldp.interfaces.interface.create('Ethernet49')
+interface_element_3 = leaf3.lldp.interfaces.interface.create('Ethernet49')
 
 # Container: /lldp/interfaces/interface[name='Ethernet49']/config
-interface_element_2.config.name = 'Ethernet49'
-interface_element_2.config.enabled = True
+interface_element_3.config.name = 'Ethernet49'
+interface_element_3.config.enabled = True
 
 # List /lldp/interfaces/interface element: 'Ethernet50'
-interface_element_2 = leaf3.lldp.interfaces.interface.create('Ethernet50')
+interface_element_3 = leaf3.lldp.interfaces.interface.create('Ethernet50')
 
 # Container: /lldp/interfaces/interface[name='Ethernet50']/config
-interface_element_2.config.name = 'Ethernet50'
-interface_element_2.config.enabled = True
+interface_element_3.config.name = 'Ethernet50'
+interface_element_3.config.enabled = True
 
 # device spine1
 # YANG module (prefix) and namespace:
@@ -918,6 +953,41 @@ statement_element.conditions.match_prefix_set.config.prefix_set = 'loopbacks'
 # Container: /routing-policy/policy-definitions/policy-definition[name='export-loopbacks']/statements/statement[name='10']/actions/config
 statement_element.actions.config.policy_result = 'ACCEPT_ROUTE'
 
+# List /network-instances/network-instance element: 'MGMT'
+network_instance_element = spine2.network_instances.network_instance.create('MGMT')
+
+# Container: /network-instances/network-instance[name='MGMT']/config
+network_instance_element.config.name = 'MGMT'
+network_instance_element.config.type = Identityref('L3VRF', ns='http://openconfig.net/yang/network-instance-types', mod='openconfig-network-instance-types', pfx='oc-ni-types')
+
+# List /network-instances/network-instance[name='MGMT']/interfaces/interface element: 'Management0'
+interface_element_2 = network_instance_element.interfaces.interface.create('Management0')
+
+# Container: /network-instances/network-instance[name='MGMT']/interfaces/interface[id='Management0']/config
+interface_element_2.config.id = 'Management0'
+interface_element_2.config.interface = 'Management0'
+interface_element_2.config.subinterface = u64(0)
+
+# List /network-instances/network-instance[name='MGMT']/protocols/protocol element: Identityref('STATIC', ns='http://openconfig.net/yang/policy-types', mod='openconfig-policy-types', pfx='oc-pol-types'), 'STATIC'
+protocol_element = network_instance_element.protocols.protocol.create((identifier=Identityref('STATIC', ns='http://openconfig.net/yang/policy-types', mod='openconfig-policy-types', pfx='oc-pol-types'), name='STATIC'))
+
+# Container: /network-instances/network-instance[name='MGMT']/protocols/protocol[identifier='Identityref(\'STATIC\', ns=\'http://openconfig.net/yang/policy-types\', mod=\'openconfig-policy-types\', pfx=\'oc-pol-types\')',name='STATIC']/config
+protocol_element.config.identifier = Identityref('STATIC', ns='http://openconfig.net/yang/policy-types', mod='openconfig-policy-types', pfx='oc-pol-types')
+protocol_element.config.name = 'STATIC'
+
+# List /network-instances/network-instance[name='MGMT']/protocols/protocol[identifier='Identityref(\'STATIC\', ns=\'http://openconfig.net/yang/policy-types\', mod=\'openconfig-policy-types\', pfx=\'oc-pol-types\')',name='STATIC']/static-routes/static element: '0.0.0.0/0'
+static_element = protocol_element.static_routes.static.create('0.0.0.0/0')
+
+# Container: /network-instances/network-instance[name='MGMT']/protocols/protocol[identifier='Identityref(\'STATIC\', ns=\'http://openconfig.net/yang/policy-types\', mod=\'openconfig-policy-types\', pfx=\'oc-pol-types\')',name='STATIC']/static-routes/static[prefix='0.0.0.0/0']/config
+static_element.config.prefix = '0.0.0.0/0'
+
+# List /network-instances/network-instance[name='MGMT']/protocols/protocol[identifier='Identityref(\'STATIC\', ns=\'http://openconfig.net/yang/policy-types\', mod=\'openconfig-policy-types\', pfx=\'oc-pol-types\')',name='STATIC']/static-routes/static[prefix='0.0.0.0/0']/next-hops/next-hop element: 'AUTO_1_172-31-36-1'
+next_hop_element = static_element.next_hops.next_hop.create('AUTO_1_172-31-36-1')
+
+# Container: /network-instances/network-instance[name='MGMT']/protocols/protocol[identifier='Identityref(\'STATIC\', ns=\'http://openconfig.net/yang/policy-types\', mod=\'openconfig-policy-types\', pfx=\'oc-pol-types\')',name='STATIC']/static-routes/static[prefix='0.0.0.0/0']/next-hops/next-hop[index='AUTO_1_172-31-36-1']/config
+next_hop_element.config.index = 'AUTO_1_172-31-36-1'
+next_hop_element.config.next_hop = '172.31.36.1'
+
 # List /network-instances/network-instance element: 'default'
 network_instance_element = spine2.network_instances.network_instance.create('default')
 
@@ -1009,22 +1079,22 @@ spine2.system.config.hostname = 'spine2'
 spine2.lldp.config.enabled = True
 
 # List /lldp/interfaces/interface element: 'Ethernet1'
-interface_element_2 = spine2.lldp.interfaces.interface.create('Ethernet1')
+interface_element_3 = spine2.lldp.interfaces.interface.create('Ethernet1')
 
 # Container: /lldp/interfaces/interface[name='Ethernet1']/config
-interface_element_2.config.name = 'Ethernet1'
-interface_element_2.config.enabled = True
+interface_element_3.config.name = 'Ethernet1'
+interface_element_3.config.enabled = True
 
 # List /lldp/interfaces/interface element: 'Ethernet2'
-interface_element_2 = spine2.lldp.interfaces.interface.create('Ethernet2')
+interface_element_3 = spine2.lldp.interfaces.interface.create('Ethernet2')
 
 # Container: /lldp/interfaces/interface[name='Ethernet2']/config
-interface_element_2.config.name = 'Ethernet2'
-interface_element_2.config.enabled = True
+interface_element_3.config.name = 'Ethernet2'
+interface_element_3.config.enabled = True
 
 # List /lldp/interfaces/interface element: 'Ethernet3'
-interface_element_2 = spine2.lldp.interfaces.interface.create('Ethernet3')
+interface_element_3 = spine2.lldp.interfaces.interface.create('Ethernet3')
 
 # Container: /lldp/interfaces/interface[name='Ethernet3']/config
-interface_element_2.config.name = 'Ethernet3'
-interface_element_2.config.enabled = True
+interface_element_3.config.name = 'Ethernet3'
+interface_element_3.config.enabled = True

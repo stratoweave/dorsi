@@ -23,6 +23,13 @@ manages, so the cEOS switches carry theirs as `management-address` in
 `ip-fabric.xml`; without it dorsi would remove the address from Management0 and
 lose the switch. SR Linux takes its address from DHCP and needs none.
 
+On cEOS, Management0 and the NETCONF server are in the VRF `MGMT`
+(`ceos-startup.partial.cfg`), apart from the fabric routes. Otherwise the
+default route of the management network would be in the fabric's routing table
+and carry fabric traffic whenever the fabric loses a route. The switches start
+in that VRF, as moving Management0 there would cut off dorsi; dorsi keeps it,
+and sets the VRF's default route from `management-gateway`.
+
 ## Links
 
 | Lower switch | Port | Upper switch | Port |

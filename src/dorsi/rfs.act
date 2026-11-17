@@ -35,6 +35,13 @@ _FABRIC_ECMP_PATHS = 64
 # too, so EOS is told apart by a module only EOS has.
 _EOS_MODULE = "arista-netinst-augments"
 
+# The VRF of Management0 on EOS. In the default VRF the management default
+# route would carry fabric traffic whenever the fabric has no route for it.
+# Moving Management0 between VRFs drops its address and the NETCONF session,
+# so the switch has to start with it (see ceos-startup.partial.cfg in the
+# labs); dorsi only keeps it there.
+_EOS_MGMT_VRF = "MGMT"
+
 
 def _eos_default_ni(dev: eos436.root):
     ni = dev.network_instances.network_instance.create("default")
@@ -151,6 +158,27 @@ class FabricBaseConfig(base.FabricBaseConfig):
                 parts: list[str] = mgmt.split("/")
                 intf_mgmt = _eos_interface(dev, "Management0", eos436.iana_if_type_ethernetCsmacd, None)
                 _eos_ipv4_address(intf_mgmt, parts[0], u64(int(parts[1])), None)
+                ni_mgmt = dev.network_instances.network_instance.create(_EOS_MGMT_VRF)
+                ni_mgmt.config.name = _EOS_MGMT_VRF
+                ni_mgmt.config.type = eos436.openconfig_network_instance_types_L3VRF
+                ni_mgmt_if = ni_mgmt.interfaces.interface.create("Management0")
+                ni_mgmt_if.config.id = "Management0"
+                ni_mgmt_if.config.interface = "Management0"
+                ni_mgmt_if.config.subinterface = 0
+                gateway = i.management_gateway
+                if gateway is not None:
+                    # The default route of the management VRF. EOS names a
+                    # next hop AUTO_1_<address with dashes> and would rename
+                    # any other.
+                    static = ni_mgmt.protocols.protocol.create((eos436.openconfig_policy_types_STATIC, "STATIC"))
+                    static.config.identifier = eos436.openconfig_policy_types_STATIC
+                    static.config.name = "STATIC"
+                    route = static.static_routes.static.create("0.0.0.0/0")
+                    route.config.prefix = "0.0.0.0/0"
+                    index = "AUTO_1_" + gateway.replace(".", "-")
+                    next_hop = route.next_hops.next_hop.create(index)
+                    next_hop.config.index = index
+                    next_hop.config.next_hop = gateway
 
             # Loopback
             lo = _eos_interface(dev, "Loopback0", eos436.iana_if_type_softwareLoopback, None)

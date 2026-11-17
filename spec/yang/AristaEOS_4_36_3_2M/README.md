@@ -25,6 +25,12 @@ Found on the lab switch, see the comments in `spec/src/dorsi_gen.act` and
 * The management address of Management0 is configuration under
   `/interfaces`, which dorsi manages, so it comes from the switch's
   `management-address` in the fabric.
+* In the default VRF, cEOS has a kernel default route through Management0,
+  which carries fabric traffic when the fabric loses a route. Management0 is
+  in the L3VRF network instance `MGMT` instead. Its default route is a static
+  route there, whose next hop EOS names `AUTO_1_<address with dashes>`.
+  Moving Management0 between VRFs removes its address, so the switch starts
+  in `MGMT` and dorsi only keeps it there.
 * An IPv4 address on subinterface 0 makes an Ethernet port routed
   (`no switchport`); `ipv4-routing-enabled` turns on `ip routing`.
 * `use-multiple-paths/config` is not supported, `use-multiple-paths/ebgp`

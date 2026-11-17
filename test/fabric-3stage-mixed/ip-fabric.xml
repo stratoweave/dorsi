@@ -19,6 +19,7 @@
                 <id>3</id>
                 <type>AristaEOS_4_36_3_2M</type>
                 <management-address>172.31.36.13/24</management-address>
+                <management-gateway>172.31.36.1</management-gateway>
                 <role>leaf</role>
             </switch>
             <switch>
@@ -32,6 +33,7 @@
                 <id>12</id>
                 <type>AristaEOS_4_36_3_2M</type>
                 <management-address>172.31.36.22/24</management-address>
+                <management-gateway>172.31.36.1</management-gateway>
                 <role>spine</role>
             </switch>
             <fabric-link>

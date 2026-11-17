@@ -7,6 +7,7 @@
                 <id>1</id>
                 <type>AristaEOS_4_36_3_2M</type>
                 <management-address>172.31.37.11/24</management-address>
+                <management-gateway>172.31.37.1</management-gateway>
                 <role>leaf</role>
                 <pod>pod-1</pod>
             </switch>
@@ -30,6 +31,7 @@
                 <id>12</id>
                 <type>AristaEOS_4_36_3_2M</type>
                 <management-address>172.31.37.22/24</management-address>
+                <management-gateway>172.31.37.1</management-gateway>
                 <role>spine</role>
                 <pod>pod-2</pod>
                 <plane>plane-1</plane>
@@ -39,6 +41,7 @@
                 <id>21</id>
                 <type>AristaEOS_4_36_3_2M</type>
                 <management-address>172.31.37.31/24</management-address>
+                <management-gateway>172.31.37.1</management-gateway>
                 <role>super-spine</role>
                 <plane>plane-1</plane>
             </switch>

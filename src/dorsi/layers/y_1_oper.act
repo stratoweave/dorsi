@@ -162,7 +162,8 @@ SRC_DNODE_CHILD_23: DList = DList(module='dorsi-rfs', namespace='http://example.
     DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='asn', config=True, is_key=True, mandatory=False, type=DTypeIntegerUnsigned(name='inet:as-number', description='The as-number type represents autonomous system numbers\nwhich identify an Autonomous System (AS).  An AS is a set\nof routers under a single technical administration, using\nan interior gateway protocol and common metrics to route\npackets within the AS, and using an exterior gateway\nprotocol to route packets to other ASes.  IANA maintains\nthe AS number space and has delegated large parts to the\nregional registries.\n\nAutonomous system numbers were originally limited to 16\nbits.  BGP extensions have enlarged the autonomous system\nnumber space to 32 bits.  This type therefore uses an uint32\nbase type without a range restriction in order to support\na larger autonomous system number space.\n\nIn the value set and its semantics, this type is equivalent\nto the InetAutonomousSystemNumber textual convention of\nthe SMIv2.', reference='RFC 1930: Guidelines for creation, selection, and registration\n          of an Autonomous System (AS)\nRFC 4271: A Border Gateway Protocol 4 (BGP-4)\nRFC 4001: Textual Conventions for Internet Network Addresses\nRFC 6793: BGP Support for Four-Octet Autonomous System (AS)\n          Number Space', units=None, exts=[], builtin_type='uint32', default=None, ranges=Ranges([(0, 4294967295)]))),
     DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='role', config=True, is_key=False, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
     DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='ipv4-address', config=True, description='Loopback address, used as router-id.', is_key=False, mandatory=True, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
-    DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='management-address', config=True, description='Address and prefix length of the management interface,\nsuch as 172.20.20.11/24. Absent on a device that takes\nits management address from DHCP.', is_key=False, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[]))
+    DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='management-address', config=True, description='Address and prefix length of the management interface,\nsuch as 172.20.20.11/24. Absent on a device that takes\nits management address from DHCP.', is_key=False, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
+    DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='management-gateway', config=True, description='Gateway of the management network, such as 172.20.20.1,\nthe default route of the management VRF.', is_key=False, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[]))
 ])
 
 SRC_DNODE_CHILD_24: DList = DList(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='fabric-interface', key=['name'], config=True, description='Routed point-to-point fabric link with its eBGP session.', min_elements=0, ordered_by='system', exts=[
@@ -256,6 +257,12 @@ SRC_YANG_0: str = r"""module dorsi-rfs {
                     "Address and prefix length of the management interface,
                      such as 172.20.20.11/24. Absent on a device that takes
                      its management address from DHCP.";
+                type string;
+            }
+            leaf management-gateway {
+                description
+                    "Gateway of the management network, such as 172.20.20.1,
+                     the default route of the management VRF.";
                 type string;
             }
         }
@@ -3156,19 +3163,21 @@ class stratoweave_rfs__rfs__fabric_base_config_entry(yadata.MNode):
     role: ?str
     ipv4_address: ?str
     management_address: ?str
+    management_gateway: ?str
 
-    mut def __init__(self, asn: u64, role: ?str=None, ipv4_address: ?str=None, management_address: ?str=None) -> None:
+    mut def __init__(self, asn: u64, role: ?str=None, ipv4_address: ?str=None, management_address: ?str=None, management_gateway: ?str=None) -> None:
         self.asn = asn
         self.role = role
         self.ipv4_address = ipv4_address
         self.management_address = management_address
+        self.management_gateway = management_gateway
 
     mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
         return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['stratoweave-rfs:rfs', 'dorsi-rfs:fabric-base-config'], prev=prev)
 
     @staticmethod
     mut def from_gdata(n: ygdata.Node) -> stratoweave_rfs__rfs__fabric_base_config_entry:
-        return stratoweave_rfs__rfs__fabric_base_config_entry(asn=n.get_u64(ygdata.Id(NS_dorsi_rfs, 'asn')), role=n.get_opt_str(ygdata.Id(NS_dorsi_rfs, 'role')), ipv4_address=n.get_opt_str(ygdata.Id(NS_dorsi_rfs, 'ipv4-address')), management_address=n.get_opt_str(ygdata.Id(NS_dorsi_rfs, 'management-address')))
+        return stratoweave_rfs__rfs__fabric_base_config_entry(asn=n.get_u64(ygdata.Id(NS_dorsi_rfs, 'asn')), role=n.get_opt_str(ygdata.Id(NS_dorsi_rfs, 'role')), ipv4_address=n.get_opt_str(ygdata.Id(NS_dorsi_rfs, 'ipv4-address')), management_address=n.get_opt_str(ygdata.Id(NS_dorsi_rfs, 'management-address')), management_gateway=n.get_opt_str(ygdata.Id(NS_dorsi_rfs, 'management-gateway')))
 
     mut def copy(self) -> stratoweave_rfs__rfs__fabric_base_config_entry:
         """Create a deep copy of this adata object"""
@@ -3179,7 +3188,7 @@ class stratoweave_rfs__rfs__fabric_base_config(yadata.MKeyedList[u64, stratoweav
     mut def __init__(self, elements: list[stratoweave_rfs__rfs__fabric_base_config_entry]=[]) -> None:
         yadata.MKeyedList.__init__(self, lambda e: e.asn, elements)
 
-    mut def create(self, key: u64, role: ?str=None, ipv4_address: ?str=None, management_address: ?str=None) -> stratoweave_rfs__rfs__fabric_base_config_entry:
+    mut def create(self, key: u64, role: ?str=None, ipv4_address: ?str=None, management_address: ?str=None, management_gateway: ?str=None) -> stratoweave_rfs__rfs__fabric_base_config_entry:
         e = self.get(key)
         if e is not None:
             if role is not None:
@@ -3188,9 +3197,11 @@ class stratoweave_rfs__rfs__fabric_base_config(yadata.MKeyedList[u64, stratoweav
                 e.ipv4_address = ipv4_address
             if management_address is not None:
                 e.management_address = management_address
+            if management_gateway is not None:
+                e.management_gateway = management_gateway
             return e
         asn = key
-        res = stratoweave_rfs__rfs__fabric_base_config_entry(asn=asn, role=role, ipv4_address=ipv4_address, management_address=management_address)
+        res = stratoweave_rfs__rfs__fabric_base_config_entry(asn=asn, role=role, ipv4_address=ipv4_address, management_address=management_address, management_gateway=management_gateway)
         self._append(res)
         return res
 
@@ -4617,6 +4628,7 @@ class stratoweave_rfs__rfs__fabric_base_config_entry_subs(SubscriptionNode):
     role: SubscriptionNode
     ipv4_address: SubscriptionNode
     management_address: SubscriptionNode
+    management_gateway: SubscriptionNode
 
     pure def __init__(self, path: ?SubscriptionPath=None) -> None:
         SubscriptionNode.__init__(self, path)
@@ -4624,9 +4636,10 @@ class stratoweave_rfs__rfs__fabric_base_config_entry_subs(SubscriptionNode):
         self.role = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_dorsi_rfs, 'role'), parent=path))
         self.ipv4_address = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_dorsi_rfs, 'ipv4-address'), parent=path))
         self.management_address = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_dorsi_rfs, 'management-address'), parent=path))
+        self.management_gateway = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_dorsi_rfs, 'management-gateway'), parent=path))
 
     pure def _direct_children(self) -> list[SubscriptionNode]:
-        direct: list[SubscriptionNode] = [self.asn, self.role, self.ipv4_address, self.management_address]
+        direct: list[SubscriptionNode] = [self.asn, self.role, self.ipv4_address, self.management_address, self.management_gateway]
         return direct
 
 _breaker73: None = None
@@ -4651,12 +4664,14 @@ class stratoweave_rfs__rfs__fabric_base_config_subs(SubscriptionNode):
     role: SubscriptionNode
     ipv4_address: SubscriptionNode
     management_address: SubscriptionNode
+    management_gateway: SubscriptionNode
     pure def __init__(self, path: ?SubscriptionPath=None) -> None:
         SubscriptionNode.__init__(self, path)
         self.asn = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_dorsi_rfs, 'asn'), parent=path))
         self.role = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_dorsi_rfs, 'role'), parent=path))
         self.ipv4_address = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_dorsi_rfs, 'ipv4-address'), parent=path))
         self.management_address = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_dorsi_rfs, 'management-address'), parent=path))
+        self.management_gateway = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_dorsi_rfs, 'management-gateway'), parent=path))
 
     pure def entry(self, asn: u64) -> stratoweave_rfs__rfs__fabric_base_config_entry_subs:
         predicates = [
@@ -4672,7 +4687,7 @@ class stratoweave_rfs__rfs__fabric_base_config_subs(SubscriptionNode):
         return ygdata.Dst(lambda n, err: stratoweave_rfs__rfs__fabric_base_config_deliver(cb, n, err), root=self.filt())
 
     pure def _direct_children(self) -> list[SubscriptionNode]:
-        direct: list[SubscriptionNode] = [self.asn, self.role, self.ipv4_address, self.management_address]
+        direct: list[SubscriptionNode] = [self.asn, self.role, self.ipv4_address, self.management_address, self.management_gateway]
         return direct
 
 _breaker74: None = None

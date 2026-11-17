@@ -9,10 +9,11 @@ import stratoweave.test_rig as swts
 SRL = "NokiaSRLinux_25_3_2"
 EOS = "AristaEOS_4_36_3_2M"
 
-def add_switch(fabric: cfs_layer.ip_fabric__ip_fabric__fabric_entry, name: str, id: u64, role: str, pod: ?str=None, plane: ?str=None, device_type: str=SRL, management_address: ?str=None):
+def add_switch(fabric: cfs_layer.ip_fabric__ip_fabric__fabric_entry, name: str, id: u64, role: str, pod: ?str=None, plane: ?str=None, device_type: str=SRL, management_address: ?str=None, management_gateway: ?str=None):
     s = fabric.switch.create(name, id, device_type, role)
     s.mock = True
     s.management_address = management_address
+    s.management_gateway = management_gateway
     if pod is not None:
         s.pod = pod
     if plane is not None:
@@ -55,15 +56,16 @@ def three_stage():
 # The three-stage Clos of the fabric-3stage-mixed lab: leaf3 and spine2 run
 # Arista EOS (ports EthernetN), the rest SR Linux. It has every kind of link:
 # SR Linux to EOS both ways and EOS to EOS (leaf3 to spine2). EOS keeps its
-# management address in configuration, so the EOS switches have one.
+# management address in configuration, so the EOS switches have one, and
+# the gateway of the management network.
 def three_stage_mixed():
     root = _empty_root()
     f = root.ip_fabric.fabric.create("dc1")
     add_switch(f, "leaf1", 1, "leaf")
     add_switch(f, "leaf2", 2, "leaf")
-    add_switch(f, "leaf3", 3, "leaf", device_type=EOS, management_address="172.31.36.13/24")
+    add_switch(f, "leaf3", 3, "leaf", device_type=EOS, management_address="172.31.36.13/24", management_gateway="172.31.36.1")
     add_switch(f, "spine1", 11, "spine")
-    add_switch(f, "spine2", 12, "spine", device_type=EOS, management_address="172.31.36.22/24")
+    add_switch(f, "spine2", 12, "spine", device_type=EOS, management_address="172.31.36.22/24", management_gateway="172.31.36.1")
     for n, leaf in enumerate(["leaf1", "leaf2"]):
         add_link(f, leaf, "ethernet-1/49", "spine1", "ethernet-1/{n + 1}")
         add_link(f, leaf, "ethernet-1/50", "spine2", "Ethernet{n + 1}")
@@ -110,11 +112,11 @@ def five_stage():
 def five_stage_mixed():
     root = _empty_root()
     f = root.ip_fabric.fabric.create("dc1")
-    add_switch(f, "leaf1", 1, "leaf", pod="pod-1", device_type=EOS, management_address="172.31.37.11/24")
+    add_switch(f, "leaf1", 1, "leaf", pod="pod-1", device_type=EOS, management_address="172.31.37.11/24", management_gateway="172.31.37.1")
     add_switch(f, "leaf2", 2, "leaf", pod="pod-2")
     add_switch(f, "spine1", 11, "spine", pod="pod-1", plane="plane-1")
-    add_switch(f, "spine2", 12, "spine", pod="pod-2", plane="plane-1", device_type=EOS, management_address="172.31.37.22/24")
-    add_switch(f, "superspine1", 21, "super-spine", plane="plane-1", device_type=EOS, management_address="172.31.37.31/24")
+    add_switch(f, "spine2", 12, "spine", pod="pod-2", plane="plane-1", device_type=EOS, management_address="172.31.37.22/24", management_gateway="172.31.37.1")
+    add_switch(f, "superspine1", 21, "super-spine", plane="plane-1", device_type=EOS, management_address="172.31.37.31/24", management_gateway="172.31.37.1")
     add_link(f, "leaf1", "Ethernet49", "spine1", "ethernet-1/1")
     add_link(f, "leaf2", "ethernet-1/49", "spine2", "Ethernet1")
     add_link(f, "spine1", "ethernet-1/31", "superspine1", "Ethernet1")

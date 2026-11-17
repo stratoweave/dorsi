@@ -516,7 +516,7 @@ dorsi-fabric-3stage-sweave    Up 2 minutes</span></pre></div>
       <tr><td>Image pull errors from <code>ghcr.io</code></td><td>Check internet access and proxy settings. The images are public. A stale login can get in the way: <code>docker logout ghcr.io</code>.</td></tr>
       <tr><td><code>pull access denied for ceos</code> when a mixed lab starts</td><td>The cEOS image is not in a public registry. Download and import it, see <a href="#ceos">Get the cEOS image</a>.</td></tr>
       <tr><td><code>exec: "xz": executable file not found</code> on <code>docker import</code></td><td>The Docker daemon (in the Colima VM) has no <code>xz</code>. Decompress on the Mac instead: <code>xz -dc &lt;file&gt; | docker import - ceos:4.36.3.2M</code>.</td></tr>
-      <tr><td>DORSI loses an Arista switch right after configuring it</td><td>The switch has no <code>management-address</code> in <code>ip-fabric.xml</code>. EOS keeps its management address in the configuration DORSI manages, so without one DORSI removes it from <code>Management0</code>.</td></tr>
+      <tr><td>DORSI loses an Arista switch right after configuring it</td><td>The switch did not start with Management0 in the VRF <code>MGMT</code> (it comes from <code>ceos-startup.partial.cfg</code>), or has no <code>management-address</code> in <code>ip-fabric.xml</code>. EOS keeps its management address in the configuration DORSI manages, so without one DORSI removes it from <code>Management0</code>.</td></tr>
       <tr><td>NETCONF authentication fails on an Arista switch</td><td>The lab startup file turns on password login for SSH (<code>authentication protocol keyboard-interactive password public-key</code>). It takes a few seconds after boot; wait until <code>show management api netconf</code> says <em>running</em>.</td></tr>
       <tr><td><code>make get-dev-config-leaf1</code> or <code>make save-logs</code> do nothing</td><td>These shared make targets only know XR and cRPD routers, not SR Linux. Use <code>sr_cli</code> and <code>docker logs</code> as shown above.</td></tr>
     </tbody>
@@ -593,7 +593,7 @@ ceos         4.36.3.2M    3.89GB</span></pre></div>
       <tr><td><code>superspine1</code></td><td>Arista cEOS 4.36.3.2M</td><td>super-spine, plane 1</td><td class="num">21</td><td><code>10.0.0.21</code></td><td class="num">4200200001</td><td><code>172.31.37.31</code></td></tr>
     </tbody>
   </table></div>
-  <p class="cap" style="margin-top:8px">Arista ports are <code>EthernetN</code> (the container interface <code>ethN</code>), Nokia ports <code>ethernet-1/N</code>. The Arista switches carry their management address as <code>management-address</code> in <code>ip-fabric.xml</code>; SR Linux takes its own from DHCP.</p>
+  <p class="cap" style="margin-top:8px">Arista ports are <code>EthernetN</code> (the container interface <code>ethN</code>), Nokia ports <code>ethernet-1/N</code>. The Arista switches keep Management0 in a VRF of its own, <code>MGMT</code>, and carry their management address and its gateway as <code>management-address</code> and <code>management-gateway</code> in <code>ip-fabric.xml</code>; SR Linux takes its own from DHCP.</p>
 
   <h4>Run it</h4>
   <p>The steps are those of the 3-stage lab, from the lab's own directory. The binary from step 2 is shared by all labs.</p>

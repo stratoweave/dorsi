@@ -29,7 +29,8 @@ The lab pins its management addresses in `172.31.37.0/24`: the leaves `.11`
 and `.12`, the spines `.21` and `.22`, superspine1 `.31`, the servers `.41` to
 `.43` and sweave `.10`. As in
 [fabric-3stage-mixed](../fabric-3stage-mixed/README.md#management-addresses),
-the cEOS switches carry theirs as `management-address` in `ip-fabric.xml`.
+the cEOS switches carry theirs as `management-address` in `ip-fabric.xml`,
+together with the `management-gateway` of their management VRF.
 
 ## Links
 
