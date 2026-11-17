@@ -41,4 +41,9 @@ make -C ../.. build-linux-aarch64   # or build-linux-x86_64
 make copy
 docker exec -d dorsi-fabric-5stage-srl-sweave sh -c '/dorsi ip-fabric.xml > /dorsi.log 2>&1'
 make check-overlay
+make check-overlay-failover
 ```
+
+`check-overlay` pings between all servers, `check-overlay-failover` takes each
+port of the ESI-LAG of server1 down and up again while server2 and server3 ping
+server1. Both fail on any lost or duplicated reply.

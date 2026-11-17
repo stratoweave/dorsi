@@ -45,11 +45,12 @@ leaves, and route 10.10.0.0/16 through the gateway of their network.
 Once dorsi has configured the switches, `make check-overlay` pings server3 from
 server1 and back, server2 from server1 and server3, which is routed, and shows
 the route table of the VRF, the EVPN routes and MAC table on leaf3 and the
-ethernet segment on leaf1. To test the ethernet segment, ping server1 from
-server3 while disabling `ethernet-1/1` of leaf1
-(`sr_cli -ec "interface ethernet-1/1 admin-state disable"`): no ping is lost.
-Disabling `ethernet-1/2` of leaf2, a port of server2, while server1 pings
-server2 loses no ping either. The replies of server2 arrive with TTL 253, not
+ethernet segment on leaf1. `make check-overlay-failover` takes a port of each
+ethernet segment down and up again while traffic crosses it: `ethernet-1/1` of
+leaf1 (server1, bridged from server3) and `ethernet-1/2` of leaf2 (server2,
+routed from server1). Both checks fail on any lost or duplicated reply
+(`../common/overlay.mk`). A port coming back up has lost one reply in about
+one change in ten. The replies of server2 arrive with TTL 253, not
 63: SR Linux seems to take the TTL of the outer header when it decapsulates
 routed VXLAN.
 
