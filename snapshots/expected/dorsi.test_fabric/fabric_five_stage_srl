@@ -115,7 +115,7 @@ evpn_2 = subinterface_element.ipv4.arp.create_evpn()
 advertise_element = evpn_2.advertise.create('dynamic')
 
 # P-container: /interface[name='irb0']/subinterface[index='5909']/anycast-gw
-anycast_gw = subinterface_element.create_anycast_gw(virtual_router_id=u64(1))
+anycast_gw = subinterface_element.create_anycast_gw(virtual_router_id=u64(1), anycast_gw_mac='02:dc:00:00:00:01')
 
 # List /interface (srl_nokia-interfaces) element: 'lag1'
 interface_element_3 = leaf1.interface.create('lag1', description='Server server1', admin_state='enable', vlan_tagging=True)
@@ -424,7 +424,7 @@ evpn_2 = subinterface_element.ipv4.arp.create_evpn()
 advertise_element = evpn_2.advertise.create('dynamic')
 
 # P-container: /interface[name='irb0']/subinterface[index='5909']/anycast-gw
-anycast_gw = subinterface_element.create_anycast_gw(virtual_router_id=u64(1))
+anycast_gw = subinterface_element.create_anycast_gw(virtual_router_id=u64(1), anycast_gw_mac='02:dc:00:00:00:01')
 
 # List /interface[name='irb0']/subinterface element: 6044
 subinterface_element = interface_element_3.subinterface.create(u64(6044), admin_state='enable')
@@ -448,7 +448,7 @@ evpn_2 = subinterface_element.ipv4.arp.create_evpn()
 advertise_element = evpn_2.advertise.create('dynamic')
 
 # P-container: /interface[name='irb0']/subinterface[index='6044']/anycast-gw
-anycast_gw = subinterface_element.create_anycast_gw(virtual_router_id=u64(1))
+anycast_gw = subinterface_element.create_anycast_gw(virtual_router_id=u64(1), anycast_gw_mac='02:dc:00:00:00:01')
 
 # List /interface (srl_nokia-interfaces) element: 'lag1'
 interface_element_3 = leaf2.interface.create('lag1', description='Server server1', admin_state='enable', vlan_tagging=True)

@@ -60,6 +60,25 @@ reachability work, and dorsi reports every fabric link up with its BGP session
 up and its cabling ok, read over LLDP from both vendors. The management
 addresses of the cEOS switches stay in place.
 
+## Overlay
+
+`ip-fabric-overlay.xml` is the same fabric with an EVPN-VXLAN overlay across
+the vendors, layer 2 only (dorsi cannot put an ethernet segment or a VRF on
+EOS yet), and server2 single-homed to leaf3 for it. Network `t1/web` joins:
+
+| Server | Leaf side | VLAN | Address |
+|---|---|---|---|
+| server1 | `lag1` on leaf1 and leaf2 (SR Linux, ESI-LAG) | 10 | 10.10.10.11/24 |
+| server2 | `Ethernet1` on leaf3 (EOS) | untagged | 10.10.10.12/24 |
+| server3 | `Ethernet2` on leaf3 (EOS) | 30 | 10.10.10.13/24 |
+
+On leaf3 the network is VLAN 768 inside the switch: server3's tag 30 is
+translated to it, server2 has it as its native VLAN. Run dorsi with
+`ip-fabric-overlay.xml` instead of `ip-fabric.xml` (`make copy
+CONFIG=ip-fabric-overlay.xml`), then `make check-overlay` pings between all
+three servers, also with full 1500 byte frames, and fails on any lost or
+duplicated reply. It has passed.
+
 ## The cEOS image
 
 cEOS-lab is not in a public registry. Download it from

@@ -342,6 +342,10 @@ address_element.config.prefix_length = u64(31)
 
 # Container: /interfaces/interface[name='Ethernet49']/subinterfaces/subinterface[index='0']/ipv4/config
 subinterface_element.ipv4.config.enabled = True
+subinterface_element.ipv4.config.mtu = u64(9000)
+
+# Container: /interfaces/interface[name='Ethernet49']/subinterfaces/subinterface[index='0']/ipv6/config
+subinterface_element.ipv6.config.mtu = u64(9000)
 
 # List /interfaces/interface element: 'Ethernet50'
 interface_element = leaf3.interfaces.interface.create('Ethernet50')
@@ -369,6 +373,10 @@ address_element.config.prefix_length = u64(31)
 
 # Container: /interfaces/interface[name='Ethernet50']/subinterfaces/subinterface[index='0']/ipv4/config
 subinterface_element.ipv4.config.enabled = True
+subinterface_element.ipv4.config.mtu = u64(9000)
+
+# Container: /interfaces/interface[name='Ethernet50']/subinterfaces/subinterface[index='0']/ipv6/config
+subinterface_element.ipv6.config.mtu = u64(9000)
 
 # List /interfaces/interface element: 'Loopback0'
 interface_element = leaf3.interfaces.interface.create('Loopback0')
@@ -801,6 +809,10 @@ address_element.config.prefix_length = u64(31)
 
 # Container: /interfaces/interface[name='Ethernet1']/subinterfaces/subinterface[index='0']/ipv4/config
 subinterface_element.ipv4.config.enabled = True
+subinterface_element.ipv4.config.mtu = u64(9000)
+
+# Container: /interfaces/interface[name='Ethernet1']/subinterfaces/subinterface[index='0']/ipv6/config
+subinterface_element.ipv6.config.mtu = u64(9000)
 
 # List /interfaces/interface element: 'Ethernet2'
 interface_element = spine2.interfaces.interface.create('Ethernet2')
@@ -828,6 +840,10 @@ address_element.config.prefix_length = u64(31)
 
 # Container: /interfaces/interface[name='Ethernet2']/subinterfaces/subinterface[index='0']/ipv4/config
 subinterface_element.ipv4.config.enabled = True
+subinterface_element.ipv4.config.mtu = u64(9000)
+
+# Container: /interfaces/interface[name='Ethernet2']/subinterfaces/subinterface[index='0']/ipv6/config
+subinterface_element.ipv6.config.mtu = u64(9000)
 
 # List /interfaces/interface element: 'Ethernet3'
 interface_element = spine2.interfaces.interface.create('Ethernet3')
@@ -855,6 +871,10 @@ address_element.config.prefix_length = u64(31)
 
 # Container: /interfaces/interface[name='Ethernet3']/subinterfaces/subinterface[index='0']/ipv4/config
 subinterface_element.ipv4.config.enabled = True
+subinterface_element.ipv4.config.mtu = u64(9000)
+
+# Container: /interfaces/interface[name='Ethernet3']/subinterfaces/subinterface[index='0']/ipv6/config
+subinterface_element.ipv6.config.mtu = u64(9000)
 
 # List /interfaces/interface element: 'Loopback0'
 interface_element = spine2.interfaces.interface.create('Loopback0')

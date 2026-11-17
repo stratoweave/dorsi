@@ -1309,7 +1309,8 @@ SRC_DNODE_CHILD_18: DContainer = DContainer(module='srl_nokia-interfaces', names
     ], must=[
 DMust(condition="starts-with(../../name,'irb')", description=None, error_app_tag=None, error_message='Only supported on IRB subinterfaces', reference=None)
     ], presence=True, children=[
-    DLeaf(module='srl_nokia-interfaces', namespace='urn:nokia.com:srlinux:chassis:interfaces', prefix='srl_nokia-if', name='virtual-router-id', config=True, description='The Virtual Router Identifier (VRID) value used to auto-derive the anycast-gw-mac in the format 00:00:5E:00:01:VRID.', default='1', is_key=False, mandatory=False, reference='draft-ietf-bess-evpn-inter-subnet-forwarding', type=DTypeIntegerUnsigned(name='uint8', description=None, reference=None, units=None, exts=[], builtin_type='uint8', default=None, ranges=Ranges([(1, 255)])))
+    DLeaf(module='srl_nokia-interfaces', namespace='urn:nokia.com:srlinux:chassis:interfaces', prefix='srl_nokia-if', name='virtual-router-id', config=True, description='The Virtual Router Identifier (VRID) value used to auto-derive the anycast-gw-mac in the format 00:00:5E:00:01:VRID.', default='1', is_key=False, mandatory=False, reference='draft-ietf-bess-evpn-inter-subnet-forwarding', type=DTypeIntegerUnsigned(name='uint8', description=None, reference=None, units=None, exts=[], builtin_type='uint8', default=None, ranges=Ranges([(1, 255)]))),
+    DLeaf(module='srl_nokia-interfaces', namespace='urn:nokia.com:srlinux:chassis:interfaces', prefix='srl_nokia-if', name='anycast-gw-mac', config=True, description='The MAC address of associated to the anycast-gw IP address.\n\nIf the anycast-gw MAC address is not configured, it will be auto-derived from the virtual-router-id value\nas per draft-ietf-bess-evpn-inter-subnet-forwarding following the format 00:00:5E:00:01:VRID.', is_key=False, mandatory=False, type=DTypeString(name='srl_nokia-comm:mac-address', description='The mac-address type represents an IEEE 802 MAC address.\nThe canonical representation uses lowercase characters.\n\nIn the value set and its semantics, this type is equivalent\nto the MacAddress textual convention of the SMIv2.', reference='IEEE 802: IEEE Standard for Local and Metropolitan Area\n          Networks: Overview and Architecture\nRFC 2579: Textual Conventions for SMIv2', units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[YangPattern(yang_regex='[0-9a-fA-F]{{2}}(:[0-9a-fA-F]{{2}}){{5}}', pcre='^([0-9a-fA-F]{{2}}(:[0-9a-fA-F]{{2}}){{5}})$', invert=False)]))
 ])
 
 SRC_DNODE_CHILD_19: DContainer = DContainer(module='srl_nokia-interfaces-vlans', namespace='urn:nokia.com:srlinux:chassis:interfaces-vlans', prefix='srl_nokia-if-vlan', name='vlan', config=True, description='Parameters for VLAN definition under SRL interfaces', presence=False, children=[
@@ -43342,9 +43343,11 @@ class srl_nokia_interfaces__interface__subinterface__ipv6(yadata.MNode):
 _breaker34: None = None
 class srl_nokia_interfaces__interface__subinterface__anycast_gw(yadata.MNode):
     virtual_router_id: ?u64
+    anycast_gw_mac: ?str
 
-    mut def __init__(self, virtual_router_id: ?u64=None) -> None:
+    mut def __init__(self, virtual_router_id: ?u64=None, anycast_gw_mac: ?str=None) -> None:
         self.virtual_router_id = virtual_router_id
+        self.anycast_gw_mac = anycast_gw_mac
 
     mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
         return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['srl_nokia-interfaces:interface', 'subinterface', 'anycast-gw'], prev=prev)
@@ -43352,7 +43355,7 @@ class srl_nokia_interfaces__interface__subinterface__anycast_gw(yadata.MNode):
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> ?srl_nokia_interfaces__interface__subinterface__anycast_gw:
         if n is not None:
-            return srl_nokia_interfaces__interface__subinterface__anycast_gw(virtual_router_id=n.get_opt_u64(ygdata.Id(NS_srl_nokia_interfaces, 'virtual-router-id')))
+            return srl_nokia_interfaces__interface__subinterface__anycast_gw(virtual_router_id=n.get_opt_u64(ygdata.Id(NS_srl_nokia_interfaces, 'virtual-router-id')), anycast_gw_mac=n.get_opt_str(ygdata.Id(NS_srl_nokia_interfaces, 'anycast-gw-mac')))
         return None
 
     mut def copy(self) -> srl_nokia_interfaces__interface__subinterface__anycast_gw:
@@ -43495,13 +43498,15 @@ class srl_nokia_interfaces__interface__subinterface_entry(yadata.MNode):
         self.anycast_gw = anycast_gw
         self.vlan = vlan if vlan is not None else srl_nokia_interfaces__interface__subinterface__vlan()
 
-    mut def create_anycast_gw(self, virtual_router_id: ?u64=None) -> srl_nokia_interfaces__interface__subinterface__anycast_gw:
+    mut def create_anycast_gw(self, virtual_router_id: ?u64=None, anycast_gw_mac: ?str=None) -> srl_nokia_interfaces__interface__subinterface__anycast_gw:
         existing = self.anycast_gw
         if existing is not None:
             if virtual_router_id is not None:
                 existing.virtual_router_id = virtual_router_id
+            if anycast_gw_mac is not None:
+                existing.anycast_gw_mac = anycast_gw_mac
             return existing
-        res = srl_nokia_interfaces__interface__subinterface__anycast_gw(virtual_router_id=virtual_router_id)
+        res = srl_nokia_interfaces__interface__subinterface__anycast_gw(virtual_router_id=virtual_router_id, anycast_gw_mac=anycast_gw_mac)
         self.anycast_gw = res
         return res
 
@@ -46283,13 +46288,15 @@ proc def srl_nokia_interfaces__interface__subinterface__anycast_gw_deliver(cb: a
 
 class srl_nokia_interfaces__interface__subinterface__anycast_gw_subs(SubscriptionNode):
     virtual_router_id: SubscriptionNode
+    anycast_gw_mac: SubscriptionNode
 
     pure def __init__(self, path: ?SubscriptionPath=None) -> None:
         SubscriptionNode.__init__(self, path)
         self.virtual_router_id = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_srl_nokia_interfaces, 'virtual-router-id'), parent=path))
+        self.anycast_gw_mac = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_srl_nokia_interfaces, 'anycast-gw-mac'), parent=path))
 
     pure def _direct_children(self) -> list[SubscriptionNode]:
-        direct: list[SubscriptionNode] = [self.virtual_router_id]
+        direct: list[SubscriptionNode] = [self.virtual_router_id, self.anycast_gw_mac]
         return direct
 
     def dst(self, cb: action(?(interface_name: str, subinterface_index: u64), ?srl_nokia_interfaces__interface__subinterface__anycast_gw, ?Exception) -> None) -> ygdata.Dst:
