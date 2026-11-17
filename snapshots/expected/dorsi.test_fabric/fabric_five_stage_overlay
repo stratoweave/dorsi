@@ -70,7 +70,7 @@ interface_element_3.ethernet.aggregate_id = 'lag1'
 interface_element_3 = leaf1.interface.create('ethernet-1/49', description='Link to spine1 [ethernet-1/1]', admin_state='enable')
 
 # List /interface[name='ethernet-1/49']/subinterface element: 0
-subinterface_element = interface_element_3.subinterface.create(u64(0), description='Link to spine1 [ethernet-1/1]', admin_state='enable')
+subinterface_element = interface_element_3.subinterface.create(u64(0), description='Link to spine1 [ethernet-1/1]', admin_state='enable', ip_mtu=u64(9000))
 
 # Container: /interface[name='ethernet-1/49']/subinterface[index='0']/ipv4
 subinterface_element.ipv4.admin_state = 'enable'
@@ -82,7 +82,7 @@ address_element = subinterface_element.ipv4.address.create('10.100.0.226/31')
 interface_element_3 = leaf1.interface.create('ethernet-1/50', description='Link to spine2 [ethernet-1/1]', admin_state='enable')
 
 # List /interface[name='ethernet-1/50']/subinterface element: 0
-subinterface_element = interface_element_3.subinterface.create(u64(0), description='Link to spine2 [ethernet-1/1]', admin_state='enable')
+subinterface_element = interface_element_3.subinterface.create(u64(0), description='Link to spine2 [ethernet-1/1]', admin_state='enable', ip_mtu=u64(9000))
 
 # Container: /interface[name='ethernet-1/50']/subinterface[index='0']/ipv4
 subinterface_element.ipv4.admin_state = 'enable'
@@ -397,7 +397,7 @@ interface_element_3.ethernet.aggregate_id = 'lag2'
 interface_element_3 = leaf2.interface.create('ethernet-1/49', description='Link to spine1 [ethernet-1/2]', admin_state='enable')
 
 # List /interface[name='ethernet-1/49']/subinterface element: 0
-subinterface_element = interface_element_3.subinterface.create(u64(0), description='Link to spine1 [ethernet-1/2]', admin_state='enable')
+subinterface_element = interface_element_3.subinterface.create(u64(0), description='Link to spine1 [ethernet-1/2]', admin_state='enable', ip_mtu=u64(9000))
 
 # Container: /interface[name='ethernet-1/49']/subinterface[index='0']/ipv4
 subinterface_element.ipv4.admin_state = 'enable'
@@ -409,7 +409,7 @@ address_element = subinterface_element.ipv4.address.create('10.100.1.98/31')
 interface_element_3 = leaf2.interface.create('ethernet-1/50', description='Link to spine2 [ethernet-1/2]', admin_state='enable')
 
 # List /interface[name='ethernet-1/50']/subinterface element: 0
-subinterface_element = interface_element_3.subinterface.create(u64(0), description='Link to spine2 [ethernet-1/2]', admin_state='enable')
+subinterface_element = interface_element_3.subinterface.create(u64(0), description='Link to spine2 [ethernet-1/2]', admin_state='enable', ip_mtu=u64(9000))
 
 # Container: /interface[name='ethernet-1/50']/subinterface[index='0']/ipv4
 subinterface_element.ipv4.admin_state = 'enable'
@@ -800,7 +800,7 @@ single_tagged = subinterface_element.vlan.encap.create_single_tagged(vlan_id=u64
 interface_element_3 = leaf3.interface.create('ethernet-1/49', description='Link to spine3 [ethernet-1/1]', admin_state='enable')
 
 # List /interface[name='ethernet-1/49']/subinterface element: 0
-subinterface_element = interface_element_3.subinterface.create(u64(0), description='Link to spine3 [ethernet-1/1]', admin_state='enable')
+subinterface_element = interface_element_3.subinterface.create(u64(0), description='Link to spine3 [ethernet-1/1]', admin_state='enable', ip_mtu=u64(9000))
 
 # Container: /interface[name='ethernet-1/49']/subinterface[index='0']/ipv4
 subinterface_element.ipv4.admin_state = 'enable'
@@ -812,7 +812,7 @@ address_element = subinterface_element.ipv4.address.create('10.100.1.226/31')
 interface_element_3 = leaf3.interface.create('ethernet-1/50', description='Link to spine4 [ethernet-1/1]', admin_state='enable')
 
 # List /interface[name='ethernet-1/50']/subinterface element: 0
-subinterface_element = interface_element_3.subinterface.create(u64(0), description='Link to spine4 [ethernet-1/1]', admin_state='enable')
+subinterface_element = interface_element_3.subinterface.create(u64(0), description='Link to spine4 [ethernet-1/1]', admin_state='enable', ip_mtu=u64(9000))
 
 # Container: /interface[name='ethernet-1/50']/subinterface[index='0']/ipv4
 subinterface_element.ipv4.admin_state = 'enable'
@@ -1133,7 +1133,7 @@ interface_element = lldp.interface.create('mgmt0', admin_state='enable')
 interface_element_2 = leaf4.interface.create('ethernet-1/49', description='Link to spine3 [ethernet-1/2]', admin_state='enable')
 
 # List /interface[name='ethernet-1/49']/subinterface element: 0
-subinterface_element = interface_element_2.subinterface.create(u64(0), description='Link to spine3 [ethernet-1/2]', admin_state='enable')
+subinterface_element = interface_element_2.subinterface.create(u64(0), description='Link to spine3 [ethernet-1/2]', admin_state='enable', ip_mtu=u64(9000))
 
 # Container: /interface[name='ethernet-1/49']/subinterface[index='0']/ipv4
 subinterface_element.ipv4.admin_state = 'enable'
@@ -1145,7 +1145,7 @@ address_element = subinterface_element.ipv4.address.create('10.100.2.98/31')
 interface_element_2 = leaf4.interface.create('ethernet-1/50', description='Link to spine4 [ethernet-1/2]', admin_state='enable')
 
 # List /interface[name='ethernet-1/50']/subinterface element: 0
-subinterface_element = interface_element_2.subinterface.create(u64(0), description='Link to spine4 [ethernet-1/2]', admin_state='enable')
+subinterface_element = interface_element_2.subinterface.create(u64(0), description='Link to spine4 [ethernet-1/2]', admin_state='enable', ip_mtu=u64(9000))
 
 # Container: /interface[name='ethernet-1/50']/subinterface[index='0']/ipv4
 subinterface_element.ipv4.admin_state = 'enable'
@@ -1289,7 +1289,7 @@ interface_element = lldp.interface.create('mgmt0', admin_state='enable')
 interface_element_2 = spine1.interface.create('ethernet-1/1', description='Link to leaf1 [ethernet-1/49]', admin_state='enable')
 
 # List /interface[name='ethernet-1/1']/subinterface element: 0
-subinterface_element = interface_element_2.subinterface.create(u64(0), description='Link to leaf1 [ethernet-1/49]', admin_state='enable')
+subinterface_element = interface_element_2.subinterface.create(u64(0), description='Link to leaf1 [ethernet-1/49]', admin_state='enable', ip_mtu=u64(9000))
 
 # Container: /interface[name='ethernet-1/1']/subinterface[index='0']/ipv4
 subinterface_element.ipv4.admin_state = 'enable'
@@ -1301,7 +1301,7 @@ address_element = subinterface_element.ipv4.address.create('10.100.0.227/31')
 interface_element_2 = spine1.interface.create('ethernet-1/2', description='Link to leaf2 [ethernet-1/49]', admin_state='enable')
 
 # List /interface[name='ethernet-1/2']/subinterface element: 0
-subinterface_element = interface_element_2.subinterface.create(u64(0), description='Link to leaf2 [ethernet-1/49]', admin_state='enable')
+subinterface_element = interface_element_2.subinterface.create(u64(0), description='Link to leaf2 [ethernet-1/49]', admin_state='enable', ip_mtu=u64(9000))
 
 # Container: /interface[name='ethernet-1/2']/subinterface[index='0']/ipv4
 subinterface_element.ipv4.admin_state = 'enable'
@@ -1313,7 +1313,7 @@ address_element = subinterface_element.ipv4.address.create('10.100.1.99/31')
 interface_element_2 = spine1.interface.create('ethernet-1/31', description='Link to superspine1 [ethernet-1/1]', admin_state='enable')
 
 # List /interface[name='ethernet-1/31']/subinterface element: 0
-subinterface_element = interface_element_2.subinterface.create(u64(0), description='Link to superspine1 [ethernet-1/1]', admin_state='enable')
+subinterface_element = interface_element_2.subinterface.create(u64(0), description='Link to superspine1 [ethernet-1/1]', admin_state='enable', ip_mtu=u64(9000))
 
 # Container: /interface[name='ethernet-1/31']/subinterface[index='0']/ipv4
 subinterface_element.ipv4.admin_state = 'enable'
@@ -1464,7 +1464,7 @@ interface_element = lldp.interface.create('mgmt0', admin_state='enable')
 interface_element_2 = spine2.interface.create('ethernet-1/1', description='Link to leaf1 [ethernet-1/50]', admin_state='enable')
 
 # List /interface[name='ethernet-1/1']/subinterface element: 0
-subinterface_element = interface_element_2.subinterface.create(u64(0), description='Link to leaf1 [ethernet-1/50]', admin_state='enable')
+subinterface_element = interface_element_2.subinterface.create(u64(0), description='Link to leaf1 [ethernet-1/50]', admin_state='enable', ip_mtu=u64(9000))
 
 # Container: /interface[name='ethernet-1/1']/subinterface[index='0']/ipv4
 subinterface_element.ipv4.admin_state = 'enable'
@@ -1476,7 +1476,7 @@ address_element = subinterface_element.ipv4.address.create('10.100.0.229/31')
 interface_element_2 = spine2.interface.create('ethernet-1/2', description='Link to leaf2 [ethernet-1/50]', admin_state='enable')
 
 # List /interface[name='ethernet-1/2']/subinterface element: 0
-subinterface_element = interface_element_2.subinterface.create(u64(0), description='Link to leaf2 [ethernet-1/50]', admin_state='enable')
+subinterface_element = interface_element_2.subinterface.create(u64(0), description='Link to leaf2 [ethernet-1/50]', admin_state='enable', ip_mtu=u64(9000))
 
 # Container: /interface[name='ethernet-1/2']/subinterface[index='0']/ipv4
 subinterface_element.ipv4.admin_state = 'enable'
@@ -1488,7 +1488,7 @@ address_element = subinterface_element.ipv4.address.create('10.100.1.101/31')
 interface_element_2 = spine2.interface.create('ethernet-1/31', description='Link to superspine2 [ethernet-1/1]', admin_state='enable')
 
 # List /interface[name='ethernet-1/31']/subinterface element: 0
-subinterface_element = interface_element_2.subinterface.create(u64(0), description='Link to superspine2 [ethernet-1/1]', admin_state='enable')
+subinterface_element = interface_element_2.subinterface.create(u64(0), description='Link to superspine2 [ethernet-1/1]', admin_state='enable', ip_mtu=u64(9000))
 
 # Container: /interface[name='ethernet-1/31']/subinterface[index='0']/ipv4
 subinterface_element.ipv4.admin_state = 'enable'
@@ -1639,7 +1639,7 @@ interface_element = lldp.interface.create('mgmt0', admin_state='enable')
 interface_element_2 = spine3.interface.create('ethernet-1/1', description='Link to leaf3 [ethernet-1/49]', admin_state='enable')
 
 # List /interface[name='ethernet-1/1']/subinterface element: 0
-subinterface_element = interface_element_2.subinterface.create(u64(0), description='Link to leaf3 [ethernet-1/49]', admin_state='enable')
+subinterface_element = interface_element_2.subinterface.create(u64(0), description='Link to leaf3 [ethernet-1/49]', admin_state='enable', ip_mtu=u64(9000))
 
 # Container: /interface[name='ethernet-1/1']/subinterface[index='0']/ipv4
 subinterface_element.ipv4.admin_state = 'enable'
@@ -1651,7 +1651,7 @@ address_element = subinterface_element.ipv4.address.create('10.100.1.227/31')
 interface_element_2 = spine3.interface.create('ethernet-1/2', description='Link to leaf4 [ethernet-1/49]', admin_state='enable')
 
 # List /interface[name='ethernet-1/2']/subinterface element: 0
-subinterface_element = interface_element_2.subinterface.create(u64(0), description='Link to leaf4 [ethernet-1/49]', admin_state='enable')
+subinterface_element = interface_element_2.subinterface.create(u64(0), description='Link to leaf4 [ethernet-1/49]', admin_state='enable', ip_mtu=u64(9000))
 
 # Container: /interface[name='ethernet-1/2']/subinterface[index='0']/ipv4
 subinterface_element.ipv4.admin_state = 'enable'
@@ -1663,7 +1663,7 @@ address_element = subinterface_element.ipv4.address.create('10.100.2.99/31')
 interface_element_2 = spine3.interface.create('ethernet-1/31', description='Link to superspine1 [ethernet-1/2]', admin_state='enable')
 
 # List /interface[name='ethernet-1/31']/subinterface element: 0
-subinterface_element = interface_element_2.subinterface.create(u64(0), description='Link to superspine1 [ethernet-1/2]', admin_state='enable')
+subinterface_element = interface_element_2.subinterface.create(u64(0), description='Link to superspine1 [ethernet-1/2]', admin_state='enable', ip_mtu=u64(9000))
 
 # Container: /interface[name='ethernet-1/31']/subinterface[index='0']/ipv4
 subinterface_element.ipv4.admin_state = 'enable'
@@ -1814,7 +1814,7 @@ interface_element = lldp.interface.create('mgmt0', admin_state='enable')
 interface_element_2 = spine4.interface.create('ethernet-1/1', description='Link to leaf3 [ethernet-1/50]', admin_state='enable')
 
 # List /interface[name='ethernet-1/1']/subinterface element: 0
-subinterface_element = interface_element_2.subinterface.create(u64(0), description='Link to leaf3 [ethernet-1/50]', admin_state='enable')
+subinterface_element = interface_element_2.subinterface.create(u64(0), description='Link to leaf3 [ethernet-1/50]', admin_state='enable', ip_mtu=u64(9000))
 
 # Container: /interface[name='ethernet-1/1']/subinterface[index='0']/ipv4
 subinterface_element.ipv4.admin_state = 'enable'
@@ -1826,7 +1826,7 @@ address_element = subinterface_element.ipv4.address.create('10.100.1.229/31')
 interface_element_2 = spine4.interface.create('ethernet-1/2', description='Link to leaf4 [ethernet-1/50]', admin_state='enable')
 
 # List /interface[name='ethernet-1/2']/subinterface element: 0
-subinterface_element = interface_element_2.subinterface.create(u64(0), description='Link to leaf4 [ethernet-1/50]', admin_state='enable')
+subinterface_element = interface_element_2.subinterface.create(u64(0), description='Link to leaf4 [ethernet-1/50]', admin_state='enable', ip_mtu=u64(9000))
 
 # Container: /interface[name='ethernet-1/2']/subinterface[index='0']/ipv4
 subinterface_element.ipv4.admin_state = 'enable'
@@ -1838,7 +1838,7 @@ address_element = subinterface_element.ipv4.address.create('10.100.2.101/31')
 interface_element_2 = spine4.interface.create('ethernet-1/31', description='Link to superspine2 [ethernet-1/2]', admin_state='enable')
 
 # List /interface[name='ethernet-1/31']/subinterface element: 0
-subinterface_element = interface_element_2.subinterface.create(u64(0), description='Link to superspine2 [ethernet-1/2]', admin_state='enable')
+subinterface_element = interface_element_2.subinterface.create(u64(0), description='Link to superspine2 [ethernet-1/2]', admin_state='enable', ip_mtu=u64(9000))
 
 # Container: /interface[name='ethernet-1/31']/subinterface[index='0']/ipv4
 subinterface_element.ipv4.admin_state = 'enable'
@@ -1986,7 +1986,7 @@ interface_element = lldp.interface.create('mgmt0', admin_state='enable')
 interface_element_2 = superspine1.interface.create('ethernet-1/1', description='Link to spine1 [ethernet-1/31]', admin_state='enable')
 
 # List /interface[name='ethernet-1/1']/subinterface element: 0
-subinterface_element = interface_element_2.subinterface.create(u64(0), description='Link to spine1 [ethernet-1/31]', admin_state='enable')
+subinterface_element = interface_element_2.subinterface.create(u64(0), description='Link to spine1 [ethernet-1/31]', admin_state='enable', ip_mtu=u64(9000))
 
 # Container: /interface[name='ethernet-1/1']/subinterface[index='0']/ipv4
 subinterface_element.ipv4.admin_state = 'enable'
@@ -1998,7 +1998,7 @@ address_element = subinterface_element.ipv4.address.create('10.100.5.191/31')
 interface_element_2 = superspine1.interface.create('ethernet-1/2', description='Link to spine3 [ethernet-1/31]', admin_state='enable')
 
 # List /interface[name='ethernet-1/2']/subinterface element: 0
-subinterface_element = interface_element_2.subinterface.create(u64(0), description='Link to spine3 [ethernet-1/31]', admin_state='enable')
+subinterface_element = interface_element_2.subinterface.create(u64(0), description='Link to spine3 [ethernet-1/31]', admin_state='enable', ip_mtu=u64(9000))
 
 # Container: /interface[name='ethernet-1/2']/subinterface[index='0']/ipv4
 subinterface_element.ipv4.admin_state = 'enable'
@@ -2140,7 +2140,7 @@ interface_element = lldp.interface.create('mgmt0', admin_state='enable')
 interface_element_2 = superspine2.interface.create('ethernet-1/1', description='Link to spine2 [ethernet-1/31]', admin_state='enable')
 
 # List /interface[name='ethernet-1/1']/subinterface element: 0
-subinterface_element = interface_element_2.subinterface.create(u64(0), description='Link to spine2 [ethernet-1/31]', admin_state='enable')
+subinterface_element = interface_element_2.subinterface.create(u64(0), description='Link to spine2 [ethernet-1/31]', admin_state='enable', ip_mtu=u64(9000))
 
 # Container: /interface[name='ethernet-1/1']/subinterface[index='0']/ipv4
 subinterface_element.ipv4.admin_state = 'enable'
@@ -2152,7 +2152,7 @@ address_element = subinterface_element.ipv4.address.create('10.100.6.63/31')
 interface_element_2 = superspine2.interface.create('ethernet-1/2', description='Link to spine4 [ethernet-1/31]', admin_state='enable')
 
 # List /interface[name='ethernet-1/2']/subinterface element: 0
-subinterface_element = interface_element_2.subinterface.create(u64(0), description='Link to spine4 [ethernet-1/31]', admin_state='enable')
+subinterface_element = interface_element_2.subinterface.create(u64(0), description='Link to spine4 [ethernet-1/31]', admin_state='enable', ip_mtu=u64(9000))
 
 # Container: /interface[name='ethernet-1/2']/subinterface[index='0']/ipv4
 subinterface_element.ipv4.admin_state = 'enable'

@@ -155,7 +155,9 @@ A `fabric` can have `tenant`s, each with layer 2 `network`s, and a `server`
 lists the networks it is `attachment` of, with the VLAN tag it sends each one
 with (absent for untagged) and, for reference, its address. DORSI places a
 network only on the leaves of its servers, as a MAC-VRF bridged over VXLAN
-(`vxlan1`, the VTEP is the loopback). EVPN runs on the eBGP sessions of the
+(`vxlan1`, the VTEP is the loopback). The fabric links of SR Linux have an IP
+MTU of 9000, so that a server can send full 1500 byte frames, to which VXLAN
+adds 50 bytes; Arista EOS links keep their default for now. EVPN runs on the eBGP sessions of the
 underlay: the spines keep and pass on the EVPN routes with their next hop
 (`inter-as-vpn`), and updates go out at once (`rapid-update`). A server
 attached to the overlay connects over a LAG with LACP when it is dual-homed or

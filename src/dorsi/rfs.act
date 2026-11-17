@@ -30,6 +30,10 @@ _FABRIC_EXPORT_POLICY = "export-loopbacks"
 _FABRIC_IMPORT_POLICY = "accept-all"
 _FABRIC_LOOPBACK_PREFIX_SET = "loopbacks"
 _FABRIC_ECMP_PATHS = 64
+# IP MTU of the fabric links. VXLAN adds 50 bytes to every frame of the
+# overlay, so with the default of 1500 a server could send no frame over 1450
+# bytes across the fabric. SR Linux ports have an MTU of 9232 by default.
+_FABRIC_IP_MTU = 9000
 
 # Arista EOS is configured through OpenConfig. SR Linux can serve OpenConfig
 # too, so EOS is told apart by a module only EOS has.
@@ -260,6 +264,7 @@ class FabricInterface(base.FabricInterface):
             subif = intf.subinterface.create(0)
             subif.admin_state = "enable"
             subif.description = if_description
+            subif.ip_mtu = u64(_FABRIC_IP_MTU)
             subif.ipv4.admin_state = "enable"
             subif.ipv4.address.create("%s/%s" % (i.ipv4_address, str(i.ipv4_prefix_length)))
 

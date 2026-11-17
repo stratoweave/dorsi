@@ -16,6 +16,7 @@ check-overlay:
 	@$(call overlay_ping,server2,10.10.10.13)
 	@$(call overlay_ping,server1,10.10.10.12)
 	@$(call overlay_ping,server1,10.10.10.13)
+	@$(call overlay_ping_mtu,server2,10.10.10.13)
 	docker exec $(TESTENV)-leaf1 sr_cli "show network-instance default protocols bgp routes evpn route-type summary"
 	docker exec $(TESTENV)-leaf1 sr_cli "show network-instance t1-web bridge-table mac-table all"
 	docker exec $(TESTENV)-leaf1 sr_cli "show system network-instance ethernet-segments"

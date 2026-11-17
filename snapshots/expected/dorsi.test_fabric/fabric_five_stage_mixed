@@ -310,7 +310,7 @@ interface_element_2 = leaf2.interface.create('ethernet-1/2', description='Server
 interface_element_2 = leaf2.interface.create('ethernet-1/49', description='Link to spine2 [Ethernet1]', admin_state='enable')
 
 # List /interface[name='ethernet-1/49']/subinterface element: 0
-subinterface_element = interface_element_2.subinterface.create(u64(0), description='Link to spine2 [Ethernet1]', admin_state='enable')
+subinterface_element = interface_element_2.subinterface.create(u64(0), description='Link to spine2 [Ethernet1]', admin_state='enable', ip_mtu=u64(9000))
 
 # Container: /interface[name='ethernet-1/49']/subinterface[index='0']/ipv4
 subinterface_element.ipv4.admin_state = 'enable'
@@ -430,7 +430,7 @@ interface_element = lldp.interface.create('mgmt0', admin_state='enable')
 interface_element_2 = spine1.interface.create('ethernet-1/1', description='Link to leaf1 [Ethernet49]', admin_state='enable')
 
 # List /interface[name='ethernet-1/1']/subinterface element: 0
-subinterface_element = interface_element_2.subinterface.create(u64(0), description='Link to leaf1 [Ethernet49]', admin_state='enable')
+subinterface_element = interface_element_2.subinterface.create(u64(0), description='Link to leaf1 [Ethernet49]', admin_state='enable', ip_mtu=u64(9000))
 
 # Container: /interface[name='ethernet-1/1']/subinterface[index='0']/ipv4
 subinterface_element.ipv4.admin_state = 'enable'
@@ -442,7 +442,7 @@ address_element = subinterface_element.ipv4.address.create('10.100.0.227/31')
 interface_element_2 = spine1.interface.create('ethernet-1/31', description='Link to superspine1 [Ethernet1]', admin_state='enable')
 
 # List /interface[name='ethernet-1/31']/subinterface element: 0
-subinterface_element = interface_element_2.subinterface.create(u64(0), description='Link to superspine1 [Ethernet1]', admin_state='enable')
+subinterface_element = interface_element_2.subinterface.create(u64(0), description='Link to superspine1 [Ethernet1]', admin_state='enable', ip_mtu=u64(9000))
 
 # Container: /interface[name='ethernet-1/31']/subinterface[index='0']/ipv4
 subinterface_element.ipv4.admin_state = 'enable'

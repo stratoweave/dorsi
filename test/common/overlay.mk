@@ -6,6 +6,12 @@ overlay_ping = out=$$(docker exec $(TESTENV)-$(1) ping -c 5 -i 0.3 -W 2 $(2)); e
 	echo "$$out" | grep -q " 0% packet loss" || { echo "FAIL: $(1) -> $(2) lost replies"; exit 1; }; \
 	! echo "$$out" | grep -q DUP || { echo "FAIL: $(1) -> $(2) duplicated replies"; exit 1; }
 
+# $(call overlay_ping_mtu,<server>,<address>): the same with full 1500 byte
+# frames that may not be fragmented: VXLAN adds 50 bytes on the fabric links,
+# which need an IP MTU above 1550 for them
+overlay_ping_mtu = out=$$(docker exec $(TESTENV)-$(1) ping -M do -s 1472 -c 3 -W 2 $(2)); echo "$$out"; \
+	echo "$$out" | grep -q " 0% packet loss" || { echo "FAIL: $(1) -> $(2) lost 1500 byte frames"; exit 1; }
+
 # $(call overlay_failover,<server>,<address>,<leaf>,<port>): ping <address>
 # from <server> every 0.2 s while <port> of <leaf>, a port of an ESI-LAG, goes
 # down and then up again. Each change must lose and duplicate no reply.
