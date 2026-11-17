@@ -169,8 +169,15 @@ route target shared by the leaves of a network, a route distinguisher per leaf
 (`<loopback>:<EVI>`), the ESI, LACP system ID and admin key from the server and
 the LAG from the lowest port of the server on the leaf. A clash rejects the
 fabric; a network can then be given its own `vni`. The overlay needs every
-switch to run SR Linux for now. Routing between networks (IRB, IP-VRFs, EVPN
-type 5) is not there yet.
+switch to run SR Linux for now.
+
+A tenant can also have `vrf`s, and a network in a VRF has a `gateway`. The
+VRF routes between its networks with symmetric IRB: every leaf of a network
+answers on the gateway with the same anycast address and MAC (on `irb0`),
+learns the hosts from ARP and advertises them, and an IP-VRF with a layer 3
+VNI on the leaves of the VRF exchanges the subnets and host routes as EVPN IP
+prefix routes (type 5). The layer 3 VNI comes from a range of its own, apart
+from those of the networks.
 
 #### IP fabric: what is verified
 
@@ -193,8 +200,10 @@ type 5) is not there yet.
 * The EVPN-VXLAN overlay has been run in
   [`test/fabric-3stage`](test/fabric-3stage/README.md): server1 (on an
   ESI-LAG of leaf1 and leaf2) and server3 (on leaf3) reach each other in
-  one network over VXLAN, and disabling or enabling a port of the ESI-LAG
-  loses no ping.
+  one network over VXLAN, server2 is routed to them from another network,
+  and disabling or enabling a port of an ESI-LAG loses no ping, bridged or
+  routed. [`test/fabric-5stage-srl`](test/fabric-5stage-srl/README.md) runs
+  the layer 2 overlay through a super-spine, with an ESI-LAG across the pods.
 * Not covered: live changes to a running fabric. The live state is covered by the build but has not
   been checked against a failing link.
 

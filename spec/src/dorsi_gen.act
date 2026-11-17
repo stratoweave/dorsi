@@ -272,6 +272,12 @@ actor main(env):
     "/srl_nokia-netinst:network-instance/protocols/bgp/afi-safi/evpn/inter-as-vpn",
     "/srl_nokia-netinst:network-instance/protocols/bgp/afi-safi/evpn/rapid-update",
     "/srl_rpol:routing-policy/policy/statement/match/family",
+    # Routing between overlay networks: anycast gateway on irb0, ip-vrf
+    "/srl_nokia-if:interface/subinterface/anycast-gw/virtual-router-id",
+    "/srl_nokia-if:interface/subinterface/ipv4/address/anycast-gw",
+    "/srl_nokia-if:interface/subinterface/ipv4/arp/learn-unsolicited",
+    "/srl_nokia-if:interface/subinterface/ipv4/arp/host-route/populate/route-type",
+    "/srl_nokia-if:interface/subinterface/ipv4/arp/evpn/advertise/route-type",
     # EVPN multihoming: LAG with LACP and the ethernet segment on it
     "/srl_nokia-if:interface/ethernet/aggregate-id",
     "/srl_nokia-if:interface/lag/lag-type",

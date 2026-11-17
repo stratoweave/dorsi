@@ -213,6 +213,25 @@ module ip-fabric {
         leaf name {
           type string;
         }
+        list vrf {
+          key name;
+          description
+            "A routed VRF: an IP-VRF on each leaf of its networks, routing
+             between them with symmetric IRB. A leaf reaches the networks
+             of the VRF it has no server in through EVPN IP prefix routes
+             (type 5).";
+          leaf name {
+            type string;
+          }
+          leaf vni {
+            type uint32 {
+              range "1..16777215";
+            }
+            description
+              "Layer 3 VNI. Derived from the fabric, tenant and VRF names
+               when absent; set it to resolve a clash.";
+          }
+        }
         list network {
           key name;
           description
@@ -228,6 +247,20 @@ module ip-fabric {
               "VXLAN network identifier. Derived from the fabric, tenant
                and network names when absent; set it to resolve a clash
                between two derived VNIs.";
+          }
+          leaf vrf {
+            type string;
+            description
+              "The VRF of the tenant that routes the network. Absent for a
+               network that is only bridged.";
+          }
+          leaf gateway {
+            type string;
+            description
+              "Address and prefix length of the gateway of the network,
+               such as 10.10.10.1/24, for a network in a VRF. Every leaf of
+               the network answers on it with the same anycast address and
+               MAC.";
           }
         }
       }

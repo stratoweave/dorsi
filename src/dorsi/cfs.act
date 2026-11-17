@@ -60,7 +60,10 @@ def fabric_link_addresses(lower_id: int, lower_port: str) -> (str, str):
 # is then rejected (see validate_fabric) and a network can be given its own
 # VNI. Replace these functions with the allocator once it exists.
 #   L2 VNI          10000 + fnv1a32(fabric/tenant/network) % 990000
+#   L3 VNI          1000000 + fnv1a32(fabric/tenant/vrf) % 900000, apart
+#                   from the L2 VNIs
 #   EVI             VNI % 65535 + 1, also the vxlan-interface index
+#   IRB             irb0.<EVI of the network % 9999 + 1>
 #   route target    target:<fnv1a32(fabric) % 65535 + 1>:<VNI>, shared
 #   route dist.     <leaf loopback>:<EVI>, unique per leaf and network
 #   ESI             type 0, 00:<8 hash bytes of fabric/server>:01
@@ -92,6 +95,10 @@ def overlay_vni(fabric: str, tenant: str, network: str) -> int:
     return 10000 + _fnv1a("{fabric}/{tenant}/{network}") % 990000
 
 
+def overlay_l3_vni(fabric: str, tenant: str, vrf: str) -> int:
+    return 1000000 + _fnv1a("{fabric}/{tenant}/{vrf}") % 900000
+
+
 def overlay_evi(vni: int) -> int:
     return vni % 65535 + 1
 
@@ -119,6 +126,14 @@ def server_lacp_admin_key(fabric: str, server: str) -> int:
 def server_lag_name(ports: list[str]) -> str:
     """The LAG of a server on a leaf, named after the lowest of its ports."""
     return "lag{min([_trailing_int(p, 0) for p in ports])}"
+
+
+def irb_index(evi: int) -> int:
+    return evi % 9999 + 1
+
+
+def ip_vrf_name(tenant: str, vrf: str) -> str:
+    return "{tenant}-{vrf}"
 
 
 def mac_vrf_name(tenant: str, network: str) -> str:
@@ -151,6 +166,27 @@ def network_vni(fabric: str, tenant: str, network: y_0.ip_fabric__ip_fabric__fab
     if vni is not None:
         return int(vni)
     return overlay_vni(fabric, tenant, network.name)
+
+
+def vrf_vni(fabric: str, tenant: str, vrf: y_0.ip_fabric__ip_fabric__fabric__tenant__vrf_entry) -> int:
+    """The layer 3 VNI of a VRF: its own when set, derived otherwise."""
+    vni = vrf.vni
+    if vni is not None:
+        return int(vni)
+    return overlay_l3_vni(fabric, tenant, vrf.name)
+
+
+def _ipv4_int(address: str) -> int:
+    """An IPv4 address, validated by is_ipv4_address, as a number."""
+    n = 0
+    for octet in address.split("."):
+        n = n * 256 + int(octet)
+    return n
+
+
+def _ipv4_subnet(address: str, prefix_length: int) -> int:
+    """The network part of an IPv4 address, validated by is_ipv4_address."""
+    return _ipv4_int(address) >> (32 - prefix_length) if prefix_length > 0 else 0
 
 
 def server_leaf_ports(server: y_0.ip_fabric__ip_fabric__fabric__server_entry) -> dict[str, list[str]]:
@@ -318,14 +354,6 @@ def validate_fabric(f: y_0.ip_fabric__ip_fabric__fabric_entry) -> list[str]:
     return errors
 
 
-def _ipv4_int(address: str) -> int:
-    """An IPv4 address, validated by is_ipv4_address, as a number."""
-    n = 0
-    for octet in address.split("."):
-        n = n * 256 + int(octet)
-    return n
-
-
 def validate_overlay(f: y_0.ip_fabric__ip_fabric__fabric_entry, switches: dict[str, y_0.ip_fabric__ip_fabric__fabric__switch_entry]) -> list[str]:
     """The problems found in the EVPN-VXLAN overlay of a fabric."""
     errors: list[str] = []
@@ -338,30 +366,69 @@ def validate_overlay(f: y_0.ip_fabric__ip_fabric__fabric_entry, switches: dict[s
         if sw.type != "NokiaSRLinux_25_3_2":
             errors.append("switch {sw.name}: the EVPN overlay is supported on NokiaSRLinux_25_3_2 only, not {sw.type}")
 
-    # Identifiers derived or set must be unique in the fabric
+    # Identifiers derived or set must be unique in the fabric, those of VRFs
+    # and networks together: they share the VNIs, EVIs and the names of
+    # network instances
     vnis: dict[int, str] = {}
     evis: dict[int, str] = {}
     vrf_names: dict[str, str] = {}
+    irbs: dict[int, str] = {}
+
+    def identify(what: str, vni: int, name: str, kind: str):
+        if vni in vnis:
+            errors.append("{what}: VNI {vni} is also used by {vnis[vni]}, set a vni on one of them")
+        else:
+            vnis[vni] = what
+        evi = overlay_evi(vni)
+        if evi in evis:
+            errors.append("{what}: EVI {evi}, derived from VNI {vni}, is also used by {evis[evi]}, set another vni on one of them")
+        else:
+            evis[evi] = what
+        if not _is_srl_name(name, 247):
+            errors.append("{what}: its {kind} name {name} is not a name SR Linux takes: up to 247 letters, digits and punctuation, no spaces or slashes")
+        elif name in vrf_names:
+            errors.append("{what}: its {kind} name {name} is also that of {vrf_names[name]}")
+        else:
+            vrf_names[name] = what
+
     for tenant in f.tenant:
+        for vrf in tenant.vrf:
+            identify("VRF {tenant.name}/{vrf.name}", vrf_vni(f.name, tenant.name, vrf), ip_vrf_name(tenant.name, vrf.name), "IP-VRF")
+        # The gateways of a VRF, as (subnet, prefix length, network)
+        gateways: dict[str, list[(int, int, str)]] = {}
         for network in tenant.network:
             what = "network {tenant.name}/{network.name}"
             vni = network_vni(f.name, tenant.name, network)
-            if vni in vnis:
-                errors.append("{what}: VNI {vni} is also used by {vnis[vni]}, set a vni on one of them")
-            else:
-                vnis[vni] = what
-            evi = overlay_evi(vni)
-            if evi in evis:
-                errors.append("{what}: EVI {evi}, derived from VNI {vni}, is also used by {evis[evi]}, set another vni on one of them")
-            else:
-                evis[evi] = what
-            name = mac_vrf_name(tenant.name, network.name)
-            if not _is_srl_name(name, 247):
-                errors.append("{what}: its MAC-VRF name {name} is not a name SR Linux takes: up to 247 letters, digits and punctuation, no spaces or slashes")
-            elif name in vrf_names:
-                errors.append("{what}: its MAC-VRF name {name} is also that of {vrf_names[name]}")
-            else:
-                vrf_names[name] = what
+            identify(what, vni, mac_vrf_name(tenant.name, network.name), "MAC-VRF")
+            vrf = network.vrf
+            gateway = network.gateway
+            if vrf is not None:
+                if tenant.vrf.get(vrf) is None:
+                    errors.append("{what}: VRF {vrf} does not exist in tenant {tenant.name}")
+                if gateway is None:
+                    errors.append("{what}: a network in a VRF needs a gateway")
+                irb = irb_index(overlay_evi(vni))
+                if irb in irbs:
+                    errors.append("{what}: its IRB subinterface irb0.{irb}, derived from VNI {vni}, is also that of {irbs[irb]}, set another vni on one of them")
+                else:
+                    irbs[irb] = what
+            if gateway is not None and vrf is None:
+                errors.append("{what}: a gateway needs a vrf")
+            if gateway is not None and vrf is not None:
+                parsed = parse_management_address(gateway)
+                address = parsed.address if parsed is not None else ""
+                length = parsed.prefix_length if parsed is not None else 0
+                if length < 1 or length > 30:
+                    errors.append("{what}: gateway {gateway} is not an IPv4 address with a prefix length of 1 to 30, such as 10.10.10.1/24")
+                else:
+                    if vrf not in gateways:
+                        gateways[vrf] = []
+                    subnet = _ipv4_subnet(address, length)
+                    for other_subnet, other_length, other in gateways[vrf]:
+                        shorter = min([length, other_length])
+                        if subnet >> (length - shorter) == other_subnet >> (other_length - shorter):
+                            errors.append("{what}: its subnet overlaps that of network {tenant.name}/{other} in VRF {vrf}")
+                    gateways[vrf].append((subnet, length, network.name))
 
     # Attachments: an existing network, one VLAN per network on a server and
     # the addresses of a network in one subnet
@@ -379,6 +446,11 @@ def validate_overlay(f: y_0.ip_fabric__ip_fabric__fabric_entry, switches: dict[s
                     errors.append("{what}: network {network} does not exist")
             else:
                 errors.append("{what}: tenant {att.tenant} does not exist")
+            gateway: ?str = None
+            if tenant is not None:
+                net = tenant.network.get(att.network)
+                if net is not None:
+                    gateway = net.gateway
             vlan_id = att.vlan
             vlan = str(vlan_id) if vlan_id is not None else "untagged"
             if vlan in vlans:
@@ -395,7 +467,14 @@ def validate_overlay(f: y_0.ip_fabric__ip_fabric__fabric_entry, switches: dict[s
                         errors.append("{what}: address {host} is also that of {addresses[host]}")
                     else:
                         addresses[host] = what
-                    subnet = _ipv4_int(host) >> (32 - length) if length > 0 else 0
+                    subnet = _ipv4_subnet(host, length)
+                    if gateway is not None:
+                        gw = parse_management_address(gateway)
+                        if gw is not None:
+                            if gw.address == host:
+                                errors.append("{what}: address {host} is the gateway of network {network}")
+                            elif gw.prefix_length != length or _ipv4_subnet(gw.address, gw.prefix_length) != subnet:
+                                errors.append("{what}: address {address} is not in the subnet of gateway {gateway} of network {network}")
                     if network not in subnets:
                         subnets[network] = (subnet, length, server.name)
                     else:
@@ -503,8 +582,11 @@ class Fabric(base.Fabric):
                             port.lag = interface
                 server_interfaces[server.name][leaf] = interface
 
-        # A network is placed on the leaves of the servers attached to it
+        # A network is placed on the leaves of the servers attached to it,
+        # a VRF on the leaves of its networks
         for tenant in i.tenant:
+            # The IRB subinterfaces of each VRF by leaf
+            vrf_irbs: dict[str, dict[str, list[str]]] = {}
             for network in tenant.network:
                 vni = network_vni(i.name, tenant.name, network)
                 evi = overlay_evi(vni)
@@ -519,6 +601,28 @@ class Fabric(base.Fabric):
                             rd = overlay_route_distinguisher(int(switches[leaf].id), evi)
                             mac_vrf = o.rfs.create(leaf).mac_vrf.create(name, u64(vni), u64(evi), rd, route_target)
                             mac_vrf.interface.create(interface).vlan = att.vlan
+                            vrf = network.vrf
+                            gateway = network.gateway
+                            if vrf is not None and gateway is not None:
+                                irb = irb_index(evi)
+                                mac_vrf.create_irb(u64(irb), gateway)
+                                if vrf not in vrf_irbs:
+                                    vrf_irbs[vrf] = {}
+                                if leaf not in vrf_irbs[vrf]:
+                                    vrf_irbs[vrf][leaf] = []
+                                irb_if = "irb0.{irb}"
+                                if irb_if not in vrf_irbs[vrf][leaf]:
+                                    vrf_irbs[vrf][leaf].append(irb_if)
+            for vrf in tenant.vrf:
+                vni = vrf_vni(i.name, tenant.name, vrf)
+                evi = overlay_evi(vni)
+                print("CFS fabric VRF {tenant.name}/{vrf.name} VNI {vni}")
+                if vrf.name not in vrf_irbs:
+                    continue
+                for leaf, irbs in vrf_irbs[vrf.name].items():
+                    rd = overlay_route_distinguisher(int(switches[leaf].id), evi)
+                    ip_vrf = o.rfs.create(leaf).ip_vrf.create(ip_vrf_name(tenant.name, vrf.name), u64(vni), u64(evi), rd, overlay_route_target(i.name, vni))
+                    ip_vrf.irb_interface = irbs
 
         return o
 

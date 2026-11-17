@@ -54,13 +54,15 @@ def three_stage():
     return root
 
 # The EVPN-VXLAN overlay of the fabric-3stage lab, on the three-stage Clos.
-# Tenant t1 has two layer 2 networks: web, tagged with VLAN 10, joins server1
-# (dual-homed to leaf1 and leaf2) to server3 (single-homed to leaf3); db,
-# untagged, is on server2 (dual-homed to leaf2 and leaf3) alone.
+# Tenant t1 has two networks, routed between each other by VRF main: web,
+# tagged with VLAN 10, joins server1 (dual-homed to leaf1 and leaf2) to server3
+# (single-homed to leaf3); db, untagged, is on server2 (dual-homed to leaf2 and
+# leaf3).
 def add_overlay(fabric: cfs_layer.ip_fabric__ip_fabric__fabric_entry):
     tenant = fabric.tenant.create("t1")
-    tenant.network.create("web")
-    tenant.network.create("db")
+    tenant.vrf.create("main")
+    tenant.network.create("web", vrf="main", gateway="10.10.10.1/24")
+    tenant.network.create("db", vrf="main", gateway="10.10.20.1/24")
     fabric.server.get("server1")!.attachment.create(("t1", "web"), vlan=10, ipv4_address="10.10.10.11/24")
     fabric.server.get("server3")!.attachment.create(("t1", "web"), vlan=10, ipv4_address="10.10.10.13/24")
     fabric.server.get("server2")!.attachment.create(("t1", "db"), ipv4_address="10.10.20.12/24")

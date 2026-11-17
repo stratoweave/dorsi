@@ -30,10 +30,11 @@ switches and the links between them.
 ## Overlay
 
 `ip-fabric.xml` also has an EVPN-VXLAN overlay: tenant `t1` with network `web`
-(VLAN 10) and network `db` (untagged). The servers set themselves up for it
+(VLAN 10, gateway 10.10.10.1) and network `db` (untagged, gateway 10.10.20.1),
+routed between each other by VRF `main`. The servers set themselves up for it
 (`exec` in `fabric-3stage.clab.yml`): server1 and server2 bond their two ports
 with LACP, as DORSI puts them on an all-active ethernet segment of their two
-leaves.
+leaves, and route 10.10.0.0/16 through the gateway of their network.
 
 | Server | Network | VLAN | Address | Leaf side |
 |---|---|---|---|---|
@@ -42,11 +43,15 @@ leaves.
 | server3 | `t1/web` | 10 | 10.10.10.13/24 | `ethernet-1/2` on leaf3 |
 
 Once dorsi has configured the switches, `make check-overlay` pings server3 from
-server1 and back and shows the EVPN routes and MAC table on leaf3 and the
+server1 and back, server2 from server1 and server3, which is routed, and shows
+the route table of the VRF, the EVPN routes and MAC table on leaf3 and the
 ethernet segment on leaf1. To test the ethernet segment, ping server1 from
 server3 while disabling `ethernet-1/1` of leaf1
 (`sr_cli -ec "interface ethernet-1/1 admin-state disable"`): no ping is lost.
-server2 is alone in its network until routing between networks is added.
+Disabling `ethernet-1/2` of leaf2, a port of server2, while server1 pings
+server2 loses no ping either. The replies of server2 arrive with TTL 253, not
+63: SR Linux seems to take the TTL of the outer header when it decapsulates
+routed VXLAN.
 
 ## Status
 

@@ -70,11 +70,18 @@
             </fabric-link>
             <tenant>
                 <name>t1</name>
+                <vrf>
+                    <name>main</name>
+                </vrf>
                 <network>
                     <name>web</name>
+                    <vrf>main</vrf>
+                    <gateway>10.10.10.1/24</gateway>
                 </network>
                 <network>
                     <name>db</name>
+                    <vrf>main</vrf>
+                    <gateway>10.10.20.1/24</gateway>
                 </network>
             </tenant>
             <server>

@@ -135,13 +135,28 @@ SRC_DNODE_CHILD_17: DList = DList(module='dorsi-rfs', namespace='http://example.
     DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='evi', config=True, is_key=False, mandatory=True, type=DTypeIntegerUnsigned(name='uint32', description=None, reference=None, units=None, exts=[], builtin_type='uint32', default=None, ranges=Ranges([(1, 65535)]))),
     DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='route-distinguisher', config=True, description='Such as 10.0.0.1:100, unique per leaf.', is_key=False, mandatory=True, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
     DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='route-target', config=True, description='Such as target:100:10010, the same on every leaf of the\nnetwork.', is_key=False, mandatory=True, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
+    DContainer(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='irb', config=True, description='The anycast gateway of the network, on irb0.', presence=True, children=[
+        DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='index', config=True, is_key=False, mandatory=True, type=DTypeIntegerUnsigned(name='uint16', description=None, reference=None, units=None, exts=[], builtin_type='uint16', default=None, ranges=Ranges([(1, 9999)]))),
+        DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='gateway', config=True, description='Such as 10.10.10.1/24.', is_key=False, mandatory=True, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[]))
+    ]),
     DList(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='interface', key=['name'], config=True, description='A server-facing port or LAG in the network.', min_elements=0, ordered_by='system', children=[
         DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='name', config=True, description='Port or LAG, such as ethernet-1/1 or lag1.', is_key=True, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
         DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='vlan', config=True, description='VLAN tag of the server traffic, absent for untagged\ntraffic. It is also the subinterface index.', is_key=False, mandatory=False, type=DTypeIntegerUnsigned(name='uint16', description=None, reference=None, units=None, exts=[], builtin_type='uint16', default=None, ranges=Ranges([(1, 4094)])))
     ])
 ])
 
-SRC_DNODE_CHILD_18: DList = DList(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='server-lag', key=['name'], config=True, description='A LAG with LACP towards a server. On a dual-homed server it\nis an all-active EVPN ethernet segment: both leaves use the\nsame ESI and LACP system ID, so that the server sees one\nLACP partner.', min_elements=0, ordered_by='system', exts=[
+SRC_DNODE_CHILD_18: DList = DList(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='ip-vrf', key=['name'], config=True, description='A routed VRF of the overlay on a leaf: an IP-VRF with a\nlayer 3 VNI, which routes between the IRB interfaces of its\nnetworks and exchanges EVPN IP prefix routes (type 5).', min_elements=0, ordered_by='system', exts=[
+        DExt(module='stratoweave', namespace='http://stratoweave.org/yang/stratoweave', prefix='sw', name='rfs-transform', arg='dorsi.rfs.IpVrf', exts=[])
+    ], children=[
+    DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='name', config=True, is_key=True, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
+    DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='vni', config=True, is_key=False, mandatory=True, type=DTypeIntegerUnsigned(name='uint32', description=None, reference=None, units=None, exts=[], builtin_type='uint32', default=None, ranges=Ranges([(1, 16777215)]))),
+    DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='evi', config=True, is_key=False, mandatory=True, type=DTypeIntegerUnsigned(name='uint32', description=None, reference=None, units=None, exts=[], builtin_type='uint32', default=None, ranges=Ranges([(1, 65535)]))),
+    DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='route-distinguisher', config=True, is_key=False, mandatory=True, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
+    DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='route-target', config=True, is_key=False, mandatory=True, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
+    DLeafList(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='irb-interface', config=True, description='IRB subinterfaces of its networks, such as irb0.10.', min_elements=0, ordered_by='system', type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[]))
+])
+
+SRC_DNODE_CHILD_19: DList = DList(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='server-lag', key=['name'], config=True, description='A LAG with LACP towards a server. On a dual-homed server it\nis an all-active EVPN ethernet segment: both leaves use the\nsame ESI and LACP system ID, so that the server sees one\nLACP partner.', min_elements=0, ordered_by='system', exts=[
         DExt(module='stratoweave', namespace='http://stratoweave.org/yang/stratoweave', prefix='sw', name='rfs-transform', arg='dorsi.rfs.ServerLag', exts=[])
     ], children=[
     DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='name', config=True, description='Such as lag1.', is_key=True, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
@@ -151,7 +166,7 @@ SRC_DNODE_CHILD_18: DList = DList(module='dorsi-rfs', namespace='http://example.
     DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='esi', config=True, description='Ethernet segment identifier of a dual-homed server,\nabsent for a single-homed one.', is_key=False, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[]))
 ])
 
-SRC_DNODE_CHILD_19: DList = DList(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='fabric-interface', key=['name'], config=True, description='Routed point-to-point fabric link with its eBGP session.', min_elements=0, ordered_by='system', exts=[
+SRC_DNODE_CHILD_20: DList = DList(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='fabric-interface', key=['name'], config=True, description='Routed point-to-point fabric link with its eBGP session.', min_elements=0, ordered_by='system', exts=[
         DExt(module='stratoweave', namespace='http://stratoweave.org/yang/stratoweave', prefix='sw', name='rfs-transform', arg='dorsi.rfs.FabricInterface', exts=[])
     ], children=[
     DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='name', config=True, is_key=True, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
@@ -167,7 +182,7 @@ SRC_DNODE_CHILD_19: DList = DList(module='dorsi-rfs', namespace='http://example.
     ])
 ])
 
-SRC_DNODE_CHILD_20: DList = DList(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='server-port', key=['name'], config=True, description='Leaf port facing a server.', min_elements=0, ordered_by='system', exts=[
+SRC_DNODE_CHILD_21: DList = DList(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='server-port', key=['name'], config=True, description='Leaf port facing a server.', min_elements=0, ordered_by='system', exts=[
         DExt(module='stratoweave', namespace='http://stratoweave.org/yang/stratoweave', prefix='sw', name='rfs-transform', arg='dorsi.rfs.ServerPort', exts=[])
     ], children=[
     DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='name', config=True, is_key=True, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
@@ -177,7 +192,7 @@ SRC_DNODE_CHILD_20: DList = DList(module='dorsi-rfs', namespace='http://example.
     DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='lag', config=True, description='The server-lag the port is a member of.', is_key=False, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[]))
 ])
 
-SRC_DNODE_CHILD_14: DList = DList(module='stratoweave-rfs', namespace='http://stratoweave.org/yang/stratoweave-rfs', prefix='sw-rfs', name='rfs', key=['name'], config=True, min_elements=0, ordered_by='system', children=[SRC_DNODE_CHILD_15, SRC_DNODE_CHILD_16, SRC_DNODE_CHILD_17, SRC_DNODE_CHILD_18, SRC_DNODE_CHILD_19, SRC_DNODE_CHILD_20])
+SRC_DNODE_CHILD_14: DList = DList(module='stratoweave-rfs', namespace='http://stratoweave.org/yang/stratoweave-rfs', prefix='sw-rfs', name='rfs', key=['name'], config=True, min_elements=0, ordered_by='system', children=[SRC_DNODE_CHILD_15, SRC_DNODE_CHILD_16, SRC_DNODE_CHILD_17, SRC_DNODE_CHILD_18, SRC_DNODE_CHILD_19, SRC_DNODE_CHILD_20, SRC_DNODE_CHILD_21])
 
 SRC_DNODE: DRoot = DRoot(
     children=[SRC_DNODE_CHILD_0, SRC_DNODE_CHILD_14],
@@ -280,6 +295,22 @@ SRC_YANG_0: str = r"""module dorsi-rfs {
                 type string;
                 mandatory true;
             }
+            container irb {
+                presence "The network is routed.";
+                description
+                    "The anycast gateway of the network, on irb0.";
+                leaf index {
+                    type uint16 {
+                        range "1..9999";
+                    }
+                    mandatory true;
+                }
+                leaf gateway {
+                    description "Such as 10.10.10.1/24.";
+                    type string;
+                    mandatory true;
+                }
+            }
             list interface {
                 description "A server-facing port or LAG in the network.";
                 key name;
@@ -295,6 +326,41 @@ SRC_YANG_0: str = r"""module dorsi-rfs {
                         range "1..4094";
                     }
                 }
+            }
+        }
+        list ip-vrf {
+            description
+                "A routed VRF of the overlay on a leaf: an IP-VRF with a
+                 layer 3 VNI, which routes between the IRB interfaces of its
+                 networks and exchanges EVPN IP prefix routes (type 5).";
+            key name;
+            sw:rfs-transform dorsi.rfs.IpVrf;
+            leaf name {
+                type string;
+            }
+            leaf vni {
+                type uint32 {
+                    range "1..16777215";
+                }
+                mandatory true;
+            }
+            leaf evi {
+                type uint32 {
+                    range "1..65535";
+                }
+                mandatory true;
+            }
+            leaf route-distinguisher {
+                type string;
+                mandatory true;
+            }
+            leaf route-target {
+                type string;
+                mandatory true;
+            }
+            leaf-list irb-interface {
+                description "IRB subinterfaces of its networks, such as irb0.10.";
+                type string;
             }
         }
         list server-lag {
@@ -3087,6 +3153,32 @@ class stratoweave_rfs__rfs__fabric_base_config(yadata.MKeyedList[u64, stratoweav
 
 
 _breaker24: None = None
+class stratoweave_rfs__rfs__mac_vrf__irb(yadata.MNode):
+    index: u64
+    gateway: str
+
+    mut def __init__(self, index: u64, gateway: str) -> None:
+        self.index = index
+        self.gateway = gateway
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=False, root_path=['stratoweave-rfs:rfs', 'dorsi-rfs:mac-vrf', 'irb'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> ?stratoweave_rfs__rfs__mac_vrf__irb:
+        if n is not None:
+            return stratoweave_rfs__rfs__mac_vrf__irb(index=n.get_u64(ygdata.Id(NS_dorsi_rfs, 'index')), gateway=n.get_str(ygdata.Id(NS_dorsi_rfs, 'gateway')))
+        return None
+
+    mut def copy(self) -> stratoweave_rfs__rfs__mac_vrf__irb:
+        """Create a deep copy of this adata object"""
+        ad = stratoweave_rfs__rfs__mac_vrf__irb.from_gdata(self.to_gdata())
+        if ad is not None:
+            return ad
+        raise Exception('Unreachable in stratoweave_rfs__rfs__mac_vrf__irb.copy()')
+
+
+_breaker25: None = None
 class stratoweave_rfs__rfs__mac_vrf__interface_entry(yadata.MNode):
     name: str
     vlan: ?u64
@@ -3106,7 +3198,7 @@ class stratoweave_rfs__rfs__mac_vrf__interface_entry(yadata.MNode):
         """Create a deep copy of this adata object"""
         return stratoweave_rfs__rfs__mac_vrf__interface_entry.from_gdata(self.to_gdata())
 
-_breaker25: None = None
+_breaker26: None = None
 class stratoweave_rfs__rfs__mac_vrf__interface(yadata.MKeyedList[str, stratoweave_rfs__rfs__mac_vrf__interface_entry]):
     mut def __init__(self, elements: list[stratoweave_rfs__rfs__mac_vrf__interface_entry]=[]) -> None:
         yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
@@ -3139,35 +3231,47 @@ class stratoweave_rfs__rfs__mac_vrf__interface(yadata.MKeyedList[str, stratoweav
         return stratoweave_rfs__rfs__mac_vrf__interface(elements=copied_elements)
 
 
-_breaker26: None = None
+_breaker27: None = None
 class stratoweave_rfs__rfs__mac_vrf_entry(yadata.MNode):
     name: str
     vni: u64
     evi: u64
     route_distinguisher: str
     route_target: str
+    irb: ?stratoweave_rfs__rfs__mac_vrf__irb
     interface: stratoweave_rfs__rfs__mac_vrf__interface
 
-    mut def __init__(self, name: str, vni: u64, evi: u64, route_distinguisher: str, route_target: str, interface: list[stratoweave_rfs__rfs__mac_vrf__interface_entry]=[]) -> None:
+    mut def __init__(self, name: str, vni: u64, evi: u64, route_distinguisher: str, route_target: str, irb: ?stratoweave_rfs__rfs__mac_vrf__irb=None, interface: list[stratoweave_rfs__rfs__mac_vrf__interface_entry]=[]) -> None:
         self.name = name
         self.vni = vni
         self.evi = evi
         self.route_distinguisher = route_distinguisher
         self.route_target = route_target
+        self.irb = irb
         self.interface = stratoweave_rfs__rfs__mac_vrf__interface(elements=interface)
+
+    mut def create_irb(self, index: u64, gateway: str) -> stratoweave_rfs__rfs__mac_vrf__irb:
+        existing = self.irb
+        if existing is not None:
+            existing.index = index
+            existing.gateway = gateway
+            return existing
+        res = stratoweave_rfs__rfs__mac_vrf__irb(index=index, gateway=gateway)
+        self.irb = res
+        return res
 
     mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
         return yadata.from_adata(SRC_DNODE, self, loose=False, root_path=['stratoweave-rfs:rfs', 'dorsi-rfs:mac-vrf'], prev=prev)
 
     @staticmethod
     mut def from_gdata(n: ygdata.Node) -> stratoweave_rfs__rfs__mac_vrf_entry:
-        return stratoweave_rfs__rfs__mac_vrf_entry(name=n.get_str(ygdata.Id(NS_dorsi_rfs, 'name')), vni=n.get_u64(ygdata.Id(NS_dorsi_rfs, 'vni')), evi=n.get_u64(ygdata.Id(NS_dorsi_rfs, 'evi')), route_distinguisher=n.get_str(ygdata.Id(NS_dorsi_rfs, 'route-distinguisher')), route_target=n.get_str(ygdata.Id(NS_dorsi_rfs, 'route-target')), interface=stratoweave_rfs__rfs__mac_vrf__interface.from_gdata(n.get_opt_list(ygdata.Id(NS_dorsi_rfs, 'interface'))))
+        return stratoweave_rfs__rfs__mac_vrf_entry(name=n.get_str(ygdata.Id(NS_dorsi_rfs, 'name')), vni=n.get_u64(ygdata.Id(NS_dorsi_rfs, 'vni')), evi=n.get_u64(ygdata.Id(NS_dorsi_rfs, 'evi')), route_distinguisher=n.get_str(ygdata.Id(NS_dorsi_rfs, 'route-distinguisher')), route_target=n.get_str(ygdata.Id(NS_dorsi_rfs, 'route-target')), irb=stratoweave_rfs__rfs__mac_vrf__irb.from_gdata(n.get_opt_cnt(ygdata.Id(NS_dorsi_rfs, 'irb'))), interface=stratoweave_rfs__rfs__mac_vrf__interface.from_gdata(n.get_opt_list(ygdata.Id(NS_dorsi_rfs, 'interface'))))
 
     mut def copy(self) -> stratoweave_rfs__rfs__mac_vrf_entry:
         """Create a deep copy of this adata object"""
         return stratoweave_rfs__rfs__mac_vrf_entry.from_gdata(self.to_gdata())
 
-_breaker27: None = None
+_breaker28: None = None
 class stratoweave_rfs__rfs__mac_vrf(yadata.MKeyedList[str, stratoweave_rfs__rfs__mac_vrf_entry]):
     mut def __init__(self, elements: list[stratoweave_rfs__rfs__mac_vrf_entry]=[]) -> None:
         yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
@@ -3202,7 +3306,70 @@ class stratoweave_rfs__rfs__mac_vrf(yadata.MKeyedList[str, stratoweave_rfs__rfs_
         return stratoweave_rfs__rfs__mac_vrf(elements=copied_elements)
 
 
-_breaker28: None = None
+_breaker29: None = None
+class stratoweave_rfs__rfs__ip_vrf_entry(yadata.MNode):
+    name: str
+    vni: u64
+    evi: u64
+    route_distinguisher: str
+    route_target: str
+    irb_interface: list[str]
+
+    mut def __init__(self, name: str, vni: u64, evi: u64, route_distinguisher: str, route_target: str, irb_interface: ?list[str]=None) -> None:
+        self.name = name
+        self.vni = vni
+        self.evi = evi
+        self.route_distinguisher = route_distinguisher
+        self.route_target = route_target
+        self.irb_interface = irb_interface if irb_interface is not None else []
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=False, root_path=['stratoweave-rfs:rfs', 'dorsi-rfs:ip-vrf'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ygdata.Node) -> stratoweave_rfs__rfs__ip_vrf_entry:
+        return stratoweave_rfs__rfs__ip_vrf_entry(name=n.get_str(ygdata.Id(NS_dorsi_rfs, 'name')), vni=n.get_u64(ygdata.Id(NS_dorsi_rfs, 'vni')), evi=n.get_u64(ygdata.Id(NS_dorsi_rfs, 'evi')), route_distinguisher=n.get_str(ygdata.Id(NS_dorsi_rfs, 'route-distinguisher')), route_target=n.get_str(ygdata.Id(NS_dorsi_rfs, 'route-target')), irb_interface=n.get_opt_strs(ygdata.Id(NS_dorsi_rfs, 'irb-interface')))
+
+    mut def copy(self) -> stratoweave_rfs__rfs__ip_vrf_entry:
+        """Create a deep copy of this adata object"""
+        return stratoweave_rfs__rfs__ip_vrf_entry.from_gdata(self.to_gdata())
+
+_breaker30: None = None
+class stratoweave_rfs__rfs__ip_vrf(yadata.MKeyedList[str, stratoweave_rfs__rfs__ip_vrf_entry]):
+    mut def __init__(self, elements: list[stratoweave_rfs__rfs__ip_vrf_entry]=[]) -> None:
+        yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
+
+    mut def create(self, key: str, vni: u64, evi: u64, route_distinguisher: str, route_target: str) -> stratoweave_rfs__rfs__ip_vrf_entry:
+        e = self.get(key)
+        if e is not None:
+            e.vni = vni
+            e.evi = evi
+            e.route_distinguisher = route_distinguisher
+            e.route_target = route_target
+            return e
+        name = key
+        res = stratoweave_rfs__rfs__ip_vrf_entry(name=name, vni=vni, evi=evi, route_distinguisher=route_distinguisher, route_target=route_target)
+        self._append(res)
+        return res
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.List) -> list[stratoweave_rfs__rfs__ip_vrf_entry]:
+        if n is not None:
+            return [stratoweave_rfs__rfs__ip_vrf_entry.from_gdata(e) for e in n.entries()]
+        return []
+
+    mut def copy(self) -> stratoweave_rfs__rfs__ip_vrf:
+        """Create a deep copy of this list object"""
+        # Copy each element in the list
+        copied_elements = []
+        for e in self:
+            ce = e.copy()
+            if ce is not None:
+                copied_elements.append(ce)
+        return stratoweave_rfs__rfs__ip_vrf(elements=copied_elements)
+
+
+_breaker31: None = None
 class stratoweave_rfs__rfs__server_lag_entry(yadata.MNode):
     name: str
     server: str
@@ -3228,7 +3395,7 @@ class stratoweave_rfs__rfs__server_lag_entry(yadata.MNode):
         """Create a deep copy of this adata object"""
         return stratoweave_rfs__rfs__server_lag_entry.from_gdata(self.to_gdata())
 
-_breaker29: None = None
+_breaker32: None = None
 class stratoweave_rfs__rfs__server_lag(yadata.MKeyedList[str, stratoweave_rfs__rfs__server_lag_entry]):
     mut def __init__(self, elements: list[stratoweave_rfs__rfs__server_lag_entry]=[]) -> None:
         yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
@@ -3264,7 +3431,7 @@ class stratoweave_rfs__rfs__server_lag(yadata.MKeyedList[str, stratoweave_rfs__r
         return stratoweave_rfs__rfs__server_lag(elements=copied_elements)
 
 
-_breaker30: None = None
+_breaker33: None = None
 class stratoweave_rfs__rfs__fabric_interface__remote(yadata.MNode):
     device: str
     interface: str
@@ -3287,7 +3454,7 @@ class stratoweave_rfs__rfs__fabric_interface__remote(yadata.MNode):
         return stratoweave_rfs__rfs__fabric_interface__remote.from_gdata(self.to_gdata())
 
 
-_breaker31: None = None
+_breaker34: None = None
 class stratoweave_rfs__rfs__fabric_interface__bgp(yadata.MNode):
     peer_address: str
     peer_asn: u64
@@ -3310,7 +3477,7 @@ class stratoweave_rfs__rfs__fabric_interface__bgp(yadata.MNode):
         return stratoweave_rfs__rfs__fabric_interface__bgp.from_gdata(self.to_gdata())
 
 
-_breaker32: None = None
+_breaker35: None = None
 class stratoweave_rfs__rfs__fabric_interface_entry(yadata.MNode):
     name: str
     ipv4_address: str
@@ -3336,7 +3503,7 @@ class stratoweave_rfs__rfs__fabric_interface_entry(yadata.MNode):
         """Create a deep copy of this adata object"""
         return stratoweave_rfs__rfs__fabric_interface_entry.from_gdata(self.to_gdata())
 
-_breaker33: None = None
+_breaker36: None = None
 class stratoweave_rfs__rfs__fabric_interface(yadata.MKeyedList[str, stratoweave_rfs__rfs__fabric_interface_entry]):
     mut def __init__(self, elements: list[stratoweave_rfs__rfs__fabric_interface_entry]=[]) -> None:
         yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
@@ -3372,7 +3539,7 @@ class stratoweave_rfs__rfs__fabric_interface(yadata.MKeyedList[str, stratoweave_
         return stratoweave_rfs__rfs__fabric_interface(elements=copied_elements)
 
 
-_breaker34: None = None
+_breaker37: None = None
 class stratoweave_rfs__rfs__server_port_entry(yadata.MNode):
     name: str
     server: str
@@ -3398,7 +3565,7 @@ class stratoweave_rfs__rfs__server_port_entry(yadata.MNode):
         """Create a deep copy of this adata object"""
         return stratoweave_rfs__rfs__server_port_entry.from_gdata(self.to_gdata())
 
-_breaker35: None = None
+_breaker38: None = None
 class stratoweave_rfs__rfs__server_port(yadata.MKeyedList[str, stratoweave_rfs__rfs__server_port_entry]):
     mut def __init__(self, elements: list[stratoweave_rfs__rfs__server_port_entry]=[]) -> None:
         yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
@@ -3434,19 +3601,21 @@ class stratoweave_rfs__rfs__server_port(yadata.MKeyedList[str, stratoweave_rfs__
         return stratoweave_rfs__rfs__server_port(elements=copied_elements)
 
 
-_breaker36: None = None
+_breaker39: None = None
 class stratoweave_rfs__rfs_entry(yadata.MNode):
     name: str
     fabric_base_config: stratoweave_rfs__rfs__fabric_base_config
     mac_vrf: stratoweave_rfs__rfs__mac_vrf
+    ip_vrf: stratoweave_rfs__rfs__ip_vrf
     server_lag: stratoweave_rfs__rfs__server_lag
     fabric_interface: stratoweave_rfs__rfs__fabric_interface
     server_port: stratoweave_rfs__rfs__server_port
 
-    mut def __init__(self, name: str, fabric_base_config: list[stratoweave_rfs__rfs__fabric_base_config_entry]=[], mac_vrf: list[stratoweave_rfs__rfs__mac_vrf_entry]=[], server_lag: list[stratoweave_rfs__rfs__server_lag_entry]=[], fabric_interface: list[stratoweave_rfs__rfs__fabric_interface_entry]=[], server_port: list[stratoweave_rfs__rfs__server_port_entry]=[]) -> None:
+    mut def __init__(self, name: str, fabric_base_config: list[stratoweave_rfs__rfs__fabric_base_config_entry]=[], mac_vrf: list[stratoweave_rfs__rfs__mac_vrf_entry]=[], ip_vrf: list[stratoweave_rfs__rfs__ip_vrf_entry]=[], server_lag: list[stratoweave_rfs__rfs__server_lag_entry]=[], fabric_interface: list[stratoweave_rfs__rfs__fabric_interface_entry]=[], server_port: list[stratoweave_rfs__rfs__server_port_entry]=[]) -> None:
         self.name = name
         self.fabric_base_config = stratoweave_rfs__rfs__fabric_base_config(elements=fabric_base_config)
         self.mac_vrf = stratoweave_rfs__rfs__mac_vrf(elements=mac_vrf)
+        self.ip_vrf = stratoweave_rfs__rfs__ip_vrf(elements=ip_vrf)
         self.server_lag = stratoweave_rfs__rfs__server_lag(elements=server_lag)
         self.fabric_interface = stratoweave_rfs__rfs__fabric_interface(elements=fabric_interface)
         self.server_port = stratoweave_rfs__rfs__server_port(elements=server_port)
@@ -3456,13 +3625,13 @@ class stratoweave_rfs__rfs_entry(yadata.MNode):
 
     @staticmethod
     mut def from_gdata(n: ygdata.Node) -> stratoweave_rfs__rfs_entry:
-        return stratoweave_rfs__rfs_entry(name=n.get_str(ygdata.Id(NS_stratoweave_rfs, 'name')), fabric_base_config=stratoweave_rfs__rfs__fabric_base_config.from_gdata(n.get_opt_list(ygdata.Id(NS_dorsi_rfs, 'fabric-base-config'))), mac_vrf=stratoweave_rfs__rfs__mac_vrf.from_gdata(n.get_opt_list(ygdata.Id(NS_dorsi_rfs, 'mac-vrf'))), server_lag=stratoweave_rfs__rfs__server_lag.from_gdata(n.get_opt_list(ygdata.Id(NS_dorsi_rfs, 'server-lag'))), fabric_interface=stratoweave_rfs__rfs__fabric_interface.from_gdata(n.get_opt_list(ygdata.Id(NS_dorsi_rfs, 'fabric-interface'))), server_port=stratoweave_rfs__rfs__server_port.from_gdata(n.get_opt_list(ygdata.Id(NS_dorsi_rfs, 'server-port'))))
+        return stratoweave_rfs__rfs_entry(name=n.get_str(ygdata.Id(NS_stratoweave_rfs, 'name')), fabric_base_config=stratoweave_rfs__rfs__fabric_base_config.from_gdata(n.get_opt_list(ygdata.Id(NS_dorsi_rfs, 'fabric-base-config'))), mac_vrf=stratoweave_rfs__rfs__mac_vrf.from_gdata(n.get_opt_list(ygdata.Id(NS_dorsi_rfs, 'mac-vrf'))), ip_vrf=stratoweave_rfs__rfs__ip_vrf.from_gdata(n.get_opt_list(ygdata.Id(NS_dorsi_rfs, 'ip-vrf'))), server_lag=stratoweave_rfs__rfs__server_lag.from_gdata(n.get_opt_list(ygdata.Id(NS_dorsi_rfs, 'server-lag'))), fabric_interface=stratoweave_rfs__rfs__fabric_interface.from_gdata(n.get_opt_list(ygdata.Id(NS_dorsi_rfs, 'fabric-interface'))), server_port=stratoweave_rfs__rfs__server_port.from_gdata(n.get_opt_list(ygdata.Id(NS_dorsi_rfs, 'server-port'))))
 
     mut def copy(self) -> stratoweave_rfs__rfs_entry:
         """Create a deep copy of this adata object"""
         return stratoweave_rfs__rfs_entry.from_gdata(self.to_gdata())
 
-_breaker37: None = None
+_breaker40: None = None
 class stratoweave_rfs__rfs(yadata.MKeyedList[str, stratoweave_rfs__rfs_entry]):
     mut def __init__(self, elements: list[stratoweave_rfs__rfs_entry]=[]) -> None:
         yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
@@ -3493,7 +3662,7 @@ class stratoweave_rfs__rfs(yadata.MKeyedList[str, stratoweave_rfs__rfs_entry]):
         return stratoweave_rfs__rfs(elements=copied_elements)
 
 
-_breaker38: None = None
+_breaker41: None = None
 class root(yadata.MNode):
     device: stratoweave_rfs__device
     rfs: stratoweave_rfs__rfs

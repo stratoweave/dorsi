@@ -12,6 +12,10 @@ def _single_error(f: cfs_layer.ip_fabric__ip_fabric__fabric_entry, text: str):
     testing.assertEqual(len(errors), 1, "expected one error: {errors}")
     testing.assertTrue(text in errors[0], "'{text}' not in '{errors[0]}'")
 
+def _has_error(f: cfs_layer.ip_fabric__ip_fabric__fabric_entry, text: str):
+    errors = cfs.validate_fabric(f)
+    testing.assertTrue(any([text in e for e in errors]), "'{text}' not in {errors}")
+
 def _test_valid_three_stage():
     testing.assertEqual(cfs.validate_fabric(_fabric(fabrics.three_stage())), [])
 
@@ -172,10 +176,8 @@ def _test_overlay_vni_clash():
     vni = cfs.overlay_vni("dc1", "t1", "web")
     db = f.tenant.get("t1")!.network.get("db")!
     db.vni = u64(vni)
-    errors = cfs.validate_fabric(f)
-    testing.assertEqual(len(errors), 2, "expected a VNI and an EVI clash: {errors}")
-    testing.assertTrue("VNI {vni} is also used by network t1/web" in errors[0])
-    testing.assertTrue("EVI" in errors[1])
+    _has_error(f, "VNI {vni} is also used by network t1/web")
+    _has_error(f, "EVI {cfs.overlay_evi(vni)}, derived from VNI {vni}, is also used by network t1/web")
 
 def _test_overlay_vni_set_resolves_clash():
     f = _fabric(fabrics.three_stage_overlay())
@@ -197,7 +199,7 @@ def _test_overlay_address_outside_subnet():
     f = _fabric(fabrics.three_stage_overlay())
     att = f.server.get("server3")!.attachment.get(("t1", "web"))!
     att.ipv4_address = "10.10.11.13/24"
-    _single_error(f, "is not in the subnet of server server1 in network t1/web")
+    _has_error(f, "is not in the subnet of server server1 in network t1/web")
 
 def _test_overlay_on_eos_rejected():
     f = _fabric(fabrics.three_stage_mixed())
@@ -217,3 +219,39 @@ def _test_overlay_es_name_too_long():
     fabrics.add_server(f, long, "dual-homed", [("leaf1", "ethernet-1/3", "eth1"), ("leaf2", "ethernet-1/3", "eth2")])
     f.server.get(long)!.attachment.create(("t1", "web"), vlan=10)
     _single_error(f, "its ethernet segment es-{long} is not a name SR Linux takes")
+
+def _test_overlay_gateway_without_vrf():
+    f = _fabric(fabrics.three_stage_overlay())
+    f.tenant.get("t1")!.network.create("app", gateway="10.10.30.1/24")
+    _single_error(f, "network t1/app: a gateway needs a vrf")
+
+def _test_overlay_vrf_does_not_exist():
+    f = _fabric(fabrics.three_stage_overlay())
+    f.tenant.get("t1")!.network.create("app", vrf="other", gateway="10.10.30.1/24")
+    _single_error(f, "network t1/app: VRF other does not exist in tenant t1")
+
+def _test_overlay_vrf_network_without_gateway():
+    f = _fabric(fabrics.three_stage_overlay())
+    f.tenant.get("t1")!.network.create("app", vrf="main")
+    _single_error(f, "network t1/app: a network in a VRF needs a gateway")
+
+def _test_overlay_overlapping_subnets():
+    f = _fabric(fabrics.three_stage_overlay())
+    f.tenant.get("t1")!.network.create("app", vrf="main", gateway="10.10.0.1/16")
+    _has_error(f, "network t1/app: its subnet overlaps that of network t1/web in VRF main")
+
+def _test_overlay_server_on_the_gateway():
+    f = _fabric(fabrics.three_stage_overlay())
+    att = f.server.get("server3")!.attachment.get(("t1", "web"))!
+    att.ipv4_address = "10.10.10.1/24"
+    _single_error(f, "server server3: address 10.10.10.1 is the gateway of network t1/web")
+
+def _test_overlay_server_outside_the_gateway_subnet():
+    f = _fabric(fabrics.three_stage_overlay())
+    att = f.server.get("server2")!.attachment.get(("t1", "db"))!
+    att.ipv4_address = "10.10.21.12/24"
+    _single_error(f, "server server2: address 10.10.21.12/24 is not in the subnet of gateway 10.10.20.1/24 of network t1/db")
+
+def _test_overlay_vrf_vni_is_apart_from_network_vnis():
+    testing.assertTrue(cfs.overlay_l3_vni("dc1", "t1", "main") >= 1000000)
+    testing.assertTrue(cfs.overlay_vni("dc1", "t1", "main") < 1000000)
