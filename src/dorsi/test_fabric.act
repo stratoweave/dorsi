@@ -153,8 +153,9 @@ def five_stage_overlay():
 # The five-stage Clos of the fabric-5stage-srl lab: the shape of
 # fabric-5stage-mixed, all SR Linux, for the overlay through a super-spine.
 # server1 is dual-homed across the pods, to leaf1 and leaf2, so its ethernet
-# segment spans the super-spine too. All three servers are in network t1/web:
-# server1 and server2 send it tagged, server3 untagged.
+# segment spans the super-spine too. server1 (tagged) and server3 (untagged)
+# are in network t1/web, server2 in network t1/db, which VRF main routes to
+# t1/web across the super-spine.
 def five_stage_srl():
     root = _empty_root()
     f = root.ip_fabric.fabric.create("dc1")
@@ -170,9 +171,12 @@ def five_stage_srl():
     add_server(f, "server1", "dual-homed", [("leaf1", "ethernet-1/1", "eth1"), ("leaf2", "ethernet-1/1", "eth2")])
     add_server(f, "server2", "single-homed", [("leaf2", "ethernet-1/2", "eth1")])
     add_server(f, "server3", "single-homed", [("leaf1", "ethernet-1/2", "eth1")])
-    f.tenant.create("t1").network.create("web")
+    tenant = f.tenant.create("t1")
+    tenant.vrf.create("main")
+    tenant.network.create("web", vrf="main", gateway="10.10.10.1/24")
+    tenant.network.create("db", vrf="main", gateway="10.10.20.1/24")
     f.server.get("server1")!.attachment.create(("t1", "web"), vlan=10, ipv4_address="10.10.10.11/24")
-    f.server.get("server2")!.attachment.create(("t1", "web"), vlan=10, ipv4_address="10.10.10.12/24")
+    f.server.get("server2")!.attachment.create(("t1", "db"), vlan=20, ipv4_address="10.10.20.12/24")
     f.server.get("server3")!.attachment.create(("t1", "web"), ipv4_address="10.10.10.13/24")
     return root
 

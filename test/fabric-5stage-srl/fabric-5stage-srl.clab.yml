@@ -23,7 +23,7 @@ topology:
       kind: nokia_srlinux
     superspine1:
       kind: nokia_srlinux
-    # The overlay test setup of ip-fabric.xml (tenant t1, network web)
+    # The overlay test setup of ip-fabric.xml (tenant t1)
     server1:
       kind: linux
       image: ghcr.io/srl-labs/network-multitool
@@ -38,20 +38,23 @@ topology:
         - ip link add link bond0 name bond0.10 type vlan id 10
         - ip link set bond0.10 up
         - ip address add 10.10.10.11/24 dev bond0.10
+        - ip route add 10.10.0.0/16 via 10.10.10.1
     server2:
       kind: linux
       image: ghcr.io/srl-labs/network-multitool
       image-pull-policy: if-not-present
       exec:
-        - ip link add link eth1 name eth1.10 type vlan id 10
-        - ip link set eth1.10 up
-        - ip address add 10.10.10.12/24 dev eth1.10
+        - ip link add link eth1 name eth1.20 type vlan id 20
+        - ip link set eth1.20 up
+        - ip address add 10.10.20.12/24 dev eth1.20
+        - ip route add 10.10.0.0/16 via 10.10.20.1
     server3:
       kind: linux
       image: ghcr.io/srl-labs/network-multitool
       image-pull-policy: if-not-present
       exec:
         - ip address add 10.10.10.13/24 dev eth1
+        - ip route add 10.10.0.0/16 via 10.10.10.1
     sweave:
       kind: linux
       image: dorsi-sweave-base
