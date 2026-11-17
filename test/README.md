@@ -9,6 +9,8 @@ labs/development environments which you can run:
     much more and has not been deployed.
 * **[fabric-3stage-mixed](fabric-3stage-mixed/README.md)** is `fabric-3stage` with leaf3
   and spine2 running Arista cEOS. Its image has to be downloaded and imported by hand.
+* **[fabric-5stage-mixed](fabric-5stage-mixed/README.md)** is a five-stage fabric of
+  SR Linux and cEOS cut down to five switches, which fits in about 8 GB. It has been run.
 
 The SR Linux image (`ghcr.io/nokia/srlinux`) is public, no account or license is
 needed.
