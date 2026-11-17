@@ -199,6 +199,30 @@ def server_leaf_ports(server: y_0.ip_fabric__ip_fabric__fabric__server_entry) ->
     return res
 
 
+def network_leaves(f: y_0.ip_fabric__ip_fabric__fabric_entry, tenant: str, network: str) -> list[str]:
+    """The leaves a network is placed on: those of the servers attached to it,
+    in the order of the servers and their links."""
+    res: list[str] = []
+    for server in f.server:
+        for att in server.attachment:
+            if att.tenant == tenant and att.network == network:
+                for leaf in server_leaf_ports(server).keys():
+                    if leaf not in res:
+                        res.append(leaf)
+    return res
+
+
+def vrf_leaves(f: y_0.ip_fabric__ip_fabric__fabric_entry, tenant: y_0.ip_fabric__ip_fabric__fabric__tenant_entry, vrf: str) -> list[str]:
+    """The leaves a VRF is placed on: those of its routed networks."""
+    res: list[str] = []
+    for network in tenant.network:
+        if network.vrf == vrf and network.gateway is not None:
+            for leaf in network_leaves(f, tenant.name, network.name):
+                if leaf not in res:
+                    res.append(leaf)
+    return res
+
+
 def server_uses_lag(server: y_0.ip_fabric__ip_fabric__fabric__server_entry, ports: list[str]) -> bool:
     """Whether a server attached to the overlay connects to a leaf over a LAG:
     always when dual-homed, for the ethernet segment, and when single-homed
@@ -730,7 +754,7 @@ actor FabricTransform(path: ttt.Path,
     # Monotonic time in ns at which the eBGP session of a link went down, by link
     var _bgp_down_since: dict[str, int] = {}
 
-    def on_rfs_state(root: ?y_1_oper.root, err: ?Exception, links: list[(str, str, str, str)], server_links: list[(str, str, str, str)]):
+    def on_rfs_state(root: ?y_1_oper.root, err: ?Exception, links: list[(str, str, str, str)], server_links: list[(str, str, str, str)], placements: list[(str, str, str, str, str)]):
         if err is not None:
             print("cfs.FabricTransform RFS subscription error: {err}", err=True)
             return
@@ -802,6 +826,42 @@ actor FabricTransform(path: ttt.Path,
             server_link.state.cabling_status = server_cabling_status(oper, seen_device, seen_interface, server, server_port)
             server_link.state.neighbor.device = seen_device
             server_link.state.neighbor.interface = seen_interface
+        # The overlay: each network and VRF on each leaf it is placed on, and
+        # each server LAG
+        for kind, owner, name, leaf, rfs_name in placements:
+            oper_status: ?str = None
+            other_status: ?str = None
+            if root is not None:
+                for r in root.rfs:
+                    if r.name == leaf:
+                        if kind == "network":
+                            for e in r.mac_vrf:
+                                if e.name == rfs_name:
+                                    oper_status = e.state.oper_status
+                                    other_status = e.state.evpn_status
+                        elif kind == "vrf":
+                            for e in r.ip_vrf:
+                                if e.name == rfs_name:
+                                    oper_status = e.state.oper_status
+                                    other_status = e.state.evpn_status
+                        else:
+                            for e in r.server_lag:
+                                if e.name == rfs_name:
+                                    oper_status = e.state.oper_status
+                                    other_status = e.state.es_status
+            if kind == "network":
+                p = _oper.tenant.create(owner).network.create(name).state.placement.create(leaf)
+                p.oper_status = oper_status
+                p.evpn_status = other_status
+            elif kind == "vrf":
+                p = _oper.tenant.create(owner).vrf.create(name).state.placement.create(leaf)
+                p.oper_status = oper_status
+                p.evpn_status = other_status
+            else:
+                lag = _oper.server.create(owner).state.lag.create(leaf)
+                lag.name = rfs_name
+                lag.oper_status = oper_status
+                lag.es_status = other_status
         _bgp_down_since = bgp_down_since
         update_oper(_oper)
 
@@ -818,7 +878,26 @@ actor FabricTransform(path: ttt.Path,
             for link in server.connectivity.link:
                 server_links.append((server.name, link.switch, link.switch_port, link.server_port))
                 subs.add(y_1_oper.subs.rfs.entry(link.switch).server_port.entry(link.switch_port).state.subscribe(period=5.0))
-        dst = y_1_oper.dst(lambda r, e: on_rfs_state(r, e, links, server_links))
+        # (kind, tenant or server, network or VRF, leaf, RFS entry)
+        placements: list[(str, str, str, str, str)] = []
+        for tenant in conf.tenant:
+            for network in tenant.network:
+                name = mac_vrf_name(tenant.name, network.name)
+                for leaf in network_leaves(conf, tenant.name, network.name):
+                    placements.append(("network", tenant.name, network.name, leaf, name))
+                    subs.add(y_1_oper.subs.rfs.entry(leaf).mac_vrf.entry(name).state.subscribe(period=5.0))
+            for vrf in tenant.vrf:
+                name = ip_vrf_name(tenant.name, vrf.name)
+                for leaf in vrf_leaves(conf, tenant, vrf.name):
+                    placements.append(("vrf", tenant.name, vrf.name, leaf, name))
+                    subs.add(y_1_oper.subs.rfs.entry(leaf).ip_vrf.entry(name).state.subscribe(period=5.0))
+        for server in conf.server:
+            for leaf, ports in server_leaf_ports(server).items():
+                if server_uses_lag(server, ports):
+                    lag = server_lag_name(ports)
+                    placements.append(("lag", server.name, "", leaf, lag))
+                    subs.add(y_1_oper.subs.rfs.entry(leaf).server_lag.entry(lag).state.subscribe(period=5.0))
+        dst = y_1_oper.dst(lambda r, e: on_rfs_state(r, e, links, server_links, placements))
         want.add(dst.deliver(subs))
         _subs.declare(want)
 

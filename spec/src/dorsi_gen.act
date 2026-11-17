@@ -272,6 +272,10 @@ actor main(env):
     "/srl_nokia-netinst:network-instance/protocols/bgp/afi-safi/evpn/inter-as-vpn",
     "/srl_nokia-netinst:network-instance/protocols/bgp/afi-safi/evpn/rapid-update",
     "/srl_rpol:routing-policy/policy/statement/match/family",
+    # State of the overlay: network instances, EVPN and ethernet segments
+    "/srl_nokia-netinst:network-instance/oper-state",
+    "/srl_nokia-netinst:network-instance/protocols/bgp-evpn/bgp-instance/oper-state",
+    "/srl_nokia-system:system/network-instance/protocols/evpn/ethernet-segments/bgp-instance/ethernet-segment/oper-state",
     # Routing between overlay networks: anycast gateway on irb0, ip-vrf
     "/srl_nokia-if:interface/subinterface/anycast-gw/virtual-router-id",
     "/srl_nokia-if:interface/subinterface/ipv4/address/anycast-gw",

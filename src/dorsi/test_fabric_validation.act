@@ -255,3 +255,13 @@ def _test_overlay_server_outside_the_gateway_subnet():
 def _test_overlay_vrf_vni_is_apart_from_network_vnis():
     testing.assertTrue(cfs.overlay_l3_vni("dc1", "t1", "main") >= 1000000)
     testing.assertTrue(cfs.overlay_vni("dc1", "t1", "main") < 1000000)
+
+# The lift subscribes to the state of the networks and VRFs where these say
+# they are placed; the transform places them on the same leaves (see the
+# fabric_three_stage_overlay snapshot)
+def _test_overlay_placement():
+    f = _fabric(fabrics.three_stage_overlay())
+    tenant = f.tenant.get("t1")!
+    testing.assertEqual(cfs.network_leaves(f, "t1", "web"), ["leaf1", "leaf2", "leaf3"])
+    testing.assertEqual(cfs.network_leaves(f, "t1", "db"), ["leaf2", "leaf3"])
+    testing.assertEqual(cfs.vrf_leaves(f, tenant, "main"), ["leaf1", "leaf2", "leaf3"])

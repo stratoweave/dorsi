@@ -108,6 +108,30 @@ module dorsi-rfs {
                     mandatory true;
                 }
             }
+            container state {
+                config false;
+                description
+                    "Operational state of the MAC-VRF, polled from the
+                     device.";
+                leaf oper-status {
+                    description "The oper-state of the network instance.";
+                    type enumeration {
+                        enum up;
+                        enum down;
+                        enum unknown;
+                    }
+                }
+                leaf evpn-status {
+                    description
+                        "The oper-state of its EVPN instance, which bridges it
+                         over VXLAN to the other leaves.";
+                    type enumeration {
+                        enum up;
+                        enum down;
+                        enum unknown;
+                    }
+                }
+            }
             list interface {
                 description "A server-facing port or LAG in the network.";
                 key name;
@@ -159,6 +183,27 @@ module dorsi-rfs {
                 description "IRB subinterfaces of its networks, such as irb0.10.";
                 type string;
             }
+            container state {
+                config false;
+                description
+                    "Operational state of the IP-VRF, polled from the device.";
+                leaf oper-status {
+                    description "The oper-state of the network instance.";
+                    type enumeration {
+                        enum up;
+                        enum down;
+                        enum unknown;
+                    }
+                }
+                leaf evpn-status {
+                    description "The oper-state of its EVPN instance.";
+                    type enumeration {
+                        enum up;
+                        enum down;
+                        enum unknown;
+                    }
+                }
+            }
         }
         list server-lag {
             description
@@ -191,6 +236,30 @@ module dorsi-rfs {
                     "Ethernet segment identifier of a dual-homed server,
                      absent for a single-homed one.";
                 type string;
+            }
+            container state {
+                config false;
+                description
+                    "Operational state of the LAG and its ethernet segment,
+                     polled from the device.";
+                leaf oper-status {
+                    description "The oper-state of the LAG.";
+                    type enumeration {
+                        enum up;
+                        enum down;
+                        enum unknown;
+                    }
+                }
+                leaf es-status {
+                    description
+                        "The oper-state of the ethernet segment, absent for a
+                         LAG that is not one.";
+                    type enumeration {
+                        enum up;
+                        enum down;
+                        enum unknown;
+                    }
+                }
             }
         }
         list fabric-interface {

@@ -179,6 +179,15 @@ VNI on the leaves of the VRF exchanges the subnets and host routes as EVPN IP
 prefix routes (type 5). The layer 3 VNI comes from a range of its own, apart
 from those of the networks.
 
+DORSI reads the state of the overlay too: on each leaf, the network instance
+and EVPN instance of every network and VRF, and the LAG and ethernet segment
+of every server attached over one. It is lifted into read-only `state` of the
+`network` and `vrf` (a `placement` per leaf) and of the `server` (a `lag` per
+leaf). The Web UI lists as *Problems* a network or VRF that is down on a leaf,
+a server LAG that is down while its ports are up, which means LACP has not
+come up with the server, and an ethernet segment that is down on a LAG that is
+up.
+
 #### IP fabric: what is verified
 
 * The generated SR Linux configuration is covered by snapshot tests for a

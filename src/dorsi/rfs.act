@@ -753,3 +753,148 @@ actor ServerPortTransform(path, update_oper: proc(?y_1_oper.stratoweave_rfs__rfs
         _running = False
 
     after _POLL_PERIOD: _watchdog()
+
+
+# --- Overlay state --------------------------------------------------------------
+# Poll the state of the overlay from the device: the network instance of each
+# MAC-VRF and IP-VRF with its EVPN instance, and each server LAG with its
+# ethernet segment. The CFS FabricTransform lift turns them into the state of
+# the networks, VRFs and servers. SR Linux only so far.
+
+def _srl_status(raw: ?str) -> ?str:
+    """An SR Linux oper-state as up, down or unknown, None when not read."""
+    if raw == "up" or raw == "down":
+        return raw
+    if raw is not None:
+        return "unknown"
+    return None
+
+
+actor _SrlPoll(path, dev: swdev.DeviceMgr, on_state: proc(?srl25_oper_root)->None):
+    """Polls subscriptions from an SR Linux device and hands each delivery to
+    on_state, and None once the device stops answering, like
+    FabricInterfaceTransform."""
+    _subs = gdata.SubscriptionManager(dev.tree_provider(), str(path))
+    var _last_delivery: ?int = None
+    var _stale = False
+    var _running = True
+
+    def _watchdog():
+        if not _running:
+            return
+        last = _last_delivery
+        if last is not None and not _stale and time.monotonic_ns() - last > _STALE_AFTER_NS:
+            print("{path}: no state from the device for {_STALE_AFTER_NS // 1000000000} s, reporting it as unknown", err=True)
+            _stale = True
+            on_state(None)
+        after _POLL_PERIOD: _watchdog()
+
+    def _on_delivery(root: ?srl25_oper_root, err: ?Exception):
+        if err is not None:
+            print("{path}: subscription error: {err}", err=True)
+        _last_delivery = time.monotonic_ns()
+        _stale = False
+        on_state(root if err is None else None)
+
+    def declare(subs: set[gdata.SubscriptionSpec]):
+        want: set[gdata.Delivery] = set()
+        if "srl_nokia-system" in dev.get_modules().0:
+            want.add(srl25_oper.dst(_on_delivery).deliver(subs))
+        _subs.declare(want)
+
+    def shutdown():
+        _running = False
+
+    after _POLL_PERIOD: _watchdog()
+
+
+def _srl_network_instance_subscriptions(name: str) -> set[gdata.SubscriptionSpec]:
+    ni = srl25_oper.subs.network_instance.entry(name)
+    return {
+        ni.oper_state.subscribe(period=_POLL_PERIOD),
+        ni.protocols.bgp_evpn.bgp_instance.entry(u64(_EVPN_BGP_INSTANCE)).oper_state.subscribe(period=_POLL_PERIOD)
+    }
+
+
+def _srl_network_instance_status(root: ?srl25_oper_root) -> (?str, ?str):
+    """The oper-state of the one network instance subscribed to and of its
+    EVPN instance."""
+    if root is not None:
+        for ni in root.network_instance:
+            evpn_status: ?str = None
+            bgp_evpn = ni.protocols.bgp_evpn
+            if bgp_evpn is not None:
+                for instance in bgp_evpn.bgp_instance:
+                    evpn_status = _srl_status(instance.oper_state)
+            return (_srl_status(ni.oper_state), evpn_status)
+    return (None, None)
+
+
+actor MacVrfTransform(path, update_oper: proc(?y_1_oper.stratoweave_rfs__rfs__mac_vrf_entry)->None, dev: swdev.DeviceMgr):
+    _oper = base.MacVrf.new_state(path)
+
+    def on_state(root: ?srl25_oper_root):
+        oper_status, evpn_status = _srl_network_instance_status(root)
+        _oper.state.oper_status = oper_status
+        _oper.state.evpn_status = evpn_status
+        update_oper(_oper)
+
+    _poll = _SrlPoll(path, dev, on_state)
+
+    def on_conf(conf: y_1.stratoweave_rfs__rfs__mac_vrf_entry):
+        _poll.declare(_srl_network_instance_subscriptions(conf.name))
+
+    def shutdown():
+        _poll.shutdown()
+
+
+actor IpVrfTransform(path, update_oper: proc(?y_1_oper.stratoweave_rfs__rfs__ip_vrf_entry)->None, dev: swdev.DeviceMgr):
+    _oper = base.IpVrf.new_state(path)
+
+    def on_state(root: ?srl25_oper_root):
+        oper_status, evpn_status = _srl_network_instance_status(root)
+        _oper.state.oper_status = oper_status
+        _oper.state.evpn_status = evpn_status
+        update_oper(_oper)
+
+    _poll = _SrlPoll(path, dev, on_state)
+
+    def on_conf(conf: y_1.stratoweave_rfs__rfs__ip_vrf_entry):
+        _poll.declare(_srl_network_instance_subscriptions(conf.name))
+
+    def shutdown():
+        _poll.shutdown()
+
+
+actor ServerLagTransform(path, update_oper: proc(?y_1_oper.stratoweave_rfs__rfs__server_lag_entry)->None, dev: swdev.DeviceMgr):
+    _oper = base.ServerLag.new_state(path)
+
+    def on_state(root: ?srl25_oper_root):
+        oper_status: ?str = None
+        es_status: ?str = None
+        if root is not None:
+            oper_status = _srl_oper_status(root)
+            system_ni = root.system.network_instance
+            if system_ni is not None:
+                evpn = system_ni.protocols.evpn
+                if evpn is not None:
+                    segments = evpn.ethernet_segments
+                    if segments is not None:
+                        for instance in segments.bgp_instance:
+                            for es in instance.ethernet_segment:
+                                es_status = _srl_status(es.oper_state)
+        _oper.state.oper_status = oper_status
+        _oper.state.es_status = es_status
+        update_oper(_oper)
+
+    _poll = _SrlPoll(path, dev, on_state)
+
+    def on_conf(conf: y_1.stratoweave_rfs__rfs__server_lag_entry):
+        subs = {srl25_oper.subs.interface.entry(conf.name).oper_state.subscribe(period=_POLL_PERIOD)}
+        if conf.esi is not None:
+            es = srl25_oper.subs.system.network_instance.protocols.evpn.ethernet_segments.bgp_instance.entry(u64(_EVPN_BGP_INSTANCE)).ethernet_segment.entry("es-{conf.server}")
+            subs.add(es.oper_state.subscribe(period=_POLL_PERIOD))
+        _poll.declare(subs)
+
+    def shutdown():
+        _poll.shutdown()

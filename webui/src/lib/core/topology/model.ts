@@ -108,6 +108,23 @@ export interface TopologyServer {
   links: TopologyServerLink[];
 }
 
+/**
+ * A part of the EVPN-VXLAN overlay on one leaf: a network (MAC-VRF) or VRF
+ * (IP-VRF) with its EVPN instance, or the LAG of a server with its ethernet
+ * segment.
+ */
+export interface OverlayPlacement {
+  kind: 'network' | 'vrf' | 'lag';
+  /** The tenant of a network or VRF, the server of a LAG. */
+  owner: string;
+  /** The network or VRF, the LAG (such as lag1). */
+  name: string;
+  switchName: string;
+  operStatus: LinkStatus;
+  /** The EVPN instance of a network or VRF, the ethernet segment of a LAG ('' when it has none). */
+  evpnStatus: LinkStatus | '';
+}
+
 export interface TopologyTier {
   label: string;
   y: number;
@@ -121,6 +138,7 @@ export interface TopologyGraph {
   switches: TopologySwitch[];
   links: TopologyLink[];
   servers: TopologyServer[];
+  overlay: OverlayPlacement[];
   /** Problems that keep part of the fabric off the map, such as a link to a switch that does not exist. */
   warnings: string[];
 }
@@ -504,8 +522,45 @@ export function buildFabricGraph(fabricApi: unknown): TopologyGraph {
     switches: [...switches.values()],
     links,
     servers,
+    overlay: buildOverlay(fabricApi),
     warnings
   };
+}
+
+/** The state of the overlay of a fabric, from the state of its networks, VRFs and servers. */
+export function buildOverlay(fabricApi: unknown): OverlayPlacement[] {
+  const out: OverlayPlacement[] = [];
+  for (const tenant of arrayAt(fabricApi, 'tenant')) {
+    const owner = stringAt(tenant, 'name');
+    for (const [kind, list] of [['network', 'network'], ['vrf', 'vrf']] as const) {
+      for (const entry of arrayAt(tenant, list)) {
+        for (const placement of arrayAt(entry, 'state', 'placement')) {
+          out.push({
+            kind,
+            owner,
+            name: stringAt(entry, 'name'),
+            switchName: stringAt(placement, 'switch'),
+            operStatus: toStatus(stringAt(placement, 'oper-status')),
+            evpnStatus: toStatus(stringAt(placement, 'evpn-status'))
+          });
+        }
+      }
+    }
+  }
+  for (const server of arrayAt(fabricApi, 'server')) {
+    for (const lag of arrayAt(server, 'state', 'lag')) {
+      const esStatus = stringAt(lag, 'es-status');
+      out.push({
+        kind: 'lag',
+        owner: stringAt(server, 'name'),
+        name: stringAt(lag, 'name'),
+        switchName: stringAt(lag, 'switch'),
+        operStatus: toStatus(stringAt(lag, 'oper-status')),
+        evpnStatus: esStatus ? toStatus(esStatus) : ''
+      });
+    }
+  }
+  return out;
 }
 
 /** One map for every fabric in the payload. */

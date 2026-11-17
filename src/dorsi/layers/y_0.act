@@ -985,6 +985,34 @@ SRC_YANG_1: str = r"""module ip-fabric {
               "Layer 3 VNI. Derived from the fabric, tenant and VRF names
                when absent; set it to resolve a clash.";
           }
+          container state {
+            config false;
+            description
+              "State of the IP-VRF on each leaf it is placed on, lifted from
+               the RFS IP-VRF entries of the leaves.";
+            list placement {
+              key switch;
+              leaf switch {
+                type string;
+              }
+              leaf oper-status {
+                description "The oper-state of its network instance.";
+                type enumeration {
+                  enum up;
+                  enum down;
+                  enum unknown;
+                }
+              }
+              leaf evpn-status {
+                description "The oper-state of its EVPN instance, which exchanges its routes with the other leaves.";
+                type enumeration {
+                  enum up;
+                  enum down;
+                  enum unknown;
+                }
+              }
+            }
+          }
         }
         list network {
           key name;
@@ -1016,6 +1044,36 @@ SRC_YANG_1: str = r"""module ip-fabric {
                the network answers on it with the same anycast address and
                MAC.";
           }
+          container state {
+            config false;
+            description
+              "State of the MAC-VRF of the network on each leaf it is placed
+               on, lifted from the RFS mac-vrf entries of the leaves.";
+            list placement {
+              key switch;
+              leaf switch {
+                type string;
+              }
+              leaf oper-status {
+                description "The oper-state of its network instance.";
+                type enumeration {
+                  enum up;
+                  enum down;
+                  enum unknown;
+                }
+              }
+              leaf evpn-status {
+                description
+                  "The oper-state of its EVPN instance, which bridges the
+                   network over VXLAN to the other leaves.";
+                type enumeration {
+                  enum up;
+                  enum down;
+                  enum unknown;
+                }
+              }
+            }
+          }
         }
       }
 
@@ -1026,6 +1084,41 @@ SRC_YANG_1: str = r"""module ip-fabric {
         leaf name {
           type string;
           description "Server name.";
+        }
+        container state {
+          config false;
+          description
+            "State of the LAG of the server on each of its leaves, for a
+             server attached to the overlay over a LAG, lifted from the RFS
+             server-lag entries of the leaves.";
+          list lag {
+            key switch;
+            leaf switch {
+              type string;
+            }
+            leaf name {
+              type string;
+              description "The LAG, such as lag1.";
+            }
+            leaf oper-status {
+              description "The oper-state of the LAG.";
+                type enumeration {
+                enum up;
+                enum down;
+                enum unknown;
+              }
+            }
+            leaf es-status {
+              description
+                "The oper-state of the ethernet segment of a dual-homed
+                 server on the LAG.";
+                type enumeration {
+                enum up;
+                enum down;
+                enum unknown;
+              }
+            }
+          }
         }
         list attachment {
           key "tenant network";
