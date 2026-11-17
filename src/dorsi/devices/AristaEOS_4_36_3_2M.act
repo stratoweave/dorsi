@@ -1355,6 +1355,12 @@ openconfig_lldp_types_SYSTEM_NAME: Identityref = Identityref('SYSTEM_NAME', ns='
 openconfig_lldp_types_SYSTEM_DESCRIPTION: Identityref = Identityref('SYSTEM_DESCRIPTION', ns='http://openconfig.net/yang/lldp/types', mod='openconfig-lldp-types', pfx='oc-lldp-types')
 openconfig_lldp_types_SYSTEM_CAPABILITIES: Identityref = Identityref('SYSTEM_CAPABILITIES', ns='http://openconfig.net/yang/lldp/types', mod='openconfig-lldp-types', pfx='oc-lldp-types')
 openconfig_lldp_types_MANAGEMENT_ADDRESS: Identityref = Identityref('MANAGEMENT_ADDRESS', ns='http://openconfig.net/yang/lldp/types', mod='openconfig-lldp-types', pfx='oc-lldp-types')
+arista_bgp_augments_RT_MEMBERSHIP: Identityref = Identityref('RT_MEMBERSHIP', ns='http://arista.com/yang/openconfig/bgp/augments', mod='arista-bgp-augments', pfx='arista-bgp-augments')
+arista_bgp_augments_UNKNOWN_ERROR_CODE: Identityref = Identityref('UNKNOWN_ERROR_CODE', ns='http://arista.com/yang/openconfig/bgp/augments', mod='arista-bgp-augments', pfx='arista-bgp-augments')
+arista_bgp_augments_UNKNOWN_ERROR_SUBCODE: Identityref = Identityref('UNKNOWN_ERROR_SUBCODE', ns='http://arista.com/yang/openconfig/bgp/augments', mod='arista-bgp-augments', pfx='arista-bgp-augments')
+arista_bgp_augments_IPV4_MULTICAST: Identityref = Identityref('IPV4_MULTICAST', ns='http://arista.com/yang/openconfig/bgp/augments', mod='arista-bgp-augments', pfx='arista-bgp-augments')
+arista_bgp_augments_IPV6_MULTICAST: Identityref = Identityref('IPV6_MULTICAST', ns='http://arista.com/yang/openconfig/bgp/augments', mod='arista-bgp-augments', pfx='arista-bgp-augments')
+arista_bgp_augments_BFD_DOWN: Identityref = Identityref('BFD_DOWN', ns='http://arista.com/yang/openconfig/bgp/augments', mod='arista-bgp-augments', pfx='arista-bgp-augments')
 
 
 SRC_DNODE: DRoot = dorsi.devices.AristaEOS_4_36_3_2M_schema.SRC_DNODE
@@ -1363,6 +1369,7 @@ pure def src_yang() -> list[str]:
     return dorsi.devices.AristaEOS_4_36_3_2M_schema.src_yang()
 
 
+NS_arista_bgp_augments: str = 'http://arista.com/yang/openconfig/bgp/augments'
 NS_arista_bgp_deviations: str = 'http://arista.com/yang/openconfig/bgp/deviations'
 NS_arista_intf_deviations: str = 'http://arista.com/yang/openconfig/interfaces/deviations'
 NS_arista_lldp_deviations: str = 'http://arista.com/yang/openconfig/lldp/deviations'

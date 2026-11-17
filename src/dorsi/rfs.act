@@ -330,12 +330,45 @@ def _eos_port_subscriptions(name: str) -> set[gdata.SubscriptionSpec]:
     }
 
 
+def _eos_bgp_subscriptions(peer_address: str) -> set[gdata.SubscriptionSpec]:
+    # The whole entry of the neighbor, as EOS fails a filter that names
+    # session-state before the session has any state. Until the neighbor is
+    # configured the filter still fails on neighbors, so the BGP state is
+    # polled apart from the port state, which then keeps coming, and that
+    # failure reads as no session (see _eos_no_neighbor).
+    bgp = eos436_oper.subs.network_instances.network_instance.entry("default").protocols.protocol.entry(eos436.openconfig_policy_types_BGP, "BGP").bgp
+    return {
+        bgp.neighbors.neighbor.entry(peer_address).subscribe(period=_POLL_PERIOD)
+    }
+
+
+# The first BGP poll often comes before the configuration with the neighbor
+# reaches the switch. Only a neighbor still missing after this long is logged.
+_NO_NEIGHBOR_LOG_AFTER_NS = 30 * 1000000000
+
+
+def _eos_no_neighbor(err: Exception) -> bool:
+    """Whether the BGP poll failed because the device has no BGP neighbor yet.
+    EOS answers a filter that names a node it does not have with an error
+    instead of an empty reply, as RFC 6241 has it."""
+    return 'unexpected element "neighbors"' in str(err)
+
+
 actor FabricInterfaceTransform(path, update_oper: proc(?y_1_oper.stratoweave_rfs__rfs__fabric_interface_entry)->None, dev: swdev.DeviceMgr):
     _subs = gdata.SubscriptionManager(dev.tree_provider(), str(path))
     _oper = base.FabricInterface.new_state(path)
     var _last_delivery: ?int = None
     var _stale = False
     var _running = True
+    # EOS port and BGP state come in two deliveries; each publish carries the
+    # last state of the other
+    var _eos_oper_status_seen: ?str = None
+    var _eos_bgp_status_seen: ?str = None
+    var _eos_neighbor_seen: (?str, ?str) = (None, None)
+    # Since when the BGP poll finds no neighbor on the device, and whether
+    # that was logged
+    var _eos_no_neighbor_since: ?int = None
+    var _eos_no_neighbor_logged = False
 
     def _watchdog():
         if not _running:
@@ -344,6 +377,9 @@ actor FabricInterfaceTransform(path, update_oper: proc(?y_1_oper.stratoweave_rfs
         if last is not None and not _stale and time.monotonic_ns() - last > _STALE_AFTER_NS:
             print("FabricInterfaceTransform {path}: no state from the device for {_STALE_AFTER_NS // 1000000000} s, reporting it as unknown", err=True)
             _stale = True
+            _eos_oper_status_seen = None
+            _eos_bgp_status_seen = None
+            _eos_neighbor_seen = (None, None)
             publish(None, None, None, None)
         after _POLL_PERIOD: _watchdog()
 
@@ -379,15 +415,39 @@ actor FabricInterfaceTransform(path, update_oper: proc(?y_1_oper.stratoweave_rfs
         _stale = False
         publish(oper_status, bgp_status, neighbor_device, neighbor_interface)
 
-    def on_eos_state(root: ?eos436_oper_root, err: ?Exception, peer_address: str):
+    def _eos_publish():
+        _last_delivery = time.monotonic_ns()
+        _stale = False
+        publish(_eos_oper_status_seen, _eos_bgp_status_seen, _eos_neighbor_seen.0, _eos_neighbor_seen.1)
+
+    def on_eos_port_state(root: ?eos436_oper_root, err: ?Exception):
         oper_status: ?str = None
-        bgp_status: ?str = None
-        neighbor_device: ?str = None
-        neighbor_interface: ?str = None
+        neighbor: (?str, ?str) = (None, None)
         if err is not None:
             print("FabricInterfaceTransform subscription error: {err}", err=True)
         elif root is not None:
             oper_status = _eos_oper_status(root)
+            neighbor = _eos_lldp_neighbor(root)
+        _eos_oper_status_seen = oper_status
+        _eos_neighbor_seen = neighbor
+        _eos_publish()
+
+    def on_eos_bgp_state(root: ?eos436_oper_root, err: ?Exception, peer_address: str):
+        bgp_status: ?str = None
+        if err is not None and _eos_no_neighbor(err):
+            # No session yet, the state stays unknown
+            now = time.monotonic_ns()
+            if _eos_no_neighbor_since is None:
+                _eos_no_neighbor_since = now
+            since = _eos_no_neighbor_since
+            if since is not None and not _eos_no_neighbor_logged and now - since > _NO_NEIGHBOR_LOG_AFTER_NS:
+                print("FabricInterfaceTransform {path}: BGP neighbor {peer_address} still not on the device after {_NO_NEIGHBOR_LOG_AFTER_NS // 1000000000} s", err=True)
+                _eos_no_neighbor_logged = True
+        elif err is not None:
+            print("FabricInterfaceTransform BGP subscription error: {err}", err=True)
+        elif root is not None:
+            _eos_no_neighbor_since = None
+            _eos_no_neighbor_logged = False
             for ni in root.network_instances.network_instance:
                 for proto in ni.protocols.protocol:
                     for neighbor in proto.bgp.neighbors.neighbor:
@@ -398,10 +458,8 @@ actor FabricInterfaceTransform(path, update_oper: proc(?y_1_oper.stratoweave_rfs
                             elif session is not None:
                                 # IDLE, CONNECT, ACTIVE, OPENSENT and OPENCONFIRM
                                 bgp_status = "down"
-            neighbor_device, neighbor_interface = _eos_lldp_neighbor(root)
-        _last_delivery = time.monotonic_ns()
-        _stale = False
-        publish(oper_status, bgp_status, neighbor_device, neighbor_interface)
+        _eos_bgp_status_seen = bgp_status
+        _eos_publish()
 
     def on_conf(conf: y_1.stratoweave_rfs__rfs__fabric_interface_entry):
         want: set[gdata.Delivery] = set()
@@ -414,11 +472,10 @@ actor FabricInterfaceTransform(path, update_oper: proc(?y_1_oper.stratoweave_rfs
             want.add(srl_dst.deliver(subs))
         elif _EOS_MODULE in modset:
             peer_address = conf.bgp.peer_address
-            eos_dst = eos436_oper.dst(lambda r, e: on_eos_state(r, e, peer_address))
-            subs = _eos_port_subscriptions(conf.name)
-            bgp = eos436_oper.subs.network_instances.network_instance.entry("default").protocols.protocol.entry(eos436.openconfig_policy_types_BGP, "BGP").bgp
-            subs.add(bgp.neighbors.neighbor.entry(peer_address).state.session_state.subscribe(period=_POLL_PERIOD))
-            want.add(eos_dst.deliver(subs))
+            port_dst = eos436_oper.dst(on_eos_port_state)
+            want.add(port_dst.deliver(_eos_port_subscriptions(conf.name)))
+            bgp_dst = eos436_oper.dst(lambda r, e: on_eos_bgp_state(r, e, peer_address))
+            want.add(bgp_dst.deliver(_eos_bgp_subscriptions(peer_address)))
         _subs.declare(want)
 
     def shutdown():
