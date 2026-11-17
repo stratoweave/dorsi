@@ -434,6 +434,7 @@ generated_device_types: dict[str, swdev.DeviceType] = {
                     '/srl_nokia-if:interface/subinterface/ipv4/arp/host-route/populate/route-type',
                     '/srl_nokia-if:interface/subinterface/ipv4/arp/evpn/advertise/route-type',
                     '/srl_nokia-if:interface/ethernet/aggregate-id',
+                    '/srl_nokia-if:interface/ethernet/hold-time/up',
                     '/srl_nokia-if:interface/lag/lag-type',
                     '/srl_nokia-if:interface/lag/lacp/interval',
                     '/srl_nokia-if:interface/lag/lacp/lacp-mode',

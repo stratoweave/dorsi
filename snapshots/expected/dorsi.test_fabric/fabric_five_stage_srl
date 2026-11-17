@@ -66,6 +66,9 @@ interface_element_3 = leaf1.interface.create('ethernet-1/1', description='Server
 # Container: /interface[name='ethernet-1/1']/ethernet
 interface_element_3.ethernet.aggregate_id = 'lag1'
 
+# Container: /interface[name='ethernet-1/1']/ethernet/hold-time
+interface_element_3.ethernet.hold_time.up = u64(2000)
+
 # List /interface (srl_nokia-interfaces) element: 'ethernet-1/2'
 interface_element_3 = leaf1.interface.create('ethernet-1/2', description='Server server3 [eth1] (single-homed)', admin_state='enable', vlan_tagging=True)
 
@@ -371,6 +374,9 @@ interface_element_3 = leaf2.interface.create('ethernet-1/1', description='Server
 
 # Container: /interface[name='ethernet-1/1']/ethernet
 interface_element_3.ethernet.aggregate_id = 'lag1'
+
+# Container: /interface[name='ethernet-1/1']/ethernet/hold-time
+interface_element_3.ethernet.hold_time.up = u64(2000)
 
 # List /interface (srl_nokia-interfaces) element: 'ethernet-1/2'
 interface_element_3 = leaf2.interface.create('ethernet-1/2', description='Server server2 [eth1] (single-homed)', admin_state='enable', vlan_tagging=True)

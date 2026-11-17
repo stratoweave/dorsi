@@ -285,6 +285,7 @@ actor main(env):
     "/srl_nokia-if:interface/subinterface/ipv4/arp/evpn/advertise/route-type",
     # EVPN multihoming: LAG with LACP and the ethernet segment on it
     "/srl_nokia-if:interface/ethernet/aggregate-id",
+    "/srl_nokia-if:interface/ethernet/hold-time/up",
     "/srl_nokia-if:interface/lag/lag-type",
     "/srl_nokia-if:interface/lag/lacp/interval",
     "/srl_nokia-if:interface/lag/lacp/lacp-mode",

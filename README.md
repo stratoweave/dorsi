@@ -181,6 +181,18 @@ VNI on the leaves of the VRF exchanges the subnets and host routes as EVPN IP
 prefix routes (type 5). The layer 3 VNI comes from a range of its own, apart
 from those of the networks.
 
+Known limits of the overlay on SR Linux 25.3, seen in the labs:
+
+* When a port of an ESI-LAG goes down and only that leaf had learned the MAC
+  address of the server, its other leaf knew it only from the EVPN route of
+  the first and drops it too. Bridged traffic is flooded to the server in the
+  meantime, but routed traffic to it is lost until the MAC address is learned
+  again, about 1.2 s. No setting of SR Linux 25.3 keeps the MAC address on
+  the other leaf of the segment.
+* When a port of an ESI-LAG comes back up, the first frame of the server on it
+  is sometimes lost. Holding the port down for 2 s after it comes up (DORSI
+  sets this on the ports of server LAGs) made it 2 losses in 30 instead of 8.
+
 DORSI reads the state of the overlay too: on each leaf, the network instance
 and EVPN instance of every network and VRF, and the LAG and ethernet segment
 of every server attached over one. It is lifted into read-only `state` of the

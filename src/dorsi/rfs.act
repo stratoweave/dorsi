@@ -533,6 +533,12 @@ actor FabricInterfaceTransform(path, update_oper: proc(?y_1_oper.stratoweave_rfs
     after _POLL_PERIOD: _watchdog()
 
 
+# How long a port of a server LAG is held down after it comes up. When a port
+# came back, SR Linux lost the first frame of the server on it in 8 of 30
+# tries in the fabric-5stage-srl lab; held for 2 s, in 2 of 30.
+_LAG_MEMBER_HOLD_TIME_UP_MS = 2000
+
+
 class ServerPort(base.ServerPort):
     def transform(self, i, di):
         print("RFS /rfs{{{di.name}}}/server-port transform running [{i.name}] <-> {i.server} [{i.server_port}] {i.profile}", err=True)
@@ -547,6 +553,7 @@ class ServerPort(base.ServerPort):
             lag = i.lag
             if lag is not None:
                 intf.ethernet.aggregate_id = lag
+                intf.ethernet.hold_time.up = u64(_LAG_MEMBER_HOLD_TIME_UP_MS)
             dev.system.create_lldp().interface.create(i.name, admin_state="enable")
             return dev
 

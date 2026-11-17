@@ -49,6 +49,9 @@ make check-overlay-failover
 `check-overlay` pings between the servers, bridged and routed, also with full
 1500 byte frames; `check-overlay-failover` takes each port of the ESI-LAG of
 server1 down and up again while server3 pings server1 bridged and server2
-routed. Both fail on any lost or duplicated reply. Both have passed; once, the
-first time it ran, taking down the port of leaf2 lost 6 routed pings of 100
-(1.2 s), which five more tries did not repeat.
+routed. Both fail on any lost or duplicated reply. `check-overlay-failover` takes
+the port of leaf1 down and up first, after which server1 often sends through
+leaf2 alone, so leaf1 knows its MAC address only from EVPN. Taking down the
+port of leaf2 then loses about 6 routed pings of 100 (1.2 s): the first known
+limit in the [README](../../README.md#evpn-vxlan-overlay-sr-linux-preliminary),
+which this check reports.
