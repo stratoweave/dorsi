@@ -27,6 +27,27 @@ switches and the links between them.
 | server2 | dual-homed | leaf3 | `ethernet-1/1` | `eth2` |
 | server3 | single-homed | leaf3 | `ethernet-1/2` | `eth1` |
 
+## Overlay
+
+`ip-fabric.xml` also has an EVPN-VXLAN overlay: tenant `t1` with network `web`
+(VLAN 10) and network `db` (untagged). The servers set themselves up for it
+(`exec` in `fabric-3stage.clab.yml`): server1 and server2 bond their two ports
+with LACP, as DORSI puts them on an all-active ethernet segment of their two
+leaves.
+
+| Server | Network | VLAN | Address | Leaf side |
+|---|---|---|---|---|
+| server1 | `t1/web` | 10 | 10.10.10.11/24 | `lag1` on leaf1 and leaf2 |
+| server2 | `t1/db` | untagged | 10.10.20.12/24 | `lag2` on leaf2, `lag1` on leaf3 |
+| server3 | `t1/web` | 10 | 10.10.10.13/24 | `ethernet-1/2` on leaf3 |
+
+Once dorsi has configured the switches, `make check-overlay` pings server3 from
+server1 and back and shows the EVPN routes and MAC table on leaf3 and the
+ethernet segment on leaf1. To test the ethernet segment, ping server1 from
+server3 while disabling `ethernet-1/1` of leaf1
+(`sr_cli -ec "interface ethernet-1/1 admin-state disable"`): no ping is lost.
+server2 is alone in its network until routing between networks is added.
+
 ## Status
 
 The topology and data match the `fabric_three_stage` and `fabric_five_stage`

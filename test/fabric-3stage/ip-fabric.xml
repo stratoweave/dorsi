@@ -68,8 +68,23 @@
                 <upper-switch>spine2</upper-switch>
                 <upper-port>ethernet-1/3</upper-port>
             </fabric-link>
+            <tenant>
+                <name>t1</name>
+                <network>
+                    <name>web</name>
+                </network>
+                <network>
+                    <name>db</name>
+                </network>
+            </tenant>
             <server>
                 <name>server1</name>
+                <attachment>
+                    <tenant>t1</tenant>
+                    <network>web</network>
+                    <vlan>10</vlan>
+                    <ipv4-address>10.10.10.11/24</ipv4-address>
+                </attachment>
                 <connectivity>
                     <profile>dual-homed</profile>
                     <link>
@@ -86,6 +101,11 @@
             </server>
             <server>
                 <name>server2</name>
+                <attachment>
+                    <tenant>t1</tenant>
+                    <network>db</network>
+                    <ipv4-address>10.10.20.12/24</ipv4-address>
+                </attachment>
                 <connectivity>
                     <profile>dual-homed</profile>
                     <link>
@@ -102,6 +122,12 @@
             </server>
             <server>
                 <name>server3</name>
+                <attachment>
+                    <tenant>t1</tenant>
+                    <network>web</network>
+                    <vlan>10</vlan>
+                    <ipv4-address>10.10.10.13/24</ipv4-address>
+                </attachment>
                 <connectivity>
                     <profile>single-homed</profile>
                     <link>

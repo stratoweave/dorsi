@@ -1,0 +1,941 @@
+# device leaf1
+# YANG module (prefix) and namespace:
+#   srl_nokia-bgp (srl_nokia-bgp)                                                                               urn:nokia.com:srlinux:bgp:bgp
+#   srl_nokia-bgp-evpn (srl_nokia-bgp-evpn)                                                                     urn:nokia.com:srlinux:net-inst:bgp-evpn
+#   srl_nokia-bgp-vpn (srl_nokia-bgp-vpn)                                                                       urn:nokia.com:srlinux:bgp:bgp-vpn
+#   srl_nokia-interfaces (srl_nokia-if)                                                                         urn:nokia.com:srlinux:chassis:interfaces
+#   srl_nokia-interfaces-lag (srl_nokia-if-lag)                                                                 urn:nokia.com:srlinux:lag:interfaces-lag
+#   srl_nokia-lacp (srl_nokia-lacp)                                                                             urn:nokia.com:srlinux:lag:lacp
+#   srl_nokia-lldp (srl_nokia-lldp)                                                                             urn:nokia.com:srlinux:lldp:lldp
+#   srl_nokia-network-instance (srl_nokia-netinst)                                                              urn:nokia.com:srlinux:net-inst:network-instance
+#   srl_nokia-system-name (srl_nokia-system-name)                                                               urn:nokia.com:srlinux:chassis:system-name
+#   srl_nokia-system-network-instance (srl_nokia-system-netinst)                                                urn:nokia.com:srlinux:net-inst:system-network-instance
+#   srl_nokia-system-network-instance-bgp-evpn-ethernet-segments (srl_nokia-system-bgp-evpn-ethernet-segments)  urn:nokia.com:srlinux:evpn:system-network-instance-bgp-evpn-ethernet-segments
+#   srl_nokia-system-network-instance-bgp-vpn (srl_nokia-system-bgp-vpn)                                        urn:nokia.com:srlinux:bgp:system-network-instance-bgp-vpn
+#   srl_nokia-tunnel-interfaces (srl_nokia-tunnel-if)                                                           urn:nokia.com:srlinux:vxlan:tunnel-interfaces
+# Top node: /
+leaf1 = root()
+
+# P-container: /system/network-instance (srl_nokia-system-network-instance)
+network_instance = leaf1.system.create_network_instance()
+
+# P-container: /system/network-instance/protocols/evpn
+evpn = network_instance.protocols.create_evpn()
+
+# P-container: /system/network-instance/protocols/evpn/ethernet-segments (srl_nokia-system-network-instance-bgp-evpn-ethernet-segments)
+ethernet_segments = evpn.create_ethernet_segments()
+
+# List /system/network-instance/protocols/evpn/ethernet-segments/bgp-instance element: 1
+bgp_instance_element = ethernet_segments.bgp_instance.create(u64(1))
+
+# List /system/network-instance/protocols/evpn/ethernet-segments/bgp-instance[id='1']/ethernet-segment element: 'es-server1'
+ethernet_segment_element = bgp_instance_element.ethernet_segment.create('es-server1', admin_state='enable', esi='00:ed:b6:17:52:a6:a6:e6:e3:01', multi_homing_mode='all-active')
+
+# List /system/network-instance/protocols/evpn/ethernet-segments/bgp-instance[id='1']/ethernet-segment[name='es-server1']/interface element: 'lag1'
+interface_element = ethernet_segment_element.interface.create('lag1')
+
+# P-container: /system/network-instance/protocols/bgp-vpn (srl_nokia-system-network-instance-bgp-vpn)
+bgp_vpn = network_instance.protocols.create_bgp_vpn()
+
+# List /system/network-instance/protocols/bgp-vpn/bgp-instance element: 1
+bgp_instance_element_2 = bgp_vpn.bgp_instance.create(u64(1))
+
+# Container: /system/name (srl_nokia-system-name)
+leaf1.system.name.host_name = 'leaf1'
+
+# P-container: /system/lldp (srl_nokia-lldp)
+lldp = leaf1.system.create_lldp(admin_state='enable')
+
+# List /system/lldp/interface element: 'ethernet-1/1'
+interface_element_2 = lldp.interface.create('ethernet-1/1', admin_state='enable')
+
+# List /system/lldp/interface element: 'ethernet-1/2'
+interface_element_2 = lldp.interface.create('ethernet-1/2', admin_state='enable')
+
+# List /system/lldp/interface element: 'ethernet-1/49'
+interface_element_2 = lldp.interface.create('ethernet-1/49', admin_state='enable')
+
+# List /system/lldp/interface element: 'mgmt0'
+interface_element_2 = lldp.interface.create('mgmt0', admin_state='enable')
+
+# List /interface (srl_nokia-interfaces) element: 'ethernet-1/1'
+interface_element_3 = leaf1.interface.create('ethernet-1/1', description='Server server1 [eth1] (dual-homed)', admin_state='enable')
+
+# Container: /interface[name='ethernet-1/1']/ethernet
+interface_element_3.ethernet.aggregate_id = 'lag1'
+
+# List /interface (srl_nokia-interfaces) element: 'ethernet-1/2'
+interface_element_3 = leaf1.interface.create('ethernet-1/2', description='Server server3 [eth1] (single-homed)', admin_state='enable', vlan_tagging=True)
+
+# List /interface[name='ethernet-1/2']/subinterface element: 0
+subinterface_element = interface_element_3.subinterface.create(u64(0), type=Identityref('bridged', ns='urn:nokia.com:srlinux:chassis:interfaces', mod='srl_nokia-interfaces', pfx='srl_nokia-if'), admin_state='enable')
+
+# P-container: /interface[name='ethernet-1/2']/subinterface[index='0']/vlan/encap/untagged
+untagged = subinterface_element.vlan.encap.create_untagged()
+
+# List /interface (srl_nokia-interfaces) element: 'ethernet-1/49'
+interface_element_3 = leaf1.interface.create('ethernet-1/49', description='Link to spine1 [ethernet-1/1]', admin_state='enable')
+
+# List /interface[name='ethernet-1/49']/subinterface element: 0
+subinterface_element = interface_element_3.subinterface.create(u64(0), description='Link to spine1 [ethernet-1/1]', admin_state='enable')
+
+# Container: /interface[name='ethernet-1/49']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# List /interface[name='ethernet-1/49']/subinterface[index='0']/ipv4/address element: '10.100.0.226/31'
+address_element = subinterface_element.ipv4.address.create('10.100.0.226/31')
+
+# List /interface (srl_nokia-interfaces) element: 'lag1'
+interface_element_3 = leaf1.interface.create('lag1', description='Server server1', admin_state='enable', vlan_tagging=True)
+
+# List /interface[name='lag1']/subinterface element: 10
+subinterface_element = interface_element_3.subinterface.create(u64(10), type=Identityref('bridged', ns='urn:nokia.com:srlinux:chassis:interfaces', mod='srl_nokia-interfaces', pfx='srl_nokia-if'), admin_state='enable')
+
+# P-container: /interface[name='lag1']/subinterface[index='10']/vlan/encap/single-tagged
+single_tagged = subinterface_element.vlan.encap.create_single_tagged(vlan_id=u64(10))
+
+# P-container: /interface[name='lag1']/lag (srl_nokia-interfaces-lag)
+lag = interface_element_3.create_lag(lag_type='lacp')
+
+# P-container: /interface[name='lag1']/lag/lacp (srl_nokia-lacp)
+lacp = lag.create_lacp(interval='FAST', lacp_mode='ACTIVE', admin_key=u64(1290), system_id_mac='02:af:f4:15:87:a1', system_priority=u64(32768))
+
+# List /interface (srl_nokia-interfaces) element: 'mgmt0'
+interface_element_3 = leaf1.interface.create('mgmt0', admin_state='enable')
+
+# List /interface[name='mgmt0']/subinterface element: 0
+subinterface_element = interface_element_3.subinterface.create(u64(0), admin_state='enable')
+
+# Container: /interface[name='mgmt0']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# Container: /interface[name='mgmt0']/subinterface[index='0']/ipv6
+subinterface_element.ipv6.admin_state = 'enable'
+
+# List /interface (srl_nokia-interfaces) element: 'system0'
+interface_element_3 = leaf1.interface.create('system0')
+
+# List /interface[name='system0']/subinterface element: 0
+subinterface_element = interface_element_3.subinterface.create(u64(0))
+
+# Container: /interface[name='system0']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# List /interface[name='system0']/subinterface[index='0']/ipv4/address element: '10.0.0.1/32'
+address_element = subinterface_element.ipv4.address.create('10.0.0.1/32')
+
+# List /network-instance (srl_nokia-network-instance) element: 'default'
+network_instance_element = leaf1.network_instance.create('default')
+
+# List /network-instance[name='default']/interface element: 'ethernet-1/49.0'
+interface_element_4 = network_instance_element.interface.create('ethernet-1/49.0')
+
+# List /network-instance[name='default']/interface element: 'system0.0'
+interface_element_4 = network_instance_element.interface.create('system0.0')
+
+# P-container: /network-instance[name='default']/protocols/bgp (srl_nokia-bgp)
+bgp = network_instance_element.protocols.create_bgp(autonomous_system=u64(4200000001), router_id='10.0.0.1')
+
+# List /network-instance[name='default']/protocols/bgp/afi-safi element: Identityref('evpn', ns='urn:nokia.com:srlinux:general:common', mod='srl_nokia-common', pfx='srl_nokia-comm')
+afi_safi_element = bgp.afi_safi.create(Identityref('evpn', ns='urn:nokia.com:srlinux:general:common', mod='srl_nokia-common', pfx='srl_nokia-comm'), admin_state='enable')
+
+# Container: /network-instance[name='default']/protocols/bgp/afi-safi[afi-safi-name='Identityref(\'evpn\', ns=\'urn:nokia.com:srlinux:general:common\', mod=\'srl_nokia-common\', pfx=\'srl_nokia-comm\')']/evpn
+afi_safi_element.evpn.rapid_update = True
+
+# List /network-instance[name='default']/protocols/bgp/afi-safi element: Identityref('ipv4-unicast', ns='urn:nokia.com:srlinux:general:common', mod='srl_nokia-common', pfx='srl_nokia-comm')
+afi_safi_element = bgp.afi_safi.create(Identityref('ipv4-unicast', ns='urn:nokia.com:srlinux:general:common', mod='srl_nokia-common', pfx='srl_nokia-comm'), admin_state='enable')
+
+# Container: /network-instance[name='default']/protocols/bgp/afi-safi[afi-safi-name='Identityref(\'ipv4-unicast\', ns=\'urn:nokia.com:srlinux:general:common\', mod=\'srl_nokia-common\', pfx=\'srl_nokia-comm\')']/multipath/ebgp
+afi_safi_element.multipath.ebgp.maximum_paths = u64(64)
+
+# List /network-instance[name='default']/protocols/bgp/group element: 'fabric'
+group_element = bgp.group.create('fabric')
+group_element.export_policy = ['export-loopbacks']
+group_element.import_policy = ['accept-all']
+
+# List /network-instance[name='default']/protocols/bgp/neighbor element: '10.100.0.227'
+neighbor_element = bgp.neighbor.create('10.100.0.227', admin_state='enable', description='Link to spine1 [ethernet-1/1]', peer_as=u64(4200100101), peer_group='fabric')
+
+# List /network-instance (srl_nokia-network-instance) element: 'mgmt'
+network_instance_element = leaf1.network_instance.create('mgmt', type=Identityref('ip-vrf', ns='urn:nokia.com:srlinux:net-inst:network-instance', mod='srl_nokia-network-instance', pfx='srl_nokia-netinst'), admin_state='enable', description='Management network instance')
+
+# List /network-instance[name='mgmt']/interface element: 'mgmt0.0'
+interface_element_4 = network_instance_element.interface.create('mgmt0.0')
+
+# List /network-instance (srl_nokia-network-instance) element: 't1-web'
+network_instance_element = leaf1.network_instance.create('t1-web', type=Identityref('mac-vrf', ns='urn:nokia.com:srlinux:net-inst:network-instance', mod='srl_nokia-network-instance', pfx='srl_nokia-netinst'), admin_state='enable', description='Overlay network VNI 15906')
+
+# List /network-instance[name='t1-web']/interface element: 'ethernet-1/2.0'
+interface_element_4 = network_instance_element.interface.create('ethernet-1/2.0')
+
+# List /network-instance[name='t1-web']/interface element: 'lag1.10'
+interface_element_4 = network_instance_element.interface.create('lag1.10')
+
+# List /network-instance[name='t1-web']/vxlan-interface element: 'vxlan1.15907'
+vxlan_interface_element = network_instance_element.vxlan_interface.create('vxlan1.15907')
+
+# P-container: /network-instance[name='t1-web']/protocols/bgp-evpn
+bgp_evpn = network_instance_element.protocols.create_bgp_evpn()
+
+# List /network-instance[name='t1-web']/protocols/bgp-evpn/bgp-instance (srl_nokia-bgp-evpn) element: 1
+bgp_instance_element_3 = bgp_evpn.bgp_instance.create(u64(1), admin_state='enable', vxlan_interface='vxlan1.15907', evi=u64(15907), ecmp=u64(8))
+
+# P-container: /network-instance[name='t1-web']/protocols/bgp-vpn (srl_nokia-bgp-vpn)
+bgp_vpn_2 = network_instance_element.protocols.create_bgp_vpn()
+
+# List /network-instance[name='t1-web']/protocols/bgp-vpn/bgp-instance element: 1
+bgp_instance_element_4 = bgp_vpn_2.bgp_instance.create(u64(1))
+
+# Container: /network-instance[name='t1-web']/protocols/bgp-vpn/bgp-instance[id='1']/route-distinguisher
+bgp_instance_element_4.route_distinguisher.rd = '10.0.0.1:15907'
+
+# Container: /network-instance[name='t1-web']/protocols/bgp-vpn/bgp-instance[id='1']/route-target
+bgp_instance_element_4.route_target.export_rt = 'target:45278:15906'
+bgp_instance_element_4.route_target.import_rt = 'target:45278:15906'
+
+# List /tunnel-interface (srl_nokia-tunnel-interfaces) element: 'vxlan1'
+tunnel_interface_element = leaf1.tunnel_interface.create('vxlan1')
+
+# List /tunnel-interface[name='vxlan1']/vxlan-interface element: 15907
+vxlan_interface_element_2 = tunnel_interface_element.vxlan_interface.create(u64(15907), type=Identityref('bridged', ns='urn:nokia.com:srlinux:chassis:interfaces', mod='srl_nokia-interfaces', pfx='srl_nokia-if'))
+
+# Container: /tunnel-interface[name='vxlan1']/vxlan-interface[index='15907']/ingress
+vxlan_interface_element_2.ingress.vni = u64(15906)
+
+# List /routing-policy/prefix-set element: 'loopbacks'
+prefix_set_element = leaf1.routing_policy.prefix_set.create('loopbacks')
+
+# List /routing-policy/prefix-set[name='loopbacks']/prefix element: '10.0.0.0/16', '32..32'
+prefix_element = prefix_set_element.prefix.create((ip_prefix='10.0.0.0/16', mask_length_range='32..32'))
+
+# List /routing-policy/policy element: 'accept-all'
+policy_element = leaf1.routing_policy.policy.create('accept-all')
+
+# List /routing-policy/policy[name='accept-all']/statement element: '10'
+statement_element = policy_element.statement.create('10')
+
+# Container: /routing-policy/policy[name='accept-all']/statement[name='10']/action
+statement_element.action_.policy_result = 'accept'
+
+# List /routing-policy/policy element: 'export-loopbacks'
+policy_element = leaf1.routing_policy.policy.create('export-loopbacks')
+
+# List /routing-policy/policy[name='export-loopbacks']/statement element: '10'
+statement_element = policy_element.statement.create('10')
+
+# Container: /routing-policy/policy[name='export-loopbacks']/statement[name='10']/match/prefix
+statement_element.match.prefix.prefix_set = 'loopbacks'
+
+# Container: /routing-policy/policy[name='export-loopbacks']/statement[name='10']/action
+statement_element.action_.policy_result = 'accept'
+
+# List /routing-policy/policy[name='export-loopbacks']/statement element: '20'
+statement_element = policy_element.statement.create('20')
+
+# Container: /routing-policy/policy[name='export-loopbacks']/statement[name='20']/match
+statement_element.match.family = [Identityref('evpn', ns='urn:nokia.com:srlinux:general:common', mod='srl_nokia-common', pfx='srl_nokia-comm')]
+
+# Container: /routing-policy/policy[name='export-loopbacks']/statement[name='20']/action
+statement_element.action_.policy_result = 'accept'
+
+# device leaf2
+# YANG module (prefix) and namespace:
+#   srl_nokia-bgp (srl_nokia-bgp)                                                                               urn:nokia.com:srlinux:bgp:bgp
+#   srl_nokia-bgp-evpn (srl_nokia-bgp-evpn)                                                                     urn:nokia.com:srlinux:net-inst:bgp-evpn
+#   srl_nokia-bgp-vpn (srl_nokia-bgp-vpn)                                                                       urn:nokia.com:srlinux:bgp:bgp-vpn
+#   srl_nokia-interfaces (srl_nokia-if)                                                                         urn:nokia.com:srlinux:chassis:interfaces
+#   srl_nokia-interfaces-lag (srl_nokia-if-lag)                                                                 urn:nokia.com:srlinux:lag:interfaces-lag
+#   srl_nokia-lacp (srl_nokia-lacp)                                                                             urn:nokia.com:srlinux:lag:lacp
+#   srl_nokia-lldp (srl_nokia-lldp)                                                                             urn:nokia.com:srlinux:lldp:lldp
+#   srl_nokia-network-instance (srl_nokia-netinst)                                                              urn:nokia.com:srlinux:net-inst:network-instance
+#   srl_nokia-system-name (srl_nokia-system-name)                                                               urn:nokia.com:srlinux:chassis:system-name
+#   srl_nokia-system-network-instance (srl_nokia-system-netinst)                                                urn:nokia.com:srlinux:net-inst:system-network-instance
+#   srl_nokia-system-network-instance-bgp-evpn-ethernet-segments (srl_nokia-system-bgp-evpn-ethernet-segments)  urn:nokia.com:srlinux:evpn:system-network-instance-bgp-evpn-ethernet-segments
+#   srl_nokia-system-network-instance-bgp-vpn (srl_nokia-system-bgp-vpn)                                        urn:nokia.com:srlinux:bgp:system-network-instance-bgp-vpn
+#   srl_nokia-tunnel-interfaces (srl_nokia-tunnel-if)                                                           urn:nokia.com:srlinux:vxlan:tunnel-interfaces
+# Top node: /
+leaf2 = root()
+
+# P-container: /system/network-instance (srl_nokia-system-network-instance)
+network_instance = leaf2.system.create_network_instance()
+
+# P-container: /system/network-instance/protocols/evpn
+evpn = network_instance.protocols.create_evpn()
+
+# P-container: /system/network-instance/protocols/evpn/ethernet-segments (srl_nokia-system-network-instance-bgp-evpn-ethernet-segments)
+ethernet_segments = evpn.create_ethernet_segments()
+
+# List /system/network-instance/protocols/evpn/ethernet-segments/bgp-instance element: 1
+bgp_instance_element = ethernet_segments.bgp_instance.create(u64(1))
+
+# List /system/network-instance/protocols/evpn/ethernet-segments/bgp-instance[id='1']/ethernet-segment element: 'es-server1'
+ethernet_segment_element = bgp_instance_element.ethernet_segment.create('es-server1', admin_state='enable', esi='00:ed:b6:17:52:a6:a6:e6:e3:01', multi_homing_mode='all-active')
+
+# List /system/network-instance/protocols/evpn/ethernet-segments/bgp-instance[id='1']/ethernet-segment[name='es-server1']/interface element: 'lag1'
+interface_element = ethernet_segment_element.interface.create('lag1')
+
+# P-container: /system/network-instance/protocols/bgp-vpn (srl_nokia-system-network-instance-bgp-vpn)
+bgp_vpn = network_instance.protocols.create_bgp_vpn()
+
+# List /system/network-instance/protocols/bgp-vpn/bgp-instance element: 1
+bgp_instance_element_2 = bgp_vpn.bgp_instance.create(u64(1))
+
+# Container: /system/name (srl_nokia-system-name)
+leaf2.system.name.host_name = 'leaf2'
+
+# P-container: /system/lldp (srl_nokia-lldp)
+lldp = leaf2.system.create_lldp(admin_state='enable')
+
+# List /system/lldp/interface element: 'ethernet-1/1'
+interface_element_2 = lldp.interface.create('ethernet-1/1', admin_state='enable')
+
+# List /system/lldp/interface element: 'ethernet-1/2'
+interface_element_2 = lldp.interface.create('ethernet-1/2', admin_state='enable')
+
+# List /system/lldp/interface element: 'ethernet-1/49'
+interface_element_2 = lldp.interface.create('ethernet-1/49', admin_state='enable')
+
+# List /system/lldp/interface element: 'mgmt0'
+interface_element_2 = lldp.interface.create('mgmt0', admin_state='enable')
+
+# List /interface (srl_nokia-interfaces) element: 'ethernet-1/1'
+interface_element_3 = leaf2.interface.create('ethernet-1/1', description='Server server1 [eth2] (dual-homed)', admin_state='enable')
+
+# Container: /interface[name='ethernet-1/1']/ethernet
+interface_element_3.ethernet.aggregate_id = 'lag1'
+
+# List /interface (srl_nokia-interfaces) element: 'ethernet-1/2'
+interface_element_3 = leaf2.interface.create('ethernet-1/2', description='Server server2 [eth1] (single-homed)', admin_state='enable', vlan_tagging=True)
+
+# List /interface[name='ethernet-1/2']/subinterface element: 10
+subinterface_element = interface_element_3.subinterface.create(u64(10), type=Identityref('bridged', ns='urn:nokia.com:srlinux:chassis:interfaces', mod='srl_nokia-interfaces', pfx='srl_nokia-if'), admin_state='enable')
+
+# P-container: /interface[name='ethernet-1/2']/subinterface[index='10']/vlan/encap/single-tagged
+single_tagged = subinterface_element.vlan.encap.create_single_tagged(vlan_id=u64(10))
+
+# List /interface (srl_nokia-interfaces) element: 'ethernet-1/49'
+interface_element_3 = leaf2.interface.create('ethernet-1/49', description='Link to spine2 [ethernet-1/1]', admin_state='enable')
+
+# List /interface[name='ethernet-1/49']/subinterface element: 0
+subinterface_element = interface_element_3.subinterface.create(u64(0), description='Link to spine2 [ethernet-1/1]', admin_state='enable')
+
+# Container: /interface[name='ethernet-1/49']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# List /interface[name='ethernet-1/49']/subinterface[index='0']/ipv4/address element: '10.100.1.98/31'
+address_element = subinterface_element.ipv4.address.create('10.100.1.98/31')
+
+# List /interface (srl_nokia-interfaces) element: 'lag1'
+interface_element_3 = leaf2.interface.create('lag1', description='Server server1', admin_state='enable', vlan_tagging=True)
+
+# List /interface[name='lag1']/subinterface element: 10
+subinterface_element = interface_element_3.subinterface.create(u64(10), type=Identityref('bridged', ns='urn:nokia.com:srlinux:chassis:interfaces', mod='srl_nokia-interfaces', pfx='srl_nokia-if'), admin_state='enable')
+
+# P-container: /interface[name='lag1']/subinterface[index='10']/vlan/encap/single-tagged
+single_tagged = subinterface_element.vlan.encap.create_single_tagged(vlan_id=u64(10))
+
+# P-container: /interface[name='lag1']/lag (srl_nokia-interfaces-lag)
+lag = interface_element_3.create_lag(lag_type='lacp')
+
+# P-container: /interface[name='lag1']/lag/lacp (srl_nokia-lacp)
+lacp = lag.create_lacp(interval='FAST', lacp_mode='ACTIVE', admin_key=u64(1290), system_id_mac='02:af:f4:15:87:a1', system_priority=u64(32768))
+
+# List /interface (srl_nokia-interfaces) element: 'mgmt0'
+interface_element_3 = leaf2.interface.create('mgmt0', admin_state='enable')
+
+# List /interface[name='mgmt0']/subinterface element: 0
+subinterface_element = interface_element_3.subinterface.create(u64(0), admin_state='enable')
+
+# Container: /interface[name='mgmt0']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# Container: /interface[name='mgmt0']/subinterface[index='0']/ipv6
+subinterface_element.ipv6.admin_state = 'enable'
+
+# List /interface (srl_nokia-interfaces) element: 'system0'
+interface_element_3 = leaf2.interface.create('system0')
+
+# List /interface[name='system0']/subinterface element: 0
+subinterface_element = interface_element_3.subinterface.create(u64(0))
+
+# Container: /interface[name='system0']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# List /interface[name='system0']/subinterface[index='0']/ipv4/address element: '10.0.0.2/32'
+address_element = subinterface_element.ipv4.address.create('10.0.0.2/32')
+
+# List /network-instance (srl_nokia-network-instance) element: 'default'
+network_instance_element = leaf2.network_instance.create('default')
+
+# List /network-instance[name='default']/interface element: 'ethernet-1/49.0'
+interface_element_4 = network_instance_element.interface.create('ethernet-1/49.0')
+
+# List /network-instance[name='default']/interface element: 'system0.0'
+interface_element_4 = network_instance_element.interface.create('system0.0')
+
+# P-container: /network-instance[name='default']/protocols/bgp (srl_nokia-bgp)
+bgp = network_instance_element.protocols.create_bgp(autonomous_system=u64(4200000002), router_id='10.0.0.2')
+
+# List /network-instance[name='default']/protocols/bgp/afi-safi element: Identityref('evpn', ns='urn:nokia.com:srlinux:general:common', mod='srl_nokia-common', pfx='srl_nokia-comm')
+afi_safi_element = bgp.afi_safi.create(Identityref('evpn', ns='urn:nokia.com:srlinux:general:common', mod='srl_nokia-common', pfx='srl_nokia-comm'), admin_state='enable')
+
+# Container: /network-instance[name='default']/protocols/bgp/afi-safi[afi-safi-name='Identityref(\'evpn\', ns=\'urn:nokia.com:srlinux:general:common\', mod=\'srl_nokia-common\', pfx=\'srl_nokia-comm\')']/evpn
+afi_safi_element.evpn.rapid_update = True
+
+# List /network-instance[name='default']/protocols/bgp/afi-safi element: Identityref('ipv4-unicast', ns='urn:nokia.com:srlinux:general:common', mod='srl_nokia-common', pfx='srl_nokia-comm')
+afi_safi_element = bgp.afi_safi.create(Identityref('ipv4-unicast', ns='urn:nokia.com:srlinux:general:common', mod='srl_nokia-common', pfx='srl_nokia-comm'), admin_state='enable')
+
+# Container: /network-instance[name='default']/protocols/bgp/afi-safi[afi-safi-name='Identityref(\'ipv4-unicast\', ns=\'urn:nokia.com:srlinux:general:common\', mod=\'srl_nokia-common\', pfx=\'srl_nokia-comm\')']/multipath/ebgp
+afi_safi_element.multipath.ebgp.maximum_paths = u64(64)
+
+# List /network-instance[name='default']/protocols/bgp/group element: 'fabric'
+group_element = bgp.group.create('fabric')
+group_element.export_policy = ['export-loopbacks']
+group_element.import_policy = ['accept-all']
+
+# List /network-instance[name='default']/protocols/bgp/neighbor element: '10.100.1.99'
+neighbor_element = bgp.neighbor.create('10.100.1.99', admin_state='enable', description='Link to spine2 [ethernet-1/1]', peer_as=u64(4200100201), peer_group='fabric')
+
+# List /network-instance (srl_nokia-network-instance) element: 'mgmt'
+network_instance_element = leaf2.network_instance.create('mgmt', type=Identityref('ip-vrf', ns='urn:nokia.com:srlinux:net-inst:network-instance', mod='srl_nokia-network-instance', pfx='srl_nokia-netinst'), admin_state='enable', description='Management network instance')
+
+# List /network-instance[name='mgmt']/interface element: 'mgmt0.0'
+interface_element_4 = network_instance_element.interface.create('mgmt0.0')
+
+# List /network-instance (srl_nokia-network-instance) element: 't1-web'
+network_instance_element = leaf2.network_instance.create('t1-web', type=Identityref('mac-vrf', ns='urn:nokia.com:srlinux:net-inst:network-instance', mod='srl_nokia-network-instance', pfx='srl_nokia-netinst'), admin_state='enable', description='Overlay network VNI 15906')
+
+# List /network-instance[name='t1-web']/interface element: 'ethernet-1/2.10'
+interface_element_4 = network_instance_element.interface.create('ethernet-1/2.10')
+
+# List /network-instance[name='t1-web']/interface element: 'lag1.10'
+interface_element_4 = network_instance_element.interface.create('lag1.10')
+
+# List /network-instance[name='t1-web']/vxlan-interface element: 'vxlan1.15907'
+vxlan_interface_element = network_instance_element.vxlan_interface.create('vxlan1.15907')
+
+# P-container: /network-instance[name='t1-web']/protocols/bgp-evpn
+bgp_evpn = network_instance_element.protocols.create_bgp_evpn()
+
+# List /network-instance[name='t1-web']/protocols/bgp-evpn/bgp-instance (srl_nokia-bgp-evpn) element: 1
+bgp_instance_element_3 = bgp_evpn.bgp_instance.create(u64(1), admin_state='enable', vxlan_interface='vxlan1.15907', evi=u64(15907), ecmp=u64(8))
+
+# P-container: /network-instance[name='t1-web']/protocols/bgp-vpn (srl_nokia-bgp-vpn)
+bgp_vpn_2 = network_instance_element.protocols.create_bgp_vpn()
+
+# List /network-instance[name='t1-web']/protocols/bgp-vpn/bgp-instance element: 1
+bgp_instance_element_4 = bgp_vpn_2.bgp_instance.create(u64(1))
+
+# Container: /network-instance[name='t1-web']/protocols/bgp-vpn/bgp-instance[id='1']/route-distinguisher
+bgp_instance_element_4.route_distinguisher.rd = '10.0.0.2:15907'
+
+# Container: /network-instance[name='t1-web']/protocols/bgp-vpn/bgp-instance[id='1']/route-target
+bgp_instance_element_4.route_target.export_rt = 'target:45278:15906'
+bgp_instance_element_4.route_target.import_rt = 'target:45278:15906'
+
+# List /tunnel-interface (srl_nokia-tunnel-interfaces) element: 'vxlan1'
+tunnel_interface_element = leaf2.tunnel_interface.create('vxlan1')
+
+# List /tunnel-interface[name='vxlan1']/vxlan-interface element: 15907
+vxlan_interface_element_2 = tunnel_interface_element.vxlan_interface.create(u64(15907), type=Identityref('bridged', ns='urn:nokia.com:srlinux:chassis:interfaces', mod='srl_nokia-interfaces', pfx='srl_nokia-if'))
+
+# Container: /tunnel-interface[name='vxlan1']/vxlan-interface[index='15907']/ingress
+vxlan_interface_element_2.ingress.vni = u64(15906)
+
+# List /routing-policy/prefix-set element: 'loopbacks'
+prefix_set_element = leaf2.routing_policy.prefix_set.create('loopbacks')
+
+# List /routing-policy/prefix-set[name='loopbacks']/prefix element: '10.0.0.0/16', '32..32'
+prefix_element = prefix_set_element.prefix.create((ip_prefix='10.0.0.0/16', mask_length_range='32..32'))
+
+# List /routing-policy/policy element: 'accept-all'
+policy_element = leaf2.routing_policy.policy.create('accept-all')
+
+# List /routing-policy/policy[name='accept-all']/statement element: '10'
+statement_element = policy_element.statement.create('10')
+
+# Container: /routing-policy/policy[name='accept-all']/statement[name='10']/action
+statement_element.action_.policy_result = 'accept'
+
+# List /routing-policy/policy element: 'export-loopbacks'
+policy_element = leaf2.routing_policy.policy.create('export-loopbacks')
+
+# List /routing-policy/policy[name='export-loopbacks']/statement element: '10'
+statement_element = policy_element.statement.create('10')
+
+# Container: /routing-policy/policy[name='export-loopbacks']/statement[name='10']/match/prefix
+statement_element.match.prefix.prefix_set = 'loopbacks'
+
+# Container: /routing-policy/policy[name='export-loopbacks']/statement[name='10']/action
+statement_element.action_.policy_result = 'accept'
+
+# List /routing-policy/policy[name='export-loopbacks']/statement element: '20'
+statement_element = policy_element.statement.create('20')
+
+# Container: /routing-policy/policy[name='export-loopbacks']/statement[name='20']/match
+statement_element.match.family = [Identityref('evpn', ns='urn:nokia.com:srlinux:general:common', mod='srl_nokia-common', pfx='srl_nokia-comm')]
+
+# Container: /routing-policy/policy[name='export-loopbacks']/statement[name='20']/action
+statement_element.action_.policy_result = 'accept'
+
+# device spine1
+# YANG module (prefix) and namespace:
+#   srl_nokia-bgp (srl_nokia-bgp)                   urn:nokia.com:srlinux:bgp:bgp
+#   srl_nokia-interfaces (srl_nokia-if)             urn:nokia.com:srlinux:chassis:interfaces
+#   srl_nokia-lldp (srl_nokia-lldp)                 urn:nokia.com:srlinux:lldp:lldp
+#   srl_nokia-network-instance (srl_nokia-netinst)  urn:nokia.com:srlinux:net-inst:network-instance
+#   srl_nokia-system-name (srl_nokia-system-name)   urn:nokia.com:srlinux:chassis:system-name
+# Top node: /
+spine1 = root()
+
+# Container: /system/name (srl_nokia-system-name)
+spine1.system.name.host_name = 'spine1'
+
+# P-container: /system/lldp (srl_nokia-lldp)
+lldp = spine1.system.create_lldp(admin_state='enable')
+
+# List /system/lldp/interface element: 'ethernet-1/1'
+interface_element = lldp.interface.create('ethernet-1/1', admin_state='enable')
+
+# List /system/lldp/interface element: 'ethernet-1/31'
+interface_element = lldp.interface.create('ethernet-1/31', admin_state='enable')
+
+# List /system/lldp/interface element: 'mgmt0'
+interface_element = lldp.interface.create('mgmt0', admin_state='enable')
+
+# List /interface (srl_nokia-interfaces) element: 'ethernet-1/1'
+interface_element_2 = spine1.interface.create('ethernet-1/1', description='Link to leaf1 [ethernet-1/49]', admin_state='enable')
+
+# List /interface[name='ethernet-1/1']/subinterface element: 0
+subinterface_element = interface_element_2.subinterface.create(u64(0), description='Link to leaf1 [ethernet-1/49]', admin_state='enable')
+
+# Container: /interface[name='ethernet-1/1']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# List /interface[name='ethernet-1/1']/subinterface[index='0']/ipv4/address element: '10.100.0.227/31'
+address_element = subinterface_element.ipv4.address.create('10.100.0.227/31')
+
+# List /interface (srl_nokia-interfaces) element: 'ethernet-1/31'
+interface_element_2 = spine1.interface.create('ethernet-1/31', description='Link to superspine1 [ethernet-1/1]', admin_state='enable')
+
+# List /interface[name='ethernet-1/31']/subinterface element: 0
+subinterface_element = interface_element_2.subinterface.create(u64(0), description='Link to superspine1 [ethernet-1/1]', admin_state='enable')
+
+# Container: /interface[name='ethernet-1/31']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# List /interface[name='ethernet-1/31']/subinterface[index='0']/ipv4/address element: '10.100.5.190/31'
+address_element = subinterface_element.ipv4.address.create('10.100.5.190/31')
+
+# List /interface (srl_nokia-interfaces) element: 'mgmt0'
+interface_element_2 = spine1.interface.create('mgmt0', admin_state='enable')
+
+# List /interface[name='mgmt0']/subinterface element: 0
+subinterface_element = interface_element_2.subinterface.create(u64(0), admin_state='enable')
+
+# Container: /interface[name='mgmt0']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# Container: /interface[name='mgmt0']/subinterface[index='0']/ipv6
+subinterface_element.ipv6.admin_state = 'enable'
+
+# List /interface (srl_nokia-interfaces) element: 'system0'
+interface_element_2 = spine1.interface.create('system0')
+
+# List /interface[name='system0']/subinterface element: 0
+subinterface_element = interface_element_2.subinterface.create(u64(0))
+
+# Container: /interface[name='system0']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# List /interface[name='system0']/subinterface[index='0']/ipv4/address element: '10.0.0.11/32'
+address_element = subinterface_element.ipv4.address.create('10.0.0.11/32')
+
+# List /network-instance (srl_nokia-network-instance) element: 'default'
+network_instance_element = spine1.network_instance.create('default')
+
+# List /network-instance[name='default']/interface element: 'ethernet-1/1.0'
+interface_element_3 = network_instance_element.interface.create('ethernet-1/1.0')
+
+# List /network-instance[name='default']/interface element: 'ethernet-1/31.0'
+interface_element_3 = network_instance_element.interface.create('ethernet-1/31.0')
+
+# List /network-instance[name='default']/interface element: 'system0.0'
+interface_element_3 = network_instance_element.interface.create('system0.0')
+
+# P-container: /network-instance[name='default']/protocols/bgp (srl_nokia-bgp)
+bgp = network_instance_element.protocols.create_bgp(autonomous_system=u64(4200100101), router_id='10.0.0.11')
+
+# List /network-instance[name='default']/protocols/bgp/afi-safi element: Identityref('evpn', ns='urn:nokia.com:srlinux:general:common', mod='srl_nokia-common', pfx='srl_nokia-comm')
+afi_safi_element = bgp.afi_safi.create(Identityref('evpn', ns='urn:nokia.com:srlinux:general:common', mod='srl_nokia-common', pfx='srl_nokia-comm'), admin_state='enable')
+
+# Container: /network-instance[name='default']/protocols/bgp/afi-safi[afi-safi-name='Identityref(\'evpn\', ns=\'urn:nokia.com:srlinux:general:common\', mod=\'srl_nokia-common\', pfx=\'srl_nokia-comm\')']/evpn
+afi_safi_element.evpn.inter_as_vpn = True
+afi_safi_element.evpn.rapid_update = True
+
+# List /network-instance[name='default']/protocols/bgp/afi-safi element: Identityref('ipv4-unicast', ns='urn:nokia.com:srlinux:general:common', mod='srl_nokia-common', pfx='srl_nokia-comm')
+afi_safi_element = bgp.afi_safi.create(Identityref('ipv4-unicast', ns='urn:nokia.com:srlinux:general:common', mod='srl_nokia-common', pfx='srl_nokia-comm'), admin_state='enable')
+
+# Container: /network-instance[name='default']/protocols/bgp/afi-safi[afi-safi-name='Identityref(\'ipv4-unicast\', ns=\'urn:nokia.com:srlinux:general:common\', mod=\'srl_nokia-common\', pfx=\'srl_nokia-comm\')']/multipath/ebgp
+afi_safi_element.multipath.ebgp.maximum_paths = u64(64)
+
+# List /network-instance[name='default']/protocols/bgp/group element: 'fabric'
+group_element = bgp.group.create('fabric')
+group_element.export_policy = ['export-loopbacks']
+group_element.import_policy = ['accept-all']
+
+# List /network-instance[name='default']/protocols/bgp/neighbor element: '10.100.0.226'
+neighbor_element = bgp.neighbor.create('10.100.0.226', admin_state='enable', description='Link to leaf1 [ethernet-1/49]', peer_as=u64(4200000001), peer_group='fabric')
+
+# List /network-instance[name='default']/protocols/bgp/neighbor element: '10.100.5.191'
+neighbor_element = bgp.neighbor.create('10.100.5.191', admin_state='enable', description='Link to superspine1 [ethernet-1/1]', peer_as=u64(4200200001), peer_group='fabric')
+
+# List /network-instance (srl_nokia-network-instance) element: 'mgmt'
+network_instance_element = spine1.network_instance.create('mgmt', type=Identityref('ip-vrf', ns='urn:nokia.com:srlinux:net-inst:network-instance', mod='srl_nokia-network-instance', pfx='srl_nokia-netinst'), admin_state='enable', description='Management network instance')
+
+# List /network-instance[name='mgmt']/interface element: 'mgmt0.0'
+interface_element_3 = network_instance_element.interface.create('mgmt0.0')
+
+# List /routing-policy/prefix-set element: 'loopbacks'
+prefix_set_element = spine1.routing_policy.prefix_set.create('loopbacks')
+
+# List /routing-policy/prefix-set[name='loopbacks']/prefix element: '10.0.0.0/16', '32..32'
+prefix_element = prefix_set_element.prefix.create((ip_prefix='10.0.0.0/16', mask_length_range='32..32'))
+
+# List /routing-policy/policy element: 'accept-all'
+policy_element = spine1.routing_policy.policy.create('accept-all')
+
+# List /routing-policy/policy[name='accept-all']/statement element: '10'
+statement_element = policy_element.statement.create('10')
+
+# Container: /routing-policy/policy[name='accept-all']/statement[name='10']/action
+statement_element.action_.policy_result = 'accept'
+
+# List /routing-policy/policy element: 'export-loopbacks'
+policy_element = spine1.routing_policy.policy.create('export-loopbacks')
+
+# List /routing-policy/policy[name='export-loopbacks']/statement element: '10'
+statement_element = policy_element.statement.create('10')
+
+# Container: /routing-policy/policy[name='export-loopbacks']/statement[name='10']/match/prefix
+statement_element.match.prefix.prefix_set = 'loopbacks'
+
+# Container: /routing-policy/policy[name='export-loopbacks']/statement[name='10']/action
+statement_element.action_.policy_result = 'accept'
+
+# List /routing-policy/policy[name='export-loopbacks']/statement element: '20'
+statement_element = policy_element.statement.create('20')
+
+# Container: /routing-policy/policy[name='export-loopbacks']/statement[name='20']/match
+statement_element.match.family = [Identityref('evpn', ns='urn:nokia.com:srlinux:general:common', mod='srl_nokia-common', pfx='srl_nokia-comm')]
+
+# Container: /routing-policy/policy[name='export-loopbacks']/statement[name='20']/action
+statement_element.action_.policy_result = 'accept'
+
+# device spine2
+# YANG module (prefix) and namespace:
+#   srl_nokia-bgp (srl_nokia-bgp)                   urn:nokia.com:srlinux:bgp:bgp
+#   srl_nokia-interfaces (srl_nokia-if)             urn:nokia.com:srlinux:chassis:interfaces
+#   srl_nokia-lldp (srl_nokia-lldp)                 urn:nokia.com:srlinux:lldp:lldp
+#   srl_nokia-network-instance (srl_nokia-netinst)  urn:nokia.com:srlinux:net-inst:network-instance
+#   srl_nokia-system-name (srl_nokia-system-name)   urn:nokia.com:srlinux:chassis:system-name
+# Top node: /
+spine2 = root()
+
+# Container: /system/name (srl_nokia-system-name)
+spine2.system.name.host_name = 'spine2'
+
+# P-container: /system/lldp (srl_nokia-lldp)
+lldp = spine2.system.create_lldp(admin_state='enable')
+
+# List /system/lldp/interface element: 'ethernet-1/1'
+interface_element = lldp.interface.create('ethernet-1/1', admin_state='enable')
+
+# List /system/lldp/interface element: 'ethernet-1/31'
+interface_element = lldp.interface.create('ethernet-1/31', admin_state='enable')
+
+# List /system/lldp/interface element: 'mgmt0'
+interface_element = lldp.interface.create('mgmt0', admin_state='enable')
+
+# List /interface (srl_nokia-interfaces) element: 'ethernet-1/1'
+interface_element_2 = spine2.interface.create('ethernet-1/1', description='Link to leaf2 [ethernet-1/49]', admin_state='enable')
+
+# List /interface[name='ethernet-1/1']/subinterface element: 0
+subinterface_element = interface_element_2.subinterface.create(u64(0), description='Link to leaf2 [ethernet-1/49]', admin_state='enable')
+
+# Container: /interface[name='ethernet-1/1']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# List /interface[name='ethernet-1/1']/subinterface[index='0']/ipv4/address element: '10.100.1.99/31'
+address_element = subinterface_element.ipv4.address.create('10.100.1.99/31')
+
+# List /interface (srl_nokia-interfaces) element: 'ethernet-1/31'
+interface_element_2 = spine2.interface.create('ethernet-1/31', description='Link to superspine1 [ethernet-1/2]', admin_state='enable')
+
+# List /interface[name='ethernet-1/31']/subinterface element: 0
+subinterface_element = interface_element_2.subinterface.create(u64(0), description='Link to superspine1 [ethernet-1/2]', admin_state='enable')
+
+# Container: /interface[name='ethernet-1/31']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# List /interface[name='ethernet-1/31']/subinterface[index='0']/ipv4/address element: '10.100.6.62/31'
+address_element = subinterface_element.ipv4.address.create('10.100.6.62/31')
+
+# List /interface (srl_nokia-interfaces) element: 'mgmt0'
+interface_element_2 = spine2.interface.create('mgmt0', admin_state='enable')
+
+# List /interface[name='mgmt0']/subinterface element: 0
+subinterface_element = interface_element_2.subinterface.create(u64(0), admin_state='enable')
+
+# Container: /interface[name='mgmt0']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# Container: /interface[name='mgmt0']/subinterface[index='0']/ipv6
+subinterface_element.ipv6.admin_state = 'enable'
+
+# List /interface (srl_nokia-interfaces) element: 'system0'
+interface_element_2 = spine2.interface.create('system0')
+
+# List /interface[name='system0']/subinterface element: 0
+subinterface_element = interface_element_2.subinterface.create(u64(0))
+
+# Container: /interface[name='system0']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# List /interface[name='system0']/subinterface[index='0']/ipv4/address element: '10.0.0.12/32'
+address_element = subinterface_element.ipv4.address.create('10.0.0.12/32')
+
+# List /network-instance (srl_nokia-network-instance) element: 'default'
+network_instance_element = spine2.network_instance.create('default')
+
+# List /network-instance[name='default']/interface element: 'ethernet-1/1.0'
+interface_element_3 = network_instance_element.interface.create('ethernet-1/1.0')
+
+# List /network-instance[name='default']/interface element: 'ethernet-1/31.0'
+interface_element_3 = network_instance_element.interface.create('ethernet-1/31.0')
+
+# List /network-instance[name='default']/interface element: 'system0.0'
+interface_element_3 = network_instance_element.interface.create('system0.0')
+
+# P-container: /network-instance[name='default']/protocols/bgp (srl_nokia-bgp)
+bgp = network_instance_element.protocols.create_bgp(autonomous_system=u64(4200100201), router_id='10.0.0.12')
+
+# List /network-instance[name='default']/protocols/bgp/afi-safi element: Identityref('evpn', ns='urn:nokia.com:srlinux:general:common', mod='srl_nokia-common', pfx='srl_nokia-comm')
+afi_safi_element = bgp.afi_safi.create(Identityref('evpn', ns='urn:nokia.com:srlinux:general:common', mod='srl_nokia-common', pfx='srl_nokia-comm'), admin_state='enable')
+
+# Container: /network-instance[name='default']/protocols/bgp/afi-safi[afi-safi-name='Identityref(\'evpn\', ns=\'urn:nokia.com:srlinux:general:common\', mod=\'srl_nokia-common\', pfx=\'srl_nokia-comm\')']/evpn
+afi_safi_element.evpn.inter_as_vpn = True
+afi_safi_element.evpn.rapid_update = True
+
+# List /network-instance[name='default']/protocols/bgp/afi-safi element: Identityref('ipv4-unicast', ns='urn:nokia.com:srlinux:general:common', mod='srl_nokia-common', pfx='srl_nokia-comm')
+afi_safi_element = bgp.afi_safi.create(Identityref('ipv4-unicast', ns='urn:nokia.com:srlinux:general:common', mod='srl_nokia-common', pfx='srl_nokia-comm'), admin_state='enable')
+
+# Container: /network-instance[name='default']/protocols/bgp/afi-safi[afi-safi-name='Identityref(\'ipv4-unicast\', ns=\'urn:nokia.com:srlinux:general:common\', mod=\'srl_nokia-common\', pfx=\'srl_nokia-comm\')']/multipath/ebgp
+afi_safi_element.multipath.ebgp.maximum_paths = u64(64)
+
+# List /network-instance[name='default']/protocols/bgp/group element: 'fabric'
+group_element = bgp.group.create('fabric')
+group_element.export_policy = ['export-loopbacks']
+group_element.import_policy = ['accept-all']
+
+# List /network-instance[name='default']/protocols/bgp/neighbor element: '10.100.1.98'
+neighbor_element = bgp.neighbor.create('10.100.1.98', admin_state='enable', description='Link to leaf2 [ethernet-1/49]', peer_as=u64(4200000002), peer_group='fabric')
+
+# List /network-instance[name='default']/protocols/bgp/neighbor element: '10.100.6.63'
+neighbor_element = bgp.neighbor.create('10.100.6.63', admin_state='enable', description='Link to superspine1 [ethernet-1/2]', peer_as=u64(4200200001), peer_group='fabric')
+
+# List /network-instance (srl_nokia-network-instance) element: 'mgmt'
+network_instance_element = spine2.network_instance.create('mgmt', type=Identityref('ip-vrf', ns='urn:nokia.com:srlinux:net-inst:network-instance', mod='srl_nokia-network-instance', pfx='srl_nokia-netinst'), admin_state='enable', description='Management network instance')
+
+# List /network-instance[name='mgmt']/interface element: 'mgmt0.0'
+interface_element_3 = network_instance_element.interface.create('mgmt0.0')
+
+# List /routing-policy/prefix-set element: 'loopbacks'
+prefix_set_element = spine2.routing_policy.prefix_set.create('loopbacks')
+
+# List /routing-policy/prefix-set[name='loopbacks']/prefix element: '10.0.0.0/16', '32..32'
+prefix_element = prefix_set_element.prefix.create((ip_prefix='10.0.0.0/16', mask_length_range='32..32'))
+
+# List /routing-policy/policy element: 'accept-all'
+policy_element = spine2.routing_policy.policy.create('accept-all')
+
+# List /routing-policy/policy[name='accept-all']/statement element: '10'
+statement_element = policy_element.statement.create('10')
+
+# Container: /routing-policy/policy[name='accept-all']/statement[name='10']/action
+statement_element.action_.policy_result = 'accept'
+
+# List /routing-policy/policy element: 'export-loopbacks'
+policy_element = spine2.routing_policy.policy.create('export-loopbacks')
+
+# List /routing-policy/policy[name='export-loopbacks']/statement element: '10'
+statement_element = policy_element.statement.create('10')
+
+# Container: /routing-policy/policy[name='export-loopbacks']/statement[name='10']/match/prefix
+statement_element.match.prefix.prefix_set = 'loopbacks'
+
+# Container: /routing-policy/policy[name='export-loopbacks']/statement[name='10']/action
+statement_element.action_.policy_result = 'accept'
+
+# List /routing-policy/policy[name='export-loopbacks']/statement element: '20'
+statement_element = policy_element.statement.create('20')
+
+# Container: /routing-policy/policy[name='export-loopbacks']/statement[name='20']/match
+statement_element.match.family = [Identityref('evpn', ns='urn:nokia.com:srlinux:general:common', mod='srl_nokia-common', pfx='srl_nokia-comm')]
+
+# Container: /routing-policy/policy[name='export-loopbacks']/statement[name='20']/action
+statement_element.action_.policy_result = 'accept'
+
+# device superspine1
+# YANG module (prefix) and namespace:
+#   srl_nokia-bgp (srl_nokia-bgp)                   urn:nokia.com:srlinux:bgp:bgp
+#   srl_nokia-interfaces (srl_nokia-if)             urn:nokia.com:srlinux:chassis:interfaces
+#   srl_nokia-lldp (srl_nokia-lldp)                 urn:nokia.com:srlinux:lldp:lldp
+#   srl_nokia-network-instance (srl_nokia-netinst)  urn:nokia.com:srlinux:net-inst:network-instance
+#   srl_nokia-system-name (srl_nokia-system-name)   urn:nokia.com:srlinux:chassis:system-name
+# Top node: /
+superspine1 = root()
+
+# Container: /system/name (srl_nokia-system-name)
+superspine1.system.name.host_name = 'superspine1'
+
+# P-container: /system/lldp (srl_nokia-lldp)
+lldp = superspine1.system.create_lldp(admin_state='enable')
+
+# List /system/lldp/interface element: 'ethernet-1/1'
+interface_element = lldp.interface.create('ethernet-1/1', admin_state='enable')
+
+# List /system/lldp/interface element: 'ethernet-1/2'
+interface_element = lldp.interface.create('ethernet-1/2', admin_state='enable')
+
+# List /system/lldp/interface element: 'mgmt0'
+interface_element = lldp.interface.create('mgmt0', admin_state='enable')
+
+# List /interface (srl_nokia-interfaces) element: 'ethernet-1/1'
+interface_element_2 = superspine1.interface.create('ethernet-1/1', description='Link to spine1 [ethernet-1/31]', admin_state='enable')
+
+# List /interface[name='ethernet-1/1']/subinterface element: 0
+subinterface_element = interface_element_2.subinterface.create(u64(0), description='Link to spine1 [ethernet-1/31]', admin_state='enable')
+
+# Container: /interface[name='ethernet-1/1']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# List /interface[name='ethernet-1/1']/subinterface[index='0']/ipv4/address element: '10.100.5.191/31'
+address_element = subinterface_element.ipv4.address.create('10.100.5.191/31')
+
+# List /interface (srl_nokia-interfaces) element: 'ethernet-1/2'
+interface_element_2 = superspine1.interface.create('ethernet-1/2', description='Link to spine2 [ethernet-1/31]', admin_state='enable')
+
+# List /interface[name='ethernet-1/2']/subinterface element: 0
+subinterface_element = interface_element_2.subinterface.create(u64(0), description='Link to spine2 [ethernet-1/31]', admin_state='enable')
+
+# Container: /interface[name='ethernet-1/2']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# List /interface[name='ethernet-1/2']/subinterface[index='0']/ipv4/address element: '10.100.6.63/31'
+address_element = subinterface_element.ipv4.address.create('10.100.6.63/31')
+
+# List /interface (srl_nokia-interfaces) element: 'mgmt0'
+interface_element_2 = superspine1.interface.create('mgmt0', admin_state='enable')
+
+# List /interface[name='mgmt0']/subinterface element: 0
+subinterface_element = interface_element_2.subinterface.create(u64(0), admin_state='enable')
+
+# Container: /interface[name='mgmt0']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# Container: /interface[name='mgmt0']/subinterface[index='0']/ipv6
+subinterface_element.ipv6.admin_state = 'enable'
+
+# List /interface (srl_nokia-interfaces) element: 'system0'
+interface_element_2 = superspine1.interface.create('system0')
+
+# List /interface[name='system0']/subinterface element: 0
+subinterface_element = interface_element_2.subinterface.create(u64(0))
+
+# Container: /interface[name='system0']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# List /interface[name='system0']/subinterface[index='0']/ipv4/address element: '10.0.0.21/32'
+address_element = subinterface_element.ipv4.address.create('10.0.0.21/32')
+
+# List /network-instance (srl_nokia-network-instance) element: 'default'
+network_instance_element = superspine1.network_instance.create('default')
+
+# List /network-instance[name='default']/interface element: 'ethernet-1/1.0'
+interface_element_3 = network_instance_element.interface.create('ethernet-1/1.0')
+
+# List /network-instance[name='default']/interface element: 'ethernet-1/2.0'
+interface_element_3 = network_instance_element.interface.create('ethernet-1/2.0')
+
+# List /network-instance[name='default']/interface element: 'system0.0'
+interface_element_3 = network_instance_element.interface.create('system0.0')
+
+# P-container: /network-instance[name='default']/protocols/bgp (srl_nokia-bgp)
+bgp = network_instance_element.protocols.create_bgp(autonomous_system=u64(4200200001), router_id='10.0.0.21')
+
+# List /network-instance[name='default']/protocols/bgp/afi-safi element: Identityref('evpn', ns='urn:nokia.com:srlinux:general:common', mod='srl_nokia-common', pfx='srl_nokia-comm')
+afi_safi_element = bgp.afi_safi.create(Identityref('evpn', ns='urn:nokia.com:srlinux:general:common', mod='srl_nokia-common', pfx='srl_nokia-comm'), admin_state='enable')
+
+# Container: /network-instance[name='default']/protocols/bgp/afi-safi[afi-safi-name='Identityref(\'evpn\', ns=\'urn:nokia.com:srlinux:general:common\', mod=\'srl_nokia-common\', pfx=\'srl_nokia-comm\')']/evpn
+afi_safi_element.evpn.inter_as_vpn = True
+afi_safi_element.evpn.rapid_update = True
+
+# List /network-instance[name='default']/protocols/bgp/afi-safi element: Identityref('ipv4-unicast', ns='urn:nokia.com:srlinux:general:common', mod='srl_nokia-common', pfx='srl_nokia-comm')
+afi_safi_element = bgp.afi_safi.create(Identityref('ipv4-unicast', ns='urn:nokia.com:srlinux:general:common', mod='srl_nokia-common', pfx='srl_nokia-comm'), admin_state='enable')
+
+# Container: /network-instance[name='default']/protocols/bgp/afi-safi[afi-safi-name='Identityref(\'ipv4-unicast\', ns=\'urn:nokia.com:srlinux:general:common\', mod=\'srl_nokia-common\', pfx=\'srl_nokia-comm\')']/multipath/ebgp
+afi_safi_element.multipath.ebgp.maximum_paths = u64(64)
+
+# List /network-instance[name='default']/protocols/bgp/group element: 'fabric'
+group_element = bgp.group.create('fabric')
+group_element.export_policy = ['export-loopbacks']
+group_element.import_policy = ['accept-all']
+
+# List /network-instance[name='default']/protocols/bgp/neighbor element: '10.100.5.190'
+neighbor_element = bgp.neighbor.create('10.100.5.190', admin_state='enable', description='Link to spine1 [ethernet-1/31]', peer_as=u64(4200100101), peer_group='fabric')
+
+# List /network-instance[name='default']/protocols/bgp/neighbor element: '10.100.6.62'
+neighbor_element = bgp.neighbor.create('10.100.6.62', admin_state='enable', description='Link to spine2 [ethernet-1/31]', peer_as=u64(4200100201), peer_group='fabric')
+
+# List /network-instance (srl_nokia-network-instance) element: 'mgmt'
+network_instance_element = superspine1.network_instance.create('mgmt', type=Identityref('ip-vrf', ns='urn:nokia.com:srlinux:net-inst:network-instance', mod='srl_nokia-network-instance', pfx='srl_nokia-netinst'), admin_state='enable', description='Management network instance')
+
+# List /network-instance[name='mgmt']/interface element: 'mgmt0.0'
+interface_element_3 = network_instance_element.interface.create('mgmt0.0')
+
+# List /routing-policy/prefix-set element: 'loopbacks'
+prefix_set_element = superspine1.routing_policy.prefix_set.create('loopbacks')
+
+# List /routing-policy/prefix-set[name='loopbacks']/prefix element: '10.0.0.0/16', '32..32'
+prefix_element = prefix_set_element.prefix.create((ip_prefix='10.0.0.0/16', mask_length_range='32..32'))
+
+# List /routing-policy/policy element: 'accept-all'
+policy_element = superspine1.routing_policy.policy.create('accept-all')
+
+# List /routing-policy/policy[name='accept-all']/statement element: '10'
+statement_element = policy_element.statement.create('10')
+
+# Container: /routing-policy/policy[name='accept-all']/statement[name='10']/action
+statement_element.action_.policy_result = 'accept'
+
+# List /routing-policy/policy element: 'export-loopbacks'
+policy_element = superspine1.routing_policy.policy.create('export-loopbacks')
+
+# List /routing-policy/policy[name='export-loopbacks']/statement element: '10'
+statement_element = policy_element.statement.create('10')
+
+# Container: /routing-policy/policy[name='export-loopbacks']/statement[name='10']/match/prefix
+statement_element.match.prefix.prefix_set = 'loopbacks'
+
+# Container: /routing-policy/policy[name='export-loopbacks']/statement[name='10']/action
+statement_element.action_.policy_result = 'accept'
+
+# List /routing-policy/policy[name='export-loopbacks']/statement element: '20'
+statement_element = policy_element.statement.create('20')
+
+# Container: /routing-policy/policy[name='export-loopbacks']/statement[name='20']/match
+statement_element.match.family = [Identityref('evpn', ns='urn:nokia.com:srlinux:general:common', mod='srl_nokia-common', pfx='srl_nokia-comm')]
+
+# Container: /routing-policy/policy[name='export-loopbacks']/statement[name='20']/action
+statement_element.action_.policy_result = 'accept'

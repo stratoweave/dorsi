@@ -203,6 +203,35 @@ module ip-fabric {
         }
       }
 
+      list tenant {
+        key name;
+        description
+          "A tenant of the EVPN-VXLAN overlay. Its networks are bridged
+           between the leaves over VXLAN, with EVPN as the control plane.
+           A network is placed only on the leaves of the servers attached
+           to it.";
+        leaf name {
+          type string;
+        }
+        list network {
+          key name;
+          description
+            "A layer 2 network: a MAC-VRF on each leaf it is placed on.";
+          leaf name {
+            type string;
+          }
+          leaf vni {
+            type uint32 {
+              range "1..16777215";
+            }
+            description
+              "VXLAN network identifier. Derived from the fabric, tenant
+               and network names when absent; set it to resolve a clash
+               between two derived VNIs.";
+          }
+        }
+      }
+
       list server {
         key name;
         description
@@ -210,6 +239,37 @@ module ip-fabric {
         leaf name {
           type string;
           description "Server name.";
+        }
+        list attachment {
+          key "tenant network";
+          description
+            "An overlay network the server is attached to, on all of its
+             links.";
+          leaf tenant {
+            type leafref {
+              path "../../../tenant/name";
+            }
+          }
+          leaf network {
+            type string;
+            description "A network of the tenant.";
+          }
+          leaf vlan {
+            type uint16 {
+              range "1..4094";
+            }
+            description
+              "VLAN tag the server sends the network with, absent when it
+               sends it untagged.";
+          }
+          leaf ipv4-address {
+            type string;
+            description
+              "Address and prefix length of the server in the network, such
+               as 10.10.10.11/24. dorsi does not configure servers; the
+               address is checked against the other servers of the network
+               and documents the test setup.";
+          }
         }
         container connectivity {
           must "(profile='single-homed' and

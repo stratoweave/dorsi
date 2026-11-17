@@ -48,6 +48,99 @@ module dorsi-rfs {
                      the default route of the management VRF.";
                 type string;
             }
+            leaf evpn {
+                description
+                    "Carry EVPN routes in BGP for the overlay. A leaf also
+                     gets the VXLAN tunnel interface and a VTEP on its
+                     loopback; a spine or super-spine passes the routes on
+                     with their next hop, the VTEP that sent them.";
+                type boolean;
+                default false;
+            }
+        }
+        list mac-vrf {
+            description
+                "A layer 2 network of the overlay on a leaf: a MAC-VRF
+                 bridged over VXLAN, with EVPN routes for MAC addresses
+                 (type 2) and for flooding by ingress replication (type 3).";
+            key name;
+            sw:rfs-transform dorsi.rfs.MacVrf;
+            leaf name {
+                type string;
+            }
+            leaf vni {
+                type uint32 {
+                    range "1..16777215";
+                }
+                mandatory true;
+            }
+            leaf evi {
+                type uint32 {
+                    range "1..65535";
+                }
+                mandatory true;
+            }
+            leaf route-distinguisher {
+                description "Such as 10.0.0.1:100, unique per leaf.";
+                type string;
+                mandatory true;
+            }
+            leaf route-target {
+                description
+                    "Such as target:100:10010, the same on every leaf of the
+                     network.";
+                type string;
+                mandatory true;
+            }
+            list interface {
+                description "A server-facing port or LAG in the network.";
+                key name;
+                leaf name {
+                    description "Port or LAG, such as ethernet-1/1 or lag1.";
+                    type string;
+                }
+                leaf vlan {
+                    description
+                        "VLAN tag of the server traffic, absent for untagged
+                         traffic. It is also the subinterface index.";
+                    type uint16 {
+                        range "1..4094";
+                    }
+                }
+            }
+        }
+        list server-lag {
+            description
+                "A LAG with LACP towards a server. On a dual-homed server it
+                 is an all-active EVPN ethernet segment: both leaves use the
+                 same ESI and LACP system ID, so that the server sees one
+                 LACP partner.";
+            key name;
+            sw:rfs-transform dorsi.rfs.ServerLag;
+            leaf name {
+                description "Such as lag1.";
+                type string;
+            }
+            leaf server {
+                type string;
+                mandatory true;
+            }
+            leaf lacp-system-id {
+                type string;
+                mandatory true;
+            }
+            leaf lacp-admin-key {
+                type uint16 {
+                    range "1..65535";
+                }
+                mandatory true;
+            }
+            leaf esi {
+                description
+                    "Ethernet segment identifier of a dual-homed server,
+                     absent for a single-homed one.";
+                type string;
+            }
         }
         list fabric-interface {
             description
@@ -145,6 +238,10 @@ module dorsi-rfs {
                 description "Connectivity profile of the server.";
                 type string;
                 mandatory true;
+            }
+            leaf lag {
+                description "The server-lag the port is a member of.";
+                type string;
             }
 
             container state {

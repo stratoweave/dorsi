@@ -11,6 +11,8 @@ labs/development environments which you can run:
   and spine2 running Arista cEOS. Its image has to be downloaded and imported by hand.
 * **[fabric-5stage-mixed](fabric-5stage-mixed/README.md)** is a five-stage fabric of
   SR Linux and cEOS cut down to five switches, which fits in about 8 GB. It has been run.
+* **[fabric-5stage-srl](fabric-5stage-srl/README.md)** is the same five-switch fabric all
+  on SR Linux, with the EVPN-VXLAN overlay through the super-spine.
 
 The SR Linux image (`ghcr.io/nokia/srlinux`) is public, no account or license is
 needed.

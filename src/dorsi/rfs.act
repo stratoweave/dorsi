@@ -142,6 +142,22 @@ class FabricBaseConfig(base.FabricBaseConfig):
             exp.action_.policy_result = "accept"
             rp.policy.create(_FABRIC_IMPORT_POLICY).statement.create("10").action_.policy_result = "accept"
 
+            if i.evpn:
+                # EVPN on the same eBGP sessions as the underlay. A spine
+                # keeps the routes it imports into no network-instance and
+                # passes them on; EVPN keeps the next hop, the VTEP of the
+                # leaf that sent them. Updates and withdrawals go out at
+                # once: held back by the advertisement interval, a link of a
+                # multihomed server that goes down cuts its traffic for
+                # seconds.
+                af_evpn = bgp.afi_safi.create(srl25.srl_nokia_common_evpn, admin_state="enable")
+                af_evpn.evpn.rapid_update = True
+                if i.role != "leaf":
+                    af_evpn.evpn.inter_as_vpn = True
+                exp_evpn = rp.policy.create(_FABRIC_EXPORT_POLICY).statement.create("20")
+                exp_evpn.match.family = [srl25.srl_nokia_common_evpn]
+                exp_evpn.action_.policy_result = "accept"
+
             return dev
 
         if _EOS_MODULE in di.modules:
@@ -523,6 +539,9 @@ class ServerPort(base.ServerPort):
             intf = dev.interface.create(i.name)
             intf.description = if_description
             intf.admin_state = "enable"
+            lag = i.lag
+            if lag is not None:
+                intf.ethernet.aggregate_id = lag
             dev.system.create_lldp().interface.create(i.name, admin_state="enable")
             return dev
 
@@ -531,6 +550,90 @@ class ServerPort(base.ServerPort):
             dev = eos436.root()
             _eos_interface(dev, i.name, eos436.iana_if_type_ethernetCsmacd, if_description)
             _eos_lldp_interface(dev, i.name)
+            return dev
+
+        raise UnsupportedDevice()
+
+
+# --- EVPN-VXLAN overlay -----------------------------------------------------------
+# Layer 2 networks bridged between the leaves over VXLAN, as in the SR Linux
+# l2evpn tutorial, with EVPN on the eBGP sessions of the underlay instead of an
+# iBGP overlay. Every network has its own vxlan-interface on vxlan1, numbered
+# by its EVI. Flooded traffic uses ingress replication.
+_VXLAN_TUNNEL = "vxlan1"
+_EVPN_BGP_INSTANCE = 1
+# Paths to a MAC address over the leaves of a multihomed server (aliasing)
+_EVPN_ECMP = 8
+# Priority of the LACP system ID shared by the leaves of a server
+_LACP_SYSTEM_PRIORITY = 32768
+
+
+class MacVrf(base.MacVrf):
+    def transform(self, i, di):
+        print("RFS /rfs{{{di.name}}}/mac-vrf transform running {i.name} VNI {i.vni}", err=True)
+
+        if "srl_nokia-system" in di.modules:
+            dev = srl25.root()
+            vxlan_if = "{_VXLAN_TUNNEL}.{i.evi}"
+            vx = dev.tunnel_interface.create(_VXLAN_TUNNEL).vxlan_interface.create(i.evi)
+            vx.type = srl25.srl_nokia_interfaces_bridged
+            vx.ingress.vni = i.vni
+
+            ni = dev.network_instance.create(i.name, type=srl25.srl_nokia_network_instance_mac_vrf, admin_state="enable", description="Overlay network VNI {i.vni}")
+            for itf in i.interface:
+                # The subinterface index is the VLAN, 0 for untagged traffic
+                vlan = itf.vlan
+                index = vlan if vlan is not None else 0
+                intf = dev.interface.create(itf.name)
+                intf.vlan_tagging = True
+                subif = intf.subinterface.create(index)
+                subif.type = srl25.srl_nokia_interfaces_bridged
+                subif.admin_state = "enable"
+                if vlan is not None:
+                    subif.vlan.encap.create_single_tagged(vlan_id=vlan)
+                else:
+                    subif.vlan.encap.create_untagged()
+                ni.interface.create("{itf.name}.{index}")
+            ni.vxlan_interface.create(vxlan_if)
+
+            evpn = ni.protocols.create_bgp_evpn().bgp_instance.create(u64(_EVPN_BGP_INSTANCE))
+            evpn.admin_state = "enable"
+            evpn.vxlan_interface = vxlan_if
+            evpn.evi = i.evi
+            evpn.ecmp = u64(_EVPN_ECMP)
+            vpn = ni.protocols.create_bgp_vpn().bgp_instance.create(u64(_EVPN_BGP_INSTANCE))
+            vpn.route_distinguisher.rd = i.route_distinguisher
+            vpn.route_target.export_rt = i.route_target
+            vpn.route_target.import_rt = i.route_target
+            return dev
+
+        raise UnsupportedDevice()
+
+
+class ServerLag(base.ServerLag):
+    def transform(self, i, di):
+        print("RFS /rfs{{{di.name}}}/server-lag transform running {i.name} {i.server}", err=True)
+
+        if "srl_nokia-system" in di.modules:
+            dev = srl25.root()
+            intf = dev.interface.create(i.name)
+            intf.description = "Server {i.server}"
+            intf.admin_state = "enable"
+            lag = intf.create_lag(lag_type="lacp")
+            lag.create_lacp(interval="FAST", lacp_mode="ACTIVE", admin_key=i.lacp_admin_key, system_id_mac=i.lacp_system_id, system_priority=u64(_LACP_SYSTEM_PRIORITY))
+
+            esi = i.esi
+            if esi is not None:
+                # All-active ethernet segment, shared with the other leaf of
+                # the server
+                protocols = dev.system.create_network_instance().protocols
+                protocols.create_bgp_vpn().bgp_instance.create(u64(_EVPN_BGP_INSTANCE))
+                es_bgp = protocols.create_evpn().create_ethernet_segments().bgp_instance.create(u64(_EVPN_BGP_INSTANCE))
+                es = es_bgp.ethernet_segment.create("es-{i.server}")
+                es.admin_state = "enable"
+                es.esi = esi
+                es.multi_homing_mode = "all-active"
+                es.interface.create(i.name)
             return dev
 
         raise UnsupportedDevice()

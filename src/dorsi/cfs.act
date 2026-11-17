@@ -52,6 +52,124 @@ def fabric_link_addresses(lower_id: int, lower_port: str) -> (str, str):
     return ("10.100.{third}.{fourth}", "10.100.{third}.{fourth + 1}")
 
 
+# --- Overlay identifiers ------------------------------------------------------
+# Placeholder allocation. StratoWeave has no allocator yet, so every identifier
+# of the EVPN-VXLAN overlay is derived from names with a stable hash: the same
+# input gives the same number on every run, and adding a network leaves the
+# identifiers of the others as they are. Derived numbers can clash; the fabric
+# is then rejected (see validate_fabric) and a network can be given its own
+# VNI. Replace these functions with the allocator once it exists.
+#   L2 VNI          10000 + fnv1a32(fabric/tenant/network) % 990000
+#   EVI             VNI % 65535 + 1, also the vxlan-interface index
+#   route target    target:<fnv1a32(fabric) % 65535 + 1>:<VNI>, shared
+#   route dist.     <leaf loopback>:<EVI>, unique per leaf and network
+#   ESI             type 0, 00:<8 hash bytes of fabric/server>:01
+#   LACP system ID  02:<5 hash bytes of lacp/fabric/server>
+#   LACP admin key  fnv1a32(fabric/server) % 65535 + 1
+#   LAG             lag<lowest port number of the server on the leaf>
+
+def _fnv1a(s: str) -> int:
+    """32-bit FNV-1a hash of the UTF-8 bytes of s."""
+    h = 0x811c9dc5
+    for b in s.encode():
+        h = ((h ^ int(b)) * 0x01000193) & 0xffffffff
+    return h
+
+
+def _hash_bytes(s: str, count: int) -> list[str]:
+    """count bytes, at most 8, derived from s, as two hex digits each: the
+    hashes of s and of s with a suffix, one after the other."""
+    digits = "0123456789abcdef"
+    words = [_fnv1a(s), _fnv1a(s + "#")]
+    res: list[str] = []
+    for i in range(count):
+        b = (words[i // 4] >> (24 - 8 * (i % 4))) & 0xff
+        res.append(digits[b >> 4] + digits[b & 0xf])
+    return res
+
+
+def overlay_vni(fabric: str, tenant: str, network: str) -> int:
+    return 10000 + _fnv1a("{fabric}/{tenant}/{network}") % 990000
+
+
+def overlay_evi(vni: int) -> int:
+    return vni % 65535 + 1
+
+
+def overlay_route_target(fabric: str, vni: int) -> str:
+    return "target:{_fnv1a(fabric) % 65535 + 1}:{vni}"
+
+
+def overlay_route_distinguisher(switch_id: int, evi: int) -> str:
+    return "{fabric_loopback(switch_id)}:{evi}"
+
+
+def server_esi(fabric: str, server: str) -> str:
+    return ":".join(["00"] + _hash_bytes("{fabric}/{server}", 8) + ["01"])
+
+
+def server_lacp_system_id(fabric: str, server: str) -> str:
+    return ":".join(["02"] + _hash_bytes("lacp/{fabric}/{server}", 5))
+
+
+def server_lacp_admin_key(fabric: str, server: str) -> int:
+    return _fnv1a("{fabric}/{server}") % 65535 + 1
+
+
+def server_lag_name(ports: list[str]) -> str:
+    """The LAG of a server on a leaf, named after the lowest of its ports."""
+    return "lag{min([_trailing_int(p, 0) for p in ports])}"
+
+
+def mac_vrf_name(tenant: str, network: str) -> str:
+    return "{tenant}-{network}"
+
+
+def server_es_name(server: str) -> str:
+    return "es-{server}"
+
+
+# The characters SR Linux takes in a network-instance name, which has no
+# spaces here, as the name also makes the subinterface and interface names
+_SRL_NAME_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&()|+=`~.,_:;?-"
+
+
+def _is_srl_name(s: str, max_length: int) -> bool:
+    """Whether s is a name SR Linux takes for a network instance or an
+    ethernet segment."""
+    if len(s) == 0 or len(s) > max_length:
+        return False
+    for c in s:
+        if c not in _SRL_NAME_CHARS:
+            return False
+    return True
+
+
+def network_vni(fabric: str, tenant: str, network: y_0.ip_fabric__ip_fabric__fabric__tenant__network_entry) -> int:
+    """The VNI of a network: its own when set, derived otherwise."""
+    vni = network.vni
+    if vni is not None:
+        return int(vni)
+    return overlay_vni(fabric, tenant, network.name)
+
+
+def server_leaf_ports(server: y_0.ip_fabric__ip_fabric__fabric__server_entry) -> dict[str, list[str]]:
+    """The ports of a server by leaf, in the order of its links."""
+    res: dict[str, list[str]] = {}
+    for link in server.connectivity.link:
+        if link.switch not in res:
+            res[link.switch] = []
+        res[link.switch].append(link.switch_port)
+    return res
+
+
+def server_uses_lag(server: y_0.ip_fabric__ip_fabric__fabric__server_entry, ports: list[str]) -> bool:
+    """Whether a server attached to the overlay connects to a leaf over a LAG:
+    always when dual-homed, for the ethernet segment, and when single-homed
+    over more than one port."""
+    return len(server.attachment) > 0 and (server.connectivity.profile == "dual-homed" or len(ports) > 1)
+
+
 # Device types that take their management address from DHCP. The address is
 # not in configuration dorsi manages, so they need no management-address.
 # Every other type, a new one too, needs it: its address sits in configuration
@@ -195,6 +313,112 @@ def validate_fabric(f: y_0.ip_fabric__ip_fabric__fabric_entry) -> list[str]:
             errors.append("{what}: a single-homed server links to one leaf, not {len(leaves)}")
         if profile == "dual-homed" and len(leaves) != 2:
             errors.append("{what}: a dual-homed server links to two leaves, not {len(leaves)}")
+
+    errors.extend(validate_overlay(f, switches))
+    return errors
+
+
+def _ipv4_int(address: str) -> int:
+    """An IPv4 address, validated by is_ipv4_address, as a number."""
+    n = 0
+    for octet in address.split("."):
+        n = n * 256 + int(octet)
+    return n
+
+
+def validate_overlay(f: y_0.ip_fabric__ip_fabric__fabric_entry, switches: dict[str, y_0.ip_fabric__ip_fabric__fabric__switch_entry]) -> list[str]:
+    """The problems found in the EVPN-VXLAN overlay of a fabric."""
+    errors: list[str] = []
+    if len(f.tenant) == 0:
+        return errors
+
+    # The overlay is built on SR Linux only so far: every switch carries EVPN
+    # routes, the spines too
+    for sw in f.switch:
+        if sw.type != "NokiaSRLinux_25_3_2":
+            errors.append("switch {sw.name}: the EVPN overlay is supported on NokiaSRLinux_25_3_2 only, not {sw.type}")
+
+    # Identifiers derived or set must be unique in the fabric
+    vnis: dict[int, str] = {}
+    evis: dict[int, str] = {}
+    vrf_names: dict[str, str] = {}
+    for tenant in f.tenant:
+        for network in tenant.network:
+            what = "network {tenant.name}/{network.name}"
+            vni = network_vni(f.name, tenant.name, network)
+            if vni in vnis:
+                errors.append("{what}: VNI {vni} is also used by {vnis[vni]}, set a vni on one of them")
+            else:
+                vnis[vni] = what
+            evi = overlay_evi(vni)
+            if evi in evis:
+                errors.append("{what}: EVI {evi}, derived from VNI {vni}, is also used by {evis[evi]}, set another vni on one of them")
+            else:
+                evis[evi] = what
+            name = mac_vrf_name(tenant.name, network.name)
+            if not _is_srl_name(name, 247):
+                errors.append("{what}: its MAC-VRF name {name} is not a name SR Linux takes: up to 247 letters, digits and punctuation, no spaces or slashes")
+            elif name in vrf_names:
+                errors.append("{what}: its MAC-VRF name {name} is also that of {vrf_names[name]}")
+            else:
+                vrf_names[name] = what
+
+    # Attachments: an existing network, one VLAN per network on a server and
+    # the addresses of a network in one subnet
+    subnets: dict[str, (int, int, str)] = {}
+    addresses: dict[str, str] = {}
+    lags: dict[str, str] = {}
+    for server in f.server:
+        what = "server {server.name}"
+        vlans: dict[str, str] = {}
+        for att in server.attachment:
+            network = "{att.tenant}/{att.network}"
+            tenant = f.tenant.get(att.tenant)
+            if tenant is not None:
+                if tenant.network.get(att.network) is None:
+                    errors.append("{what}: network {network} does not exist")
+            else:
+                errors.append("{what}: tenant {att.tenant} does not exist")
+            vlan_id = att.vlan
+            vlan = str(vlan_id) if vlan_id is not None else "untagged"
+            if vlan in vlans:
+                errors.append("{what}: networks {vlans[vlan]} and {network} are both on VLAN {vlan}")
+            else:
+                vlans[vlan] = network
+            address = att.ipv4_address
+            if address is not None:
+                parsed = parse_management_address(address)
+                if parsed is not None:
+                    host = parsed.address
+                    length = parsed.prefix_length
+                    if host in addresses:
+                        errors.append("{what}: address {host} is also that of {addresses[host]}")
+                    else:
+                        addresses[host] = what
+                    subnet = _ipv4_int(host) >> (32 - length) if length > 0 else 0
+                    if network not in subnets:
+                        subnets[network] = (subnet, length, server.name)
+                    else:
+                        seen_subnet, seen_length, seen_server = subnets[network]
+                        if seen_subnet != subnet or seen_length != length:
+                            errors.append("{what}: address {address} is not in the subnet of server {seen_server} in network {network}")
+                else:
+                    errors.append("{what}: ipv4-address {address} of network {network} is not an IPv4 address with a prefix length, such as 10.10.10.11/24")
+        if len(server.attachment) > 0 and server.connectivity.profile == "dual-homed":
+            es = server_es_name(server.name)
+            if not _is_srl_name(es, 32):
+                errors.append("{what}: its ethernet segment {es} is not a name SR Linux takes: up to 32 letters, digits and punctuation, no spaces or slashes")
+        for leaf, ports in server_leaf_ports(server).items():
+            if server_uses_lag(server, ports):
+                lag = server_lag_name(ports)
+                key = "{leaf}/{lag}"
+                lag_id = _trailing_int(lag, 0)
+                if lag_id < 1 or lag_id > 1000:
+                    errors.append("{what}: the LAG on {leaf} is named after its lowest port, whose number must be 1 to 1000")
+                elif key in lags:
+                    errors.append("{what}: its LAG on {leaf}, {lag}, is also that of server {lags[key]}")
+                else:
+                    lags[key] = server.name
     return errors
 
 
@@ -236,6 +460,7 @@ class Fabric(base.Fabric):
             base_config.ipv4_address = fabric_loopback(int(sw.id))
             base_config.management_address = sw.management_address
             base_config.management_gateway = sw.management_gateway
+            base_config.evpn = len(i.tenant) > 0
 
         for link in i.fabric_link:
             print("CFS fabric-link %s [%s] <-> %s [%s]" % (link.lower_switch, link.lower_port, link.upper_switch, link.upper_port))
@@ -257,10 +482,43 @@ class Fabric(base.Fabric):
             ui.bgp.peer_address = lower_addr
             ui.bgp.peer_asn = u64(lower_asn)
 
+        # The port or LAG of every server on each of its leaves, by server and
+        # leaf, for the networks it is attached to
+        server_interfaces: dict[str, dict[str, str]] = {}
         for server in i.server:
             print("CFS fabric server", server.name, server.connectivity.profile)
-            for link in server.connectivity.link:
-                o.rfs.create(link.switch).server_port.create(link.switch_port, server=server.name, server_port=link.server_port, profile=server.connectivity.profile)
+            server_interfaces[server.name] = {}
+            for leaf, ports in server_leaf_ports(server).items():
+                interface = ports[0]
+                uses_lag = server_uses_lag(server, ports)
+                if uses_lag:
+                    interface = server_lag_name(ports)
+                    server_lag = o.rfs.create(leaf).server_lag.create(interface, server.name, server_lacp_system_id(i.name, server.name), u64(server_lacp_admin_key(i.name, server.name)))
+                    if server.connectivity.profile == "dual-homed":
+                        server_lag.esi = server_esi(i.name, server.name)
+                for link in server.connectivity.link:
+                    if link.switch == leaf:
+                        port = o.rfs.create(leaf).server_port.create(link.switch_port, server=server.name, server_port=link.server_port, profile=server.connectivity.profile)
+                        if uses_lag:
+                            port.lag = interface
+                server_interfaces[server.name][leaf] = interface
+
+        # A network is placed on the leaves of the servers attached to it
+        for tenant in i.tenant:
+            for network in tenant.network:
+                vni = network_vni(i.name, tenant.name, network)
+                evi = overlay_evi(vni)
+                name = mac_vrf_name(tenant.name, network.name)
+                route_target = overlay_route_target(i.name, vni)
+                print("CFS fabric network {tenant.name}/{network.name} VNI {vni}")
+                for server in i.server:
+                    for att in server.attachment:
+                        if att.tenant != tenant.name or att.network != network.name:
+                            continue
+                        for leaf, interface in server_interfaces[server.name].items():
+                            rd = overlay_route_distinguisher(int(switches[leaf].id), evi)
+                            mac_vrf = o.rfs.create(leaf).mac_vrf.create(name, u64(vni), u64(evi), rd, route_target)
+                            mac_vrf.interface.create(interface).vlan = att.vlan
 
         return o
 

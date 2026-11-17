@@ -53,6 +53,23 @@ def three_stage():
     add_servers(f)
     return root
 
+# The EVPN-VXLAN overlay of the fabric-3stage lab, on the three-stage Clos.
+# Tenant t1 has two layer 2 networks: web, tagged with VLAN 10, joins server1
+# (dual-homed to leaf1 and leaf2) to server3 (single-homed to leaf3); db,
+# untagged, is on server2 (dual-homed to leaf2 and leaf3) alone.
+def add_overlay(fabric: cfs_layer.ip_fabric__ip_fabric__fabric_entry):
+    tenant = fabric.tenant.create("t1")
+    tenant.network.create("web")
+    tenant.network.create("db")
+    fabric.server.get("server1")!.attachment.create(("t1", "web"), vlan=10, ipv4_address="10.10.10.11/24")
+    fabric.server.get("server3")!.attachment.create(("t1", "web"), vlan=10, ipv4_address="10.10.10.13/24")
+    fabric.server.get("server2")!.attachment.create(("t1", "db"), ipv4_address="10.10.20.12/24")
+
+def three_stage_overlay():
+    root = three_stage()
+    add_overlay(root.ip_fabric.fabric.get("dc1")!)
+    return root
+
 # The three-stage Clos of the fabric-3stage-mixed lab: leaf3 and spine2 run
 # Arista EOS (ports EthernetN), the rest SR Linux. It has every kind of link:
 # SR Linux to EOS both ways and EOS to EOS (leaf3 to spine2). EOS keeps its
@@ -126,6 +143,37 @@ def five_stage_mixed():
     add_server(f, "server3", "single-homed", [("leaf1", "Ethernet2", "eth1")])
     return root
 
+def five_stage_overlay():
+    root = five_stage()
+    add_overlay(root.ip_fabric.fabric.get("dc1")!)
+    return root
+
+# The five-stage Clos of the fabric-5stage-srl lab: the shape of
+# fabric-5stage-mixed, all SR Linux, for the overlay through a super-spine.
+# server1 is dual-homed across the pods, to leaf1 and leaf2, so its ethernet
+# segment spans the super-spine too. All three servers are in network t1/web:
+# server1 and server2 send it tagged, server3 untagged.
+def five_stage_srl():
+    root = _empty_root()
+    f = root.ip_fabric.fabric.create("dc1")
+    add_switch(f, "leaf1", 1, "leaf", pod="pod-1")
+    add_switch(f, "leaf2", 2, "leaf", pod="pod-2")
+    add_switch(f, "spine1", 11, "spine", pod="pod-1", plane="plane-1")
+    add_switch(f, "spine2", 12, "spine", pod="pod-2", plane="plane-1")
+    add_switch(f, "superspine1", 21, "super-spine", plane="plane-1")
+    add_link(f, "leaf1", "ethernet-1/49", "spine1", "ethernet-1/1")
+    add_link(f, "leaf2", "ethernet-1/49", "spine2", "ethernet-1/1")
+    add_link(f, "spine1", "ethernet-1/31", "superspine1", "ethernet-1/1")
+    add_link(f, "spine2", "ethernet-1/31", "superspine1", "ethernet-1/2")
+    add_server(f, "server1", "dual-homed", [("leaf1", "ethernet-1/1", "eth1"), ("leaf2", "ethernet-1/1", "eth2")])
+    add_server(f, "server2", "single-homed", [("leaf2", "ethernet-1/2", "eth1")])
+    add_server(f, "server3", "single-homed", [("leaf1", "ethernet-1/2", "eth1")])
+    f.tenant.create("t1").network.create("web")
+    f.server.get("server1")!.attachment.create(("t1", "web"), vlan=10, ipv4_address="10.10.10.11/24")
+    f.server.get("server2")!.attachment.create(("t1", "web"), vlan=10, ipv4_address="10.10.10.12/24")
+    f.server.get("server3")!.attachment.create(("t1", "web"), ipv4_address="10.10.10.13/24")
+    return root
+
 # TransformTester takes its snapshot as soon as the CFS commit completes, which
 # can be before the device configuration exists. Wait for it to settle.
 actor FabricTester(t: testing.AsyncT, input_config: gdata.Node):
@@ -145,6 +193,18 @@ actor FabricTester(t: testing.AsyncT, input_config: gdata.Node):
 actor _test_fabric_three_stage(t: testing.AsyncT):
     t.timeout(30.0)
     FabricTester(t, three_stage().to_gdata())
+
+actor _test_fabric_three_stage_overlay(t: testing.AsyncT):
+    t.timeout(30.0)
+    FabricTester(t, three_stage_overlay().to_gdata())
+
+actor _test_fabric_five_stage_overlay(t: testing.AsyncT):
+    t.timeout(30.0)
+    FabricTester(t, five_stage_overlay().to_gdata())
+
+actor _test_fabric_five_stage_srl(t: testing.AsyncT):
+    t.timeout(30.0)
+    FabricTester(t, five_stage_srl().to_gdata())
 
 actor _test_fabric_three_stage_mixed(t: testing.AsyncT):
     t.timeout(30.0)
