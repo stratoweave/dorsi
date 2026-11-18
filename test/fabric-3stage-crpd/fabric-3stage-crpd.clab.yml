@@ -1,0 +1,66 @@
+name: dorsi-fabric-3stage-crpd
+prefix: __lab-name
+
+mgmt:
+  network: dorsi-fabric-3stage-crpd
+  ipv4-subnet: 172.31.39.0/24
+  ipv6-subnet: auto
+
+topology:
+  kinds:
+    juniper_crpd:
+      image: ${IMAGE_PATH}crpd:24.4r1.9
+      image-pull-policy: if-not-present
+      startup-config: crpd-startup.conf
+  nodes:
+    leaf1:
+      mgmt-ipv4: 172.31.39.11
+      kind: juniper_crpd
+    leaf2:
+      mgmt-ipv4: 172.31.39.12
+      kind: juniper_crpd
+    leaf3:
+      mgmt-ipv4: 172.31.39.13
+      kind: juniper_crpd
+    spine1:
+      mgmt-ipv4: 172.31.39.21
+      kind: juniper_crpd
+    spine2:
+      mgmt-ipv4: 172.31.39.22
+      kind: juniper_crpd
+    server1:
+      mgmt-ipv4: 172.31.39.31
+      kind: linux
+      image: ghcr.io/srl-labs/network-multitool
+      image-pull-policy: if-not-present
+    server2:
+      mgmt-ipv4: 172.31.39.32
+      kind: linux
+      image: ghcr.io/srl-labs/network-multitool
+      image-pull-policy: if-not-present
+    server3:
+      mgmt-ipv4: 172.31.39.33
+      kind: linux
+      image: ghcr.io/srl-labs/network-multitool
+      image-pull-policy: if-not-present
+    sweave:
+      mgmt-ipv4: 172.31.39.10
+      kind: linux
+      image: dorsi-sweave-base
+      image-pull-policy: if-not-present
+      ports:
+        # The dorsi binary serves the APIs and the embedded Web UI on :80.
+        - "${WEBUI_PUBLISH}:80/tcp"
+        - "830/tcp"
+
+  # cRPD routes for the Linux interfaces of its container, ethN.
+  links:
+    - endpoints: ["leaf1:eth49", "spine1:eth1"]
+    - endpoints: ["leaf1:eth50", "spine2:eth1"]
+    - endpoints: ["leaf2:eth49", "spine1:eth2"]
+    - endpoints: ["leaf2:eth50", "spine2:eth2"]
+    - endpoints: ["leaf3:eth49", "spine1:eth3"]
+    - endpoints: ["leaf3:eth50", "spine2:eth3"]
+    - endpoints: ["server1:eth1", "leaf1:eth1"]
+    - endpoints: ["server2:eth1", "leaf2:eth1"]
+    - endpoints: ["server3:eth1", "leaf3:eth1"]

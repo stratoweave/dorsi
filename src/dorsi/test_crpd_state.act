@@ -1,0 +1,66 @@
+import testing
+import std.xml as xml
+
+import dorsi.rfs as rfs
+
+# Replies of a cRPD 24.4R1.9 in the fabric-3stage-crpd lab, cut down to the
+# elements read
+
+def _test_oper_status_up():
+    reply = xml.decode("""<rpc-reply><output>
+Interface        State Addresses
+eth49            Up    MPLS  enabled
+                       INET  10.100.0.226
+</output></rpc-reply>""")
+    testing.assertEqual(rfs.crpd_oper_status(reply, "eth49"), "up")
+
+def _test_oper_status_down():
+    reply = xml.decode("""<rpc-reply><output>
+Interface        State Addresses
+eth49            Down  MPLS  enabled
+</output></rpc-reply>""")
+    testing.assertEqual(rfs.crpd_oper_status(reply, "eth49"), "down")
+
+def _test_oper_status_other_interface():
+    # eth4 is not eth49, even though eth49 starts with it
+    reply = xml.decode("""<rpc-reply><output>
+Interface        State Addresses
+eth49            Up    MPLS  enabled
+</output></rpc-reply>""")
+    testing.assertEqual(rfs.crpd_oper_status(reply, "eth4"), None)
+
+def _test_bgp_status_established():
+    reply = xml.decode("""<rpc-reply><bgp-information><bgp-peer>
+<peer-address>10.100.0.227+34119</peer-address>
+<peer-state>Established</peer-state>
+</bgp-peer></bgp-information></rpc-reply>""")
+    testing.assertEqual(rfs.crpd_bgp_status(reply), "up")
+
+def _test_bgp_status_active():
+    reply = xml.decode("""<rpc-reply><bgp-information><bgp-peer>
+<peer-address>10.100.0.227</peer-address>
+<peer-state>Active</peer-state>
+</bgp-peer></bgp-information></rpc-reply>""")
+    testing.assertEqual(rfs.crpd_bgp_status(reply), "down")
+
+def _test_bgp_status_not_running():
+    reply = xml.decode("""<rpc-reply><output>
+BGP is not running</output></rpc-reply>""")
+    testing.assertEqual(rfs.crpd_bgp_status(reply), None)
+
+def _test_lldp_neighbor():
+    reply = xml.decode("""<rpc-reply><lldp-neighbors-information>
+<lldp-neighbor-information>
+<lldp-local-interface>eth49</lldp-local-interface>
+<lldp-remote-port-id-subtype>Interface name</lldp-remote-port-id-subtype>
+<lldp-remote-port-id>eth1</lldp-remote-port-id>
+<lldp-remote-port-description>Link to leaf1 [eth49]</lldp-remote-port-description>
+<lldp-remote-system-name>spine1</lldp-remote-system-name>
+</lldp-neighbor-information>
+</lldp-neighbors-information></rpc-reply>""")
+    testing.assertEqual(rfs.crpd_lldp_neighbor(reply), ("spine1", "eth1"))
+
+def _test_lldp_no_neighbor():
+    reply = xml.decode("""<rpc-reply><lldp-neighbors-information>
+</lldp-neighbors-information></rpc-reply>""")
+    testing.assertEqual(rfs.crpd_lldp_neighbor(reply), (None, None))

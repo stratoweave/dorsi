@@ -249,11 +249,12 @@ def server_uses_lag(server: y_0.ip_fabric__ip_fabric__fabric__server_entry, port
     return len(server.attachment) > 0 and (server.connectivity.profile == "dual-homed" or len(ports) > 1)
 
 
-# Device types that take their management address from DHCP. The address is
-# not in configuration dorsi manages, so they need no management-address.
-# Every other type, a new one too, needs it: its address sits in configuration
-# dorsi owns, which would otherwise drop it and cut dorsi off from the device.
-DHCP_MANAGEMENT_TYPES = {"NokiaSRLinux_25_3_2"}
+# Device types that take their management address from DHCP, or, as Juniper
+# cRPD, from the container they run in. The address is not in configuration
+# dorsi manages, so they need no management-address. Every other type, a new
+# one too, needs it: its address sits in configuration dorsi owns, which would
+# otherwise drop it and cut dorsi off from the device.
+DHCP_MANAGEMENT_TYPES = {"NokiaSRLinux_25_3_2", "JuniperCRPD_24_4R1_9"}
 
 
 def _decimal_at_most(s: str, max_digits: int, max_value: int) -> bool:
@@ -793,7 +794,6 @@ def server_cabling_status(oper: ?str, seen_device: ?str, seen_interface: ?str, s
 actor FabricTransform(path: ttt.Path,
                       update_oper: proc(?y_0_oper.ip_fabric__ip_fabric__fabric_entry)->None,
                       lower_tree_provider: ?gdata.TreeProvider):
-    _oper = base.Fabric.new_state(path)
     _subs = gdata.SubscriptionManager(lower_tree_provider!, str(path))
     # Monotonic time in ns at which the eBGP session of a link went down, by link
     var _bgp_down_since: dict[str, int] = {}
@@ -802,6 +802,9 @@ actor FabricTransform(path: ttt.Path,
         if err is not None:
             print("cfs.FabricTransform RFS subscription error: {err}", err=True)
             return
+        # The state is built anew from each delivery, so that a link, server
+        # or placement removed from the fabric leaves it
+        fabric_state = base.Fabric.new_state(path)
         now = time.monotonic_ns()
         bgp_down_since: dict[str, int] = {}
         for lower, lower_port, upper, upper_port in links:
@@ -829,7 +832,7 @@ actor FabricTransform(path: ttt.Path,
                                 upper_bgp = fi.state.bgp_status
                                 upper_seen_device = fi.state.lldp_neighbor.device
                                 upper_seen_interface = fi.state.lldp_neighbor.interface
-            link = _oper.fabric_link.create((lower, lower_port, upper, upper_port))
+            link = fabric_state.fabric_link.create((lower, lower_port, upper, upper_port))
             link.state.link_status = combine_link_status(lower_oper, upper_oper)
             link.state.bgp_status = combine_link_status(lower_bgp, upper_bgp)
             # Only the time the session is down on a working link counts: it
@@ -865,7 +868,7 @@ actor FabricTransform(path: ttt.Path,
                                 oper = sp.state.oper_status
                                 seen_device = sp.state.lldp_neighbor.device
                                 seen_interface = sp.state.lldp_neighbor.interface
-            server_link = _oper.server.create(server).connectivity.link.create((switch, switch_port))
+            server_link = fabric_state.server.create(server).connectivity.link.create((switch, switch_port))
             server_link.state.link_status = oper
             server_link.state.cabling_status = server_cabling_status(oper, seen_device, seen_interface, server, server_port)
             server_link.state.neighbor.device = seen_device
@@ -894,20 +897,20 @@ actor FabricTransform(path: ttt.Path,
                                     oper_status = e.state.oper_status
                                     other_status = e.state.es_status
             if kind == "network":
-                p = _oper.tenant.create(owner).network.create(name).state.placement.create(leaf)
+                p = fabric_state.tenant.create(owner).network.create(name).state.placement.create(leaf)
                 p.oper_status = oper_status
                 p.evpn_status = other_status
             elif kind == "vrf":
-                p = _oper.tenant.create(owner).vrf.create(name).state.placement.create(leaf)
+                p = fabric_state.tenant.create(owner).vrf.create(name).state.placement.create(leaf)
                 p.oper_status = oper_status
                 p.evpn_status = other_status
             else:
-                lag = _oper.server.create(owner).state.lag.create(leaf)
+                lag = fabric_state.server.create(owner).state.lag.create(leaf)
                 lag.name = rfs_name
                 lag.oper_status = oper_status
                 lag.es_status = other_status
         _bgp_down_since = bgp_down_since
-        update_oper(_oper)
+        update_oper(fabric_state)
 
     def on_conf(conf: y_0.ip_fabric__ip_fabric__fabric_entry):
         links: list[(str, str, str, str)] = []

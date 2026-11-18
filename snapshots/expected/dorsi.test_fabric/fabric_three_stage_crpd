@@ -1,0 +1,578 @@
+# device leaf1
+# Top node: /
+leaf1 = root()
+
+# Container: /configuration/system
+leaf1.configuration.system.host_name = 'leaf1'
+
+# List /configuration/interfaces/interface element: 'eth1'
+interface_element = leaf1.configuration.interfaces.interface.create('eth1', description='Server server1 [eth1] (single-homed)')
+
+# List /configuration/interfaces/interface element: 'eth49'
+interface_element = leaf1.configuration.interfaces.interface.create('eth49', description='Link to spine1 [eth1]', mtu=u64(9000))
+
+# List /configuration/interfaces/interface[name='eth49']/unit element: '0'
+unit_element = interface_element.unit.create('0', description='Link to spine1 [eth1]')
+
+# P-container: /configuration/interfaces/interface[name='eth49']/unit[name='0']/family/inet
+inet = unit_element.family.create_inet()
+
+# List /configuration/interfaces/interface[name='eth49']/unit[name='0']/family/inet/address element: '10.100.0.226/31'
+address_element = inet.address.create('10.100.0.226/31')
+
+# List /configuration/interfaces/interface element: 'eth50'
+interface_element = leaf1.configuration.interfaces.interface.create('eth50', description='Link to spine2 [eth1]', mtu=u64(9000))
+
+# List /configuration/interfaces/interface[name='eth50']/unit element: '0'
+unit_element = interface_element.unit.create('0', description='Link to spine2 [eth1]')
+
+# P-container: /configuration/interfaces/interface[name='eth50']/unit[name='0']/family/inet
+inet = unit_element.family.create_inet()
+
+# List /configuration/interfaces/interface[name='eth50']/unit[name='0']/family/inet/address element: '10.100.0.228/31'
+address_element = inet.address.create('10.100.0.228/31')
+
+# List /configuration/interfaces/interface element: 'lo0'
+interface_element = leaf1.configuration.interfaces.interface.create('lo0')
+
+# List /configuration/interfaces/interface[name='lo0']/unit element: '0'
+unit_element = interface_element.unit.create('0')
+
+# P-container: /configuration/interfaces/interface[name='lo0']/unit[name='0']/family/inet
+inet = unit_element.family.create_inet()
+
+# List /configuration/interfaces/interface[name='lo0']/unit[name='0']/family/inet/address element: '10.0.0.1/32'
+address_element = inet.address.create('10.0.0.1/32')
+
+# List /configuration/policy-options/policy-statement element: 'accept-all'
+policy_statement_element = leaf1.configuration.policy_options.policy_statement.create('accept-all')
+
+# List /configuration/policy-options/policy-statement[name='accept-all']/term element: 'all'
+term_element = policy_statement_element.term.create('all')
+
+# Container: /configuration/policy-options/policy-statement[name='accept-all']/term[name='all']/then
+term_element.then.accept = True
+
+# List /configuration/policy-options/policy-statement element: 'ecmp'
+policy_statement_element = leaf1.configuration.policy_options.policy_statement.create('ecmp')
+
+# List /configuration/policy-options/policy-statement[name='ecmp']/term element: 'all'
+term_element = policy_statement_element.term.create('all')
+
+# Container: /configuration/policy-options/policy-statement[name='ecmp']/term[name='all']/then/load-balance
+term_element.then.load_balance.per_packet = True
+
+# List /configuration/policy-options/policy-statement element: 'export-loopbacks'
+policy_statement_element = leaf1.configuration.policy_options.policy_statement.create('export-loopbacks')
+
+# List /configuration/policy-options/policy-statement[name='export-loopbacks']/term element: 'loopbacks'
+term_element = policy_statement_element.term.create('loopbacks')
+
+# List /configuration/policy-options/policy-statement[name='export-loopbacks']/term[name='loopbacks']/from/route-filter element: '10.0.0.0/16', 'prefix-length-range', '/32-/32'
+route_filter_element = term_element.from.route_filter.create((address='10.0.0.0/16', choice_ident='prefix-length-range', choice_value='/32-/32'))
+
+# Container: /configuration/policy-options/policy-statement[name='export-loopbacks']/term[name='loopbacks']/then
+term_element.then.accept = True
+
+# Container: /configuration/routing-options
+leaf1.configuration.routing_options.router_id = '10.0.0.1'
+
+# Container: /configuration/routing-options/autonomous-system
+leaf1.configuration.routing_options.autonomous_system.as_number = '4200000001'
+
+# Container: /configuration/routing-options/forwarding-table
+leaf1.configuration.routing_options.forwarding_table.export = ['ecmp']
+
+# List /configuration/protocols/bgp/group element: 'fabric'
+group_element = leaf1.configuration.protocols.bgp.group.create('fabric', type='external')
+group_element.import = ['accept-all']
+group_element.export = ['export-loopbacks']
+
+# P-container: /configuration/protocols/bgp/group[name='fabric']/multipath
+multipath = group_element.create_multipath(multiple_as=True)
+
+# List /configuration/protocols/bgp/group[name='fabric']/neighbor element: '10.100.0.227'
+neighbor_element = group_element.neighbor.create('10.100.0.227', description='Link to spine1 [eth1]', peer_as='4200100101')
+
+# List /configuration/protocols/bgp/group[name='fabric']/neighbor element: '10.100.0.229'
+neighbor_element = group_element.neighbor.create('10.100.0.229', description='Link to spine2 [eth1]', peer_as='4200100101')
+
+# Container: /configuration/protocols/lldp
+leaf1.configuration.protocols.lldp.port_id_subtype = 'interface-name'
+
+# List /configuration/protocols/lldp/interface element: 'eth1'
+interface_element_2 = leaf1.configuration.protocols.lldp.interface.create('eth1')
+
+# List /configuration/protocols/lldp/interface element: 'eth49'
+interface_element_2 = leaf1.configuration.protocols.lldp.interface.create('eth49')
+
+# List /configuration/protocols/lldp/interface element: 'eth50'
+interface_element_2 = leaf1.configuration.protocols.lldp.interface.create('eth50')
+
+# device leaf2
+# Top node: /
+leaf2 = root()
+
+# Container: /configuration/system
+leaf2.configuration.system.host_name = 'leaf2'
+
+# List /configuration/interfaces/interface element: 'eth1'
+interface_element = leaf2.configuration.interfaces.interface.create('eth1', description='Server server2 [eth1] (single-homed)')
+
+# List /configuration/interfaces/interface element: 'eth49'
+interface_element = leaf2.configuration.interfaces.interface.create('eth49', description='Link to spine1 [eth2]', mtu=u64(9000))
+
+# List /configuration/interfaces/interface[name='eth49']/unit element: '0'
+unit_element = interface_element.unit.create('0', description='Link to spine1 [eth2]')
+
+# P-container: /configuration/interfaces/interface[name='eth49']/unit[name='0']/family/inet
+inet = unit_element.family.create_inet()
+
+# List /configuration/interfaces/interface[name='eth49']/unit[name='0']/family/inet/address element: '10.100.1.98/31'
+address_element = inet.address.create('10.100.1.98/31')
+
+# List /configuration/interfaces/interface element: 'eth50'
+interface_element = leaf2.configuration.interfaces.interface.create('eth50', description='Link to spine2 [eth2]', mtu=u64(9000))
+
+# List /configuration/interfaces/interface[name='eth50']/unit element: '0'
+unit_element = interface_element.unit.create('0', description='Link to spine2 [eth2]')
+
+# P-container: /configuration/interfaces/interface[name='eth50']/unit[name='0']/family/inet
+inet = unit_element.family.create_inet()
+
+# List /configuration/interfaces/interface[name='eth50']/unit[name='0']/family/inet/address element: '10.100.1.100/31'
+address_element = inet.address.create('10.100.1.100/31')
+
+# List /configuration/interfaces/interface element: 'lo0'
+interface_element = leaf2.configuration.interfaces.interface.create('lo0')
+
+# List /configuration/interfaces/interface[name='lo0']/unit element: '0'
+unit_element = interface_element.unit.create('0')
+
+# P-container: /configuration/interfaces/interface[name='lo0']/unit[name='0']/family/inet
+inet = unit_element.family.create_inet()
+
+# List /configuration/interfaces/interface[name='lo0']/unit[name='0']/family/inet/address element: '10.0.0.2/32'
+address_element = inet.address.create('10.0.0.2/32')
+
+# List /configuration/policy-options/policy-statement element: 'accept-all'
+policy_statement_element = leaf2.configuration.policy_options.policy_statement.create('accept-all')
+
+# List /configuration/policy-options/policy-statement[name='accept-all']/term element: 'all'
+term_element = policy_statement_element.term.create('all')
+
+# Container: /configuration/policy-options/policy-statement[name='accept-all']/term[name='all']/then
+term_element.then.accept = True
+
+# List /configuration/policy-options/policy-statement element: 'ecmp'
+policy_statement_element = leaf2.configuration.policy_options.policy_statement.create('ecmp')
+
+# List /configuration/policy-options/policy-statement[name='ecmp']/term element: 'all'
+term_element = policy_statement_element.term.create('all')
+
+# Container: /configuration/policy-options/policy-statement[name='ecmp']/term[name='all']/then/load-balance
+term_element.then.load_balance.per_packet = True
+
+# List /configuration/policy-options/policy-statement element: 'export-loopbacks'
+policy_statement_element = leaf2.configuration.policy_options.policy_statement.create('export-loopbacks')
+
+# List /configuration/policy-options/policy-statement[name='export-loopbacks']/term element: 'loopbacks'
+term_element = policy_statement_element.term.create('loopbacks')
+
+# List /configuration/policy-options/policy-statement[name='export-loopbacks']/term[name='loopbacks']/from/route-filter element: '10.0.0.0/16', 'prefix-length-range', '/32-/32'
+route_filter_element = term_element.from.route_filter.create((address='10.0.0.0/16', choice_ident='prefix-length-range', choice_value='/32-/32'))
+
+# Container: /configuration/policy-options/policy-statement[name='export-loopbacks']/term[name='loopbacks']/then
+term_element.then.accept = True
+
+# Container: /configuration/routing-options
+leaf2.configuration.routing_options.router_id = '10.0.0.2'
+
+# Container: /configuration/routing-options/autonomous-system
+leaf2.configuration.routing_options.autonomous_system.as_number = '4200000002'
+
+# Container: /configuration/routing-options/forwarding-table
+leaf2.configuration.routing_options.forwarding_table.export = ['ecmp']
+
+# List /configuration/protocols/bgp/group element: 'fabric'
+group_element = leaf2.configuration.protocols.bgp.group.create('fabric', type='external')
+group_element.import = ['accept-all']
+group_element.export = ['export-loopbacks']
+
+# P-container: /configuration/protocols/bgp/group[name='fabric']/multipath
+multipath = group_element.create_multipath(multiple_as=True)
+
+# List /configuration/protocols/bgp/group[name='fabric']/neighbor element: '10.100.1.101'
+neighbor_element = group_element.neighbor.create('10.100.1.101', description='Link to spine2 [eth2]', peer_as='4200100101')
+
+# List /configuration/protocols/bgp/group[name='fabric']/neighbor element: '10.100.1.99'
+neighbor_element = group_element.neighbor.create('10.100.1.99', description='Link to spine1 [eth2]', peer_as='4200100101')
+
+# Container: /configuration/protocols/lldp
+leaf2.configuration.protocols.lldp.port_id_subtype = 'interface-name'
+
+# List /configuration/protocols/lldp/interface element: 'eth1'
+interface_element_2 = leaf2.configuration.protocols.lldp.interface.create('eth1')
+
+# List /configuration/protocols/lldp/interface element: 'eth49'
+interface_element_2 = leaf2.configuration.protocols.lldp.interface.create('eth49')
+
+# List /configuration/protocols/lldp/interface element: 'eth50'
+interface_element_2 = leaf2.configuration.protocols.lldp.interface.create('eth50')
+
+# device leaf3
+# Top node: /
+leaf3 = root()
+
+# Container: /configuration/system
+leaf3.configuration.system.host_name = 'leaf3'
+
+# List /configuration/interfaces/interface element: 'eth1'
+interface_element = leaf3.configuration.interfaces.interface.create('eth1', description='Server server3 [eth1] (single-homed)')
+
+# List /configuration/interfaces/interface element: 'eth49'
+interface_element = leaf3.configuration.interfaces.interface.create('eth49', description='Link to spine1 [eth3]', mtu=u64(9000))
+
+# List /configuration/interfaces/interface[name='eth49']/unit element: '0'
+unit_element = interface_element.unit.create('0', description='Link to spine1 [eth3]')
+
+# P-container: /configuration/interfaces/interface[name='eth49']/unit[name='0']/family/inet
+inet = unit_element.family.create_inet()
+
+# List /configuration/interfaces/interface[name='eth49']/unit[name='0']/family/inet/address element: '10.100.1.226/31'
+address_element = inet.address.create('10.100.1.226/31')
+
+# List /configuration/interfaces/interface element: 'eth50'
+interface_element = leaf3.configuration.interfaces.interface.create('eth50', description='Link to spine2 [eth3]', mtu=u64(9000))
+
+# List /configuration/interfaces/interface[name='eth50']/unit element: '0'
+unit_element = interface_element.unit.create('0', description='Link to spine2 [eth3]')
+
+# P-container: /configuration/interfaces/interface[name='eth50']/unit[name='0']/family/inet
+inet = unit_element.family.create_inet()
+
+# List /configuration/interfaces/interface[name='eth50']/unit[name='0']/family/inet/address element: '10.100.1.228/31'
+address_element = inet.address.create('10.100.1.228/31')
+
+# List /configuration/interfaces/interface element: 'lo0'
+interface_element = leaf3.configuration.interfaces.interface.create('lo0')
+
+# List /configuration/interfaces/interface[name='lo0']/unit element: '0'
+unit_element = interface_element.unit.create('0')
+
+# P-container: /configuration/interfaces/interface[name='lo0']/unit[name='0']/family/inet
+inet = unit_element.family.create_inet()
+
+# List /configuration/interfaces/interface[name='lo0']/unit[name='0']/family/inet/address element: '10.0.0.3/32'
+address_element = inet.address.create('10.0.0.3/32')
+
+# List /configuration/policy-options/policy-statement element: 'accept-all'
+policy_statement_element = leaf3.configuration.policy_options.policy_statement.create('accept-all')
+
+# List /configuration/policy-options/policy-statement[name='accept-all']/term element: 'all'
+term_element = policy_statement_element.term.create('all')
+
+# Container: /configuration/policy-options/policy-statement[name='accept-all']/term[name='all']/then
+term_element.then.accept = True
+
+# List /configuration/policy-options/policy-statement element: 'ecmp'
+policy_statement_element = leaf3.configuration.policy_options.policy_statement.create('ecmp')
+
+# List /configuration/policy-options/policy-statement[name='ecmp']/term element: 'all'
+term_element = policy_statement_element.term.create('all')
+
+# Container: /configuration/policy-options/policy-statement[name='ecmp']/term[name='all']/then/load-balance
+term_element.then.load_balance.per_packet = True
+
+# List /configuration/policy-options/policy-statement element: 'export-loopbacks'
+policy_statement_element = leaf3.configuration.policy_options.policy_statement.create('export-loopbacks')
+
+# List /configuration/policy-options/policy-statement[name='export-loopbacks']/term element: 'loopbacks'
+term_element = policy_statement_element.term.create('loopbacks')
+
+# List /configuration/policy-options/policy-statement[name='export-loopbacks']/term[name='loopbacks']/from/route-filter element: '10.0.0.0/16', 'prefix-length-range', '/32-/32'
+route_filter_element = term_element.from.route_filter.create((address='10.0.0.0/16', choice_ident='prefix-length-range', choice_value='/32-/32'))
+
+# Container: /configuration/policy-options/policy-statement[name='export-loopbacks']/term[name='loopbacks']/then
+term_element.then.accept = True
+
+# Container: /configuration/routing-options
+leaf3.configuration.routing_options.router_id = '10.0.0.3'
+
+# Container: /configuration/routing-options/autonomous-system
+leaf3.configuration.routing_options.autonomous_system.as_number = '4200000003'
+
+# Container: /configuration/routing-options/forwarding-table
+leaf3.configuration.routing_options.forwarding_table.export = ['ecmp']
+
+# List /configuration/protocols/bgp/group element: 'fabric'
+group_element = leaf3.configuration.protocols.bgp.group.create('fabric', type='external')
+group_element.import = ['accept-all']
+group_element.export = ['export-loopbacks']
+
+# P-container: /configuration/protocols/bgp/group[name='fabric']/multipath
+multipath = group_element.create_multipath(multiple_as=True)
+
+# List /configuration/protocols/bgp/group[name='fabric']/neighbor element: '10.100.1.227'
+neighbor_element = group_element.neighbor.create('10.100.1.227', description='Link to spine1 [eth3]', peer_as='4200100101')
+
+# List /configuration/protocols/bgp/group[name='fabric']/neighbor element: '10.100.1.229'
+neighbor_element = group_element.neighbor.create('10.100.1.229', description='Link to spine2 [eth3]', peer_as='4200100101')
+
+# Container: /configuration/protocols/lldp
+leaf3.configuration.protocols.lldp.port_id_subtype = 'interface-name'
+
+# List /configuration/protocols/lldp/interface element: 'eth1'
+interface_element_2 = leaf3.configuration.protocols.lldp.interface.create('eth1')
+
+# List /configuration/protocols/lldp/interface element: 'eth49'
+interface_element_2 = leaf3.configuration.protocols.lldp.interface.create('eth49')
+
+# List /configuration/protocols/lldp/interface element: 'eth50'
+interface_element_2 = leaf3.configuration.protocols.lldp.interface.create('eth50')
+
+# device spine1
+# Top node: /
+spine1 = root()
+
+# Container: /configuration/system
+spine1.configuration.system.host_name = 'spine1'
+
+# List /configuration/interfaces/interface element: 'eth1'
+interface_element = spine1.configuration.interfaces.interface.create('eth1', description='Link to leaf1 [eth49]', mtu=u64(9000))
+
+# List /configuration/interfaces/interface[name='eth1']/unit element: '0'
+unit_element = interface_element.unit.create('0', description='Link to leaf1 [eth49]')
+
+# P-container: /configuration/interfaces/interface[name='eth1']/unit[name='0']/family/inet
+inet = unit_element.family.create_inet()
+
+# List /configuration/interfaces/interface[name='eth1']/unit[name='0']/family/inet/address element: '10.100.0.227/31'
+address_element = inet.address.create('10.100.0.227/31')
+
+# List /configuration/interfaces/interface element: 'eth2'
+interface_element = spine1.configuration.interfaces.interface.create('eth2', description='Link to leaf2 [eth49]', mtu=u64(9000))
+
+# List /configuration/interfaces/interface[name='eth2']/unit element: '0'
+unit_element = interface_element.unit.create('0', description='Link to leaf2 [eth49]')
+
+# P-container: /configuration/interfaces/interface[name='eth2']/unit[name='0']/family/inet
+inet = unit_element.family.create_inet()
+
+# List /configuration/interfaces/interface[name='eth2']/unit[name='0']/family/inet/address element: '10.100.1.99/31'
+address_element = inet.address.create('10.100.1.99/31')
+
+# List /configuration/interfaces/interface element: 'eth3'
+interface_element = spine1.configuration.interfaces.interface.create('eth3', description='Link to leaf3 [eth49]', mtu=u64(9000))
+
+# List /configuration/interfaces/interface[name='eth3']/unit element: '0'
+unit_element = interface_element.unit.create('0', description='Link to leaf3 [eth49]')
+
+# P-container: /configuration/interfaces/interface[name='eth3']/unit[name='0']/family/inet
+inet = unit_element.family.create_inet()
+
+# List /configuration/interfaces/interface[name='eth3']/unit[name='0']/family/inet/address element: '10.100.1.227/31'
+address_element = inet.address.create('10.100.1.227/31')
+
+# List /configuration/interfaces/interface element: 'lo0'
+interface_element = spine1.configuration.interfaces.interface.create('lo0')
+
+# List /configuration/interfaces/interface[name='lo0']/unit element: '0'
+unit_element = interface_element.unit.create('0')
+
+# P-container: /configuration/interfaces/interface[name='lo0']/unit[name='0']/family/inet
+inet = unit_element.family.create_inet()
+
+# List /configuration/interfaces/interface[name='lo0']/unit[name='0']/family/inet/address element: '10.0.0.11/32'
+address_element = inet.address.create('10.0.0.11/32')
+
+# List /configuration/policy-options/policy-statement element: 'accept-all'
+policy_statement_element = spine1.configuration.policy_options.policy_statement.create('accept-all')
+
+# List /configuration/policy-options/policy-statement[name='accept-all']/term element: 'all'
+term_element = policy_statement_element.term.create('all')
+
+# Container: /configuration/policy-options/policy-statement[name='accept-all']/term[name='all']/then
+term_element.then.accept = True
+
+# List /configuration/policy-options/policy-statement element: 'ecmp'
+policy_statement_element = spine1.configuration.policy_options.policy_statement.create('ecmp')
+
+# List /configuration/policy-options/policy-statement[name='ecmp']/term element: 'all'
+term_element = policy_statement_element.term.create('all')
+
+# Container: /configuration/policy-options/policy-statement[name='ecmp']/term[name='all']/then/load-balance
+term_element.then.load_balance.per_packet = True
+
+# List /configuration/policy-options/policy-statement element: 'export-loopbacks'
+policy_statement_element = spine1.configuration.policy_options.policy_statement.create('export-loopbacks')
+
+# List /configuration/policy-options/policy-statement[name='export-loopbacks']/term element: 'loopbacks'
+term_element = policy_statement_element.term.create('loopbacks')
+
+# List /configuration/policy-options/policy-statement[name='export-loopbacks']/term[name='loopbacks']/from/route-filter element: '10.0.0.0/16', 'prefix-length-range', '/32-/32'
+route_filter_element = term_element.from.route_filter.create((address='10.0.0.0/16', choice_ident='prefix-length-range', choice_value='/32-/32'))
+
+# Container: /configuration/policy-options/policy-statement[name='export-loopbacks']/term[name='loopbacks']/then
+term_element.then.accept = True
+
+# Container: /configuration/routing-options
+spine1.configuration.routing_options.router_id = '10.0.0.11'
+
+# Container: /configuration/routing-options/autonomous-system
+spine1.configuration.routing_options.autonomous_system.as_number = '4200100101'
+
+# Container: /configuration/routing-options/forwarding-table
+spine1.configuration.routing_options.forwarding_table.export = ['ecmp']
+
+# List /configuration/protocols/bgp/group element: 'fabric'
+group_element = spine1.configuration.protocols.bgp.group.create('fabric', type='external')
+group_element.import = ['accept-all']
+group_element.export = ['export-loopbacks']
+
+# P-container: /configuration/protocols/bgp/group[name='fabric']/multipath
+multipath = group_element.create_multipath(multiple_as=True)
+
+# List /configuration/protocols/bgp/group[name='fabric']/neighbor element: '10.100.0.226'
+neighbor_element = group_element.neighbor.create('10.100.0.226', description='Link to leaf1 [eth49]', peer_as='4200000001')
+
+# List /configuration/protocols/bgp/group[name='fabric']/neighbor element: '10.100.1.226'
+neighbor_element = group_element.neighbor.create('10.100.1.226', description='Link to leaf3 [eth49]', peer_as='4200000003')
+
+# List /configuration/protocols/bgp/group[name='fabric']/neighbor element: '10.100.1.98'
+neighbor_element = group_element.neighbor.create('10.100.1.98', description='Link to leaf2 [eth49]', peer_as='4200000002')
+
+# Container: /configuration/protocols/lldp
+spine1.configuration.protocols.lldp.port_id_subtype = 'interface-name'
+
+# List /configuration/protocols/lldp/interface element: 'eth1'
+interface_element_2 = spine1.configuration.protocols.lldp.interface.create('eth1')
+
+# List /configuration/protocols/lldp/interface element: 'eth2'
+interface_element_2 = spine1.configuration.protocols.lldp.interface.create('eth2')
+
+# List /configuration/protocols/lldp/interface element: 'eth3'
+interface_element_2 = spine1.configuration.protocols.lldp.interface.create('eth3')
+
+# device spine2
+# Top node: /
+spine2 = root()
+
+# Container: /configuration/system
+spine2.configuration.system.host_name = 'spine2'
+
+# List /configuration/interfaces/interface element: 'eth1'
+interface_element = spine2.configuration.interfaces.interface.create('eth1', description='Link to leaf1 [eth50]', mtu=u64(9000))
+
+# List /configuration/interfaces/interface[name='eth1']/unit element: '0'
+unit_element = interface_element.unit.create('0', description='Link to leaf1 [eth50]')
+
+# P-container: /configuration/interfaces/interface[name='eth1']/unit[name='0']/family/inet
+inet = unit_element.family.create_inet()
+
+# List /configuration/interfaces/interface[name='eth1']/unit[name='0']/family/inet/address element: '10.100.0.229/31'
+address_element = inet.address.create('10.100.0.229/31')
+
+# List /configuration/interfaces/interface element: 'eth2'
+interface_element = spine2.configuration.interfaces.interface.create('eth2', description='Link to leaf2 [eth50]', mtu=u64(9000))
+
+# List /configuration/interfaces/interface[name='eth2']/unit element: '0'
+unit_element = interface_element.unit.create('0', description='Link to leaf2 [eth50]')
+
+# P-container: /configuration/interfaces/interface[name='eth2']/unit[name='0']/family/inet
+inet = unit_element.family.create_inet()
+
+# List /configuration/interfaces/interface[name='eth2']/unit[name='0']/family/inet/address element: '10.100.1.101/31'
+address_element = inet.address.create('10.100.1.101/31')
+
+# List /configuration/interfaces/interface element: 'eth3'
+interface_element = spine2.configuration.interfaces.interface.create('eth3', description='Link to leaf3 [eth50]', mtu=u64(9000))
+
+# List /configuration/interfaces/interface[name='eth3']/unit element: '0'
+unit_element = interface_element.unit.create('0', description='Link to leaf3 [eth50]')
+
+# P-container: /configuration/interfaces/interface[name='eth3']/unit[name='0']/family/inet
+inet = unit_element.family.create_inet()
+
+# List /configuration/interfaces/interface[name='eth3']/unit[name='0']/family/inet/address element: '10.100.1.229/31'
+address_element = inet.address.create('10.100.1.229/31')
+
+# List /configuration/interfaces/interface element: 'lo0'
+interface_element = spine2.configuration.interfaces.interface.create('lo0')
+
+# List /configuration/interfaces/interface[name='lo0']/unit element: '0'
+unit_element = interface_element.unit.create('0')
+
+# P-container: /configuration/interfaces/interface[name='lo0']/unit[name='0']/family/inet
+inet = unit_element.family.create_inet()
+
+# List /configuration/interfaces/interface[name='lo0']/unit[name='0']/family/inet/address element: '10.0.0.12/32'
+address_element = inet.address.create('10.0.0.12/32')
+
+# List /configuration/policy-options/policy-statement element: 'accept-all'
+policy_statement_element = spine2.configuration.policy_options.policy_statement.create('accept-all')
+
+# List /configuration/policy-options/policy-statement[name='accept-all']/term element: 'all'
+term_element = policy_statement_element.term.create('all')
+
+# Container: /configuration/policy-options/policy-statement[name='accept-all']/term[name='all']/then
+term_element.then.accept = True
+
+# List /configuration/policy-options/policy-statement element: 'ecmp'
+policy_statement_element = spine2.configuration.policy_options.policy_statement.create('ecmp')
+
+# List /configuration/policy-options/policy-statement[name='ecmp']/term element: 'all'
+term_element = policy_statement_element.term.create('all')
+
+# Container: /configuration/policy-options/policy-statement[name='ecmp']/term[name='all']/then/load-balance
+term_element.then.load_balance.per_packet = True
+
+# List /configuration/policy-options/policy-statement element: 'export-loopbacks'
+policy_statement_element = spine2.configuration.policy_options.policy_statement.create('export-loopbacks')
+
+# List /configuration/policy-options/policy-statement[name='export-loopbacks']/term element: 'loopbacks'
+term_element = policy_statement_element.term.create('loopbacks')
+
+# List /configuration/policy-options/policy-statement[name='export-loopbacks']/term[name='loopbacks']/from/route-filter element: '10.0.0.0/16', 'prefix-length-range', '/32-/32'
+route_filter_element = term_element.from.route_filter.create((address='10.0.0.0/16', choice_ident='prefix-length-range', choice_value='/32-/32'))
+
+# Container: /configuration/policy-options/policy-statement[name='export-loopbacks']/term[name='loopbacks']/then
+term_element.then.accept = True
+
+# Container: /configuration/routing-options
+spine2.configuration.routing_options.router_id = '10.0.0.12'
+
+# Container: /configuration/routing-options/autonomous-system
+spine2.configuration.routing_options.autonomous_system.as_number = '4200100101'
+
+# Container: /configuration/routing-options/forwarding-table
+spine2.configuration.routing_options.forwarding_table.export = ['ecmp']
+
+# List /configuration/protocols/bgp/group element: 'fabric'
+group_element = spine2.configuration.protocols.bgp.group.create('fabric', type='external')
+group_element.import = ['accept-all']
+group_element.export = ['export-loopbacks']
+
+# P-container: /configuration/protocols/bgp/group[name='fabric']/multipath
+multipath = group_element.create_multipath(multiple_as=True)
+
+# List /configuration/protocols/bgp/group[name='fabric']/neighbor element: '10.100.0.228'
+neighbor_element = group_element.neighbor.create('10.100.0.228', description='Link to leaf1 [eth50]', peer_as='4200000001')
+
+# List /configuration/protocols/bgp/group[name='fabric']/neighbor element: '10.100.1.100'
+neighbor_element = group_element.neighbor.create('10.100.1.100', description='Link to leaf2 [eth50]', peer_as='4200000002')
+
+# List /configuration/protocols/bgp/group[name='fabric']/neighbor element: '10.100.1.228'
+neighbor_element = group_element.neighbor.create('10.100.1.228', description='Link to leaf3 [eth50]', peer_as='4200000003')
+
+# Container: /configuration/protocols/lldp
+spine2.configuration.protocols.lldp.port_id_subtype = 'interface-name'
+
+# List /configuration/protocols/lldp/interface element: 'eth1'
+interface_element_2 = spine2.configuration.protocols.lldp.interface.create('eth1')
+
+# List /configuration/protocols/lldp/interface element: 'eth2'
+interface_element_2 = spine2.configuration.protocols.lldp.interface.create('eth2')
+
+# List /configuration/protocols/lldp/interface element: 'eth3'
+interface_element_2 = spine2.configuration.protocols.lldp.interface.create('eth3')

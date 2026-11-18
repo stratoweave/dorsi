@@ -25,6 +25,13 @@ def _test_valid_five_stage():
 def _test_valid_three_stage_mixed():
     testing.assertEqual(cfs.validate_fabric(_fabric(fabrics.three_stage_mixed())), [])
 
+def _test_valid_three_stage_crpd():
+    # cRPD takes its management address from its container, so it needs none
+    testing.assertEqual(cfs.validate_fabric(_fabric(fabrics.three_stage_crpd())), [])
+
+def _test_valid_three_stage_mixed_crpd():
+    testing.assertEqual(cfs.validate_fabric(_fabric(fabrics.three_stage_mixed_crpd())), [])
+
 def _test_eos_without_management_address():
     f = _fabric(fabrics.three_stage_mixed())
     sw = f.switch.get("leaf3")!
