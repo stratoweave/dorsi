@@ -293,8 +293,11 @@ The service stack is designed to be vendor-neutral. The IP fabric is
 implemented for [Nokia SR Linux](https://www.nokia.com/ip-networks/service-router-linux-NOS/)
 and Arista EOS (`AristaEOS_4_36_3_2M`, configured through OpenConfig, see
 [`spec/yang/AristaEOS_4_36_3_2M`](spec/yang/AristaEOS_4_36_3_2M/README.md)),
-and one fabric can mix them. Device models for Cisco IOS XR and Juniper cRPD are
-generated as well (`spec/yang/`), but no service uses them yet. A new vendor
+and one fabric can mix them. The underlay is also implemented for Juniper cRPD
+(`JuniperCRPD_24_4R1_9`, configured through the native Junos model, its state
+polled with Junos RPCs, see [test/fabric-3stage-crpd](test/fabric-3stage-crpd/README.md)),
+without the overlay yet. A device model for Cisco IOS XR is generated as well
+(`spec/yang/`), but no service uses it yet. A new vendor
 needs its models in `spec/yang/` with a filter in `spec/src/dorsi_gen.act`, a
 branch in each RFS transform (`src/dorsi/rfs.act`) that also puts the
 `management-address` on its management interface, and, if it takes that

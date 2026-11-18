@@ -13,6 +13,9 @@ labs/development environments which you can run:
   SR Linux and cEOS cut down to five switches, which fits in about 8 GB. It has been run.
 * **[fabric-5stage-srl](fabric-5stage-srl/README.md)** is the same five-switch fabric all
   on SR Linux, with the EVPN-VXLAN overlay through the super-spine.
+* **[fabric-3stage-crpd](fabric-3stage-crpd/README.md)** is `fabric-3stage` with every
+  switch running Juniper cRPD, the underlay only. Its image is in the private
+  registry `ghcr.io/stratoweave`. It has been run.
 
 The SR Linux image (`ghcr.io/nokia/srlinux`) is public, no account or license is
 needed.

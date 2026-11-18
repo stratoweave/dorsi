@@ -8,6 +8,7 @@ import stratoweave.test_rig as swts
 
 SRL = "NokiaSRLinux_25_3_2"
 EOS = "AristaEOS_4_36_3_2M"
+CRPD = "JuniperCRPD_24_4R1_9"
 
 def add_switch(fabric: cfs_layer.ip_fabric__ip_fabric__fabric_entry, name: str, id: u64, role: str, pod: ?str=None, plane: ?str=None, device_type: str=SRL, management_address: ?str=None, management_gateway: ?str=None):
     s = fabric.switch.create(name, id, device_type, role)
@@ -197,6 +198,24 @@ def five_stage_srl():
     f.server.get("server3")!.attachment.create(("t1", "web"), ipv4_address="10.10.10.13/24")
     return root
 
+# The three-stage Clos of the fabric-3stage-crpd lab, all Juniper cRPD (ports
+# ethN), the underlay only: cRPD bridges no server traffic yet, so the servers
+# are single-homed. cRPD takes its management address from its container.
+def three_stage_crpd():
+    root = _empty_root()
+    f = root.ip_fabric.fabric.create("dc1")
+    add_switch(f, "leaf1", 1, "leaf", device_type=CRPD)
+    add_switch(f, "leaf2", 2, "leaf", device_type=CRPD)
+    add_switch(f, "leaf3", 3, "leaf", device_type=CRPD)
+    add_switch(f, "spine1", 11, "spine", device_type=CRPD)
+    add_switch(f, "spine2", 12, "spine", device_type=CRPD)
+    for n, leaf in enumerate(["leaf1", "leaf2", "leaf3"]):
+        add_link(f, leaf, "eth49", "spine1", "eth{n + 1}")
+        add_link(f, leaf, "eth50", "spine2", "eth{n + 1}")
+    for n, leaf in enumerate(["leaf1", "leaf2", "leaf3"]):
+        add_server(f, "server{n + 1}", "single-homed", [(leaf, "eth1", "eth1")])
+    return root
+
 # TransformTester takes its snapshot as soon as the CFS commit completes, which
 # can be before the device configuration exists. Wait for it to settle: until
 # the snapshot has not changed for two seconds. On a busy machine a device can
@@ -274,3 +293,7 @@ actor _test_fabric_invalid_is_rejected(t: testing.AsyncT):
             t.failure(ValueError("the invalid fabric was accepted"))
 
     tr.edit_config(root.to_gdata(), cont, 0)
+
+actor _test_fabric_three_stage_crpd(t: testing.AsyncT):
+    t.timeout(30.0)
+    FabricTester(t, three_stage_crpd().to_gdata())

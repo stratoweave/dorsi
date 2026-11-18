@@ -1,4 +1,5 @@
 import time
+import std.xml as xml
 
 import yang.gdata as gdata
 import stratoweave.device as swdev
@@ -8,10 +9,12 @@ import dorsi.layers.y_1 as y_1
 import dorsi.layers.y_1_oper as y_1_oper
 
 from stratoweave.exception import UnsupportedDevice
+from stratoweave.adapters.adapter import NotConnectedError
 
 import dorsi.devices.AristaEOS_4_36_3_2M as eos436
 import dorsi.devices.AristaEOS_4_36_3_2M_oper as eos436_oper
 from dorsi.devices.AristaEOS_4_36_3_2M_oper import root as eos436_oper_root
+import dorsi.devices.JuniperCRPD_24_4R1_9 as crpd244
 import dorsi.devices.NokiaSRLinux_25_3_2 as srl25
 import dorsi.devices.NokiaSRLinux_25_3_2_oper as srl25_oper
 from dorsi.devices.NokiaSRLinux_25_3_2_oper import root as srl25_oper_root
@@ -53,6 +56,30 @@ _EOS_MODULE = "arista-netinst-augments"
 # so the switch has to start with it (see ceos-startup.partial.cfg in the
 # labs); dorsi only keeps it there.
 _EOS_MGMT_VRF = "MGMT"
+
+# Juniper cRPD is configured through the native Junos model, which only Junos
+# has. cRPD routes for the Linux of its container: what it is configured with
+# becomes Linux addresses, MTUs and routes. Its management address comes from
+# the container and is not in its configuration.
+_CRPD_MODULE = "junos-conf-root"
+_CRPD_LOOPBACK = "lo0"
+# The policy that puts every equal-cost path of a route into the forwarding
+# table; without it Junos installs one
+_CRPD_ECMP_POLICY = "ecmp"
+
+
+def _crpd_ipv4_address(dev: crpd244.root, name: str, address: str, description: ?str):
+    """An address on unit 0 of an interface, address/prefix-length."""
+    unit = dev.configuration.interfaces.interface.create(name).unit.create("0")
+    unit.description = description
+    unit.family.create_inet().address.create(address)
+
+
+def _crpd_accept_term(dev: crpd244.root, policy: str, term: str):
+    """A term of a policy that accepts the routes it matches."""
+    t = dev.configuration.policy_options.policy_statement.create(policy).term.create(term)
+    t.then.accept = True
+    return t
 
 
 def _eos_default_ni(dev: eos436.root):
@@ -282,6 +309,43 @@ class FabricBaseConfig(base.FabricBaseConfig):
 
             return dev
 
+        if _CRPD_MODULE in di.modules:
+            print("RFS /rfs{{{di.name}}}/fabric-base-config transform running {i.role} for Juniper cRPD", err=True)
+            dev = crpd244.root()
+            conf = dev.configuration
+            conf.system.host_name = di.name
+
+            # LLDP names the port, as SR Linux and EOS do, instead of the
+            # number Junos assigns it; fabric and server ports enable it
+            # themselves
+            conf.protocols.lldp.port_id_subtype = "interface-name"
+
+            # Loopback
+            _crpd_ipv4_address(dev, _CRPD_LOOPBACK, "{i.ipv4_address}/32", None)
+
+            # BGP with ECMP across the peers of every AS; the group carries the
+            # loopback export policy
+            conf.routing_options.router_id = i.ipv4_address
+            conf.routing_options.autonomous_system.as_number = str(i.asn)
+            conf.routing_options.forwarding_table.export = [_CRPD_ECMP_POLICY]
+            group = conf.protocols.bgp.group.create(_FABRIC_GROUP, type="external")
+            group.export = [_FABRIC_EXPORT_POLICY]
+            group.import = [_FABRIC_IMPORT_POLICY]
+            group.create_multipath(multiple_as=True)
+
+            # Advertise the loopbacks and accept everything the fabric sends
+            # us. Junos passes a route the export policy does not match to its
+            # default, which advertises the routes learned over BGP.
+            exp = _crpd_accept_term(dev, _FABRIC_EXPORT_POLICY, _FABRIC_LOOPBACK_PREFIX_SET)
+            exp.from.route_filter.create((address="10.0.0.0/16", choice_ident="prefix-length-range", choice_value="/32-/32"))
+            _crpd_accept_term(dev, _FABRIC_IMPORT_POLICY, "all")
+            ecmp = dev.configuration.policy_options.policy_statement.create(_CRPD_ECMP_POLICY).term.create("all")
+            # Despite its name, per-packet only lets the paths into the
+            # forwarding table; Linux spreads the flows over them
+            ecmp.then.load_balance.per_packet = True
+
+            return dev
+
         raise UnsupportedDevice()
 
 
@@ -338,6 +402,24 @@ class FabricInterface(base.FabricInterface):
             neighbor.config.peer_as = i.bgp.peer_asn
             neighbor.config.enabled = True
             neighbor.config.description = if_description
+
+            return dev
+
+        if _CRPD_MODULE in di.modules:
+            print("RFS /rfs{{{di.name}}}/fabric-interface transform running [{i.name}] <-> {i.remote.device} [{i.remote.interface}] for Juniper cRPD", err=True)
+            dev = crpd244.root()
+            conf = dev.configuration
+
+            # Routed point-to-point interface. cRPD sets the MTU of the Linux
+            # interface, which is its IP MTU.
+            conf.interfaces.interface.create(i.name, description=if_description, mtu=_FABRIC_IP_MTU)
+            _crpd_ipv4_address(dev, i.name, "%s/%s" % (i.ipv4_address, str(i.ipv4_prefix_length)), if_description)
+
+            conf.protocols.lldp.interface.create(i.name)
+
+            # eBGP session to the other end of the link
+            group = conf.protocols.bgp.group.create(_FABRIC_GROUP)
+            group.neighbor.create(i.bgp.peer_address, description=if_description, peer_as=str(i.bgp.peer_asn))
 
             return dev
 
@@ -444,6 +526,141 @@ def _eos_no_neighbor(err: Exception) -> bool:
     return 'unexpected element "neighbors"' in str(err)
 
 
+def _xml_find(node: xml.Node, tag: str) -> ?xml.Node:
+    """The first element named tag at or below node, depth first."""
+    if node.tag == tag:
+        return node
+    for child in node.children:
+        found = _xml_find(child, tag)
+        if found is not None:
+            return found
+    return None
+
+
+def _xml_text(node: xml.Node, tag: str) -> ?str:
+    """The text of the first element named tag at or below node, stripped."""
+    found = _xml_find(node, tag)
+    if found is not None:
+        text = found.text
+        if text is not None:
+            return text.strip()
+    return None
+
+
+def _crpd_rpc(name: str, arg: str, value: str) -> xml.Node:
+    return xml.Node(name, children=[xml.Node(arg, text=value)])
+
+
+def crpd_oper_status(reply: xml.Node, name: str) -> ?str:
+    """The oper status of an interface from get-interfaces-routing, the
+    interfaces as rpd sees them. cRPD answers with the text of the CLI table,
+    a line per interface of its name, Up or Down, and addresses. It answers
+    get-interface-information with the text of `ip address show`, whose
+    <BROADCAST,...> it does not escape, which breaks the XML of the reply."""
+    text = _xml_text(reply, "output")
+    if text is not None:
+        for line in text.split("\n"):
+            fields = line.split()
+            if len(fields) >= 2 and fields[0] == name:
+                state = fields[1]
+                if state == "Up":
+                    return "up"
+                if state == "Down":
+                    return "down"
+                return "unknown"
+    return None
+
+
+def crpd_bgp_status(reply: xml.Node) -> ?str:
+    """The state of the BGP session from get-bgp-neighbor-information of one
+    neighbor; None while the neighbor or BGP is not configured."""
+    state = _xml_text(reply, "peer-state")
+    if state == "Established":
+        return "up"
+    if state is not None:
+        # Idle, Connect, Active, OpenSent and OpenConfirm
+        return "down"
+    return None
+
+
+def crpd_lldp_neighbor(reply: xml.Node) -> (?str, ?str):
+    """System name and port ID of the LLDP neighbor from
+    get-lldp-interface-neighbors, like _srl_lldp_neighbor."""
+    neighbor = _xml_find(reply, "lldp-neighbor-information")
+    if neighbor is not None:
+        return (_xml_text(neighbor, "lldp-remote-system-name"), _xml_text(neighbor, "lldp-remote-port-id"))
+    return (None, None)
+
+
+actor _CrpdPortPoll(path, dev: swdev.DeviceMgr, on_state: proc(?str, ?str, ?str, ?str)->None):
+    """Polls the state of a port of a cRPD and, for a fabric port, of the BGP
+    session over it. cRPD has no state in a datastore to subscribe to, only in
+    the replies of Junos RPCs. Each reply passes on the last state of the
+    others; a device that does not answer passes on nothing."""
+    var _port: ?str = None
+    var _peer_address: ?str = None
+    var _running = True
+    var _oper_status: ?str = None
+    var _bgp_status: ?str = None
+    var _neighbor: (?str, ?str) = (None, None)
+    var _error_logged = False
+
+    def watch(port: str, peer_address: ?str):
+        _port = port
+        _peer_address = peer_address
+
+    def stop():
+        _running = False
+
+    def _failed(err: Exception):
+        # Not connected is for the watchdog of the transform to report; any
+        # other failure is logged once until the next reply
+        if not isinstance(err, NotConnectedError) and not _error_logged:
+            print("{path}: polling the cRPD failed: {err}", err=True)
+            _error_logged = True
+
+    def _publish():
+        if not _running:
+            return
+        _error_logged = False
+        on_state(_oper_status, _bgp_status, _neighbor.0, _neighbor.1)
+
+    def on_port(reply: ?xml.Node, err: ?Exception, port: str):
+        if err is not None:
+            _failed(err)
+        elif reply is not None:
+            _oper_status = crpd_oper_status(reply, port)
+            _publish()
+
+    def on_lldp(reply: ?xml.Node, err: ?Exception):
+        if err is not None:
+            _failed(err)
+        elif reply is not None:
+            _neighbor = crpd_lldp_neighbor(reply)
+            _publish()
+
+    def on_bgp(reply: ?xml.Node, err: ?Exception):
+        if err is not None:
+            _failed(err)
+        elif reply is not None:
+            _bgp_status = crpd_bgp_status(reply)
+            _publish()
+
+    def _poll():
+        if not _running:
+            return
+        port = _port
+        if port is not None:
+            dev.rpc_xml(lambda r, e: on_port(r, e, port), _crpd_rpc("get-interfaces-routing", "interface-name", port))
+            dev.rpc_xml(on_lldp, _crpd_rpc("get-lldp-interface-neighbors", "interface-device", port))
+            peer_address = _peer_address
+            if peer_address is not None:
+                dev.rpc_xml(on_bgp, _crpd_rpc("get-bgp-neighbor-information", "neighbor-address", peer_address))
+        after _POLL_PERIOD: _poll()
+
+    _poll()
+
+
 actor FabricInterfaceTransform(path, update_oper: proc(?y_1_oper.stratoweave_rfs__rfs__fabric_interface_entry)->None, dev: swdev.DeviceMgr):
     _subs = gdata.SubscriptionManager(dev.tree_provider(), str(path))
     _oper = base.FabricInterface.new_state(path)
@@ -459,6 +676,7 @@ actor FabricInterfaceTransform(path, update_oper: proc(?y_1_oper.stratoweave_rfs
     # that was logged
     var _eos_no_neighbor_since: ?int = None
     var _eos_no_neighbor_logged = False
+    var _crpd_poll: ?_CrpdPortPoll = None
 
     def _watchdog():
         if not _running:
@@ -474,6 +692,10 @@ actor FabricInterfaceTransform(path, update_oper: proc(?y_1_oper.stratoweave_rfs
         after _POLL_PERIOD: _watchdog()
 
     def publish(oper_status: ?str, bgp_status: ?str, neighbor_device: ?str, neighbor_interface: ?str):
+        # A reply to a poll sent before the interface was removed would
+        # bring its state back
+        if not _running:
+            return
         _oper.state.oper_status = oper_status
         _oper.state.bgp_status = bgp_status
         _oper.state.lldp_neighbor.device = neighbor_device
@@ -551,6 +773,11 @@ actor FabricInterfaceTransform(path, update_oper: proc(?y_1_oper.stratoweave_rfs
         _eos_bgp_status_seen = bgp_status
         _eos_publish()
 
+    def on_crpd_state(oper_status: ?str, bgp_status: ?str, neighbor_device: ?str, neighbor_interface: ?str):
+        _last_delivery = time.monotonic_ns()
+        _stale = False
+        publish(oper_status, bgp_status, neighbor_device, neighbor_interface)
+
     def on_conf(conf: y_1.stratoweave_rfs__rfs__fabric_interface_entry):
         want: set[gdata.Delivery] = set()
         modset = dev.get_modules().0
@@ -566,10 +793,21 @@ actor FabricInterfaceTransform(path, update_oper: proc(?y_1_oper.stratoweave_rfs
             want.add(port_dst.deliver(_eos_port_subscriptions(conf.name)))
             bgp_dst = eos436_oper.dst(lambda r, e: on_eos_bgp_state(r, e, peer_address))
             want.add(bgp_dst.deliver(_eos_bgp_subscriptions(peer_address)))
+        elif _CRPD_MODULE in modset:
+            poll = _crpd_poll
+            if poll is not None:
+                poll.watch(conf.name, conf.bgp.peer_address)
+            else:
+                new_poll = _CrpdPortPoll(path, dev, on_crpd_state)
+                new_poll.watch(conf.name, conf.bgp.peer_address)
+                _crpd_poll = new_poll
         _subs.declare(want)
 
     def shutdown():
         _running = False
+        poll = _crpd_poll
+        if poll is not None:
+            poll.stop()
 
     after _POLL_PERIOD: _watchdog()
 
@@ -606,6 +844,14 @@ class ServerPort(base.ServerPort):
             if lag is not None:
                 intf.ethernet.config.aggregate_id = lag
             _eos_lldp_interface(dev, i.name)
+            return dev
+
+        if _CRPD_MODULE in di.modules:
+            # The port only: cRPD bridges no server traffic yet
+            print("RFS /rfs{{{di.name}}}/server-port transform running [{i.name}] for Juniper cRPD", err=True)
+            dev = crpd244.root()
+            dev.configuration.interfaces.interface.create(i.name, description=if_description)
+            dev.configuration.protocols.lldp.interface.create(i.name)
             return dev
 
         raise UnsupportedDevice()
@@ -882,6 +1128,7 @@ actor ServerPortTransform(path, update_oper: proc(?y_1_oper.stratoweave_rfs__rfs
     var _last_delivery: ?int = None
     var _stale = False
     var _running = True
+    var _crpd_poll: ?_CrpdPortPoll = None
 
     def _watchdog():
         if not _running:
@@ -894,6 +1141,10 @@ actor ServerPortTransform(path, update_oper: proc(?y_1_oper.stratoweave_rfs__rfs
         after _POLL_PERIOD: _watchdog()
 
     def publish(oper_status: ?str, neighbor_device: ?str, neighbor_interface: ?str):
+        # A reply to a poll sent before the port was removed would bring its
+        # state back
+        if not _running:
+            return
         _oper.state.oper_status = oper_status
         _oper.state.lldp_neighbor.device = neighbor_device
         _oper.state.lldp_neighbor.interface = neighbor_interface
@@ -925,6 +1176,11 @@ actor ServerPortTransform(path, update_oper: proc(?y_1_oper.stratoweave_rfs__rfs
         _stale = False
         publish(oper_status, neighbor_device, neighbor_interface)
 
+    def on_crpd_state(oper_status: ?str, bgp_status: ?str, neighbor_device: ?str, neighbor_interface: ?str):
+        _last_delivery = time.monotonic_ns()
+        _stale = False
+        publish(oper_status, neighbor_device, neighbor_interface)
+
     def on_conf(conf: y_1.stratoweave_rfs__rfs__server_port_entry):
         want: set[gdata.Delivery] = set()
         modset = dev.get_modules().0
@@ -934,10 +1190,21 @@ actor ServerPortTransform(path, update_oper: proc(?y_1_oper.stratoweave_rfs__rfs
         elif _EOS_MODULE in modset:
             eos_dst = eos436_oper.dst(lambda r, e: on_eos_state(r, e))
             want.add(eos_dst.deliver(_eos_port_subscriptions(conf.name)))
+        elif _CRPD_MODULE in modset:
+            poll = _crpd_poll
+            if poll is not None:
+                poll.watch(conf.name, None)
+            else:
+                new_poll = _CrpdPortPoll(path, dev, on_crpd_state)
+                new_poll.watch(conf.name, None)
+                _crpd_poll = new_poll
         _subs.declare(want)
 
     def shutdown():
         _running = False
+        poll = _crpd_poll
+        if poll is not None:
+            poll.stop()
 
     after _POLL_PERIOD: _watchdog()
 

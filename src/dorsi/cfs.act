@@ -249,11 +249,12 @@ def server_uses_lag(server: y_0.ip_fabric__ip_fabric__fabric__server_entry, port
     return len(server.attachment) > 0 and (server.connectivity.profile == "dual-homed" or len(ports) > 1)
 
 
-# Device types that take their management address from DHCP. The address is
-# not in configuration dorsi manages, so they need no management-address.
-# Every other type, a new one too, needs it: its address sits in configuration
-# dorsi owns, which would otherwise drop it and cut dorsi off from the device.
-DHCP_MANAGEMENT_TYPES = {"NokiaSRLinux_25_3_2"}
+# Device types that take their management address from DHCP, or, as Juniper
+# cRPD, from the container they run in. The address is not in configuration
+# dorsi manages, so they need no management-address. Every other type, a new
+# one too, needs it: its address sits in configuration dorsi owns, which would
+# otherwise drop it and cut dorsi off from the device.
+DHCP_MANAGEMENT_TYPES = {"NokiaSRLinux_25_3_2", "JuniperCRPD_24_4R1_9"}
 
 
 def _decimal_at_most(s: str, max_digits: int, max_value: int) -> bool:
