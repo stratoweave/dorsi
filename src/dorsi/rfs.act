@@ -34,6 +34,14 @@ _FABRIC_ECMP_PATHS = 64
 # overlay, so with the default of 1500 a server could send no frame over 1450
 # bytes across the fabric. SR Linux ports have an MTU of 9232 by default.
 _FABRIC_IP_MTU = 9000
+# The MAC address of the anycast gateways, the same on every leaf of every
+# vendor. Arista EOS refuses the 00:00:5e:00:01:xx that SR Linux derives
+# from the virtual router ID, a VRRP address, so it is set explicitly.
+_ANYCAST_GW_MAC = "02:dc:00:00:00:01"
+# The VXLAN tunnel interface of Arista EOS and its source, the loopback
+_EOS_VXLAN_INTERFACE = "Vxlan1"
+_EOS_LOOPBACK = "Loopback0"
+_VXLAN_UDP_PORT = 4789
 
 # Arista EOS is configured through OpenConfig. SR Linux can serve OpenConfig
 # too, so EOS is told apart by a module only EOS has.
@@ -232,6 +240,28 @@ class FabricBaseConfig(base.FabricBaseConfig):
             tc.config.dst_protocol = eos436.openconfig_policy_types_BGP
             tc.config.address_family = eos436.openconfig_types_IPV4
 
+            if i.evpn:
+                # EVPN on the same eBGP sessions as the underlay; a spine or
+                # super-spine keeps the next hop, the VTEP of the leaf
+                af_evpn = bgp.global.afi_safis.afi_safi.create(eos436.openconfig_bgp_types_L2VPN_EVPN)
+                af_evpn.config.afi_safi_name = eos436.openconfig_bgp_types_L2VPN_EVPN
+                af_evpn.config.enabled = True
+                if i.role != "leaf":
+                    af_evpn.next_hop.config.preserve_next_hop = True
+                group_evpn = group.afi_safis.afi_safi.create(eos436.openconfig_bgp_types_L2VPN_EVPN)
+                group_evpn.config.afi_safi_name = eos436.openconfig_bgp_types_L2VPN_EVPN
+                group_evpn.config.enabled = True
+                # EOS sends no communities by default, and an EVPN route is
+                # imported by its route target, an extended community
+                group.config.send_community_type = ["EXTENDED"]
+                if i.role == "leaf":
+                    # The VTEP on the loopback, and the MAC address of the
+                    # anycast gateways
+                    vxlan = _eos_interface(dev, _EOS_VXLAN_INTERFACE, eos436.iana_if_type_other, None)
+                    vxlan.arista_vxlan.config.src_ip_intf = _EOS_LOOPBACK
+                    vxlan.arista_vxlan.config.udp_port = u64(_VXLAN_UDP_PORT)
+                    dev.system.mac_address.config.routing_mac = _ANYCAST_GW_MAC
+
             # Advertise the loopbacks and accept everything the fabric sends us
             ps = dev.routing_policy.defined_sets.prefix_sets.prefix_set.create(_FABRIC_LOOPBACK_PREFIX_SET)
             ps.config.name = _FABRIC_LOOPBACK_PREFIX_SET
@@ -242,6 +272,13 @@ class FabricBaseConfig(base.FabricBaseConfig):
             exp = _eos_policy(dev, _FABRIC_EXPORT_POLICY)
             exp.conditions.match_prefix_set.config.prefix_set = _FABRIC_LOOPBACK_PREFIX_SET
             _eos_policy(dev, _FABRIC_IMPORT_POLICY)
+            if i.evpn:
+                # The export policy applies to every address family on EOS:
+                # let the EVPN routes out too
+                exp_evpn = dev.routing_policy.policy_definitions.policy_definition.create(_FABRIC_EXPORT_POLICY).statements.statement.create("20")
+                exp_evpn.config.name = "20"
+                exp_evpn.conditions.bgp_conditions.config.afi_safi_in = [eos436.openconfig_bgp_types_L2VPN_EVPN]
+                exp_evpn.actions.config.policy_result = "ACCEPT_ROUTE"
 
             return dev
 
@@ -286,6 +323,10 @@ class FabricInterface(base.FabricInterface):
             # Routed point-to-point interface
             intf = _eos_interface(dev, i.name, eos436.iana_if_type_ethernetCsmacd, if_description)
             _eos_ipv4_address(intf, i.ipv4_address, i.ipv4_prefix_length, if_description)
+            # EOS takes the IPv4 MTU only when the IPv6 one is the same
+            fabric_subif = intf.subinterfaces.subinterface.create(0)
+            fabric_subif.ipv4.config.mtu = u64(_FABRIC_IP_MTU)
+            fabric_subif.ipv6.config.mtu = u64(_FABRIC_IP_MTU)
 
             _eos_lldp_interface(dev, i.name)
 
@@ -560,7 +601,10 @@ class ServerPort(base.ServerPort):
         if _EOS_MODULE in di.modules:
             print("RFS /rfs{{{di.name}}}/server-port transform running [{i.name}] for Arista EOS", err=True)
             dev = eos436.root()
-            _eos_interface(dev, i.name, eos436.iana_if_type_ethernetCsmacd, if_description)
+            intf = _eos_interface(dev, i.name, eos436.iana_if_type_ethernetCsmacd, if_description)
+            lag = i.lag
+            if lag is not None:
+                intf.ethernet.config.aggregate_id = lag
             _eos_lldp_interface(dev, i.name)
             return dev
 
@@ -578,8 +622,7 @@ _EVPN_BGP_INSTANCE = 1
 _EVPN_ECMP = 8
 # Priority of the LACP system ID shared by the leaves of a server
 _LACP_SYSTEM_PRIORITY = 32768
-# The anycast gateways of the networks. SR Linux derives the gateway MAC from
-# the virtual router ID, 00:00:5e:00:01:01, the same on every leaf.
+# The anycast gateways of the networks, with the MAC address _ANYCAST_GW_MAC
 _IRB_INTERFACE = "irb0"
 _ANYCAST_GW_VRID = 1
 
@@ -622,7 +665,7 @@ class MacVrf(base.MacVrf):
                 irb_if.admin_state = "enable"
                 irb_sub = irb_if.subinterface.create(irb.index)
                 irb_sub.admin_state = "enable"
-                irb_sub.create_anycast_gw(virtual_router_id=u64(_ANYCAST_GW_VRID))
+                irb_sub.create_anycast_gw(virtual_router_id=u64(_ANYCAST_GW_VRID), anycast_gw_mac=_ANYCAST_GW_MAC)
                 irb_sub.ipv4.admin_state = "enable"
                 irb_sub.ipv4.address.create(irb.gateway, anycast_gw=True)
                 arp = irb_sub.ipv4.arp
@@ -634,7 +677,91 @@ class MacVrf(base.MacVrf):
             _srl_evpn_instance(ni, vxlan_if, i.evi, i.route_distinguisher, i.route_target)
             return dev
 
+        if _EOS_MODULE in di.modules:
+            if i.vlan is None:
+                raise ValueError("mac-vrf {i.name}: Arista EOS needs the internal VLAN of the network")
+            net_vlan = i.vlan!
+            dev = eos436.root()
+            # The VLAN of the network inside the switch and its VNI
+            eos_vlan = _eos_default_ni(dev).vlans.vlan.create(net_vlan)
+            eos_vlan.config.vlan_id = net_vlan
+            eos_vlan.config.name = i.name
+            eos_vxlan = dev.interfaces.interface.create(_EOS_VXLAN_INTERFACE)
+            eos_vxlan.config.name = _EOS_VXLAN_INTERFACE
+            vni_map = eos_vxlan.arista_vxlan.vlan_to_vnis.vlan_to_vni.create(net_vlan)
+            vni_map.config.vlan = net_vlan
+            vni_map.config.vni = i.vni
+
+            # Its EVPN instance
+            eos_evi = dev.arista.eos.evpn.evpn_instances.evpn_instance.create(str(net_vlan))
+            eos_evi.config.name = str(net_vlan)
+            eos_evi.config.route_distinguisher = i.route_distinguisher
+            eos_evi.config.redistribute = ["LEARNED"]
+            eos_rt = _eos_route_target(i.route_target)
+            eos_evi.route_target.config.import = [eos_rt]
+            eos_evi.route_target.config.export = [eos_rt]
+            evi_vlan = eos_evi.vlans.vlan.create(net_vlan)
+            evi_vlan.config.vlan_id = net_vlan
+
+            # The server ports and LAGs trunk it, with the VLAN tag of the
+            # server translated to it both ways, or untagged as their native
+            # VLAN
+            trunk: list[atom] = [net_vlan]
+            for itf in i.interface:
+                eos_intf = dev.interfaces.interface.create(itf.name)
+                eos_intf.config.name = itf.name
+                tag = itf.vlan
+                if itf.name.startswith("Port-Channel"):
+                    lag_vlan = eos_intf.aggregation.switched_vlan
+                    lag_vlan.config.interface_mode = "TRUNK"
+                    lag_vlan.config.trunk_vlans = trunk
+                    if tag is not None:
+                        if tag != net_vlan:
+                            eos_ingress = lag_vlan.vlan_translation.ingress.create(tag)
+                            eos_ingress.config.translation_key = tag
+                            eos_ingress.config.bridging_vlan = net_vlan
+                            # On the way out EOS takes the VLAN it bridges in as
+                            # the key and the tag it sends as bridging-vlan
+                            eos_egress = lag_vlan.vlan_translation.egress.create(net_vlan)
+                            eos_egress.config.translation_key = net_vlan
+                            eos_egress.config.bridging_vlan = tag
+                    else:
+                        lag_vlan.config.native_vlan = net_vlan
+                else:
+                    port_vlan = eos_intf.ethernet.switched_vlan
+                    port_vlan.config.interface_mode = "TRUNK"
+                    port_vlan.config.trunk_vlans = trunk
+                    if tag is not None:
+                        if tag != net_vlan:
+                            eos_port_ingress = port_vlan.vlan_translation.ingress.create(tag)
+                            eos_port_ingress.config.translation_key = tag
+                            eos_port_ingress.config.bridging_vlan = net_vlan
+                            # On the way out EOS takes the VLAN it bridges in as
+                            # the key and the tag it sends as bridging-vlan
+                            eos_port_egress = port_vlan.vlan_translation.egress.create(net_vlan)
+                            eos_port_egress.config.translation_key = net_vlan
+                            eos_port_egress.config.bridging_vlan = tag
+                    else:
+                        port_vlan.config.native_vlan = net_vlan
+
+            eos_irb = i.irb
+            if eos_irb is not None:
+                # The anycast gateway: a virtual address on the VLAN
+                # interface, answering with the MAC of every leaf
+                gw_parts: list[str] = eos_irb.gateway.split("/")
+                name = "Vlan{net_vlan}"
+                vlan_if = _eos_interface(dev, name, eos436.iana_if_type_l3ipvlan, None)
+                vlan_if.routed_vlan.config.vlan = name
+                vlan_if.arista_varp.virtual_address.config.ip = gw_parts[0]
+                vlan_if.arista_varp.virtual_address.config.prefix_length = u64(int(gw_parts[1]))
+            return dev
+
         raise UnsupportedDevice()
+
+
+def _eos_route_target(rt: str) -> str:
+    """A route target as EOS writes it, without the target: of SR Linux."""
+    return rt[len("target:"):] if rt.startswith("target:") else rt
 
 
 def _srl_evpn_instance(ni, vxlan_if: str, evi: u64, rd: str, rt: str):
@@ -669,6 +796,39 @@ class IpVrf(base.IpVrf):
             _srl_evpn_instance(ni, vxlan_if, i.evi, i.route_distinguisher, i.route_target)
             return dev
 
+        if _EOS_MODULE in di.modules:
+            # Not used yet, the CFS places no VRF on EOS: for the layer 3 VNI
+            # EOS adds a VLAN interface of its own (Vlan4097 and up), which
+            # dorsi would try to remove, and EOS refuses that
+            dev = eos436.root()
+            ni = dev.network_instances.network_instance.create(i.name)
+            ni.config.name = i.name
+            ni.config.type = eos436.openconfig_network_instance_types_L3VRF
+            ni.config.route_distinguisher = i.route_distinguisher
+            ni.config.ipv4_routing_enabled = True
+            for irb_if in i.irb_interface:
+                member = ni.interfaces.interface.create(irb_if)
+                member.config.id = irb_if
+                member.config.interface = irb_if
+
+            # Its layer 3 VNI, and its routes in EVPN: the subnets of its
+            # networks, redistributed as IP prefix routes
+            vxlan = dev.interfaces.interface.create(_EOS_VXLAN_INTERFACE)
+            vxlan.config.name = _EOS_VXLAN_INTERFACE
+            vni = vxlan.arista_vxlan.vrf_to_vnis.vrf_to_vni.create(i.name)
+            vni.config.vrf = i.name
+            vni.config.vni = i.vni
+            bgp = _eos_bgp(ni)
+            rt = _eos_route_target(i.route_target)
+            bgp.global.evpn.import_target = [rt]
+            bgp.global.evpn.export_target = [rt]
+            tc_key = (eos436.openconfig_policy_types_DIRECTLY_CONNECTED, eos436.openconfig_policy_types_BGP, eos436.openconfig_types_IPV4)
+            tc = ni.table_connections.table_connection.create(tc_key)
+            tc.config.src_protocol = eos436.openconfig_policy_types_DIRECTLY_CONNECTED
+            tc.config.dst_protocol = eos436.openconfig_policy_types_BGP
+            tc.config.address_family = eos436.openconfig_types_IPV4
+            return dev
+
         raise UnsupportedDevice()
 
 
@@ -696,6 +856,21 @@ class ServerLag(base.ServerLag):
                 es.esi = esi
                 es.multi_homing_mode = "all-active"
                 es.interface.create(i.name)
+            return dev
+
+        if _EOS_MODULE in di.modules:
+            if i.esi is not None:
+                # EOS takes an ethernet segment only on a LAG that is already
+                # there, not in the transaction that creates it
+                raise ValueError("server-lag {i.name}: dorsi cannot configure an ethernet segment on Arista EOS yet")
+            dev = eos436.root()
+            intf = _eos_interface(dev, i.name, eos436.iana_if_type_ieee8023adLag, "Server {i.server}")
+            intf.aggregation.config.lag_type = "LACP"
+            lacp = dev.lacp.interfaces.interface.create(i.name)
+            lacp.config.name = i.name
+            lacp.config.interval = "FAST"
+            lacp.config.lacp_mode = "ACTIVE"
+            lacp.config.system_id_mac = i.lacp_system_id
             return dev
 
         raise UnsupportedDevice()
@@ -771,7 +946,8 @@ actor ServerPortTransform(path, update_oper: proc(?y_1_oper.stratoweave_rfs__rfs
 # Poll the state of the overlay from the device: the network instance of each
 # MAC-VRF and IP-VRF with its EVPN instance, and each server LAG with its
 # ethernet segment. The CFS FabricTransform lift turns them into the state of
-# the networks, VRFs and servers. SR Linux only so far.
+# the networks, VRFs and servers. On Arista EOS a network is a VLAN rather than
+# a network instance, and EOS takes no VRF or ethernet segment from dorsi yet.
 
 def _srl_status(raw: ?str) -> ?str:
     """An SR Linux oper-state as up, down or unknown, None when not read."""
@@ -782,14 +958,16 @@ def _srl_status(raw: ?str) -> ?str:
     return None
 
 
-actor _SrlPoll(path, dev: swdev.DeviceMgr, on_state: proc(?srl25_oper_root)->None):
-    """Polls subscriptions from an SR Linux device and hands each delivery to
-    on_state, and None once the device stops answering, like
-    FabricInterfaceTransform."""
+actor _OverlayPoll(path, dev: swdev.DeviceMgr, on_srl: proc(?srl25_oper_root)->None, on_eos: proc(?eos436_oper_root, ?Exception)->None):
+    """Polls subscriptions from an SR Linux or Arista EOS device and hands
+    each delivery to on_srl or on_eos, and None once the device stops
+    answering, like FabricInterfaceTransform. An EOS error goes to on_eos,
+    which tells a node EOS does not have yet from a failure."""
     _subs = gdata.SubscriptionManager(dev.tree_provider(), str(path))
     var _last_delivery: ?int = None
     var _stale = False
     var _running = True
+    var _eos = False
 
     def _watchdog():
         if not _running:
@@ -798,20 +976,34 @@ actor _SrlPoll(path, dev: swdev.DeviceMgr, on_state: proc(?srl25_oper_root)->Non
         if last is not None and not _stale and time.monotonic_ns() - last > _STALE_AFTER_NS:
             print("{path}: no state from the device for {_STALE_AFTER_NS // 1000000000} s, reporting it as unknown", err=True)
             _stale = True
-            on_state(None)
+            if _eos:
+                on_eos(None, None)
+            else:
+                on_srl(None)
         after _POLL_PERIOD: _watchdog()
 
-    def _on_delivery(root: ?srl25_oper_root, err: ?Exception):
+    def _on_srl_delivery(root: ?srl25_oper_root, err: ?Exception):
         if err is not None:
             print("{path}: subscription error: {err}", err=True)
         _last_delivery = time.monotonic_ns()
         _stale = False
-        on_state(root if err is None else None)
+        on_srl(root if err is None else None)
 
-    def declare(subs: set[gdata.SubscriptionSpec]):
+    def _on_eos_delivery(root: ?eos436_oper_root, err: ?Exception):
+        _last_delivery = time.monotonic_ns()
+        _stale = False
+        on_eos(root if err is None else None, err)
+
+    def declare(srl_subs: set[gdata.SubscriptionSpec], eos_subs: set[gdata.SubscriptionSpec]):
         want: set[gdata.Delivery] = set()
-        if "srl_nokia-system" in dev.get_modules().0:
-            want.add(srl25_oper.dst(_on_delivery).deliver(subs))
+        modset = dev.get_modules().0
+        if "srl_nokia-system" in modset:
+            _eos = False
+            want.add(srl25_oper.dst(_on_srl_delivery).deliver(srl_subs))
+        elif _EOS_MODULE in modset:
+            _eos = True
+            if len(eos_subs) > 0:
+                want.add(eos436_oper.dst(_on_eos_delivery).deliver(eos_subs))
         _subs.declare(want)
 
     def shutdown():
@@ -842,19 +1034,60 @@ def _srl_network_instance_status(root: ?srl25_oper_root) -> (?str, ?str):
     return (None, None)
 
 
+def _eos_vlan_subscriptions(vlan: u64) -> set[gdata.SubscriptionSpec]:
+    # The whole entry of the VLAN, as EOS fails a filter that names the
+    # members of a VLAN that has none
+    return {
+        eos436_oper.subs.network_instances.network_instance.entry("default").vlans.vlan.entry(vlan).subscribe(period=_POLL_PERIOD)
+    }
+
+
+def _eos_no_vlans(err: Exception) -> bool:
+    """Whether the VLAN poll failed because the device has no VLAN at all, an
+    error where EOS answers an empty reply for a VLAN it does not have."""
+    return 'unexpected element "vlans"' in str(err)
+
+
+def _eos_network_status(root: ?eos436_oper_root) -> (?str, ?str):
+    """The state of a network on EOS, from its VLAN: up while the VLAN is
+    there, and its EVPN instance up while Vxlan1 forwards in it. EOS has no
+    state of its own for an EVPN instance, nor an oper-status for Vxlan1, but
+    takes Vxlan1 out of the members of the VLAN when Vxlan1 goes down."""
+    if root is not None:
+        for ni in root.network_instances.network_instance:
+            for vlan in ni.vlans.vlan:
+                vxlan_up = False
+                for member in vlan.members.member:
+                    if member.state.interface == _EOS_VXLAN_INTERFACE:
+                        vxlan_up = True
+                return ("up", "up" if vxlan_up else "down")
+    return (None, None)
+
+
 actor MacVrfTransform(path, update_oper: proc(?y_1_oper.stratoweave_rfs__rfs__mac_vrf_entry)->None, dev: swdev.DeviceMgr):
     _oper = base.MacVrf.new_state(path)
 
-    def on_state(root: ?srl25_oper_root):
-        oper_status, evpn_status = _srl_network_instance_status(root)
+    def publish(oper_status: ?str, evpn_status: ?str):
         _oper.state.oper_status = oper_status
         _oper.state.evpn_status = evpn_status
         update_oper(_oper)
 
-    _poll = _SrlPoll(path, dev, on_state)
+    def on_srl(root: ?srl25_oper_root):
+        oper_status, evpn_status = _srl_network_instance_status(root)
+        publish(oper_status, evpn_status)
+
+    def on_eos(root: ?eos436_oper_root, err: ?Exception):
+        if err is not None and not _eos_no_vlans(err):
+            print("MacVrfTransform {path}: subscription error: {err}", err=True)
+        oper_status, evpn_status = _eos_network_status(root)
+        publish(oper_status, evpn_status)
+
+    _poll = _OverlayPoll(path, dev, on_srl, on_eos)
 
     def on_conf(conf: y_1.stratoweave_rfs__rfs__mac_vrf_entry):
-        _poll.declare(_srl_network_instance_subscriptions(conf.name))
+        vlan = conf.vlan
+        eos_subs = _eos_vlan_subscriptions(vlan) if vlan is not None else set()
+        _poll.declare(_srl_network_instance_subscriptions(conf.name), eos_subs)
 
     def shutdown():
         _poll.shutdown()
@@ -863,16 +1096,20 @@ actor MacVrfTransform(path, update_oper: proc(?y_1_oper.stratoweave_rfs__rfs__ma
 actor IpVrfTransform(path, update_oper: proc(?y_1_oper.stratoweave_rfs__rfs__ip_vrf_entry)->None, dev: swdev.DeviceMgr):
     _oper = base.IpVrf.new_state(path)
 
-    def on_state(root: ?srl25_oper_root):
+    def on_srl(root: ?srl25_oper_root):
         oper_status, evpn_status = _srl_network_instance_status(root)
         _oper.state.oper_status = oper_status
         _oper.state.evpn_status = evpn_status
         update_oper(_oper)
 
-    _poll = _SrlPoll(path, dev, on_state)
+    def on_eos(root: ?eos436_oper_root, err: ?Exception):
+        # The CFS places no VRF on EOS yet, so nothing is polled
+        pass
+
+    _poll = _OverlayPoll(path, dev, on_srl, on_eos)
 
     def on_conf(conf: y_1.stratoweave_rfs__rfs__ip_vrf_entry):
-        _poll.declare(_srl_network_instance_subscriptions(conf.name))
+        _poll.declare(_srl_network_instance_subscriptions(conf.name), set())
 
     def shutdown():
         _poll.shutdown()
@@ -881,7 +1118,12 @@ actor IpVrfTransform(path, update_oper: proc(?y_1_oper.stratoweave_rfs__rfs__ip_
 actor ServerLagTransform(path, update_oper: proc(?y_1_oper.stratoweave_rfs__rfs__server_lag_entry)->None, dev: swdev.DeviceMgr):
     _oper = base.ServerLag.new_state(path)
 
-    def on_state(root: ?srl25_oper_root):
+    def publish(oper_status: ?str, es_status: ?str):
+        _oper.state.oper_status = oper_status
+        _oper.state.es_status = es_status
+        update_oper(_oper)
+
+    def on_srl(root: ?srl25_oper_root):
         oper_status: ?str = None
         es_status: ?str = None
         if root is not None:
@@ -895,18 +1137,23 @@ actor ServerLagTransform(path, update_oper: proc(?y_1_oper.stratoweave_rfs__rfs_
                         for instance in segments.bgp_instance:
                             for es in instance.ethernet_segment:
                                 es_status = _srl_status(es.oper_state)
-        _oper.state.oper_status = oper_status
-        _oper.state.es_status = es_status
-        update_oper(_oper)
+        publish(oper_status, es_status)
 
-    _poll = _SrlPoll(path, dev, on_state)
+    def on_eos(root: ?eos436_oper_root, err: ?Exception):
+        # No ethernet segment on EOS yet, only the LAG
+        if err is not None:
+            print("ServerLagTransform {path}: subscription error: {err}", err=True)
+        publish(_eos_oper_status(root) if root is not None else None, None)
+
+    _poll = _OverlayPoll(path, dev, on_srl, on_eos)
 
     def on_conf(conf: y_1.stratoweave_rfs__rfs__server_lag_entry):
-        subs = {srl25_oper.subs.interface.entry(conf.name).oper_state.subscribe(period=_POLL_PERIOD)}
+        srl_subs = {srl25_oper.subs.interface.entry(conf.name).oper_state.subscribe(period=_POLL_PERIOD)}
         if conf.esi is not None:
             es = srl25_oper.subs.system.network_instance.protocols.evpn.ethernet_segments.bgp_instance.entry(u64(_EVPN_BGP_INSTANCE)).ethernet_segment.entry("es-{conf.server}")
-            subs.add(es.oper_state.subscribe(period=_POLL_PERIOD))
-        _poll.declare(subs)
+            srl_subs.add(es.oper_state.subscribe(period=_POLL_PERIOD))
+        eos_subs = {eos436_oper.subs.interfaces.interface.entry(conf.name).state.oper_status.subscribe(period=_POLL_PERIOD)}
+        _poll.declare(srl_subs, eos_subs)
 
     def shutdown():
         _poll.shutdown()

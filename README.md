@@ -149,15 +149,15 @@ address, which Linux `lldpd` sends by default. A server link that is down is an
 error when the server has no working link left, and a warning when a
 dual-homed server has only lost its redundancy.
 
-#### EVPN-VXLAN overlay (SR Linux, preliminary)
+#### EVPN-VXLAN overlay (SR Linux and Arista EOS, preliminary)
 
 A `fabric` can have `tenant`s, each with layer 2 `network`s, and a `server`
 lists the networks it is `attachment` of, with the VLAN tag it sends each one
 with (absent for untagged) and, for reference, its address. DORSI places a
 network only on the leaves of its servers, as a MAC-VRF bridged over VXLAN
-(`vxlan1`, the VTEP is the loopback). The fabric links of SR Linux have an IP
-MTU of 9000, so that a server can send full 1500 byte frames, to which VXLAN
-adds 50 bytes; Arista EOS links keep their default for now. EVPN runs on the eBGP sessions of the
+(`vxlan1`, the VTEP is the loopback). The fabric links have an IP MTU of 9000,
+so that a server can send full 1500 byte frames, to which VXLAN adds 50
+bytes. EVPN runs on the eBGP sessions of the
 underlay: the spines keep and pass on the EVPN routes with their next hop
 (`inter-as-vpn`), and updates go out at once (`rapid-update`). A server
 attached to the overlay connects over a LAG with LACP when it is dual-homed or
@@ -170,8 +170,21 @@ from fabric, tenant and network, the EVI and vxlan-interface from the VNI, a
 route target shared by the leaves of a network, a route distinguisher per leaf
 (`<loopback>:<EVI>`), the ESI, LACP system ID and admin key from the server and
 the LAG from the lowest port of the server on the leaf. A clash rejects the
-fabric; a network can then be given its own `vni`. The overlay needs every
-switch to run SR Linux for now.
+fabric; a network can then be given its own `vni`.
+
+Arista EOS takes the layer 2 overlay too, as a leaf or a spine, so that a
+network spans both vendors. EOS bridges in VLANs: a network gets an internal
+VLAN of its own (derived from its VNI, 200 to 999, below the VLANs EOS keeps
+for routed ports), and the VLAN tag of a server is translated to it on the
+port, or the network is the native VLAN of an untagged server. VXLAN, the EVPN
+instances and the anycast gateway exist on EOS only in Arista's experimental
+YANG models, which dorsi uses besides OpenConfig. The export policy of the
+fabric applies to every address family on EOS, so it also lets the EVPN routes
+out, and EOS is told to send extended communities, which carry the route
+targets. Two things dorsi cannot do on EOS yet, and rejects: an ethernet
+segment (EOS takes it only on a LAG that already exists, not in the
+transaction that creates it) and a routed network (for the layer 3 VNI of a
+VRF, EOS adds a VLAN interface of its own, which dorsi would try to remove).
 
 A tenant can also have `vrf`s, and a network in a VRF has a `gateway`. The
 VRF routes between its networks with symmetric IRB: every leaf of a network
@@ -202,6 +215,12 @@ a server LAG that is down while its ports are up, which means LACP has not
 come up with the server, and an ethernet segment that is down on a LAG that is
 up.
 
+On Arista EOS a network is a VLAN, and EOS has no state of its own for an
+EVPN instance or for `Vxlan1`. DORSI reads the network as up while its VLAN is
+there, and its EVPN instance as up while `Vxlan1` forwards in the VLAN: EOS
+takes `Vxlan1` out of the VLAN when it goes down. A server LAG on EOS has its
+LAG state only, as EOS has no ethernet segment from DORSI yet.
+
 #### IP fabric: what is verified
 
 * The generated SR Linux configuration is covered by snapshot tests for a
@@ -220,6 +239,10 @@ up.
   The full 5-stage lab ([`test/fabric-5stage`](test/fabric-5stage/README.md))
   has not been deployed: ten SR Linux nodes need much more memory than the
   3-stage lab, which already needs about 9 GB.
+* The layer 2 overlay across SR Linux and Arista EOS has been run in
+  [`test/fabric-3stage-mixed`](test/fabric-3stage-mixed/README.md)
+  (`ip-fabric-overlay.xml`): servers on SR Linux and EOS leaves, one with
+  another VLAN tag, reach each other through an SR Linux and an EOS spine.
 * The EVPN-VXLAN overlay has been run in
   [`test/fabric-3stage`](test/fabric-3stage/README.md): server1 (on an
   ESI-LAG of leaf1 and leaf2) and server3 (on leaf3) reach each other in

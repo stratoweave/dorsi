@@ -1272,9 +1272,11 @@ class srl_nokia_interfaces__interface__subinterface__ipv6(yadata.MNode):
 _breaker32: None = None
 class srl_nokia_interfaces__interface__subinterface__anycast_gw(yadata.MNode):
     virtual_router_id: ?u64
+    anycast_gw_mac: ?str
 
-    mut def __init__(self, virtual_router_id: ?u64=None) -> None:
+    mut def __init__(self, virtual_router_id: ?u64=None, anycast_gw_mac: ?str=None) -> None:
         self.virtual_router_id = virtual_router_id
+        self.anycast_gw_mac = anycast_gw_mac
 
     mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
         return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['srl_nokia-interfaces:interface', 'subinterface', 'anycast-gw'], prev=prev)
@@ -1282,7 +1284,7 @@ class srl_nokia_interfaces__interface__subinterface__anycast_gw(yadata.MNode):
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> ?srl_nokia_interfaces__interface__subinterface__anycast_gw:
         if n is not None:
-            return srl_nokia_interfaces__interface__subinterface__anycast_gw(virtual_router_id=n.get_opt_u64(ygdata.Id(NS_srl_nokia_interfaces, 'virtual-router-id')))
+            return srl_nokia_interfaces__interface__subinterface__anycast_gw(virtual_router_id=n.get_opt_u64(ygdata.Id(NS_srl_nokia_interfaces, 'virtual-router-id')), anycast_gw_mac=n.get_opt_str(ygdata.Id(NS_srl_nokia_interfaces, 'anycast-gw-mac')))
         return None
 
     mut def copy(self) -> srl_nokia_interfaces__interface__subinterface__anycast_gw:
@@ -1425,13 +1427,15 @@ class srl_nokia_interfaces__interface__subinterface_entry(yadata.MNode):
         self.anycast_gw = anycast_gw
         self.vlan = vlan if vlan is not None else srl_nokia_interfaces__interface__subinterface__vlan()
 
-    mut def create_anycast_gw(self, virtual_router_id: ?u64=None) -> srl_nokia_interfaces__interface__subinterface__anycast_gw:
+    mut def create_anycast_gw(self, virtual_router_id: ?u64=None, anycast_gw_mac: ?str=None) -> srl_nokia_interfaces__interface__subinterface__anycast_gw:
         existing = self.anycast_gw
         if existing is not None:
             if virtual_router_id is not None:
                 existing.virtual_router_id = virtual_router_id
+            if anycast_gw_mac is not None:
+                existing.anycast_gw_mac = anycast_gw_mac
             return existing
-        res = srl_nokia_interfaces__interface__subinterface__anycast_gw(virtual_router_id=virtual_router_id)
+        res = srl_nokia_interfaces__interface__subinterface__anycast_gw(virtual_router_id=virtual_router_id, anycast_gw_mac=anycast_gw_mac)
         self.anycast_gw = res
         return res
 

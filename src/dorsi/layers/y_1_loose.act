@@ -135,6 +135,7 @@ SRC_DNODE_CHILD_17: DList = DList(module='dorsi-rfs', namespace='http://example.
     DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='evi', config=True, is_key=False, mandatory=True, type=DTypeIntegerUnsigned(name='uint32', description=None, reference=None, units=None, exts=[], builtin_type='uint32', default=None, ranges=Ranges([(1, 65535)]))),
     DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='route-distinguisher', config=True, description='Such as 10.0.0.1:100, unique per leaf.', is_key=False, mandatory=True, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
     DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='route-target', config=True, description='Such as target:100:10010, the same on every leaf of the\nnetwork.', is_key=False, mandatory=True, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
+    DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='vlan', config=True, description='The VLAN of the network inside a switch that bridges in\nVLANs, such as Arista EOS, apart from the VLAN tags of\nthe servers. SR Linux has no use for it.', is_key=False, mandatory=False, type=DTypeIntegerUnsigned(name='uint16', description=None, reference=None, units=None, exts=[], builtin_type='uint16', default=None, ranges=Ranges([(2, 4094)]))),
     DContainer(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='irb', config=True, description='The anycast gateway of the network, on irb0.', presence=True, children=[
         DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='index', config=True, is_key=False, mandatory=True, type=DTypeIntegerUnsigned(name='uint16', description=None, reference=None, units=None, exts=[], builtin_type='uint16', default=None, ranges=Ranges([(1, 9999)]))),
         DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='gateway', config=True, description='Such as 10.10.10.1/24.', is_key=False, mandatory=True, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[]))
@@ -294,6 +295,15 @@ SRC_YANG_0: str = r"""module dorsi-rfs {
                      network.";
                 type string;
                 mandatory true;
+            }
+            leaf vlan {
+                description
+                    "The VLAN of the network inside a switch that bridges in
+                     VLANs, such as Arista EOS, apart from the VLAN tags of
+                     the servers. SR Linux has no use for it.";
+                type uint16 {
+                    range "2..4094";
+                }
             }
             container irb {
                 presence "The network is routed.";
@@ -3309,15 +3319,17 @@ class stratoweave_rfs__rfs__mac_vrf_entry(yadata.MNode):
     evi: ?u64
     route_distinguisher: ?str
     route_target: ?str
+    vlan: ?u64
     irb: ?stratoweave_rfs__rfs__mac_vrf__irb
     interface: stratoweave_rfs__rfs__mac_vrf__interface
 
-    mut def __init__(self, name: str, vni: ?u64=None, evi: ?u64=None, route_distinguisher: ?str=None, route_target: ?str=None, irb: ?stratoweave_rfs__rfs__mac_vrf__irb=None, interface: list[stratoweave_rfs__rfs__mac_vrf__interface_entry]=[]) -> None:
+    mut def __init__(self, name: str, vni: ?u64=None, evi: ?u64=None, route_distinguisher: ?str=None, route_target: ?str=None, vlan: ?u64=None, irb: ?stratoweave_rfs__rfs__mac_vrf__irb=None, interface: list[stratoweave_rfs__rfs__mac_vrf__interface_entry]=[]) -> None:
         self.name = name
         self.vni = vni
         self.evi = evi
         self.route_distinguisher = route_distinguisher
         self.route_target = route_target
+        self.vlan = vlan
         self.irb = irb
         self.interface = stratoweave_rfs__rfs__mac_vrf__interface(elements=interface)
 
@@ -3338,7 +3350,7 @@ class stratoweave_rfs__rfs__mac_vrf_entry(yadata.MNode):
 
     @staticmethod
     mut def from_gdata(n: ygdata.Node) -> stratoweave_rfs__rfs__mac_vrf_entry:
-        return stratoweave_rfs__rfs__mac_vrf_entry(name=n.get_str(ygdata.Id(NS_dorsi_rfs, 'name')), vni=n.get_opt_u64(ygdata.Id(NS_dorsi_rfs, 'vni')), evi=n.get_opt_u64(ygdata.Id(NS_dorsi_rfs, 'evi')), route_distinguisher=n.get_opt_str(ygdata.Id(NS_dorsi_rfs, 'route-distinguisher')), route_target=n.get_opt_str(ygdata.Id(NS_dorsi_rfs, 'route-target')), irb=stratoweave_rfs__rfs__mac_vrf__irb.from_gdata(n.get_opt_cnt(ygdata.Id(NS_dorsi_rfs, 'irb'))), interface=stratoweave_rfs__rfs__mac_vrf__interface.from_gdata(n.get_opt_list(ygdata.Id(NS_dorsi_rfs, 'interface'))))
+        return stratoweave_rfs__rfs__mac_vrf_entry(name=n.get_str(ygdata.Id(NS_dorsi_rfs, 'name')), vni=n.get_opt_u64(ygdata.Id(NS_dorsi_rfs, 'vni')), evi=n.get_opt_u64(ygdata.Id(NS_dorsi_rfs, 'evi')), route_distinguisher=n.get_opt_str(ygdata.Id(NS_dorsi_rfs, 'route-distinguisher')), route_target=n.get_opt_str(ygdata.Id(NS_dorsi_rfs, 'route-target')), vlan=n.get_opt_u64(ygdata.Id(NS_dorsi_rfs, 'vlan')), irb=stratoweave_rfs__rfs__mac_vrf__irb.from_gdata(n.get_opt_cnt(ygdata.Id(NS_dorsi_rfs, 'irb'))), interface=stratoweave_rfs__rfs__mac_vrf__interface.from_gdata(n.get_opt_list(ygdata.Id(NS_dorsi_rfs, 'interface'))))
 
     mut def copy(self) -> stratoweave_rfs__rfs__mac_vrf_entry:
         """Create a deep copy of this adata object"""
@@ -3349,7 +3361,7 @@ class stratoweave_rfs__rfs__mac_vrf(yadata.MKeyedList[str, stratoweave_rfs__rfs_
     mut def __init__(self, elements: list[stratoweave_rfs__rfs__mac_vrf_entry]=[]) -> None:
         yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
 
-    mut def create(self, key: str, vni: ?u64=None, evi: ?u64=None, route_distinguisher: ?str=None, route_target: ?str=None) -> stratoweave_rfs__rfs__mac_vrf_entry:
+    mut def create(self, key: str, vni: ?u64=None, evi: ?u64=None, route_distinguisher: ?str=None, route_target: ?str=None, vlan: ?u64=None) -> stratoweave_rfs__rfs__mac_vrf_entry:
         e = self.get(key)
         if e is not None:
             if vni is not None:
@@ -3360,9 +3372,11 @@ class stratoweave_rfs__rfs__mac_vrf(yadata.MKeyedList[str, stratoweave_rfs__rfs_
                 e.route_distinguisher = route_distinguisher
             if route_target is not None:
                 e.route_target = route_target
+            if vlan is not None:
+                e.vlan = vlan
             return e
         name = key
-        res = stratoweave_rfs__rfs__mac_vrf_entry(name=name, vni=vni, evi=evi, route_distinguisher=route_distinguisher, route_target=route_target)
+        res = stratoweave_rfs__rfs__mac_vrf_entry(name=name, vni=vni, evi=evi, route_distinguisher=route_distinguisher, route_target=route_target, vlan=vlan)
         self._append(res)
         return res
 

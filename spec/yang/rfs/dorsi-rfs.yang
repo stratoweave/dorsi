@@ -92,6 +92,15 @@ module dorsi-rfs {
                 type string;
                 mandatory true;
             }
+            leaf vlan {
+                description
+                    "The VLAN of the network inside a switch that bridges in
+                     VLANs, such as Arista EOS, apart from the VLAN tags of
+                     the servers. SR Linux has no use for it.";
+                type uint16 {
+                    range "2..4094";
+                }
+            }
             container irb {
                 presence "The network is routed.";
                 description

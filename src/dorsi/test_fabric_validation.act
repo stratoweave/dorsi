@@ -169,7 +169,8 @@ def _test_overlay_identifiers_are_stable():
     testing.assertTrue(cfs.server_esi("dc1", "server1").startswith("00:"))
     testing.assertEqual(len(cfs.server_lacp_system_id("dc1", "server1")), 17)
     testing.assertTrue(cfs.server_lacp_system_id("dc1", "server1").startswith("02:"))
-    testing.assertEqual(cfs.server_lag_name(["ethernet-1/7", "ethernet-1/3"]), "lag3")
+    testing.assertEqual(cfs.server_lag_name(["ethernet-1/7", "ethernet-1/3"], "NokiaSRLinux_25_3_2"), "lag3")
+    testing.assertEqual(cfs.server_lag_name(["Ethernet7", "Ethernet3"], "AristaEOS_4_36_3_2M"), "Port-Channel3")
 
 def _test_overlay_vni_clash():
     f = _fabric(fabrics.three_stage_overlay())
@@ -201,12 +202,31 @@ def _test_overlay_address_outside_subnet():
     att.ipv4_address = "10.10.11.13/24"
     _has_error(f, "is not in the subnet of server server1 in network t1/web")
 
-def _test_overlay_on_eos_rejected():
+def _test_valid_three_stage_mixed_overlay():
+    testing.assertEqual(cfs.validate_fabric(_fabric(fabrics.three_stage_mixed_overlay())), [])
+
+def _test_overlay_dual_homed_on_eos_rejected():
     f = _fabric(fabrics.three_stage_mixed())
     f.tenant.create("t1").network.create("web")
-    errors = cfs.validate_fabric(f)
-    testing.assertEqual(len(errors), 2, "expected an error per EOS switch: {errors}")
-    testing.assertTrue("the EVPN overlay is supported on NokiaSRLinux_25_3_2 only" in errors[0])
+    f.server.get("server2")!.attachment.create(("t1", "web"), vlan=10)
+    _single_error(f, "server server2: a dual-homed server is an ethernet segment, which dorsi cannot configure on leaf3")
+
+def _test_overlay_server_tag_is_an_internal_vlan():
+    f = _fabric(fabrics.three_stage_mixed_overlay())
+    f.tenant.get("t1")!.network.create("db")
+    vlan = cfs.overlay_vlan(cfs.overlay_vni("dc1", "t1", "db"))
+    att = f.server.get("server3")!.attachment.get(("t1", "web"))!
+    att.vlan = u64(vlan)
+    _single_error(f, "server server3: its VLAN {vlan} on leaf3 is the internal VLAN of network t1/db")
+
+def _test_overlay_routed_network_on_eos_rejected():
+    f = _fabric(fabrics.three_stage_mixed_overlay())
+    tenant = f.tenant.get("t1")!
+    tenant.vrf.create("main")
+    web = tenant.network.get("web")!
+    web.vrf = "main"
+    web.gateway = "10.10.10.1/24"
+    _single_error(f, "network t1/web: a routed network cannot be placed on leaf3")
 
 def _test_overlay_network_name_srl_rejects():
     f = _fabric(fabrics.three_stage_overlay())

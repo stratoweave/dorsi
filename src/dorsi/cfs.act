@@ -69,7 +69,11 @@ def fabric_link_addresses(lower_id: int, lower_port: str) -> (str, str):
 #   ESI             type 0, 00:<8 hash bytes of fabric/server>:01
 #   LACP system ID  02:<5 hash bytes of lacp/fabric/server>
 #   LACP admin key  fnv1a32(fabric/server) % 65535 + 1
-#   LAG             lag<lowest port number of the server on the leaf>
+#   LAG             lag<lowest port number of the server on the leaf>, on
+#                   Arista EOS Port-Channel<the same>
+#   internal VLAN   200 + fnv1a32(vlan/<VNI>) % 800, on switches that bridge
+#                   in VLANs (EOS), below the VLANs EOS keeps for routed
+#                   ports from 1006 up
 
 def _fnv1a(s: str) -> int:
     """32-bit FNV-1a hash of the UTF-8 bytes of s."""
@@ -123,13 +127,28 @@ def server_lacp_admin_key(fabric: str, server: str) -> int:
     return _fnv1a("{fabric}/{server}") % 65535 + 1
 
 
-def server_lag_name(ports: list[str]) -> str:
-    """The LAG of a server on a leaf, named after the lowest of its ports."""
-    return "lag{min([_trailing_int(p, 0) for p in ports])}"
-
-
 def irb_index(evi: int) -> int:
     return evi % 9999 + 1
+
+
+# Device types that bridge in VLANs and name LAGs Port-Channel<n>, apart from
+# SR Linux
+_EOS = "AristaEOS_4_36_3_2M"
+
+
+def server_lag_name(ports: list[str], switch_type: str) -> str:
+    """The LAG of a server on a leaf, named after the lowest of its ports."""
+    n = min([_trailing_int(p, 0) for p in ports])
+    return "Port-Channel{n}" if switch_type == _EOS else "lag{n}"
+
+
+def overlay_vlan(vni: int) -> int:
+    return 200 + _fnv1a("vlan/{vni}") % 800
+
+
+def irb_interface(switch_type: str, evi: int, vlan: int) -> str:
+    """The routed interface of a network on a leaf, in its VRF."""
+    return "Vlan{vlan}" if switch_type == _EOS else "irb0.{irb_index(evi)}"
 
 
 def ip_vrf_name(tenant: str, vrf: str) -> str:
@@ -384,11 +403,11 @@ def validate_overlay(f: y_0.ip_fabric__ip_fabric__fabric_entry, switches: dict[s
     if len(f.tenant) == 0:
         return errors
 
-    # The overlay is built on SR Linux only so far: every switch carries EVPN
-    # routes, the spines too
+    # The overlay is built on SR Linux and Arista EOS: every switch carries
+    # EVPN routes, the spines too
     for sw in f.switch:
-        if sw.type != "NokiaSRLinux_25_3_2":
-            errors.append("switch {sw.name}: the EVPN overlay is supported on NokiaSRLinux_25_3_2 only, not {sw.type}")
+        if sw.type != "NokiaSRLinux_25_3_2" and sw.type != _EOS:
+            errors.append("switch {sw.name}: the EVPN overlay is supported on NokiaSRLinux_25_3_2 and {_EOS} only, not {sw.type}")
 
     # Identifiers derived or set must be unique in the fabric, those of VRFs
     # and networks together: they share the VNIs, EVIs and the names of
@@ -397,6 +416,7 @@ def validate_overlay(f: y_0.ip_fabric__ip_fabric__fabric_entry, switches: dict[s
     evis: dict[int, str] = {}
     vrf_names: dict[str, str] = {}
     irbs: dict[int, str] = {}
+    internal_vlans: dict[int, str] = {}
 
     def identify(what: str, vni: int, name: str, kind: str):
         if vni in vnis:
@@ -424,6 +444,11 @@ def validate_overlay(f: y_0.ip_fabric__ip_fabric__fabric_entry, switches: dict[s
             what = "network {tenant.name}/{network.name}"
             vni = network_vni(f.name, tenant.name, network)
             identify(what, vni, mac_vrf_name(tenant.name, network.name), "MAC-VRF")
+            vlan = overlay_vlan(vni)
+            if vlan in internal_vlans:
+                errors.append("{what}: its internal VLAN {vlan}, derived from VNI {vni}, is also that of {internal_vlans[vlan]}, set another vni on one of them")
+            else:
+                internal_vlans[vlan] = what
             vrf = network.vrf
             gateway = network.gateway
             if vrf is not None:
@@ -431,6 +456,12 @@ def validate_overlay(f: y_0.ip_fabric__ip_fabric__fabric_entry, switches: dict[s
                     errors.append("{what}: VRF {vrf} does not exist in tenant {tenant.name}")
                 if gateway is None:
                     errors.append("{what}: a network in a VRF needs a gateway")
+                for leaf in network_leaves(f, tenant.name, network.name):
+                    sw = switches.get(leaf)
+                    if sw is not None and sw.type == _EOS:
+                        # EOS creates a VLAN interface of its own for the layer
+                        # 3 VNI of a VRF, which dorsi would try to remove
+                        errors.append("{what}: a routed network cannot be placed on {leaf} ({_EOS}) yet")
                 irb = irb_index(overlay_evi(vni))
                 if irb in irbs:
                     errors.append("{what}: its IRB subinterface irb0.{irb}, derived from VNI {vni}, is also that of {irbs[irb]}, set another vni on one of them")
@@ -507,13 +538,25 @@ def validate_overlay(f: y_0.ip_fabric__ip_fabric__fabric_entry, switches: dict[s
                             errors.append("{what}: address {address} is not in the subnet of server {seen_server} in network {network}")
                 else:
                     errors.append("{what}: ipv4-address {address} of network {network} is not an IPv4 address with a prefix length, such as 10.10.10.11/24")
+        leaf_ports = server_leaf_ports(server)
+        if len(server.attachment) > 0:
+            for leaf in leaf_ports.keys():
+                sw = switches.get(leaf)
+                if sw is not None and sw.type == _EOS:
+                    if server.connectivity.profile == "dual-homed":
+                        errors.append("{what}: a dual-homed server is an ethernet segment, which dorsi cannot configure on {leaf} ({_EOS}) yet")
+                    for att in server.attachment:
+                        tag = att.vlan
+                        if tag is not None and int(tag) in internal_vlans:
+                            errors.append("{what}: its VLAN {tag} on {leaf} is the internal VLAN of {internal_vlans[int(tag)]}, the switch would bridge it there")
         if len(server.attachment) > 0 and server.connectivity.profile == "dual-homed":
             es = server_es_name(server.name)
             if not _is_srl_name(es, 32):
                 errors.append("{what}: its ethernet segment {es} is not a name SR Linux takes: up to 32 letters, digits and punctuation, no spaces or slashes")
-        for leaf, ports in server_leaf_ports(server).items():
+        for leaf, ports in leaf_ports.items():
             if server_uses_lag(server, ports):
-                lag = server_lag_name(ports)
+                sw = switches.get(leaf)
+                lag = server_lag_name(ports, sw.type if sw is not None else "")
                 key = "{leaf}/{lag}"
                 lag_id = _trailing_int(lag, 0)
                 if lag_id < 1 or lag_id > 1000:
@@ -595,7 +638,7 @@ class Fabric(base.Fabric):
                 interface = ports[0]
                 uses_lag = server_uses_lag(server, ports)
                 if uses_lag:
-                    interface = server_lag_name(ports)
+                    interface = server_lag_name(ports, switches[leaf].type)
                     server_lag = o.rfs.create(leaf).server_lag.create(interface, server.name, server_lacp_system_id(i.name, server.name), u64(server_lacp_admin_key(i.name, server.name)))
                     if server.connectivity.profile == "dual-homed":
                         server_lag.esi = server_esi(i.name, server.name)
@@ -624,6 +667,7 @@ class Fabric(base.Fabric):
                         for leaf, interface in server_interfaces[server.name].items():
                             rd = overlay_route_distinguisher(int(switches[leaf].id), evi)
                             mac_vrf = o.rfs.create(leaf).mac_vrf.create(name, u64(vni), u64(evi), rd, route_target)
+                            mac_vrf.vlan = u64(overlay_vlan(vni))
                             mac_vrf.interface.create(interface).vlan = att.vlan
                             vrf = network.vrf
                             gateway = network.gateway
@@ -634,7 +678,7 @@ class Fabric(base.Fabric):
                                     vrf_irbs[vrf] = {}
                                 if leaf not in vrf_irbs[vrf]:
                                     vrf_irbs[vrf][leaf] = []
-                                irb_if = "irb0.{irb}"
+                                irb_if = irb_interface(switches[leaf].type, evi, overlay_vlan(vni))
                                 if irb_if not in vrf_irbs[vrf][leaf]:
                                     vrf_irbs[vrf][leaf].append(irb_if)
             for vrf in tenant.vrf:
@@ -891,10 +935,13 @@ actor FabricTransform(path: ttt.Path,
                 for leaf in vrf_leaves(conf, tenant, vrf.name):
                     placements.append(("vrf", tenant.name, vrf.name, leaf, name))
                     subs.add(y_1_oper.subs.rfs.entry(leaf).ip_vrf.entry(name).state.subscribe(period=5.0))
+        switch_types: dict[str, str] = {}
+        for sw in conf.switch:
+            switch_types[sw.name] = sw.type
         for server in conf.server:
             for leaf, ports in server_leaf_ports(server).items():
                 if server_uses_lag(server, ports):
-                    lag = server_lag_name(ports)
+                    lag = server_lag_name(ports, switch_types[leaf] if leaf in switch_types else "")
                     placements.append(("lag", server.name, "", leaf, lag))
                     subs.add(y_1_oper.subs.rfs.entry(leaf).server_lag.entry(lag).state.subscribe(period=5.0))
         dst = y_1_oper.dst(lambda r, e: on_rfs_state(r, e, links, server_links, placements))
