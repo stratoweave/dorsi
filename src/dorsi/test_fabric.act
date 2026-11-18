@@ -216,6 +216,29 @@ def three_stage_crpd():
         add_server(f, "server{n + 1}", "single-homed", [(leaf, "eth1", "eth1")])
     return root
 
+# The three-stage Clos of the fabric-3stage-mixed-crpd lab, of all three
+# vendors, the underlay only: leaf1 SR Linux, leaf2 and spine2 Arista EOS,
+# leaf3 and spine1 Juniper cRPD. Its links are SR Linux to cRPD and to EOS,
+# EOS to cRPD and to EOS, and cRPD to cRPD and to EOS.
+def three_stage_mixed_crpd():
+    root = _empty_root()
+    f = root.ip_fabric.fabric.create("dc1")
+    add_switch(f, "leaf1", 1, "leaf")
+    add_switch(f, "leaf2", 2, "leaf", device_type=EOS, management_address="172.31.40.12/24", management_gateway="172.31.40.1")
+    add_switch(f, "leaf3", 3, "leaf", device_type=CRPD)
+    add_switch(f, "spine1", 11, "spine", device_type=CRPD)
+    add_switch(f, "spine2", 12, "spine", device_type=EOS, management_address="172.31.40.22/24", management_gateway="172.31.40.1")
+    add_link(f, "leaf1", "ethernet-1/49", "spine1", "eth1")
+    add_link(f, "leaf1", "ethernet-1/50", "spine2", "Ethernet1")
+    add_link(f, "leaf2", "Ethernet49", "spine1", "eth2")
+    add_link(f, "leaf2", "Ethernet50", "spine2", "Ethernet2")
+    add_link(f, "leaf3", "eth49", "spine1", "eth3")
+    add_link(f, "leaf3", "eth50", "spine2", "Ethernet3")
+    add_server(f, "server1", "single-homed", [("leaf1", "ethernet-1/1", "eth1")])
+    add_server(f, "server2", "single-homed", [("leaf2", "Ethernet1", "eth1")])
+    add_server(f, "server3", "single-homed", [("leaf3", "eth1", "eth1")])
+    return root
+
 # TransformTester takes its snapshot as soon as the CFS commit completes, which
 # can be before the device configuration exists. Wait for it to settle: until
 # the snapshot has not changed for two seconds. On a busy machine a device can
@@ -297,3 +320,7 @@ actor _test_fabric_invalid_is_rejected(t: testing.AsyncT):
 actor _test_fabric_three_stage_crpd(t: testing.AsyncT):
     t.timeout(30.0)
     FabricTester(t, three_stage_crpd().to_gdata())
+
+actor _test_fabric_three_stage_mixed_crpd(t: testing.AsyncT):
+    t.timeout(30.0)
+    FabricTester(t, three_stage_mixed_crpd().to_gdata())

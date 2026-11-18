@@ -16,6 +16,9 @@ labs/development environments which you can run:
 * **[fabric-3stage-crpd](fabric-3stage-crpd/README.md)** is `fabric-3stage` with every
   switch running Juniper cRPD, the underlay only. Its image is in the private
   registry `ghcr.io/stratoweave`. It has been run.
+* **[fabric-3stage-mixed-crpd](fabric-3stage-mixed-crpd/README.md)** is `fabric-3stage`
+  with switches of all three vendors, SR Linux, cEOS and cRPD, the underlay only.
+  It has been run.
 
 The SR Linux image (`ghcr.io/nokia/srlinux`) is public, no account or license is
 needed.

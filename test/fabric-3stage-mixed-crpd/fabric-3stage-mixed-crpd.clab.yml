@@ -1,0 +1,79 @@
+name: dorsi-fabric-3stage-mixed-crpd
+prefix: __lab-name
+
+# Fixed management addresses: ip-fabric.xml gives the cEOS switches theirs as
+# management-address, which dorsi keeps on Management0 and connects to.
+mgmt:
+  network: dorsi-fabric-3stage-mixed-crpd
+  ipv4-subnet: 172.31.40.0/24
+  ipv6-subnet: auto
+
+topology:
+  kinds:
+    nokia_srlinux:
+      image: ghcr.io/nokia/srlinux:25.3.2
+      image-pull-policy: if-not-present
+      startup-config: srl-startup.conf
+    # cEOS-lab is not in a public registry: download it from arista.com and
+    # `docker import` it under this name (see ../fabric-3stage-mixed/README.md).
+    arista_ceos:
+      image: ceos:4.36.3.2M
+      image-pull-policy: never
+      startup-config: ceos-startup.partial.cfg
+    juniper_crpd:
+      image: ${IMAGE_PATH}crpd:24.4r1.9
+      image-pull-policy: if-not-present
+      startup-config: crpd-startup.conf
+  nodes:
+    leaf1:
+      mgmt-ipv4: 172.31.40.11
+      kind: nokia_srlinux
+    leaf2:
+      mgmt-ipv4: 172.31.40.12
+      kind: arista_ceos
+    leaf3:
+      mgmt-ipv4: 172.31.40.13
+      kind: juniper_crpd
+    spine1:
+      mgmt-ipv4: 172.31.40.21
+      kind: juniper_crpd
+    spine2:
+      mgmt-ipv4: 172.31.40.22
+      kind: arista_ceos
+    server1:
+      mgmt-ipv4: 172.31.40.31
+      kind: linux
+      image: ghcr.io/srl-labs/network-multitool
+      image-pull-policy: if-not-present
+    server2:
+      mgmt-ipv4: 172.31.40.32
+      kind: linux
+      image: ghcr.io/srl-labs/network-multitool
+      image-pull-policy: if-not-present
+    server3:
+      mgmt-ipv4: 172.31.40.33
+      kind: linux
+      image: ghcr.io/srl-labs/network-multitool
+      image-pull-policy: if-not-present
+    sweave:
+      mgmt-ipv4: 172.31.40.10
+      kind: linux
+      image: dorsi-sweave-base
+      image-pull-policy: if-not-present
+      ports:
+        # The dorsi binary serves the APIs and the embedded Web UI on :80.
+        - "${WEBUI_PUBLISH}:80/tcp"
+        - "830/tcp"
+
+  # cEOS maps the container interface ethN to EthernetN; cRPD routes for ethN
+  # itself.
+  links:
+    - endpoints: ["leaf1:e1-49", "spine1:eth1"]
+    - endpoints: ["leaf1:e1-50", "spine2:eth1"]
+    - endpoints: ["leaf2:eth49", "spine1:eth2"]
+    - endpoints: ["leaf2:eth50", "spine2:eth2"]
+    - endpoints: ["leaf3:eth49", "spine1:eth3"]
+    - endpoints: ["leaf3:eth50", "spine2:eth3"]
+    - endpoints: ["server1:eth1", "leaf1:e1-1"]
+    - endpoints: ["server2:eth1", "leaf2:eth1"]
+    - endpoints: ["server3:eth1", "leaf3:eth1"]
