@@ -203,6 +203,126 @@ module ip-fabric {
         }
       }
 
+      list tenant {
+        key name;
+        description
+          "A tenant of the EVPN-VXLAN overlay. Its networks are bridged
+           between the leaves over VXLAN, with EVPN as the control plane.
+           A network is placed only on the leaves of the servers attached
+           to it.";
+        leaf name {
+          type string;
+        }
+        list vrf {
+          key name;
+          description
+            "A routed VRF: an IP-VRF on each leaf of its networks, routing
+             between them with symmetric IRB. A leaf reaches the networks
+             of the VRF it has no server in through EVPN IP prefix routes
+             (type 5).";
+          leaf name {
+            type string;
+          }
+          leaf vni {
+            type uint32 {
+              range "1..16777215";
+            }
+            description
+              "Layer 3 VNI. Derived from the fabric, tenant and VRF names
+               when absent; set it to resolve a clash.";
+          }
+          container state {
+            config false;
+            description
+              "State of the IP-VRF on each leaf it is placed on, lifted from
+               the RFS IP-VRF entries of the leaves.";
+            list placement {
+              key switch;
+              leaf switch {
+                type string;
+              }
+              leaf oper-status {
+                description "The oper-state of its network instance.";
+                type enumeration {
+                  enum up;
+                  enum down;
+                  enum unknown;
+                }
+              }
+              leaf evpn-status {
+                description "The oper-state of its EVPN instance, which exchanges its routes with the other leaves.";
+                type enumeration {
+                  enum up;
+                  enum down;
+                  enum unknown;
+                }
+              }
+            }
+          }
+        }
+        list network {
+          key name;
+          description
+            "A layer 2 network: a MAC-VRF on each leaf it is placed on.";
+          leaf name {
+            type string;
+          }
+          leaf vni {
+            type uint32 {
+              range "1..16777215";
+            }
+            description
+              "VXLAN network identifier. Derived from the fabric, tenant
+               and network names when absent; set it to resolve a clash
+               between two derived VNIs.";
+          }
+          leaf vrf {
+            type string;
+            description
+              "The VRF of the tenant that routes the network. Absent for a
+               network that is only bridged.";
+          }
+          leaf gateway {
+            type string;
+            description
+              "Address and prefix length of the gateway of the network,
+               such as 10.10.10.1/24, for a network in a VRF. Every leaf of
+               the network answers on it with the same anycast address and
+               MAC.";
+          }
+          container state {
+            config false;
+            description
+              "State of the MAC-VRF of the network on each leaf it is placed
+               on, lifted from the RFS mac-vrf entries of the leaves.";
+            list placement {
+              key switch;
+              leaf switch {
+                type string;
+              }
+              leaf oper-status {
+                description "The oper-state of its network instance.";
+                type enumeration {
+                  enum up;
+                  enum down;
+                  enum unknown;
+                }
+              }
+              leaf evpn-status {
+                description
+                  "The oper-state of its EVPN instance, which bridges the
+                   network over VXLAN to the other leaves.";
+                type enumeration {
+                  enum up;
+                  enum down;
+                  enum unknown;
+                }
+              }
+            }
+          }
+        }
+      }
+
       list server {
         key name;
         description
@@ -210,6 +330,72 @@ module ip-fabric {
         leaf name {
           type string;
           description "Server name.";
+        }
+        container state {
+          config false;
+          description
+            "State of the LAG of the server on each of its leaves, for a
+             server attached to the overlay over a LAG, lifted from the RFS
+             server-lag entries of the leaves.";
+          list lag {
+            key switch;
+            leaf switch {
+              type string;
+            }
+            leaf name {
+              type string;
+              description "The LAG, such as lag1.";
+            }
+            leaf oper-status {
+              description "The oper-state of the LAG.";
+                type enumeration {
+                enum up;
+                enum down;
+                enum unknown;
+              }
+            }
+            leaf es-status {
+              description
+                "The oper-state of the ethernet segment of a dual-homed
+                 server on the LAG.";
+                type enumeration {
+                enum up;
+                enum down;
+                enum unknown;
+              }
+            }
+          }
+        }
+        list attachment {
+          key "tenant network";
+          description
+            "An overlay network the server is attached to, on all of its
+             links.";
+          leaf tenant {
+            type leafref {
+              path "../../../tenant/name";
+            }
+          }
+          leaf network {
+            type string;
+            description "A network of the tenant.";
+          }
+          leaf vlan {
+            type uint16 {
+              range "1..4094";
+            }
+            description
+              "VLAN tag the server sends the network with, absent when it
+               sends it untagged.";
+          }
+          leaf ipv4-address {
+            type string;
+            description
+              "Address and prefix length of the server in the network, such
+               as 10.10.10.11/24. dorsi does not configure servers; the
+               address is checked against the other servers of the network
+               and documents the test setup.";
+          }
         }
         container connectivity {
           must "(profile='single-homed' and

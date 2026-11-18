@@ -1,4 +1,4 @@
-import type { LldpNeighbor, TopologyGraph, TopologyLink, TopologyServer, TopologyServerLink } from '$lib/core/topology/model';
+import type { LldpNeighbor, OverlayPlacement, TopologyGraph, TopologyLink, TopologyServer, TopologyServerLink } from '$lib/core/topology/model';
 
 export type ProblemSeverity = 'danger' | 'warning';
 
@@ -175,6 +175,66 @@ function serverProblems(fabric: string, server: TopologyServer, silent: Set<stri
   return problems;
 }
 
+/**
+ * The problems of the overlay on one leaf: a network or VRF whose network
+ * instance or EVPN instance is down, and a server LAG that is down while its
+ * ports are up (LACP did not come up) or whose ethernet segment is down. A LAG
+ * with its ports down is a server link problem already.
+ */
+function overlayProblems(graph: TopologyGraph, placement: OverlayPlacement): FabricProblem[] {
+  const base = { fabric: graph.fabric, href: `/devices/${encodeURIComponent(placement.switchName)}` };
+  const id = `${placement.kind}|${placement.owner}|${placement.name}|${placement.switchName}`;
+  if (placement.kind !== 'lag') {
+    const what = placement.kind === 'network' ? 'Network' : 'VRF';
+    const instance = placement.kind === 'network' ? 'MAC-VRF' : 'IP-VRF';
+    const detail: string[] = [];
+    if (placement.operStatus === 'down') detail.push(`The ${instance} ${placement.owner}-${placement.name} on ${placement.switchName} is down.`);
+    if (placement.evpnStatus === 'down') {
+      detail.push(`Its EVPN instance is down, so ${placement.switchName} exchanges no routes for it with the other leaves.`);
+    }
+    if (detail.length === 0) return [];
+    return [{
+      ...base,
+      id,
+      severity: 'danger',
+      title: `${what} ${placement.owner}/${placement.name} down on ${placement.switchName}`,
+      detail,
+      hint: placement.kind === 'network'
+        ? 'Check that the network has an interface that is up and that vxlan1 has its VNI on the switch.'
+        : 'Check that the VRF has an IRB interface that is up and that vxlan1 has its layer 3 VNI on the switch.'
+    }];
+  }
+  const server = graph.servers.find((candidate) => candidate.name === placement.owner);
+  const ports = server?.links.filter((link) => link.switchName === placement.switchName) ?? [];
+  const portsUp = ports.length > 0 && ports.every((link) => link.linkStatus === 'up');
+  const serverHref = server ? `/services/ip-fabric-server/${encodeURIComponent(server.routeId)}` : base.href;
+  if (placement.operStatus === 'down' && portsUp) {
+    return [{
+      ...base,
+      href: serverHref,
+      id,
+      severity: 'danger',
+      title: `LAG ${placement.name} of ${placement.owner} down on ${placement.switchName}`,
+      detail: [
+        `${ports.length === 1 ? `The port ${ports[0].switchPort} is` : `The ports ${ports.map((link) => link.switchPort).join(', ')} are`} up, but the LAG is not: LACP has not come up with ${placement.owner}.`
+      ],
+      hint: `Check that ${placement.owner} bonds the ports with LACP (802.3ad) and that the cables go to the ports the server describes.`
+    }];
+  }
+  if (placement.operStatus === 'up' && placement.evpnStatus === 'down') {
+    return [{
+      ...base,
+      href: serverHref,
+      id,
+      severity: 'danger',
+      title: `Ethernet segment of ${placement.owner} down on ${placement.switchName}`,
+      detail: [`The LAG ${placement.name} is up, but its EVPN ethernet segment is down, so ${placement.switchName} does not forward for ${placement.owner} with its other leaf.`],
+      hint: 'Check that the ethernet segment has the same ESI on both leaves of the server and that EVPN is up on the switch.'
+    }];
+  }
+  return [];
+}
+
 function graphProblems(graph: TopologyGraph): FabricProblem[] {
   const silent = new Set(silentSwitches(graph));
   // The links of a silent switch are only half known, what is seen of them follows from it
@@ -182,7 +242,10 @@ function graphProblems(graph: TopologyGraph): FabricProblem[] {
   return [
     ...[...silent].map((name) => silentSwitchProblem(graph.fabric, name)),
     ...links.flatMap((link) => linkProblems(graph.fabric, link)),
-    ...graph.servers.flatMap((server) => serverProblems(graph.fabric, server, silent))
+    ...graph.servers.flatMap((server) => serverProblems(graph.fabric, server, silent)),
+    ...graph.overlay
+      .filter((placement) => !silent.has(placement.switchName))
+      .flatMap((placement) => overlayProblems(graph, placement))
   ];
 }
 

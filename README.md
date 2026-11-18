@@ -149,8 +149,58 @@ address, which Linux `lldpd` sends by default. A server link that is down is an
 error when the server has no working link left, and a warning when a
 dual-homed server has only lost its redundancy.
 
-Out of scope for now: the **overlay** (EVPN/VXLAN). A dual-homed server has two
-configured ports, but surviving the loss of a leaf needs an overlay.
+#### EVPN-VXLAN overlay (SR Linux, preliminary)
+
+A `fabric` can have `tenant`s, each with layer 2 `network`s, and a `server`
+lists the networks it is `attachment` of, with the VLAN tag it sends each one
+with (absent for untagged) and, for reference, its address. DORSI places a
+network only on the leaves of its servers, as a MAC-VRF bridged over VXLAN
+(`vxlan1`, the VTEP is the loopback). The fabric links of SR Linux have an IP
+MTU of 9000, so that a server can send full 1500 byte frames, to which VXLAN
+adds 50 bytes; Arista EOS links keep their default for now. EVPN runs on the eBGP sessions of the
+underlay: the spines keep and pass on the EVPN routes with their next hop
+(`inter-as-vpn`), and updates go out at once (`rapid-update`). A server
+attached to the overlay connects over a LAG with LACP when it is dual-homed or
+has several ports on a leaf; a dual-homed server is an all-active EVPN
+ethernet segment, with the same ESI and LACP system ID on both leaves.
+
+StratoWeave has no allocator yet, so the identifiers are derived from names
+with a stable hash (see *Overlay identifiers* in `src/dorsi/cfs.act`): the VNI
+from fabric, tenant and network, the EVI and vxlan-interface from the VNI, a
+route target shared by the leaves of a network, a route distinguisher per leaf
+(`<loopback>:<EVI>`), the ESI, LACP system ID and admin key from the server and
+the LAG from the lowest port of the server on the leaf. A clash rejects the
+fabric; a network can then be given its own `vni`. The overlay needs every
+switch to run SR Linux for now.
+
+A tenant can also have `vrf`s, and a network in a VRF has a `gateway`. The
+VRF routes between its networks with symmetric IRB: every leaf of a network
+answers on the gateway with the same anycast address and MAC (on `irb0`),
+learns the hosts from ARP and advertises them, and an IP-VRF with a layer 3
+VNI on the leaves of the VRF exchanges the subnets and host routes as EVPN IP
+prefix routes (type 5). The layer 3 VNI comes from a range of its own, apart
+from those of the networks.
+
+Known limits of the overlay on SR Linux 25.3, seen in the labs:
+
+* When a port of an ESI-LAG goes down and only that leaf had learned the MAC
+  address of the server, its other leaf knew it only from the EVPN route of
+  the first and drops it too. Bridged traffic is flooded to the server in the
+  meantime, but routed traffic to it is lost until the MAC address is learned
+  again, about 1.2 s. No setting of SR Linux 25.3 keeps the MAC address on
+  the other leaf of the segment.
+* When a port of an ESI-LAG comes back up, the first frame of the server on it
+  is sometimes lost. Holding the port down for 2 s after it comes up (DORSI
+  sets this on the ports of server LAGs) made it 2 losses in 30 instead of 8.
+
+DORSI reads the state of the overlay too: on each leaf, the network instance
+and EVPN instance of every network and VRF, and the LAG and ethernet segment
+of every server attached over one. It is lifted into read-only `state` of the
+`network` and `vrf` (a `placement` per leaf) and of the `server` (a `lag` per
+leaf). The Web UI lists as *Problems* a network or VRF that is down on a leaf,
+a server LAG that is down while its ports are up, which means LACP has not
+come up with the server, and an ethernet segment that is down on a LAG that is
+up.
 
 #### IP fabric: what is verified
 
@@ -170,8 +220,14 @@ configured ports, but surviving the loss of a leaf needs an overlay.
   The full 5-stage lab ([`test/fabric-5stage`](test/fabric-5stage/README.md))
   has not been deployed: ten SR Linux nodes need much more memory than the
   3-stage lab, which already needs about 9 GB.
-* Not covered: server-to-server traffic and live changes to a running
-  fabric. The live state is covered by the build but has not
+* The EVPN-VXLAN overlay has been run in
+  [`test/fabric-3stage`](test/fabric-3stage/README.md): server1 (on an
+  ESI-LAG of leaf1 and leaf2) and server3 (on leaf3) reach each other in
+  one network over VXLAN, server2 is routed to them from another network,
+  and disabling or enabling a port of an ESI-LAG loses no ping, bridged or
+  routed. [`test/fabric-5stage-srl`](test/fabric-5stage-srl/README.md) runs
+  the layer 2 overlay through a super-spine, with an ESI-LAG across the pods.
+* Not covered: live changes to a running fabric. The live state is covered by the build but has not
   been checked against a failing link.
 
 ### Service automation layering

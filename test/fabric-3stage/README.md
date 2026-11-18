@@ -27,6 +27,33 @@ switches and the links between them.
 | server2 | dual-homed | leaf3 | `ethernet-1/1` | `eth2` |
 | server3 | single-homed | leaf3 | `ethernet-1/2` | `eth1` |
 
+## Overlay
+
+`ip-fabric.xml` also has an EVPN-VXLAN overlay: tenant `t1` with network `web`
+(VLAN 10, gateway 10.10.10.1) and network `db` (untagged, gateway 10.10.20.1),
+routed between each other by VRF `main`. The servers set themselves up for it
+(`exec` in `fabric-3stage.clab.yml`): server1 and server2 bond their two ports
+with LACP, as DORSI puts them on an all-active ethernet segment of their two
+leaves, and route 10.10.0.0/16 through the gateway of their network.
+
+| Server | Network | VLAN | Address | Leaf side |
+|---|---|---|---|---|
+| server1 | `t1/web` | 10 | 10.10.10.11/24 | `lag1` on leaf1 and leaf2 |
+| server2 | `t1/db` | untagged | 10.10.20.12/24 | `lag2` on leaf2, `lag1` on leaf3 |
+| server3 | `t1/web` | 10 | 10.10.10.13/24 | `ethernet-1/2` on leaf3 |
+
+Once dorsi has configured the switches, `make check-overlay` pings server3 from
+server1 and back, server2 from server1 and server3, which is routed, and shows
+the route table of the VRF, the EVPN routes and MAC table on leaf3 and the
+ethernet segment on leaf1. `make check-overlay-failover` takes a port of each
+ethernet segment down and up again while traffic crosses it: `ethernet-1/1` of
+leaf1 (server1, bridged from server3) and `ethernet-1/2` of leaf2 (server2,
+routed from server1). Both checks fail on any lost or duplicated reply
+(`../common/overlay.mk`). A port coming back up has lost one reply in about
+one change in ten. The replies of server2 arrive with TTL 253, not
+63: SR Linux seems to take the TTL of the outer header when it decapsulates
+routed VXLAN.
+
 ## Status
 
 The topology and data match the `fabric_three_stage` and `fabric_five_stage`

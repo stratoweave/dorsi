@@ -78,6 +78,28 @@
                         "upper-port": "ethernet-1/3"
                     }
                 ],
+                "tenant": [
+                    {
+                        "name": "t1",
+                        "vrf": [
+                            {
+                                "name": "main"
+                            }
+                        ],
+                        "network": [
+                            {
+                                "name": "web",
+                                "vrf": "main",
+                                "gateway": "10.10.10.1/24"
+                            },
+                            {
+                                "name": "db",
+                                "vrf": "main",
+                                "gateway": "10.10.20.1/24"
+                            }
+                        ]
+                    }
+                ],
                 "server": [
                     {
                         "name": "server1",
@@ -95,7 +117,15 @@
                                     "server-port": "eth2"
                                 }
                             ]
-                        }
+                        },
+                        "attachment": [
+                            {
+                                "tenant": "t1",
+                                "network": "web",
+                                "vlan": 10,
+                                "ipv4-address": "10.10.10.11/24"
+                            }
+                        ]
                     },
                     {
                         "name": "server2",
@@ -113,7 +143,14 @@
                                     "server-port": "eth2"
                                 }
                             ]
-                        }
+                        },
+                        "attachment": [
+                            {
+                                "tenant": "t1",
+                                "network": "db",
+                                "ipv4-address": "10.10.20.12/24"
+                            }
+                        ]
                     },
                     {
                         "name": "server3",
@@ -126,7 +163,15 @@
                                     "server-port": "eth1"
                                 }
                             ]
-                        }
+                        },
+                        "attachment": [
+                            {
+                                "tenant": "t1",
+                                "network": "web",
+                                "vlan": 10,
+                                "ipv4-address": "10.10.10.13/24"
+                            }
+                        ]
                     }
                 ]
             }

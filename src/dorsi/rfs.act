@@ -30,6 +30,10 @@ _FABRIC_EXPORT_POLICY = "export-loopbacks"
 _FABRIC_IMPORT_POLICY = "accept-all"
 _FABRIC_LOOPBACK_PREFIX_SET = "loopbacks"
 _FABRIC_ECMP_PATHS = 64
+# IP MTU of the fabric links. VXLAN adds 50 bytes to every frame of the
+# overlay, so with the default of 1500 a server could send no frame over 1450
+# bytes across the fabric. SR Linux ports have an MTU of 9232 by default.
+_FABRIC_IP_MTU = 9000
 
 # Arista EOS is configured through OpenConfig. SR Linux can serve OpenConfig
 # too, so EOS is told apart by a module only EOS has.
@@ -142,6 +146,22 @@ class FabricBaseConfig(base.FabricBaseConfig):
             exp.action_.policy_result = "accept"
             rp.policy.create(_FABRIC_IMPORT_POLICY).statement.create("10").action_.policy_result = "accept"
 
+            if i.evpn:
+                # EVPN on the same eBGP sessions as the underlay. A spine
+                # keeps the routes it imports into no network-instance and
+                # passes them on; EVPN keeps the next hop, the VTEP of the
+                # leaf that sent them. Updates and withdrawals go out at
+                # once: held back by the advertisement interval, a link of a
+                # multihomed server that goes down cuts its traffic for
+                # seconds.
+                af_evpn = bgp.afi_safi.create(srl25.srl_nokia_common_evpn, admin_state="enable")
+                af_evpn.evpn.rapid_update = True
+                if i.role != "leaf":
+                    af_evpn.evpn.inter_as_vpn = True
+                exp_evpn = rp.policy.create(_FABRIC_EXPORT_POLICY).statement.create("20")
+                exp_evpn.match.family = [srl25.srl_nokia_common_evpn]
+                exp_evpn.action_.policy_result = "accept"
+
             return dev
 
         if _EOS_MODULE in di.modules:
@@ -244,6 +264,7 @@ class FabricInterface(base.FabricInterface):
             subif = intf.subinterface.create(0)
             subif.admin_state = "enable"
             subif.description = if_description
+            subif.ip_mtu = u64(_FABRIC_IP_MTU)
             subif.ipv4.admin_state = "enable"
             subif.ipv4.address.create("%s/%s" % (i.ipv4_address, str(i.ipv4_prefix_length)))
 
@@ -512,6 +533,12 @@ actor FabricInterfaceTransform(path, update_oper: proc(?y_1_oper.stratoweave_rfs
     after _POLL_PERIOD: _watchdog()
 
 
+# How long a port of a server LAG is held down after it comes up. When a port
+# came back, SR Linux lost the first frame of the server on it in 8 of 30
+# tries in the fabric-5stage-srl lab; held for 2 s, in 2 of 30.
+_LAG_MEMBER_HOLD_TIME_UP_MS = 2000
+
+
 class ServerPort(base.ServerPort):
     def transform(self, i, di):
         print("RFS /rfs{{{di.name}}}/server-port transform running [{i.name}] <-> {i.server} [{i.server_port}] {i.profile}", err=True)
@@ -523,6 +550,10 @@ class ServerPort(base.ServerPort):
             intf = dev.interface.create(i.name)
             intf.description = if_description
             intf.admin_state = "enable"
+            lag = i.lag
+            if lag is not None:
+                intf.ethernet.aggregate_id = lag
+                intf.ethernet.hold_time.up = u64(_LAG_MEMBER_HOLD_TIME_UP_MS)
             dev.system.create_lldp().interface.create(i.name, admin_state="enable")
             return dev
 
@@ -531,6 +562,140 @@ class ServerPort(base.ServerPort):
             dev = eos436.root()
             _eos_interface(dev, i.name, eos436.iana_if_type_ethernetCsmacd, if_description)
             _eos_lldp_interface(dev, i.name)
+            return dev
+
+        raise UnsupportedDevice()
+
+
+# --- EVPN-VXLAN overlay -----------------------------------------------------------
+# Layer 2 networks bridged between the leaves over VXLAN, as in the SR Linux
+# l2evpn tutorial, with EVPN on the eBGP sessions of the underlay instead of an
+# iBGP overlay. Every network has its own vxlan-interface on vxlan1, numbered
+# by its EVI. Flooded traffic uses ingress replication.
+_VXLAN_TUNNEL = "vxlan1"
+_EVPN_BGP_INSTANCE = 1
+# Paths to a MAC address over the leaves of a multihomed server (aliasing)
+_EVPN_ECMP = 8
+# Priority of the LACP system ID shared by the leaves of a server
+_LACP_SYSTEM_PRIORITY = 32768
+# The anycast gateways of the networks. SR Linux derives the gateway MAC from
+# the virtual router ID, 00:00:5e:00:01:01, the same on every leaf.
+_IRB_INTERFACE = "irb0"
+_ANYCAST_GW_VRID = 1
+
+
+class MacVrf(base.MacVrf):
+    def transform(self, i, di):
+        print("RFS /rfs{{{di.name}}}/mac-vrf transform running {i.name} VNI {i.vni}", err=True)
+
+        if "srl_nokia-system" in di.modules:
+            dev = srl25.root()
+            vxlan_if = "{_VXLAN_TUNNEL}.{i.evi}"
+            vx = dev.tunnel_interface.create(_VXLAN_TUNNEL).vxlan_interface.create(i.evi)
+            vx.type = srl25.srl_nokia_interfaces_bridged
+            vx.ingress.vni = i.vni
+
+            ni = dev.network_instance.create(i.name, type=srl25.srl_nokia_network_instance_mac_vrf, admin_state="enable", description="Overlay network VNI {i.vni}")
+            for itf in i.interface:
+                # The subinterface index is the VLAN, 0 for untagged traffic
+                vlan = itf.vlan
+                index = vlan if vlan is not None else 0
+                intf = dev.interface.create(itf.name)
+                intf.vlan_tagging = True
+                subif = intf.subinterface.create(index)
+                subif.type = srl25.srl_nokia_interfaces_bridged
+                subif.admin_state = "enable"
+                if vlan is not None:
+                    subif.vlan.encap.create_single_tagged(vlan_id=vlan)
+                else:
+                    subif.vlan.encap.create_untagged()
+                ni.interface.create("{itf.name}.{index}")
+            ni.vxlan_interface.create(vxlan_if)
+
+            irb = i.irb
+            if irb is not None:
+                # Anycast gateway. The leaf learns the hosts of the network
+                # from ARP, also from the gratuitous ARP of a host, advertises
+                # them with their IP in MAC/IP routes and puts them in the
+                # IP-VRF as host routes, which go out as IP prefix routes.
+                irb_if = dev.interface.create(_IRB_INTERFACE)
+                irb_if.admin_state = "enable"
+                irb_sub = irb_if.subinterface.create(irb.index)
+                irb_sub.admin_state = "enable"
+                irb_sub.create_anycast_gw(virtual_router_id=u64(_ANYCAST_GW_VRID))
+                irb_sub.ipv4.admin_state = "enable"
+                irb_sub.ipv4.address.create(irb.gateway, anycast_gw=True)
+                arp = irb_sub.ipv4.arp
+                arp.learn_unsolicited = True
+                arp.host_route.populate.create("dynamic")
+                arp.create_evpn().advertise.create("dynamic")
+                ni.interface.create("{_IRB_INTERFACE}.{irb.index}")
+
+            _srl_evpn_instance(ni, vxlan_if, i.evi, i.route_distinguisher, i.route_target)
+            return dev
+
+        raise UnsupportedDevice()
+
+
+def _srl_evpn_instance(ni, vxlan_if: str, evi: u64, rd: str, rt: str):
+    """EVPN on the vxlan-interface of a network instance, with its route
+    distinguisher and route target."""
+    evpn = ni.protocols.create_bgp_evpn().bgp_instance.create(u64(_EVPN_BGP_INSTANCE))
+    evpn.admin_state = "enable"
+    evpn.vxlan_interface = vxlan_if
+    evpn.evi = evi
+    evpn.ecmp = u64(_EVPN_ECMP)
+    vpn = ni.protocols.create_bgp_vpn().bgp_instance.create(u64(_EVPN_BGP_INSTANCE))
+    vpn.route_distinguisher.rd = rd
+    vpn.route_target.export_rt = rt
+    vpn.route_target.import_rt = rt
+
+
+class IpVrf(base.IpVrf):
+    def transform(self, i, di):
+        print("RFS /rfs{{{di.name}}}/ip-vrf transform running {i.name} VNI {i.vni}", err=True)
+
+        if "srl_nokia-system" in di.modules:
+            dev = srl25.root()
+            vxlan_if = "{_VXLAN_TUNNEL}.{i.evi}"
+            vx = dev.tunnel_interface.create(_VXLAN_TUNNEL).vxlan_interface.create(i.evi)
+            vx.type = srl25.srl_nokia_interfaces_routed
+            vx.ingress.vni = i.vni
+
+            ni = dev.network_instance.create(i.name, type=srl25.srl_nokia_network_instance_ip_vrf, admin_state="enable", description="Overlay VRF VNI {i.vni}")
+            for irb_if in i.irb_interface:
+                ni.interface.create(irb_if)
+            ni.vxlan_interface.create(vxlan_if)
+            _srl_evpn_instance(ni, vxlan_if, i.evi, i.route_distinguisher, i.route_target)
+            return dev
+
+        raise UnsupportedDevice()
+
+
+class ServerLag(base.ServerLag):
+    def transform(self, i, di):
+        print("RFS /rfs{{{di.name}}}/server-lag transform running {i.name} {i.server}", err=True)
+
+        if "srl_nokia-system" in di.modules:
+            dev = srl25.root()
+            intf = dev.interface.create(i.name)
+            intf.description = "Server {i.server}"
+            intf.admin_state = "enable"
+            lag = intf.create_lag(lag_type="lacp")
+            lag.create_lacp(interval="FAST", lacp_mode="ACTIVE", admin_key=i.lacp_admin_key, system_id_mac=i.lacp_system_id, system_priority=u64(_LACP_SYSTEM_PRIORITY))
+
+            esi = i.esi
+            if esi is not None:
+                # All-active ethernet segment, shared with the other leaf of
+                # the server
+                protocols = dev.system.create_network_instance().protocols
+                protocols.create_bgp_vpn().bgp_instance.create(u64(_EVPN_BGP_INSTANCE))
+                es_bgp = protocols.create_evpn().create_ethernet_segments().bgp_instance.create(u64(_EVPN_BGP_INSTANCE))
+                es = es_bgp.ethernet_segment.create("es-{i.server}")
+                es.admin_state = "enable"
+                es.esi = esi
+                es.multi_homing_mode = "all-active"
+                es.interface.create(i.name)
             return dev
 
         raise UnsupportedDevice()
@@ -600,3 +765,148 @@ actor ServerPortTransform(path, update_oper: proc(?y_1_oper.stratoweave_rfs__rfs
         _running = False
 
     after _POLL_PERIOD: _watchdog()
+
+
+# --- Overlay state --------------------------------------------------------------
+# Poll the state of the overlay from the device: the network instance of each
+# MAC-VRF and IP-VRF with its EVPN instance, and each server LAG with its
+# ethernet segment. The CFS FabricTransform lift turns them into the state of
+# the networks, VRFs and servers. SR Linux only so far.
+
+def _srl_status(raw: ?str) -> ?str:
+    """An SR Linux oper-state as up, down or unknown, None when not read."""
+    if raw == "up" or raw == "down":
+        return raw
+    if raw is not None:
+        return "unknown"
+    return None
+
+
+actor _SrlPoll(path, dev: swdev.DeviceMgr, on_state: proc(?srl25_oper_root)->None):
+    """Polls subscriptions from an SR Linux device and hands each delivery to
+    on_state, and None once the device stops answering, like
+    FabricInterfaceTransform."""
+    _subs = gdata.SubscriptionManager(dev.tree_provider(), str(path))
+    var _last_delivery: ?int = None
+    var _stale = False
+    var _running = True
+
+    def _watchdog():
+        if not _running:
+            return
+        last = _last_delivery
+        if last is not None and not _stale and time.monotonic_ns() - last > _STALE_AFTER_NS:
+            print("{path}: no state from the device for {_STALE_AFTER_NS // 1000000000} s, reporting it as unknown", err=True)
+            _stale = True
+            on_state(None)
+        after _POLL_PERIOD: _watchdog()
+
+    def _on_delivery(root: ?srl25_oper_root, err: ?Exception):
+        if err is not None:
+            print("{path}: subscription error: {err}", err=True)
+        _last_delivery = time.monotonic_ns()
+        _stale = False
+        on_state(root if err is None else None)
+
+    def declare(subs: set[gdata.SubscriptionSpec]):
+        want: set[gdata.Delivery] = set()
+        if "srl_nokia-system" in dev.get_modules().0:
+            want.add(srl25_oper.dst(_on_delivery).deliver(subs))
+        _subs.declare(want)
+
+    def shutdown():
+        _running = False
+
+    after _POLL_PERIOD: _watchdog()
+
+
+def _srl_network_instance_subscriptions(name: str) -> set[gdata.SubscriptionSpec]:
+    ni = srl25_oper.subs.network_instance.entry(name)
+    return {
+        ni.oper_state.subscribe(period=_POLL_PERIOD),
+        ni.protocols.bgp_evpn.bgp_instance.entry(u64(_EVPN_BGP_INSTANCE)).oper_state.subscribe(period=_POLL_PERIOD)
+    }
+
+
+def _srl_network_instance_status(root: ?srl25_oper_root) -> (?str, ?str):
+    """The oper-state of the one network instance subscribed to and of its
+    EVPN instance."""
+    if root is not None:
+        for ni in root.network_instance:
+            evpn_status: ?str = None
+            bgp_evpn = ni.protocols.bgp_evpn
+            if bgp_evpn is not None:
+                for instance in bgp_evpn.bgp_instance:
+                    evpn_status = _srl_status(instance.oper_state)
+            return (_srl_status(ni.oper_state), evpn_status)
+    return (None, None)
+
+
+actor MacVrfTransform(path, update_oper: proc(?y_1_oper.stratoweave_rfs__rfs__mac_vrf_entry)->None, dev: swdev.DeviceMgr):
+    _oper = base.MacVrf.new_state(path)
+
+    def on_state(root: ?srl25_oper_root):
+        oper_status, evpn_status = _srl_network_instance_status(root)
+        _oper.state.oper_status = oper_status
+        _oper.state.evpn_status = evpn_status
+        update_oper(_oper)
+
+    _poll = _SrlPoll(path, dev, on_state)
+
+    def on_conf(conf: y_1.stratoweave_rfs__rfs__mac_vrf_entry):
+        _poll.declare(_srl_network_instance_subscriptions(conf.name))
+
+    def shutdown():
+        _poll.shutdown()
+
+
+actor IpVrfTransform(path, update_oper: proc(?y_1_oper.stratoweave_rfs__rfs__ip_vrf_entry)->None, dev: swdev.DeviceMgr):
+    _oper = base.IpVrf.new_state(path)
+
+    def on_state(root: ?srl25_oper_root):
+        oper_status, evpn_status = _srl_network_instance_status(root)
+        _oper.state.oper_status = oper_status
+        _oper.state.evpn_status = evpn_status
+        update_oper(_oper)
+
+    _poll = _SrlPoll(path, dev, on_state)
+
+    def on_conf(conf: y_1.stratoweave_rfs__rfs__ip_vrf_entry):
+        _poll.declare(_srl_network_instance_subscriptions(conf.name))
+
+    def shutdown():
+        _poll.shutdown()
+
+
+actor ServerLagTransform(path, update_oper: proc(?y_1_oper.stratoweave_rfs__rfs__server_lag_entry)->None, dev: swdev.DeviceMgr):
+    _oper = base.ServerLag.new_state(path)
+
+    def on_state(root: ?srl25_oper_root):
+        oper_status: ?str = None
+        es_status: ?str = None
+        if root is not None:
+            oper_status = _srl_oper_status(root)
+            system_ni = root.system.network_instance
+            if system_ni is not None:
+                evpn = system_ni.protocols.evpn
+                if evpn is not None:
+                    segments = evpn.ethernet_segments
+                    if segments is not None:
+                        for instance in segments.bgp_instance:
+                            for es in instance.ethernet_segment:
+                                es_status = _srl_status(es.oper_state)
+        _oper.state.oper_status = oper_status
+        _oper.state.es_status = es_status
+        update_oper(_oper)
+
+    _poll = _SrlPoll(path, dev, on_state)
+
+    def on_conf(conf: y_1.stratoweave_rfs__rfs__server_lag_entry):
+        subs = {srl25_oper.subs.interface.entry(conf.name).oper_state.subscribe(period=_POLL_PERIOD)}
+        if conf.esi is not None:
+            es = srl25_oper.subs.system.network_instance.protocols.evpn.ethernet_segments.bgp_instance.entry(u64(_EVPN_BGP_INSTANCE)).ethernet_segment.entry("es-{conf.server}")
+            subs.add(es.oper_state.subscribe(period=_POLL_PERIOD))
+        _poll.declare(subs)
+
+    def shutdown():
+        _poll.shutdown()

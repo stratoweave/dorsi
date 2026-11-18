@@ -1,0 +1,75 @@
+name: dorsi-fabric-5stage-srl
+prefix: __lab-name
+
+mgmt:
+  network: dorsi-fabric-5stage-srl
+  ipv4-subnet: auto
+  ipv6-subnet: auto
+
+topology:
+  kinds:
+    nokia_srlinux:
+      image: ghcr.io/nokia/srlinux:25.3.2
+      image-pull-policy: if-not-present
+      startup-config: srl-startup.conf
+  nodes:
+    leaf1:
+      kind: nokia_srlinux
+    leaf2:
+      kind: nokia_srlinux
+    spine1:
+      kind: nokia_srlinux
+    spine2:
+      kind: nokia_srlinux
+    superspine1:
+      kind: nokia_srlinux
+    # The overlay test setup of ip-fabric.xml (tenant t1)
+    server1:
+      kind: linux
+      image: ghcr.io/srl-labs/network-multitool
+      image-pull-policy: if-not-present
+      exec:
+        - ip link add bond0 type bond mode 802.3ad lacp_rate fast xmit_hash_policy layer3+4
+        - ip link set eth1 down
+        - ip link set eth1 master bond0
+        - ip link set eth2 down
+        - ip link set eth2 master bond0
+        - ip link set bond0 up
+        - ip link add link bond0 name bond0.10 type vlan id 10
+        - ip link set bond0.10 up
+        - ip address add 10.10.10.11/24 dev bond0.10
+        - ip route add 10.10.0.0/16 via 10.10.10.1
+    server2:
+      kind: linux
+      image: ghcr.io/srl-labs/network-multitool
+      image-pull-policy: if-not-present
+      exec:
+        - ip link add link eth1 name eth1.20 type vlan id 20
+        - ip link set eth1.20 up
+        - ip address add 10.10.20.12/24 dev eth1.20
+        - ip route add 10.10.0.0/16 via 10.10.20.1
+    server3:
+      kind: linux
+      image: ghcr.io/srl-labs/network-multitool
+      image-pull-policy: if-not-present
+      exec:
+        - ip address add 10.10.10.13/24 dev eth1
+        - ip route add 10.10.0.0/16 via 10.10.10.1
+    sweave:
+      kind: linux
+      image: dorsi-sweave-base
+      image-pull-policy: if-not-present
+      ports:
+        # The dorsi binary serves the APIs and the embedded Web UI on :80.
+        - "${WEBUI_PUBLISH}:80/tcp"
+        - "830/tcp"
+
+  links:
+    - endpoints: ["leaf1:e1-49", "spine1:e1-1"]
+    - endpoints: ["leaf2:e1-49", "spine2:e1-1"]
+    - endpoints: ["spine1:e1-31", "superspine1:e1-1"]
+    - endpoints: ["spine2:e1-31", "superspine1:e1-2"]
+    - endpoints: ["server1:eth1", "leaf1:e1-1"]
+    - endpoints: ["server1:eth2", "leaf2:e1-1"]
+    - endpoints: ["server2:eth1", "leaf2:e1-2"]
+    - endpoints: ["server3:eth1", "leaf1:e1-2"]
