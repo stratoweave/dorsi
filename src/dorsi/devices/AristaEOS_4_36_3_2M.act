@@ -3565,26 +3565,48 @@ class openconfig_network_instance__network_instances__network_instance__vlans__v
 
 
 _breaker89: None = None
+class openconfig_network_instance__network_instances__network_instance__vlans__vlan__members(yadata.MNode):
+
+    mut def __init__(self) -> None:
+        pass
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['openconfig-network-instance:network-instances', 'network-instance', 'vlans', 'vlan', 'members'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> openconfig_network_instance__network_instances__network_instance__vlans__vlan__members:
+        if n is not None:
+            return openconfig_network_instance__network_instances__network_instance__vlans__vlan__members()
+        return openconfig_network_instance__network_instances__network_instance__vlans__vlan__members()
+
+    mut def copy(self) -> openconfig_network_instance__network_instances__network_instance__vlans__vlan__members:
+        """Create a deep copy of this adata object"""
+        return openconfig_network_instance__network_instances__network_instance__vlans__vlan__members.from_gdata(self.to_gdata())
+
+
+_breaker90: None = None
 class openconfig_network_instance__network_instances__network_instance__vlans__vlan_entry(yadata.MNode):
     vlan_id: u64
     config: openconfig_network_instance__network_instances__network_instance__vlans__vlan__config
+    members: openconfig_network_instance__network_instances__network_instance__vlans__vlan__members
 
-    mut def __init__(self, vlan_id: u64, config: ?openconfig_network_instance__network_instances__network_instance__vlans__vlan__config=None) -> None:
+    mut def __init__(self, vlan_id: u64, config: ?openconfig_network_instance__network_instances__network_instance__vlans__vlan__config=None, members: ?openconfig_network_instance__network_instances__network_instance__vlans__vlan__members=None) -> None:
         self.vlan_id = vlan_id
         self.config = config if config is not None else openconfig_network_instance__network_instances__network_instance__vlans__vlan__config()
+        self.members = members if members is not None else openconfig_network_instance__network_instances__network_instance__vlans__vlan__members()
 
     mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
         return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['openconfig-network-instance:network-instances', 'network-instance', 'vlans', 'vlan'], prev=prev)
 
     @staticmethod
     mut def from_gdata(n: ygdata.Node) -> openconfig_network_instance__network_instances__network_instance__vlans__vlan_entry:
-        return openconfig_network_instance__network_instances__network_instance__vlans__vlan_entry(vlan_id=n.get_u64(ygdata.Id(NS_openconfig_network_instance, 'vlan-id')), config=openconfig_network_instance__network_instances__network_instance__vlans__vlan__config.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_network_instance, 'config'))))
+        return openconfig_network_instance__network_instances__network_instance__vlans__vlan_entry(vlan_id=n.get_u64(ygdata.Id(NS_openconfig_network_instance, 'vlan-id')), config=openconfig_network_instance__network_instances__network_instance__vlans__vlan__config.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_network_instance, 'config'))), members=openconfig_network_instance__network_instances__network_instance__vlans__vlan__members.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_network_instance, 'members'))))
 
     mut def copy(self) -> openconfig_network_instance__network_instances__network_instance__vlans__vlan_entry:
         """Create a deep copy of this adata object"""
         return openconfig_network_instance__network_instances__network_instance__vlans__vlan_entry.from_gdata(self.to_gdata())
 
-_breaker90: None = None
+_breaker91: None = None
 class openconfig_network_instance__network_instances__network_instance__vlans__vlan(yadata.MKeyedList[u64, openconfig_network_instance__network_instances__network_instance__vlans__vlan_entry]):
     mut def __init__(self, elements: list[openconfig_network_instance__network_instances__network_instance__vlans__vlan_entry]=[]) -> None:
         yadata.MKeyedList.__init__(self, lambda e: e.vlan_id, elements)
@@ -3615,7 +3637,7 @@ class openconfig_network_instance__network_instances__network_instance__vlans__v
         return openconfig_network_instance__network_instances__network_instance__vlans__vlan(elements=copied_elements)
 
 
-_breaker91: None = None
+_breaker92: None = None
 class openconfig_network_instance__network_instances__network_instance__vlans(yadata.MNode):
     vlan: openconfig_network_instance__network_instances__network_instance__vlans__vlan
 
@@ -3636,7 +3658,7 @@ class openconfig_network_instance__network_instances__network_instance__vlans(ya
         return openconfig_network_instance__network_instances__network_instance__vlans.from_gdata(self.to_gdata())
 
 
-_breaker92: None = None
+_breaker93: None = None
 class openconfig_network_instance__network_instances__network_instance__protocols__protocol__config(yadata.MNode):
     identifier: ?Identityref
     name: ?str
@@ -3659,7 +3681,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
         return openconfig_network_instance__network_instances__network_instance__protocols__protocol__config.from_gdata(self.to_gdata())
 
 
-_breaker93: None = None
+_breaker94: None = None
 class openconfig_network_instance__network_instances__network_instance__protocols__protocol__static_routes__static__config(yadata.MNode):
     prefix: ?str
 
@@ -3680,7 +3702,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
         return openconfig_network_instance__network_instances__network_instance__protocols__protocol__static_routes__static__config.from_gdata(self.to_gdata())
 
 
-_breaker94: None = None
+_breaker95: None = None
 class openconfig_network_instance__network_instances__network_instance__protocols__protocol__static_routes__static__next_hops__next_hop__config(yadata.MNode):
     index: ?str
     next_hop: ?atom
@@ -3703,7 +3725,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
         return openconfig_network_instance__network_instances__network_instance__protocols__protocol__static_routes__static__next_hops__next_hop__config.from_gdata(self.to_gdata())
 
 
-_breaker95: None = None
+_breaker96: None = None
 class openconfig_network_instance__network_instances__network_instance__protocols__protocol__static_routes__static__next_hops__next_hop_entry(yadata.MNode):
     index: str
     config: openconfig_network_instance__network_instances__network_instance__protocols__protocol__static_routes__static__next_hops__next_hop__config
@@ -3723,7 +3745,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
         """Create a deep copy of this adata object"""
         return openconfig_network_instance__network_instances__network_instance__protocols__protocol__static_routes__static__next_hops__next_hop_entry.from_gdata(self.to_gdata())
 
-_breaker96: None = None
+_breaker97: None = None
 class openconfig_network_instance__network_instances__network_instance__protocols__protocol__static_routes__static__next_hops__next_hop(yadata.MKeyedList[str, openconfig_network_instance__network_instances__network_instance__protocols__protocol__static_routes__static__next_hops__next_hop_entry]):
     mut def __init__(self, elements: list[openconfig_network_instance__network_instances__network_instance__protocols__protocol__static_routes__static__next_hops__next_hop_entry]=[]) -> None:
         yadata.MKeyedList.__init__(self, lambda e: e.index, elements)
@@ -3754,7 +3776,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
         return openconfig_network_instance__network_instances__network_instance__protocols__protocol__static_routes__static__next_hops__next_hop(elements=copied_elements)
 
 
-_breaker97: None = None
+_breaker98: None = None
 class openconfig_network_instance__network_instances__network_instance__protocols__protocol__static_routes__static__next_hops(yadata.MNode):
     next_hop: openconfig_network_instance__network_instances__network_instance__protocols__protocol__static_routes__static__next_hops__next_hop
 
@@ -3775,7 +3797,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
         return openconfig_network_instance__network_instances__network_instance__protocols__protocol__static_routes__static__next_hops.from_gdata(self.to_gdata())
 
 
-_breaker98: None = None
+_breaker99: None = None
 class openconfig_network_instance__network_instances__network_instance__protocols__protocol__static_routes__static_entry(yadata.MNode):
     prefix: str
     config: openconfig_network_instance__network_instances__network_instance__protocols__protocol__static_routes__static__config
@@ -3797,7 +3819,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
         """Create a deep copy of this adata object"""
         return openconfig_network_instance__network_instances__network_instance__protocols__protocol__static_routes__static_entry.from_gdata(self.to_gdata())
 
-_breaker99: None = None
+_breaker100: None = None
 class openconfig_network_instance__network_instances__network_instance__protocols__protocol__static_routes__static(yadata.MKeyedList[str, openconfig_network_instance__network_instances__network_instance__protocols__protocol__static_routes__static_entry]):
     mut def __init__(self, elements: list[openconfig_network_instance__network_instances__network_instance__protocols__protocol__static_routes__static_entry]=[]) -> None:
         yadata.MKeyedList.__init__(self, lambda e: e.prefix, elements)
@@ -3828,7 +3850,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
         return openconfig_network_instance__network_instances__network_instance__protocols__protocol__static_routes__static(elements=copied_elements)
 
 
-_breaker100: None = None
+_breaker101: None = None
 class openconfig_network_instance__network_instances__network_instance__protocols__protocol__static_routes(yadata.MNode):
     static: openconfig_network_instance__network_instances__network_instance__protocols__protocol__static_routes__static
 
@@ -3849,7 +3871,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
         return openconfig_network_instance__network_instances__network_instance__protocols__protocol__static_routes.from_gdata(self.to_gdata())
 
 
-_breaker101: None = None
+_breaker102: None = None
 class openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__config(yadata.MNode):
     as_: ?u64
     router_id: ?str
@@ -3872,7 +3894,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
         return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__config.from_gdata(self.to_gdata())
 
 
-_breaker102: None = None
+_breaker103: None = None
 class openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis__afi_safi__config(yadata.MNode):
     afi_safi_name: ?Identityref
     enabled: ?bool
@@ -3895,7 +3917,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
         return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis__afi_safi__config.from_gdata(self.to_gdata())
 
 
-_breaker103: None = None
+_breaker104: None = None
 class openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis__afi_safi__use_multiple_paths__ebgp__config(yadata.MNode):
     maximum_paths: ?u64
 
@@ -3916,7 +3938,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
         return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis__afi_safi__use_multiple_paths__ebgp__config.from_gdata(self.to_gdata())
 
 
-_breaker104: None = None
+_breaker105: None = None
 class openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis__afi_safi__use_multiple_paths__ebgp(yadata.MNode):
     config: openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis__afi_safi__use_multiple_paths__ebgp__config
 
@@ -3937,7 +3959,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
         return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis__afi_safi__use_multiple_paths__ebgp.from_gdata(self.to_gdata())
 
 
-_breaker105: None = None
+_breaker106: None = None
 class openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis__afi_safi__use_multiple_paths(yadata.MNode):
     ebgp: openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis__afi_safi__use_multiple_paths__ebgp
 
@@ -3958,7 +3980,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
         return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis__afi_safi__use_multiple_paths.from_gdata(self.to_gdata())
 
 
-_breaker106: None = None
+_breaker107: None = None
 class openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis__afi_safi__next_hop__config(yadata.MNode):
     preserve_next_hop: ?bool
 
@@ -3979,7 +4001,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
         return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis__afi_safi__next_hop__config.from_gdata(self.to_gdata())
 
 
-_breaker107: None = None
+_breaker108: None = None
 class openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis__afi_safi__next_hop(yadata.MNode):
     config: openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis__afi_safi__next_hop__config
 
@@ -4000,7 +4022,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
         return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis__afi_safi__next_hop.from_gdata(self.to_gdata())
 
 
-_breaker108: None = None
+_breaker109: None = None
 class openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis__afi_safi_entry(yadata.MNode):
     afi_safi_name: Identityref
     config: openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis__afi_safi__config
@@ -4024,7 +4046,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
         """Create a deep copy of this adata object"""
         return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis__afi_safi_entry.from_gdata(self.to_gdata())
 
-_breaker109: None = None
+_breaker110: None = None
 class openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis__afi_safi(yadata.MKeyedList[Identityref, openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis__afi_safi_entry]):
     mut def __init__(self, elements: list[openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis__afi_safi_entry]=[]) -> None:
         yadata.MKeyedList.__init__(self, lambda e: e.afi_safi_name, elements)
@@ -4055,7 +4077,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
         return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis__afi_safi(elements=copied_elements)
 
 
-_breaker110: None = None
+_breaker111: None = None
 class openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis(yadata.MNode):
     afi_safi: openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis__afi_safi
 
@@ -4076,7 +4098,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
         return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis.from_gdata(self.to_gdata())
 
 
-_breaker111: None = None
+_breaker112: None = None
 class openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__evpn(yadata.MNode):
     import_target: list[str]
     export_target: list[str]
@@ -4099,7 +4121,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
         return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__evpn.from_gdata(self.to_gdata())
 
 
-_breaker112: None = None
+_breaker113: None = None
 class openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global(yadata.MNode):
     config: openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__config
     afi_safis: openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis
@@ -4124,7 +4146,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
         return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global.from_gdata(self.to_gdata())
 
 
-_breaker113: None = None
+_breaker114: None = None
 class openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__neighbors__neighbor__config(yadata.MNode):
     peer_group: ?str
     neighbor_address: ?str
@@ -4153,7 +4175,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
         return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__neighbors__neighbor__config.from_gdata(self.to_gdata())
 
 
-_breaker114: None = None
+_breaker115: None = None
 class openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__neighbors__neighbor_entry(yadata.MNode):
     neighbor_address: str
     config: openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__neighbors__neighbor__config
@@ -4173,7 +4195,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
         """Create a deep copy of this adata object"""
         return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__neighbors__neighbor_entry.from_gdata(self.to_gdata())
 
-_breaker115: None = None
+_breaker116: None = None
 class openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__neighbors__neighbor(yadata.MKeyedList[str, openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__neighbors__neighbor_entry]):
     mut def __init__(self, elements: list[openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__neighbors__neighbor_entry]=[]) -> None:
         yadata.MKeyedList.__init__(self, lambda e: e.neighbor_address, elements)
@@ -4204,7 +4226,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
         return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__neighbors__neighbor(elements=copied_elements)
 
 
-_breaker116: None = None
+_breaker117: None = None
 class openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__neighbors(yadata.MNode):
     neighbor: openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__neighbors__neighbor
 
@@ -4225,7 +4247,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
         return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__neighbors.from_gdata(self.to_gdata())
 
 
-_breaker117: None = None
+_breaker118: None = None
 class openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__config(yadata.MNode):
     peer_group_name: ?str
     send_community_type: list[str]
@@ -4248,7 +4270,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
         return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__config.from_gdata(self.to_gdata())
 
 
-_breaker118: None = None
+_breaker119: None = None
 class openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__apply_policy__config(yadata.MNode):
     import_policy: list[str]
     export_policy: list[str]
@@ -4271,7 +4293,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
         return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__apply_policy__config.from_gdata(self.to_gdata())
 
 
-_breaker119: None = None
+_breaker120: None = None
 class openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__apply_policy(yadata.MNode):
     config: openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__apply_policy__config
 
@@ -4292,7 +4314,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
         return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__apply_policy.from_gdata(self.to_gdata())
 
 
-_breaker120: None = None
+_breaker121: None = None
 class openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__afi_safis__afi_safi__config(yadata.MNode):
     afi_safi_name: ?Identityref
     enabled: ?bool
@@ -4315,7 +4337,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
         return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__afi_safis__afi_safi__config.from_gdata(self.to_gdata())
 
 
-_breaker121: None = None
+_breaker122: None = None
 class openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__afi_safis__afi_safi__apply_policy__config(yadata.MNode):
     import_policy: list[str]
     export_policy: list[str]
@@ -4338,7 +4360,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
         return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__afi_safis__afi_safi__apply_policy__config.from_gdata(self.to_gdata())
 
 
-_breaker122: None = None
+_breaker123: None = None
 class openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__afi_safis__afi_safi__apply_policy(yadata.MNode):
     config: openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__afi_safis__afi_safi__apply_policy__config
 
@@ -4359,7 +4381,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
         return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__afi_safis__afi_safi__apply_policy.from_gdata(self.to_gdata())
 
 
-_breaker123: None = None
+_breaker124: None = None
 class openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__afi_safis__afi_safi_entry(yadata.MNode):
     afi_safi_name: Identityref
     config: openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__afi_safis__afi_safi__config
@@ -4381,7 +4403,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
         """Create a deep copy of this adata object"""
         return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__afi_safis__afi_safi_entry.from_gdata(self.to_gdata())
 
-_breaker124: None = None
+_breaker125: None = None
 class openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__afi_safis__afi_safi(yadata.MKeyedList[Identityref, openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__afi_safis__afi_safi_entry]):
     mut def __init__(self, elements: list[openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__afi_safis__afi_safi_entry]=[]) -> None:
         yadata.MKeyedList.__init__(self, lambda e: e.afi_safi_name, elements)
@@ -4412,7 +4434,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
         return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__afi_safis__afi_safi(elements=copied_elements)
 
 
-_breaker125: None = None
+_breaker126: None = None
 class openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__afi_safis(yadata.MNode):
     afi_safi: openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__afi_safis__afi_safi
 
@@ -4433,7 +4455,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
         return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__afi_safis.from_gdata(self.to_gdata())
 
 
-_breaker126: None = None
+_breaker127: None = None
 class openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group_entry(yadata.MNode):
     peer_group_name: str
     config: openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__config
@@ -4457,7 +4479,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
         """Create a deep copy of this adata object"""
         return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group_entry.from_gdata(self.to_gdata())
 
-_breaker127: None = None
+_breaker128: None = None
 class openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group(yadata.MKeyedList[str, openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group_entry]):
     mut def __init__(self, elements: list[openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group_entry]=[]) -> None:
         yadata.MKeyedList.__init__(self, lambda e: e.peer_group_name, elements)
@@ -4488,7 +4510,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
         return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group(elements=copied_elements)
 
 
-_breaker128: None = None
+_breaker129: None = None
 class openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups(yadata.MNode):
     peer_group: openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group
 
@@ -4509,7 +4531,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
         return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups.from_gdata(self.to_gdata())
 
 
-_breaker129: None = None
+_breaker130: None = None
 class openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp(yadata.MNode):
     global: openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global
     neighbors: openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__neighbors
@@ -4534,7 +4556,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
         return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp.from_gdata(self.to_gdata())
 
 
-_breaker130: None = None
+_breaker131: None = None
 class openconfig_network_instance__network_instances__network_instance__protocols__protocol_entry(yadata.MNode):
     identifier: Identityref
     name: str
@@ -4560,7 +4582,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
         """Create a deep copy of this adata object"""
         return openconfig_network_instance__network_instances__network_instance__protocols__protocol_entry.from_gdata(self.to_gdata())
 
-_breaker131: None = None
+_breaker132: None = None
 class openconfig_network_instance__network_instances__network_instance__protocols__protocol(yadata.MKeyedList[(identifier: Identityref, name: str), openconfig_network_instance__network_instances__network_instance__protocols__protocol_entry]):
     mut def __init__(self, elements: list[openconfig_network_instance__network_instances__network_instance__protocols__protocol_entry]=[]) -> None:
         yadata.MKeyedList.__init__(self, lambda e: (identifier=e.identifier, name=e.name), elements)
@@ -4591,7 +4613,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
         return openconfig_network_instance__network_instances__network_instance__protocols__protocol(elements=copied_elements)
 
 
-_breaker132: None = None
+_breaker133: None = None
 class openconfig_network_instance__network_instances__network_instance__protocols(yadata.MNode):
     protocol: openconfig_network_instance__network_instances__network_instance__protocols__protocol
 
@@ -4612,7 +4634,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
         return openconfig_network_instance__network_instances__network_instance__protocols.from_gdata(self.to_gdata())
 
 
-_breaker133: None = None
+_breaker134: None = None
 class openconfig_network_instance__network_instances__network_instance_entry(yadata.MNode):
     name: str
     config: openconfig_network_instance__network_instances__network_instance__config
@@ -4640,7 +4662,7 @@ class openconfig_network_instance__network_instances__network_instance_entry(yad
         """Create a deep copy of this adata object"""
         return openconfig_network_instance__network_instances__network_instance_entry.from_gdata(self.to_gdata())
 
-_breaker134: None = None
+_breaker135: None = None
 class openconfig_network_instance__network_instances__network_instance(yadata.MKeyedList[str, openconfig_network_instance__network_instances__network_instance_entry]):
     mut def __init__(self, elements: list[openconfig_network_instance__network_instances__network_instance_entry]=[]) -> None:
         yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
@@ -4671,7 +4693,7 @@ class openconfig_network_instance__network_instances__network_instance(yadata.MK
         return openconfig_network_instance__network_instances__network_instance(elements=copied_elements)
 
 
-_breaker135: None = None
+_breaker136: None = None
 class openconfig_network_instance__network_instances(yadata.MNode):
     network_instance: openconfig_network_instance__network_instances__network_instance
 
@@ -4692,7 +4714,7 @@ class openconfig_network_instance__network_instances(yadata.MNode):
         return openconfig_network_instance__network_instances.from_gdata(self.to_gdata())
 
 
-_breaker136: None = None
+_breaker137: None = None
 class openconfig_system__system__config(yadata.MNode):
     hostname: ?str
 
@@ -4713,7 +4735,7 @@ class openconfig_system__system__config(yadata.MNode):
         return openconfig_system__system__config.from_gdata(self.to_gdata())
 
 
-_breaker137: None = None
+_breaker138: None = None
 class openconfig_system__system__mac_address__config(yadata.MNode):
     routing_mac: ?str
 
@@ -4734,7 +4756,7 @@ class openconfig_system__system__mac_address__config(yadata.MNode):
         return openconfig_system__system__mac_address__config.from_gdata(self.to_gdata())
 
 
-_breaker138: None = None
+_breaker139: None = None
 class openconfig_system__system__mac_address(yadata.MNode):
     config: openconfig_system__system__mac_address__config
 
@@ -4755,7 +4777,7 @@ class openconfig_system__system__mac_address(yadata.MNode):
         return openconfig_system__system__mac_address.from_gdata(self.to_gdata())
 
 
-_breaker139: None = None
+_breaker140: None = None
 class openconfig_system__system(yadata.MNode):
     config: openconfig_system__system__config
     mac_address: openconfig_system__system__mac_address
@@ -4778,7 +4800,7 @@ class openconfig_system__system(yadata.MNode):
         return openconfig_system__system.from_gdata(self.to_gdata())
 
 
-_breaker140: None = None
+_breaker141: None = None
 class openconfig_lldp__lldp__config(yadata.MNode):
     enabled: ?bool
 
@@ -4799,7 +4821,7 @@ class openconfig_lldp__lldp__config(yadata.MNode):
         return openconfig_lldp__lldp__config.from_gdata(self.to_gdata())
 
 
-_breaker141: None = None
+_breaker142: None = None
 class openconfig_lldp__lldp__interfaces__interface__config(yadata.MNode):
     name: ?str
     enabled: ?bool
@@ -4822,7 +4844,7 @@ class openconfig_lldp__lldp__interfaces__interface__config(yadata.MNode):
         return openconfig_lldp__lldp__interfaces__interface__config.from_gdata(self.to_gdata())
 
 
-_breaker142: None = None
+_breaker143: None = None
 class openconfig_lldp__lldp__interfaces__interface_entry(yadata.MNode):
     name: str
     config: openconfig_lldp__lldp__interfaces__interface__config
@@ -4842,7 +4864,7 @@ class openconfig_lldp__lldp__interfaces__interface_entry(yadata.MNode):
         """Create a deep copy of this adata object"""
         return openconfig_lldp__lldp__interfaces__interface_entry.from_gdata(self.to_gdata())
 
-_breaker143: None = None
+_breaker144: None = None
 class openconfig_lldp__lldp__interfaces__interface(yadata.MKeyedList[str, openconfig_lldp__lldp__interfaces__interface_entry]):
     mut def __init__(self, elements: list[openconfig_lldp__lldp__interfaces__interface_entry]=[]) -> None:
         yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
@@ -4873,7 +4895,7 @@ class openconfig_lldp__lldp__interfaces__interface(yadata.MKeyedList[str, openco
         return openconfig_lldp__lldp__interfaces__interface(elements=copied_elements)
 
 
-_breaker144: None = None
+_breaker145: None = None
 class openconfig_lldp__lldp__interfaces(yadata.MNode):
     interface: openconfig_lldp__lldp__interfaces__interface
 
@@ -4894,7 +4916,7 @@ class openconfig_lldp__lldp__interfaces(yadata.MNode):
         return openconfig_lldp__lldp__interfaces.from_gdata(self.to_gdata())
 
 
-_breaker145: None = None
+_breaker146: None = None
 class openconfig_lldp__lldp(yadata.MNode):
     config: openconfig_lldp__lldp__config
     interfaces: openconfig_lldp__lldp__interfaces
@@ -4917,7 +4939,7 @@ class openconfig_lldp__lldp(yadata.MNode):
         return openconfig_lldp__lldp.from_gdata(self.to_gdata())
 
 
-_breaker146: None = None
+_breaker147: None = None
 class openconfig_lacp__lacp__interfaces__interface__config(yadata.MNode):
     name: ?str
     interval: ?str
@@ -4944,7 +4966,7 @@ class openconfig_lacp__lacp__interfaces__interface__config(yadata.MNode):
         return openconfig_lacp__lacp__interfaces__interface__config.from_gdata(self.to_gdata())
 
 
-_breaker147: None = None
+_breaker148: None = None
 class openconfig_lacp__lacp__interfaces__interface_entry(yadata.MNode):
     name: str
     config: openconfig_lacp__lacp__interfaces__interface__config
@@ -4964,7 +4986,7 @@ class openconfig_lacp__lacp__interfaces__interface_entry(yadata.MNode):
         """Create a deep copy of this adata object"""
         return openconfig_lacp__lacp__interfaces__interface_entry.from_gdata(self.to_gdata())
 
-_breaker148: None = None
+_breaker149: None = None
 class openconfig_lacp__lacp__interfaces__interface(yadata.MKeyedList[str, openconfig_lacp__lacp__interfaces__interface_entry]):
     mut def __init__(self, elements: list[openconfig_lacp__lacp__interfaces__interface_entry]=[]) -> None:
         yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
@@ -4995,7 +5017,7 @@ class openconfig_lacp__lacp__interfaces__interface(yadata.MKeyedList[str, openco
         return openconfig_lacp__lacp__interfaces__interface(elements=copied_elements)
 
 
-_breaker149: None = None
+_breaker150: None = None
 class openconfig_lacp__lacp__interfaces(yadata.MNode):
     interface: openconfig_lacp__lacp__interfaces__interface
 
@@ -5016,7 +5038,7 @@ class openconfig_lacp__lacp__interfaces(yadata.MNode):
         return openconfig_lacp__lacp__interfaces.from_gdata(self.to_gdata())
 
 
-_breaker150: None = None
+_breaker151: None = None
 class openconfig_lacp__lacp(yadata.MNode):
     interfaces: openconfig_lacp__lacp__interfaces
 
@@ -5037,7 +5059,7 @@ class openconfig_lacp__lacp(yadata.MNode):
         return openconfig_lacp__lacp.from_gdata(self.to_gdata())
 
 
-_breaker151: None = None
+_breaker152: None = None
 class arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__config(yadata.MNode):
     name: ?str
     route_distinguisher: ?str
@@ -5062,7 +5084,7 @@ class arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__config(y
         return arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__config.from_gdata(self.to_gdata())
 
 
-_breaker152: None = None
+_breaker153: None = None
 class arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__route_target__config(yadata.MNode):
     import: list[str]
     export: list[str]
@@ -5085,7 +5107,7 @@ class arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__route_ta
         return arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__route_target__config.from_gdata(self.to_gdata())
 
 
-_breaker153: None = None
+_breaker154: None = None
 class arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__route_target(yadata.MNode):
     config: arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__route_target__config
 
@@ -5106,7 +5128,7 @@ class arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__route_ta
         return arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__route_target.from_gdata(self.to_gdata())
 
 
-_breaker154: None = None
+_breaker155: None = None
 class arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__vlans__vlan__config(yadata.MNode):
     vlan_id: ?u64
 
@@ -5127,7 +5149,7 @@ class arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__vlans__v
         return arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__vlans__vlan__config.from_gdata(self.to_gdata())
 
 
-_breaker155: None = None
+_breaker156: None = None
 class arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__vlans__vlan_entry(yadata.MNode):
     vlan_id: u64
     config: arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__vlans__vlan__config
@@ -5147,7 +5169,7 @@ class arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__vlans__v
         """Create a deep copy of this adata object"""
         return arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__vlans__vlan_entry.from_gdata(self.to_gdata())
 
-_breaker156: None = None
+_breaker157: None = None
 class arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__vlans__vlan(yadata.MKeyedList[u64, arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__vlans__vlan_entry]):
     mut def __init__(self, elements: list[arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__vlans__vlan_entry]=[]) -> None:
         yadata.MKeyedList.__init__(self, lambda e: e.vlan_id, elements)
@@ -5178,7 +5200,7 @@ class arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__vlans__v
         return arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__vlans__vlan(elements=copied_elements)
 
 
-_breaker157: None = None
+_breaker158: None = None
 class arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__vlans(yadata.MNode):
     vlan: arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__vlans__vlan
 
@@ -5199,7 +5221,7 @@ class arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__vlans(ya
         return arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__vlans.from_gdata(self.to_gdata())
 
 
-_breaker158: None = None
+_breaker159: None = None
 class arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance_entry(yadata.MNode):
     name: str
     config: arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__config
@@ -5223,7 +5245,7 @@ class arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance_entry(yad
         """Create a deep copy of this adata object"""
         return arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance_entry.from_gdata(self.to_gdata())
 
-_breaker159: None = None
+_breaker160: None = None
 class arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance(yadata.MKeyedList[str, arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance_entry]):
     mut def __init__(self, elements: list[arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance_entry]=[]) -> None:
         yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
@@ -5254,7 +5276,7 @@ class arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance(yadata.MK
         return arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance(elements=copied_elements)
 
 
-_breaker160: None = None
+_breaker161: None = None
 class arista_exp_eos__arista__eos__evpn__evpn_instances(yadata.MNode):
     evpn_instance: arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance
 
@@ -5275,7 +5297,7 @@ class arista_exp_eos__arista__eos__evpn__evpn_instances(yadata.MNode):
         return arista_exp_eos__arista__eos__evpn__evpn_instances.from_gdata(self.to_gdata())
 
 
-_breaker161: None = None
+_breaker162: None = None
 class arista_exp_eos__arista__eos__evpn(yadata.MNode):
     evpn_instances: arista_exp_eos__arista__eos__evpn__evpn_instances
 
@@ -5296,7 +5318,7 @@ class arista_exp_eos__arista__eos__evpn(yadata.MNode):
         return arista_exp_eos__arista__eos__evpn.from_gdata(self.to_gdata())
 
 
-_breaker162: None = None
+_breaker163: None = None
 class arista_exp_eos__arista__eos(yadata.MNode):
     evpn: arista_exp_eos__arista__eos__evpn
 
@@ -5317,7 +5339,7 @@ class arista_exp_eos__arista__eos(yadata.MNode):
         return arista_exp_eos__arista__eos.from_gdata(self.to_gdata())
 
 
-_breaker163: None = None
+_breaker164: None = None
 class arista_exp_eos__arista(yadata.MNode):
     eos: arista_exp_eos__arista__eos
 
@@ -5338,7 +5360,7 @@ class arista_exp_eos__arista(yadata.MNode):
         return arista_exp_eos__arista.from_gdata(self.to_gdata())
 
 
-_breaker164: None = None
+_breaker165: None = None
 class root(yadata.MNode):
     interfaces: openconfig_interfaces__interfaces
     routing_policy: openconfig_routing_policy__routing_policy

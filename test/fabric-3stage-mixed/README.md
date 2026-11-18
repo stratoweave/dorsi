@@ -79,6 +79,12 @@ CONFIG=ip-fabric-overlay.xml`), then `make check-overlay` pings between all
 three servers, also with full 1500 byte frames, and fails on any lost or
 duplicated reply. It has passed.
 
+DORSI reports the network up on all three leaves, with its EVPN instance up.
+Shutting `Vxlan1` on leaf3 turns the EVPN instance of the network on leaf3
+down in its state, and `no shutdown` brings it back. With server3 moved to a
+LAG of `Ethernet1` and `Ethernet2` on leaf3, the LAG reads down while the
+server does not run LACP, and up once it bonds its port with LACP.
+
 ## The cEOS image
 
 cEOS-lab is not in a public registry. Download it from

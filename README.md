@@ -215,6 +215,12 @@ a server LAG that is down while its ports are up, which means LACP has not
 come up with the server, and an ethernet segment that is down on a LAG that is
 up.
 
+On Arista EOS a network is a VLAN, and EOS has no state of its own for an
+EVPN instance or for `Vxlan1`. DORSI reads the network as up while its VLAN is
+there, and its EVPN instance as up while `Vxlan1` forwards in the VLAN: EOS
+takes `Vxlan1` out of the VLAN when it goes down. A server LAG on EOS has its
+LAG state only, as EOS has no ethernet segment from DORSI yet.
+
 #### IP fabric: what is verified
 
 * The generated SR Linux configuration is covered by snapshot tests for a

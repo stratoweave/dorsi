@@ -2950,7 +2950,8 @@ SRC_DNODE_CHILD_19: DContainer = DContainer(module='openconfig-network-instance'
         DContainer(module='openconfig-network-instance', namespace='http://openconfig.net/yang/network-instance', prefix='oc-netinst', name='config', config=True, description='Configuration parameters for VLANs', presence=False, children=[
             DLeaf(module='openconfig-network-instance', namespace='http://openconfig.net/yang/network-instance', prefix='oc-netinst', name='vlan-id', config=True, description='Interface VLAN id.', is_key=False, mandatory=False, type=DTypeIntegerUnsigned(name='oc-vlan-types:vlan-id', description='Type definition representing a single-tagged VLAN', reference=None, units=None, exts=[], builtin_type='uint16', default=None, ranges=Ranges([(1, 4094)]))),
             DLeaf(module='openconfig-network-instance', namespace='http://openconfig.net/yang/network-instance', prefix='oc-netinst', name='name', config=True, description='Interface VLAN name.', is_key=False, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[]))
-        ])
+        ]),
+        DContainer(module='openconfig-network-instance', namespace='http://openconfig.net/yang/network-instance', prefix='oc-netinst', name='members', config=True, description='Enclosing container for list of member interfaces', presence=False)
     ])
 ])
 

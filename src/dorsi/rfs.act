@@ -946,7 +946,8 @@ actor ServerPortTransform(path, update_oper: proc(?y_1_oper.stratoweave_rfs__rfs
 # Poll the state of the overlay from the device: the network instance of each
 # MAC-VRF and IP-VRF with its EVPN instance, and each server LAG with its
 # ethernet segment. The CFS FabricTransform lift turns them into the state of
-# the networks, VRFs and servers. SR Linux only so far.
+# the networks, VRFs and servers. On Arista EOS a network is a VLAN rather than
+# a network instance, and EOS takes no VRF or ethernet segment from dorsi yet.
 
 def _srl_status(raw: ?str) -> ?str:
     """An SR Linux oper-state as up, down or unknown, None when not read."""
@@ -957,14 +958,16 @@ def _srl_status(raw: ?str) -> ?str:
     return None
 
 
-actor _SrlPoll(path, dev: swdev.DeviceMgr, on_state: proc(?srl25_oper_root)->None):
-    """Polls subscriptions from an SR Linux device and hands each delivery to
-    on_state, and None once the device stops answering, like
-    FabricInterfaceTransform."""
+actor _OverlayPoll(path, dev: swdev.DeviceMgr, on_srl: proc(?srl25_oper_root)->None, on_eos: proc(?eos436_oper_root, ?Exception)->None):
+    """Polls subscriptions from an SR Linux or Arista EOS device and hands
+    each delivery to on_srl or on_eos, and None once the device stops
+    answering, like FabricInterfaceTransform. An EOS error goes to on_eos,
+    which tells a node EOS does not have yet from a failure."""
     _subs = gdata.SubscriptionManager(dev.tree_provider(), str(path))
     var _last_delivery: ?int = None
     var _stale = False
     var _running = True
+    var _eos = False
 
     def _watchdog():
         if not _running:
@@ -973,20 +976,34 @@ actor _SrlPoll(path, dev: swdev.DeviceMgr, on_state: proc(?srl25_oper_root)->Non
         if last is not None and not _stale and time.monotonic_ns() - last > _STALE_AFTER_NS:
             print("{path}: no state from the device for {_STALE_AFTER_NS // 1000000000} s, reporting it as unknown", err=True)
             _stale = True
-            on_state(None)
+            if _eos:
+                on_eos(None, None)
+            else:
+                on_srl(None)
         after _POLL_PERIOD: _watchdog()
 
-    def _on_delivery(root: ?srl25_oper_root, err: ?Exception):
+    def _on_srl_delivery(root: ?srl25_oper_root, err: ?Exception):
         if err is not None:
             print("{path}: subscription error: {err}", err=True)
         _last_delivery = time.monotonic_ns()
         _stale = False
-        on_state(root if err is None else None)
+        on_srl(root if err is None else None)
 
-    def declare(subs: set[gdata.SubscriptionSpec]):
+    def _on_eos_delivery(root: ?eos436_oper_root, err: ?Exception):
+        _last_delivery = time.monotonic_ns()
+        _stale = False
+        on_eos(root if err is None else None, err)
+
+    def declare(srl_subs: set[gdata.SubscriptionSpec], eos_subs: set[gdata.SubscriptionSpec]):
         want: set[gdata.Delivery] = set()
-        if "srl_nokia-system" in dev.get_modules().0:
-            want.add(srl25_oper.dst(_on_delivery).deliver(subs))
+        modset = dev.get_modules().0
+        if "srl_nokia-system" in modset:
+            _eos = False
+            want.add(srl25_oper.dst(_on_srl_delivery).deliver(srl_subs))
+        elif _EOS_MODULE in modset:
+            _eos = True
+            if len(eos_subs) > 0:
+                want.add(eos436_oper.dst(_on_eos_delivery).deliver(eos_subs))
         _subs.declare(want)
 
     def shutdown():
@@ -1017,19 +1034,60 @@ def _srl_network_instance_status(root: ?srl25_oper_root) -> (?str, ?str):
     return (None, None)
 
 
+def _eos_vlan_subscriptions(vlan: u64) -> set[gdata.SubscriptionSpec]:
+    # The whole entry of the VLAN, as EOS fails a filter that names the
+    # members of a VLAN that has none
+    return {
+        eos436_oper.subs.network_instances.network_instance.entry("default").vlans.vlan.entry(vlan).subscribe(period=_POLL_PERIOD)
+    }
+
+
+def _eos_no_vlans(err: Exception) -> bool:
+    """Whether the VLAN poll failed because the device has no VLAN at all, an
+    error where EOS answers an empty reply for a VLAN it does not have."""
+    return 'unexpected element "vlans"' in str(err)
+
+
+def _eos_network_status(root: ?eos436_oper_root) -> (?str, ?str):
+    """The state of a network on EOS, from its VLAN: up while the VLAN is
+    there, and its EVPN instance up while Vxlan1 forwards in it. EOS has no
+    state of its own for an EVPN instance, nor an oper-status for Vxlan1, but
+    takes Vxlan1 out of the members of the VLAN when Vxlan1 goes down."""
+    if root is not None:
+        for ni in root.network_instances.network_instance:
+            for vlan in ni.vlans.vlan:
+                vxlan_up = False
+                for member in vlan.members.member:
+                    if member.state.interface == _EOS_VXLAN_INTERFACE:
+                        vxlan_up = True
+                return ("up", "up" if vxlan_up else "down")
+    return (None, None)
+
+
 actor MacVrfTransform(path, update_oper: proc(?y_1_oper.stratoweave_rfs__rfs__mac_vrf_entry)->None, dev: swdev.DeviceMgr):
     _oper = base.MacVrf.new_state(path)
 
-    def on_state(root: ?srl25_oper_root):
-        oper_status, evpn_status = _srl_network_instance_status(root)
+    def publish(oper_status: ?str, evpn_status: ?str):
         _oper.state.oper_status = oper_status
         _oper.state.evpn_status = evpn_status
         update_oper(_oper)
 
-    _poll = _SrlPoll(path, dev, on_state)
+    def on_srl(root: ?srl25_oper_root):
+        oper_status, evpn_status = _srl_network_instance_status(root)
+        publish(oper_status, evpn_status)
+
+    def on_eos(root: ?eos436_oper_root, err: ?Exception):
+        if err is not None and not _eos_no_vlans(err):
+            print("MacVrfTransform {path}: subscription error: {err}", err=True)
+        oper_status, evpn_status = _eos_network_status(root)
+        publish(oper_status, evpn_status)
+
+    _poll = _OverlayPoll(path, dev, on_srl, on_eos)
 
     def on_conf(conf: y_1.stratoweave_rfs__rfs__mac_vrf_entry):
-        _poll.declare(_srl_network_instance_subscriptions(conf.name))
+        vlan = conf.vlan
+        eos_subs = _eos_vlan_subscriptions(vlan) if vlan is not None else set()
+        _poll.declare(_srl_network_instance_subscriptions(conf.name), eos_subs)
 
     def shutdown():
         _poll.shutdown()
@@ -1038,16 +1096,20 @@ actor MacVrfTransform(path, update_oper: proc(?y_1_oper.stratoweave_rfs__rfs__ma
 actor IpVrfTransform(path, update_oper: proc(?y_1_oper.stratoweave_rfs__rfs__ip_vrf_entry)->None, dev: swdev.DeviceMgr):
     _oper = base.IpVrf.new_state(path)
 
-    def on_state(root: ?srl25_oper_root):
+    def on_srl(root: ?srl25_oper_root):
         oper_status, evpn_status = _srl_network_instance_status(root)
         _oper.state.oper_status = oper_status
         _oper.state.evpn_status = evpn_status
         update_oper(_oper)
 
-    _poll = _SrlPoll(path, dev, on_state)
+    def on_eos(root: ?eos436_oper_root, err: ?Exception):
+        # The CFS places no VRF on EOS yet, so nothing is polled
+        pass
+
+    _poll = _OverlayPoll(path, dev, on_srl, on_eos)
 
     def on_conf(conf: y_1.stratoweave_rfs__rfs__ip_vrf_entry):
-        _poll.declare(_srl_network_instance_subscriptions(conf.name))
+        _poll.declare(_srl_network_instance_subscriptions(conf.name), set())
 
     def shutdown():
         _poll.shutdown()
@@ -1056,7 +1118,12 @@ actor IpVrfTransform(path, update_oper: proc(?y_1_oper.stratoweave_rfs__rfs__ip_
 actor ServerLagTransform(path, update_oper: proc(?y_1_oper.stratoweave_rfs__rfs__server_lag_entry)->None, dev: swdev.DeviceMgr):
     _oper = base.ServerLag.new_state(path)
 
-    def on_state(root: ?srl25_oper_root):
+    def publish(oper_status: ?str, es_status: ?str):
+        _oper.state.oper_status = oper_status
+        _oper.state.es_status = es_status
+        update_oper(_oper)
+
+    def on_srl(root: ?srl25_oper_root):
         oper_status: ?str = None
         es_status: ?str = None
         if root is not None:
@@ -1070,18 +1137,23 @@ actor ServerLagTransform(path, update_oper: proc(?y_1_oper.stratoweave_rfs__rfs_
                         for instance in segments.bgp_instance:
                             for es in instance.ethernet_segment:
                                 es_status = _srl_status(es.oper_state)
-        _oper.state.oper_status = oper_status
-        _oper.state.es_status = es_status
-        update_oper(_oper)
+        publish(oper_status, es_status)
 
-    _poll = _SrlPoll(path, dev, on_state)
+    def on_eos(root: ?eos436_oper_root, err: ?Exception):
+        # No ethernet segment on EOS yet, only the LAG
+        if err is not None:
+            print("ServerLagTransform {path}: subscription error: {err}", err=True)
+        publish(_eos_oper_status(root) if root is not None else None, None)
+
+    _poll = _OverlayPoll(path, dev, on_srl, on_eos)
 
     def on_conf(conf: y_1.stratoweave_rfs__rfs__server_lag_entry):
-        subs = {srl25_oper.subs.interface.entry(conf.name).oper_state.subscribe(period=_POLL_PERIOD)}
+        srl_subs = {srl25_oper.subs.interface.entry(conf.name).oper_state.subscribe(period=_POLL_PERIOD)}
         if conf.esi is not None:
             es = srl25_oper.subs.system.network_instance.protocols.evpn.ethernet_segments.bgp_instance.entry(u64(_EVPN_BGP_INSTANCE)).ethernet_segment.entry("es-{conf.server}")
-            subs.add(es.oper_state.subscribe(period=_POLL_PERIOD))
-        _poll.declare(subs)
+            srl_subs.add(es.oper_state.subscribe(period=_POLL_PERIOD))
+        eos_subs = {eos436_oper.subs.interfaces.interface.entry(conf.name).state.oper_status.subscribe(period=_POLL_PERIOD)}
+        _poll.declare(srl_subs, eos_subs)
 
     def shutdown():
         _poll.shutdown()

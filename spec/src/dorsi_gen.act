@@ -423,6 +423,10 @@ actor main(env):
     "/oc-netinst:network-instances/network-instance/vlans/vlan/vlan-id",
     "/oc-netinst:network-instances/network-instance/vlans/vlan/config/vlan-id",
     "/oc-netinst:network-instances/network-instance/vlans/vlan/config/name",
+    # State of a network: its VLAN and the interfaces that forward in it,
+    # Vxlan1 among them while the network is bridged over VXLAN
+    "/oc-netinst:network-instances/network-instance/vlans/vlan/state/vlan-id",
+    "/oc-netinst:network-instances/network-instance/vlans/vlan/members/member/state/interface",
     "/oc-if:interfaces/interface/ethernet/switched-vlan/config/interface-mode",
     "/oc-if:interfaces/interface/ethernet/switched-vlan/config/native-vlan",
     "/oc-if:interfaces/interface/ethernet/switched-vlan/config/trunk-vlans",
