@@ -124,7 +124,12 @@ SRC_DNODE_CHILD_16: DList = DList(module='dorsi-rfs', namespace='http://example.
     DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='ipv4-address', config=True, description='Loopback address, used as router-id.', is_key=False, mandatory=True, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
     DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='management-address', config=True, description='Address and prefix length of the management interface,\nsuch as 172.20.20.11/24. Absent on a device that takes\nits management address from DHCP.', is_key=False, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
     DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='management-gateway', config=True, description='Gateway of the management network, such as 172.20.20.1,\nthe default route of the management VRF.', is_key=False, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
-    DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='evpn', config=True, description='Carry EVPN routes in BGP for the overlay. A leaf also\ngets the VXLAN tunnel interface and a VTEP on its\nloopback; a spine or super-spine passes the routes on\nwith their next hop, the VTEP that sent them.', default='false', is_key=False, mandatory=False, type=DTypeBoolean(name='boolean', description=None, reference=None, units=None, exts=[], builtin_type='boolean', default=None))
+    DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='evpn', config=True, description='Carry EVPN routes in BGP for the overlay. A leaf also\ngets the VXLAN tunnel interface and a VTEP on its\nloopback; a spine or super-spine passes the routes on\nwith their next hop, the VTEP that sent them.', default='false', is_key=False, mandatory=False, type=DTypeBoolean(name='boolean', description=None, reference=None, units=None, exts=[], builtin_type='boolean', default=None)),
+    DList(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='overlay-peer', key=['address'], config=True, description='An eBGP session between loopbacks that carries EVPN\nonly, multihop. Juniper cRPD advertises the EVPN routes\nof its own networks with the local address of the\nsession as next hop, whatever the export policy sets,\nso a cRPD leaf sends them from its loopback, its VTEP,\nto the loopbacks of its spines instead of over the\nsessions of the links.', min_elements=0, ordered_by='system', children=[
+        DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='address', config=True, description='Loopback of the peer.', is_key=True, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
+        DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='asn', config=True, is_key=False, mandatory=True, type=DTypeIntegerUnsigned(name='inet:as-number', description='The as-number type represents autonomous system numbers\nwhich identify an Autonomous System (AS).  An AS is a set\nof routers under a single technical administration, using\nan interior gateway protocol and common metrics to route\npackets within the AS, and using an exterior gateway\nprotocol to route packets to other ASes.  IANA maintains\nthe AS number space and has delegated large parts to the\nregional registries.\n\nAutonomous system numbers were originally limited to 16\nbits.  BGP extensions have enlarged the autonomous system\nnumber space to 32 bits.  This type therefore uses an uint32\nbase type without a range restriction in order to support\na larger autonomous system number space.\n\nIn the value set and its semantics, this type is equivalent\nto the InetAutonomousSystemNumber textual convention of\nthe SMIv2.', reference='RFC 1930: Guidelines for creation, selection, and registration\n          of an Autonomous System (AS)\nRFC 4271: A Border Gateway Protocol 4 (BGP-4)\nRFC 4001: Textual Conventions for Internet Network Addresses\nRFC 6793: BGP Support for Four-Octet Autonomous System (AS)\n          Number Space', units=None, exts=[], builtin_type='uint32', default=None, ranges=Ranges([(0, 4294967295)]))),
+        DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='device', config=True, description='Name of the peer, for the description.', is_key=False, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[]))
+    ])
 ])
 
 SRC_DNODE_CHILD_17: DList = DList(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='mac-vrf', key=['name'], config=True, description='A layer 2 network of the overlay on a leaf: a MAC-VRF\nbridged over VXLAN, with EVPN routes for MAC addresses\n(type 2) and for flooding by ingress replication (type 3).', min_elements=0, ordered_by='system', exts=[
@@ -260,6 +265,29 @@ SRC_YANG_0: str = r"""module dorsi-rfs {
                      with their next hop, the VTEP that sent them.";
                 type boolean;
                 default false;
+            }
+            list overlay-peer {
+                description
+                    "An eBGP session between loopbacks that carries EVPN
+                     only, multihop. Juniper cRPD advertises the EVPN routes
+                     of its own networks with the local address of the
+                     session as next hop, whatever the export policy sets,
+                     so a cRPD leaf sends them from its loopback, its VTEP,
+                     to the loopbacks of its spines instead of over the
+                     sessions of the links.";
+                key address;
+                leaf address {
+                    description "Loopback of the peer.";
+                    type string;
+                }
+                leaf asn {
+                    type inet:as-number;
+                    mandatory true;
+                }
+                leaf device {
+                    description "Name of the peer, for the description.";
+                    type string;
+                }
             }
         }
         list mac-vrf {
@@ -3164,6 +3192,62 @@ class stratoweave_rfs__device(yadata.MKeyedList[str, stratoweave_rfs__device_ent
 
 
 _breaker22: None = None
+class stratoweave_rfs__rfs__fabric_base_config__overlay_peer_entry(yadata.MNode):
+    address: str
+    asn: u64
+    device: ?str
+
+    mut def __init__(self, address: str, asn: u64, device: ?str=None) -> None:
+        self.address = address
+        self.asn = asn
+        self.device = device
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=False, root_path=['stratoweave-rfs:rfs', 'dorsi-rfs:fabric-base-config', 'overlay-peer'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ygdata.Node) -> stratoweave_rfs__rfs__fabric_base_config__overlay_peer_entry:
+        return stratoweave_rfs__rfs__fabric_base_config__overlay_peer_entry(address=n.get_str(ygdata.Id(NS_dorsi_rfs, 'address')), asn=n.get_u64(ygdata.Id(NS_dorsi_rfs, 'asn')), device=n.get_opt_str(ygdata.Id(NS_dorsi_rfs, 'device')))
+
+    mut def copy(self) -> stratoweave_rfs__rfs__fabric_base_config__overlay_peer_entry:
+        """Create a deep copy of this adata object"""
+        return stratoweave_rfs__rfs__fabric_base_config__overlay_peer_entry.from_gdata(self.to_gdata())
+
+_breaker23: None = None
+class stratoweave_rfs__rfs__fabric_base_config__overlay_peer(yadata.MKeyedList[str, stratoweave_rfs__rfs__fabric_base_config__overlay_peer_entry]):
+    mut def __init__(self, elements: list[stratoweave_rfs__rfs__fabric_base_config__overlay_peer_entry]=[]) -> None:
+        yadata.MKeyedList.__init__(self, lambda e: e.address, elements)
+
+    mut def create(self, key: str, asn: u64, device: ?str=None) -> stratoweave_rfs__rfs__fabric_base_config__overlay_peer_entry:
+        e = self.get(key)
+        if e is not None:
+            e.asn = asn
+            if device is not None:
+                e.device = device
+            return e
+        address = key
+        res = stratoweave_rfs__rfs__fabric_base_config__overlay_peer_entry(address=address, asn=asn, device=device)
+        self._append(res)
+        return res
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.List) -> list[stratoweave_rfs__rfs__fabric_base_config__overlay_peer_entry]:
+        if n is not None:
+            return [stratoweave_rfs__rfs__fabric_base_config__overlay_peer_entry.from_gdata(e) for e in n.entries()]
+        return []
+
+    mut def copy(self) -> stratoweave_rfs__rfs__fabric_base_config__overlay_peer:
+        """Create a deep copy of this list object"""
+        # Copy each element in the list
+        copied_elements = []
+        for e in self:
+            ce = e.copy()
+            if ce is not None:
+                copied_elements.append(ce)
+        return stratoweave_rfs__rfs__fabric_base_config__overlay_peer(elements=copied_elements)
+
+
+_breaker24: None = None
 class stratoweave_rfs__rfs__fabric_base_config_entry(yadata.MNode):
     asn: u64
     role: ?str
@@ -3171,27 +3255,29 @@ class stratoweave_rfs__rfs__fabric_base_config_entry(yadata.MNode):
     management_address: ?str
     management_gateway: ?str
     evpn: bool
+    overlay_peer: stratoweave_rfs__rfs__fabric_base_config__overlay_peer
 
-    mut def __init__(self, asn: u64, ipv4_address: str, role: ?str=None, management_address: ?str=None, management_gateway: ?str=None, evpn: ?bool=None) -> None:
+    mut def __init__(self, asn: u64, ipv4_address: str, role: ?str=None, management_address: ?str=None, management_gateway: ?str=None, evpn: ?bool=None, overlay_peer: list[stratoweave_rfs__rfs__fabric_base_config__overlay_peer_entry]=[]) -> None:
         self.asn = asn
         self.role = role
         self.ipv4_address = ipv4_address
         self.management_address = management_address
         self.management_gateway = management_gateway
         self.evpn = evpn if evpn is not None else False
+        self.overlay_peer = stratoweave_rfs__rfs__fabric_base_config__overlay_peer(elements=overlay_peer)
 
     mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
         return yadata.from_adata(SRC_DNODE, self, loose=False, root_path=['stratoweave-rfs:rfs', 'dorsi-rfs:fabric-base-config'], prev=prev)
 
     @staticmethod
     mut def from_gdata(n: ygdata.Node) -> stratoweave_rfs__rfs__fabric_base_config_entry:
-        return stratoweave_rfs__rfs__fabric_base_config_entry(asn=n.get_u64(ygdata.Id(NS_dorsi_rfs, 'asn')), role=n.get_opt_str(ygdata.Id(NS_dorsi_rfs, 'role')), ipv4_address=n.get_str(ygdata.Id(NS_dorsi_rfs, 'ipv4-address')), management_address=n.get_opt_str(ygdata.Id(NS_dorsi_rfs, 'management-address')), management_gateway=n.get_opt_str(ygdata.Id(NS_dorsi_rfs, 'management-gateway')), evpn=n.get_opt_bool(ygdata.Id(NS_dorsi_rfs, 'evpn')))
+        return stratoweave_rfs__rfs__fabric_base_config_entry(asn=n.get_u64(ygdata.Id(NS_dorsi_rfs, 'asn')), role=n.get_opt_str(ygdata.Id(NS_dorsi_rfs, 'role')), ipv4_address=n.get_str(ygdata.Id(NS_dorsi_rfs, 'ipv4-address')), management_address=n.get_opt_str(ygdata.Id(NS_dorsi_rfs, 'management-address')), management_gateway=n.get_opt_str(ygdata.Id(NS_dorsi_rfs, 'management-gateway')), evpn=n.get_opt_bool(ygdata.Id(NS_dorsi_rfs, 'evpn')), overlay_peer=stratoweave_rfs__rfs__fabric_base_config__overlay_peer.from_gdata(n.get_opt_list(ygdata.Id(NS_dorsi_rfs, 'overlay-peer'))))
 
     mut def copy(self) -> stratoweave_rfs__rfs__fabric_base_config_entry:
         """Create a deep copy of this adata object"""
         return stratoweave_rfs__rfs__fabric_base_config_entry.from_gdata(self.to_gdata())
 
-_breaker23: None = None
+_breaker25: None = None
 class stratoweave_rfs__rfs__fabric_base_config(yadata.MKeyedList[u64, stratoweave_rfs__rfs__fabric_base_config_entry]):
     mut def __init__(self, elements: list[stratoweave_rfs__rfs__fabric_base_config_entry]=[]) -> None:
         yadata.MKeyedList.__init__(self, lambda e: e.asn, elements)
@@ -3231,7 +3317,7 @@ class stratoweave_rfs__rfs__fabric_base_config(yadata.MKeyedList[u64, stratoweav
         return stratoweave_rfs__rfs__fabric_base_config(elements=copied_elements)
 
 
-_breaker24: None = None
+_breaker26: None = None
 class stratoweave_rfs__rfs__mac_vrf__irb(yadata.MNode):
     index: u64
     gateway: str
@@ -3257,7 +3343,7 @@ class stratoweave_rfs__rfs__mac_vrf__irb(yadata.MNode):
         raise Exception('Unreachable in stratoweave_rfs__rfs__mac_vrf__irb.copy()')
 
 
-_breaker25: None = None
+_breaker27: None = None
 class stratoweave_rfs__rfs__mac_vrf__interface_entry(yadata.MNode):
     name: str
     vlan: ?u64
@@ -3277,7 +3363,7 @@ class stratoweave_rfs__rfs__mac_vrf__interface_entry(yadata.MNode):
         """Create a deep copy of this adata object"""
         return stratoweave_rfs__rfs__mac_vrf__interface_entry.from_gdata(self.to_gdata())
 
-_breaker26: None = None
+_breaker28: None = None
 class stratoweave_rfs__rfs__mac_vrf__interface(yadata.MKeyedList[str, stratoweave_rfs__rfs__mac_vrf__interface_entry]):
     mut def __init__(self, elements: list[stratoweave_rfs__rfs__mac_vrf__interface_entry]=[]) -> None:
         yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
@@ -3310,7 +3396,7 @@ class stratoweave_rfs__rfs__mac_vrf__interface(yadata.MKeyedList[str, stratoweav
         return stratoweave_rfs__rfs__mac_vrf__interface(elements=copied_elements)
 
 
-_breaker27: None = None
+_breaker29: None = None
 class stratoweave_rfs__rfs__mac_vrf_entry(yadata.MNode):
     name: str
     vni: u64
@@ -3352,7 +3438,7 @@ class stratoweave_rfs__rfs__mac_vrf_entry(yadata.MNode):
         """Create a deep copy of this adata object"""
         return stratoweave_rfs__rfs__mac_vrf_entry.from_gdata(self.to_gdata())
 
-_breaker28: None = None
+_breaker30: None = None
 class stratoweave_rfs__rfs__mac_vrf(yadata.MKeyedList[str, stratoweave_rfs__rfs__mac_vrf_entry]):
     mut def __init__(self, elements: list[stratoweave_rfs__rfs__mac_vrf_entry]=[]) -> None:
         yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
@@ -3389,7 +3475,7 @@ class stratoweave_rfs__rfs__mac_vrf(yadata.MKeyedList[str, stratoweave_rfs__rfs_
         return stratoweave_rfs__rfs__mac_vrf(elements=copied_elements)
 
 
-_breaker29: None = None
+_breaker31: None = None
 class stratoweave_rfs__rfs__ip_vrf_entry(yadata.MNode):
     name: str
     vni: u64
@@ -3417,7 +3503,7 @@ class stratoweave_rfs__rfs__ip_vrf_entry(yadata.MNode):
         """Create a deep copy of this adata object"""
         return stratoweave_rfs__rfs__ip_vrf_entry.from_gdata(self.to_gdata())
 
-_breaker30: None = None
+_breaker32: None = None
 class stratoweave_rfs__rfs__ip_vrf(yadata.MKeyedList[str, stratoweave_rfs__rfs__ip_vrf_entry]):
     mut def __init__(self, elements: list[stratoweave_rfs__rfs__ip_vrf_entry]=[]) -> None:
         yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
@@ -3452,7 +3538,7 @@ class stratoweave_rfs__rfs__ip_vrf(yadata.MKeyedList[str, stratoweave_rfs__rfs__
         return stratoweave_rfs__rfs__ip_vrf(elements=copied_elements)
 
 
-_breaker31: None = None
+_breaker33: None = None
 class stratoweave_rfs__rfs__server_lag_entry(yadata.MNode):
     name: str
     server: str
@@ -3478,7 +3564,7 @@ class stratoweave_rfs__rfs__server_lag_entry(yadata.MNode):
         """Create a deep copy of this adata object"""
         return stratoweave_rfs__rfs__server_lag_entry.from_gdata(self.to_gdata())
 
-_breaker32: None = None
+_breaker34: None = None
 class stratoweave_rfs__rfs__server_lag(yadata.MKeyedList[str, stratoweave_rfs__rfs__server_lag_entry]):
     mut def __init__(self, elements: list[stratoweave_rfs__rfs__server_lag_entry]=[]) -> None:
         yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
@@ -3514,7 +3600,7 @@ class stratoweave_rfs__rfs__server_lag(yadata.MKeyedList[str, stratoweave_rfs__r
         return stratoweave_rfs__rfs__server_lag(elements=copied_elements)
 
 
-_breaker33: None = None
+_breaker35: None = None
 class stratoweave_rfs__rfs__fabric_interface__remote(yadata.MNode):
     device: str
     interface: str
@@ -3537,7 +3623,7 @@ class stratoweave_rfs__rfs__fabric_interface__remote(yadata.MNode):
         return stratoweave_rfs__rfs__fabric_interface__remote.from_gdata(self.to_gdata())
 
 
-_breaker34: None = None
+_breaker36: None = None
 class stratoweave_rfs__rfs__fabric_interface__bgp(yadata.MNode):
     peer_address: str
     peer_asn: u64
@@ -3560,7 +3646,7 @@ class stratoweave_rfs__rfs__fabric_interface__bgp(yadata.MNode):
         return stratoweave_rfs__rfs__fabric_interface__bgp.from_gdata(self.to_gdata())
 
 
-_breaker35: None = None
+_breaker37: None = None
 class stratoweave_rfs__rfs__fabric_interface_entry(yadata.MNode):
     name: str
     ipv4_address: str
@@ -3586,7 +3672,7 @@ class stratoweave_rfs__rfs__fabric_interface_entry(yadata.MNode):
         """Create a deep copy of this adata object"""
         return stratoweave_rfs__rfs__fabric_interface_entry.from_gdata(self.to_gdata())
 
-_breaker36: None = None
+_breaker38: None = None
 class stratoweave_rfs__rfs__fabric_interface(yadata.MKeyedList[str, stratoweave_rfs__rfs__fabric_interface_entry]):
     mut def __init__(self, elements: list[stratoweave_rfs__rfs__fabric_interface_entry]=[]) -> None:
         yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
@@ -3622,7 +3708,7 @@ class stratoweave_rfs__rfs__fabric_interface(yadata.MKeyedList[str, stratoweave_
         return stratoweave_rfs__rfs__fabric_interface(elements=copied_elements)
 
 
-_breaker37: None = None
+_breaker39: None = None
 class stratoweave_rfs__rfs__server_port_entry(yadata.MNode):
     name: str
     server: str
@@ -3648,7 +3734,7 @@ class stratoweave_rfs__rfs__server_port_entry(yadata.MNode):
         """Create a deep copy of this adata object"""
         return stratoweave_rfs__rfs__server_port_entry.from_gdata(self.to_gdata())
 
-_breaker38: None = None
+_breaker40: None = None
 class stratoweave_rfs__rfs__server_port(yadata.MKeyedList[str, stratoweave_rfs__rfs__server_port_entry]):
     mut def __init__(self, elements: list[stratoweave_rfs__rfs__server_port_entry]=[]) -> None:
         yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
@@ -3684,7 +3770,7 @@ class stratoweave_rfs__rfs__server_port(yadata.MKeyedList[str, stratoweave_rfs__
         return stratoweave_rfs__rfs__server_port(elements=copied_elements)
 
 
-_breaker39: None = None
+_breaker41: None = None
 class stratoweave_rfs__rfs_entry(yadata.MNode):
     name: str
     fabric_base_config: stratoweave_rfs__rfs__fabric_base_config
@@ -3714,7 +3800,7 @@ class stratoweave_rfs__rfs_entry(yadata.MNode):
         """Create a deep copy of this adata object"""
         return stratoweave_rfs__rfs_entry.from_gdata(self.to_gdata())
 
-_breaker40: None = None
+_breaker42: None = None
 class stratoweave_rfs__rfs(yadata.MKeyedList[str, stratoweave_rfs__rfs_entry]):
     mut def __init__(self, elements: list[stratoweave_rfs__rfs_entry]=[]) -> None:
         yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
@@ -3745,7 +3831,7 @@ class stratoweave_rfs__rfs(yadata.MKeyedList[str, stratoweave_rfs__rfs_entry]):
         return stratoweave_rfs__rfs(elements=copied_elements)
 
 
-_breaker41: None = None
+_breaker43: None = None
 class root(yadata.MNode):
     device: stratoweave_rfs__device
     rfs: stratoweave_rfs__rfs

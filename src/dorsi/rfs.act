@@ -45,6 +45,11 @@ _ANYCAST_GW_MAC = "02:dc:00:00:00:01"
 _EOS_VXLAN_INTERFACE = "Vxlan1"
 _EOS_LOOPBACK = "Loopback0"
 _VXLAN_UDP_PORT = 4789
+# The eBGP sessions between loopbacks that carry the EVPN routes of a Juniper
+# cRPD leaf (see overlay-peer), and the TTL of their packets: leaf and spine
+# are one link apart
+_OVERLAY_GROUP = "overlay"
+_OVERLAY_MAX_HOPS = 2
 
 # Arista EOS is configured through OpenConfig. SR Linux can serve OpenConfig
 # too, so EOS is told apart by a module only EOS has.
@@ -80,6 +85,10 @@ def _crpd_accept_term(dev: crpd244.root, policy: str, term: str):
     t = dev.configuration.policy_options.policy_statement.create(policy).term.create(term)
     t.then.accept = True
     return t
+
+
+def _overlay_description(device: ?str) -> str:
+    return "Overlay to {device}" if device is not None else "Overlay"
 
 
 def _eos_default_ni(dev: eos436.root):
@@ -197,6 +206,20 @@ class FabricBaseConfig(base.FabricBaseConfig):
                 exp_evpn.match.family = [srl25.srl_nokia_common_evpn]
                 exp_evpn.action_.policy_result = "accept"
 
+            if len(i.overlay_peer) > 0:
+                # EVPN only, between the loopbacks, with the policies of the
+                # fabric
+                overlay = bgp.group.create(_OVERLAY_GROUP)
+                overlay.export_policy = [_FABRIC_EXPORT_POLICY]
+                overlay.import_policy = [_FABRIC_IMPORT_POLICY]
+                overlay.multihop.admin_state = "enable"
+                overlay.multihop.maximum_hops = u64(_OVERLAY_MAX_HOPS)
+                overlay.transport.local_address = i.ipv4_address
+                overlay.afi_safi.create(srl25.srl_nokia_common_evpn, admin_state="enable")
+                overlay.afi_safi.create(srl25.srl_nokia_common_ipv4_unicast, admin_state="disable")
+                for peer in i.overlay_peer:
+                    bgp.neighbor.create(peer.address, peer_group=_OVERLAY_GROUP, peer_as=peer.asn, admin_state="enable", description=_overlay_description(peer.device))
+
             return dev
 
         if _EOS_MODULE in di.modules:
@@ -307,6 +330,28 @@ class FabricBaseConfig(base.FabricBaseConfig):
                 exp_evpn.conditions.bgp_conditions.config.afi_safi_in = [eos436.openconfig_bgp_types_L2VPN_EVPN]
                 exp_evpn.actions.config.policy_result = "ACCEPT_ROUTE"
 
+            if len(i.overlay_peer) > 0:
+                # EVPN only, between the loopbacks, with the policies of the
+                # fabric
+                overlay = bgp.peer_groups.peer_group.create(_OVERLAY_GROUP)
+                overlay.config.peer_group_name = _OVERLAY_GROUP
+                overlay.config.send_community_type = ["EXTENDED"]
+                overlay.apply_policy.config.export_policy = [_FABRIC_EXPORT_POLICY]
+                overlay.apply_policy.config.import_policy = [_FABRIC_IMPORT_POLICY]
+                overlay.transport.config.local_address = _EOS_LOOPBACK
+                overlay.ebgp_multihop.config.enabled = True
+                overlay.ebgp_multihop.config.multihop_ttl = u64(_OVERLAY_MAX_HOPS)
+                overlay_evpn = overlay.afi_safis.afi_safi.create(eos436.openconfig_bgp_types_L2VPN_EVPN)
+                overlay_evpn.config.afi_safi_name = eos436.openconfig_bgp_types_L2VPN_EVPN
+                overlay_evpn.config.enabled = True
+                for peer in i.overlay_peer:
+                    neighbor = bgp.neighbors.neighbor.create(peer.address)
+                    neighbor.config.neighbor_address = peer.address
+                    neighbor.config.peer_group = _OVERLAY_GROUP
+                    neighbor.config.peer_as = peer.asn
+                    neighbor.config.enabled = True
+                    neighbor.config.description = _overlay_description(peer.device)
+
             return dev
 
         if _CRPD_MODULE in di.modules:
@@ -343,6 +388,34 @@ class FabricBaseConfig(base.FabricBaseConfig):
             # Despite its name, per-packet only lets the paths into the
             # forwarding table; Linux spreads the flows over them
             ecmp.then.load_balance.per_packet = True
+
+            if i.evpn:
+                exp_evpn = _crpd_accept_term(dev, _FABRIC_EXPORT_POLICY, "evpn")
+                exp_evpn.from.family = "evpn"
+                if i.role != "leaf":
+                    # A spine or super-spine passes the EVPN routes on over
+                    # the sessions of the links with their next hop, the VTEP
+                    # of the leaf, which is not on the link. Junos changes the
+                    # next hop on an eBGP session unless it is multihop with
+                    # no-nexthop-change, which would keep that of the loopback
+                    # routes too: those go out with the address of the link.
+                    group.family.inet.create_unicast()
+                    group.family.evpn.create_signaling()
+                    group.create_multihop(ttl=1, no_nexthop_change=True)
+                    group.accept_remote_nexthop = True
+                    exp.then.next_hop.self_ = True
+
+            if len(i.overlay_peer) > 0:
+                # EVPN only, between the loopbacks, keeping the next hop of
+                # the routes passed on
+                overlay = conf.protocols.bgp.group.create(_OVERLAY_GROUP, type="external", accept_remote_nexthop=True, local_address=i.ipv4_address)
+                overlay.create_multihop(no_nexthop_change=True)
+                overlay.family.evpn.create_signaling()
+                overlay.export = [_FABRIC_EXPORT_POLICY]
+                overlay.import = [_FABRIC_IMPORT_POLICY]
+                overlay.create_multipath(multiple_as=True)
+                for peer in i.overlay_peer:
+                    overlay.neighbor.create(peer.address, description=_overlay_description(peer.device), peer_as=str(peer.asn))
 
             return dev
 
@@ -847,7 +920,8 @@ class ServerPort(base.ServerPort):
             return dev
 
         if _CRPD_MODULE in di.modules:
-            # The port only: cRPD bridges no server traffic yet
+            # The port only; the units that bridge the server VLANs come with
+            # the MAC-VRFs
             print("RFS /rfs{{{di.name}}}/server-port transform running [{i.name}] for Juniper cRPD", err=True)
             dev = crpd244.root()
             dev.configuration.interfaces.interface.create(i.name, description=if_description)
@@ -1000,6 +1074,36 @@ class MacVrf(base.MacVrf):
                 vlan_if.routed_vlan.config.vlan = name
                 vlan_if.arista_varp.virtual_address.config.ip = gw_parts[0]
                 vlan_if.arista_varp.virtual_address.config.prefix_length = u64(int(gw_parts[1]))
+            return dev
+
+        if _CRPD_MODULE in di.modules:
+            if i.vlan is None:
+                raise ValueError("mac-vrf {i.name}: Juniper cRPD needs the internal VLAN of the network")
+            if i.irb is not None:
+                raise ValueError("mac-vrf {i.name}: dorsi cannot route a network on Juniper cRPD yet")
+            dev = crpd244.root()
+            conf = dev.configuration
+            # A bridge domain of the network in a vlan-based MAC-VRF, with its
+            # VTEP on the loopback. cRPD makes it a Linux bridge with a VXLAN
+            # device of the VNI. cRPD requires the service type; vlan-based is
+            # added to its YANG in spec/yang, which lacks it.
+            inst = conf.routing_instances.instance.create(i.name, instance_type="mac-vrf", service_type="vlan-based")
+            inst.protocols.create_evpn(encapsulation="vxlan")
+            inst.vtep_source_interface.interface_name = "{_CRPD_LOOPBACK}.0"
+            inst.route_distinguisher.rd_type = i.route_distinguisher
+            inst.vrf_target.community = i.route_target
+            bd = inst.bridge_domains.domain.create(i.name, vlan_id=str(i.vlan))
+            bd.vxlan.vni = i.vni
+            for itf in i.interface:
+                # A unit of the VLAN tag of the server, which cRPD makes the
+                # Linux VLAN subinterface <port>.<tag> in the bridge. Without
+                # the vlan-bridge encapsulation rpd counts the port as not
+                # there and keeps its EVPN routes back.
+                tag = itf.vlan
+                if tag is None:
+                    raise ValueError("mac-vrf {i.name}: Juniper cRPD cannot bridge untagged traffic on {itf.name} yet")
+                conf.interfaces.interface.create(itf.name).unit.create(str(tag), vlan_id=str(tag), encapsulation="vlan-bridge")
+                bd.interface.create("{itf.name}.{tag}")
             return dev
 
         raise UnsupportedDevice()

@@ -296,7 +296,9 @@ and Arista EOS (`AristaEOS_4_36_3_2M`, configured through OpenConfig, see
 and one fabric can mix them. The underlay is also implemented for Juniper cRPD
 (`JuniperCRPD_24_4R1_9`, configured through the native Junos model, its state
 polled with Junos RPCs, see [test/fabric-3stage-crpd](test/fabric-3stage-crpd/README.md)),
-without the overlay yet. A device model for Cisco IOS XR is generated as well
+with a layer 2 overlay of tagged single-homed servers: a cRPD leaf sends its
+EVPN routes over eBGP sessions between loopbacks, see
+[test/fabric-3stage-mixed-crpd](test/fabric-3stage-mixed-crpd/README.md). A device model for Cisco IOS XR is generated as well
 (`spec/yang/`), but no service uses it yet. A new vendor
 needs its models in `spec/yang/` with a filter in `spec/src/dorsi_gen.act`, a
 branch in each RFS transform (`src/dorsi/rfs.act`) that also puts the
