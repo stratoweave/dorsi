@@ -64,3 +64,39 @@ def _test_lldp_no_neighbor():
     reply = xml.decode("""<rpc-reply><lldp-neighbors-information>
 </lldp-neighbors-information></rpc-reply>""")
     testing.assertEqual(rfs.crpd_lldp_neighbor(reply), (None, None))
+
+# get-evpn-instance-information of instance t1-web in the
+# fabric-3stage-mixed-crpd lab
+def _test_evpn_instance_up():
+    reply = xml.decode("""<rpc-reply><evpn-instance-information><evpn-instance>
+<evpn-instance-name>t1-web</evpn-instance-name>
+<evpn-interface-status-table>
+<evpn-interface><evpn-interface-name>.local..192</evpn-interface-name><evpn-interface-status>Up</evpn-interface-status></evpn-interface>
+<evpn-interface><evpn-interface-name>eth1.30</evpn-interface-name><evpn-interface-status>Up</evpn-interface-status></evpn-interface>
+</evpn-interface-status-table>
+</evpn-instance></evpn-instance-information></rpc-reply>""")
+    testing.assertEqual(rfs.crpd_evpn_instance_status(reply), "up")
+
+def _test_evpn_instance_server_port_down():
+    # The instance's own .local interface is up, the server port is not
+    reply = xml.decode("""<rpc-reply><evpn-instance-information><evpn-instance>
+<evpn-instance-name>t1-web</evpn-instance-name>
+<evpn-interface-status-table>
+<evpn-interface><evpn-interface-name>.local..1</evpn-interface-name><evpn-interface-status>Up</evpn-interface-status></evpn-interface>
+<evpn-interface><evpn-interface-name>eth1.30</evpn-interface-name><evpn-interface-status>Down</evpn-interface-status></evpn-interface>
+</evpn-interface-status-table>
+</evpn-instance></evpn-instance-information></rpc-reply>""")
+    testing.assertEqual(rfs.crpd_evpn_instance_status(reply), "down")
+
+def _test_evpn_instance_not_running():
+    reply = xml.decode("""<rpc-reply><output>
+EVPN instance with this name is not running</output></rpc-reply>""")
+    testing.assertEqual(rfs.crpd_evpn_instance_status(reply), None)
+
+def _test_vxlan_device_down():
+    # The VXLAN device of the VNI while irb holds UDP port 4789
+    reply = xml.decode("""<rpc-reply><output>
+Interface        State Addresses
+vxlan15906       Down  MPLS  enabled
+</output></rpc-reply>""")
+    testing.assertEqual(rfs.crpd_oper_status(reply, "vxlan15906"), "down")
