@@ -34,6 +34,11 @@ topology:
     leaf3:
       mgmt-ipv4: 172.31.40.13
       kind: juniper_crpd
+      # rpd starts with a VXLAN device irb of its own on UDP 4789, collecting
+      # every VNI; the device of the VNI of a network then cannot come up
+      # (EADDRINUSE). Take irb down once rpd has made it; it stays down.
+      exec:
+        - sh -c 'timeout 120 sh -c "until ip link show irb 2>/dev/null | grep -q ,UP; do sleep 1; done" && ip link set irb down'
     spine1:
       mgmt-ipv4: 172.31.40.21
       kind: juniper_crpd
@@ -45,16 +50,31 @@ topology:
       kind: linux
       image: ghcr.io/srl-labs/network-multitool
       image-pull-policy: if-not-present
+      # The overlay test setup of ip-fabric-overlay.xml (tenant t1)
+      exec:
+        - ip link add link eth1 name eth1.30 type vlan id 30
+        - ip link set eth1.30 up
+        - ip address add 10.10.10.11/24 dev eth1.30
     server2:
       mgmt-ipv4: 172.31.40.32
       kind: linux
       image: ghcr.io/srl-labs/network-multitool
       image-pull-policy: if-not-present
+      # The overlay test setup of ip-fabric-overlay.xml (tenant t1)
+      exec:
+        - ip link add link eth1 name eth1.30 type vlan id 30
+        - ip link set eth1.30 up
+        - ip address add 10.10.10.12/24 dev eth1.30
     server3:
       mgmt-ipv4: 172.31.40.33
       kind: linux
       image: ghcr.io/srl-labs/network-multitool
       image-pull-policy: if-not-present
+      # The overlay test setup of ip-fabric-overlay.xml (tenant t1)
+      exec:
+        - ip link add link eth1 name eth1.30 type vlan id 30
+        - ip link set eth1.30 up
+        - ip address add 10.10.10.13/24 dev eth1.30
     sweave:
       mgmt-ipv4: 172.31.40.10
       kind: linux

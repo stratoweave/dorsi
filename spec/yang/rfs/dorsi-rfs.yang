@@ -57,6 +57,29 @@ module dorsi-rfs {
                 type boolean;
                 default false;
             }
+            list overlay-peer {
+                description
+                    "An eBGP session between loopbacks that carries EVPN
+                     only, multihop. Juniper cRPD advertises the EVPN routes
+                     of its own networks with the local address of the
+                     session as next hop, whatever the export policy sets,
+                     so a cRPD leaf sends them from its loopback, its VTEP,
+                     to the loopbacks of its spines instead of over the
+                     sessions of the links.";
+                key address;
+                leaf address {
+                    description "Loopback of the peer.";
+                    type string;
+                }
+                leaf asn {
+                    type inet:as-number;
+                    mandatory true;
+                }
+                leaf device {
+                    description "Name of the peer, for the description.";
+                    type string;
+                }
+            }
         }
         list mac-vrf {
             description
