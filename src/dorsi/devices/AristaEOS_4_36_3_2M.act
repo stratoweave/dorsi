@@ -1,5 +1,5 @@
-import base64
-import json
+import std.base64
+import std.json
 import std.xml as xml
 import yang.adata as yadata
 import yang.gdata as ygdata
@@ -1365,7 +1365,7 @@ arista_bgp_augments_BFD_DOWN: Identityref = Identityref('BFD_DOWN', ns='http://a
 
 SRC_DNODE: DRoot = dorsi.devices.AristaEOS_4_36_3_2M_schema.SRC_DNODE
 
-pure def src_yang() -> list[str]:
+pure def src_yang() -> list[YangSource]:
     return dorsi.devices.AristaEOS_4_36_3_2M_schema.src_yang()
 
 
@@ -1470,6 +1470,179 @@ NS_ietf_inet_types: str = 'urn:ietf:params:xml:ns:yang:ietf-inet-types'
 NS_ietf_interfaces: str = 'urn:ietf:params:xml:ns:yang:ietf-interfaces'
 NS_ietf_yang_types: str = 'urn:ietf:params:xml:ns:yang:ietf-yang-types'
 
+_ID_arista_bgp_augments__config: ygdata.Id = ygdata.Id(NS_arista_bgp_augments, 'config')
+_ID_arista_bgp_augments__evpn: ygdata.Id = ygdata.Id(NS_arista_bgp_augments, 'evpn')
+_ID_arista_bgp_augments__export_target: ygdata.Id = ygdata.Id(NS_arista_bgp_augments, 'export-target')
+_ID_arista_bgp_augments__import_target: ygdata.Id = ygdata.Id(NS_arista_bgp_augments, 'import-target')
+_ID_arista_bgp_augments__next_hop: ygdata.Id = ygdata.Id(NS_arista_bgp_augments, 'next-hop')
+_ID_arista_bgp_augments__preserve_next_hop: ygdata.Id = ygdata.Id(NS_arista_bgp_augments, 'preserve-next-hop')
+_ID_arista_exp_eos__arista: ygdata.Id = ygdata.Id(NS_arista_exp_eos, 'arista')
+_ID_arista_exp_eos__eos: ygdata.Id = ygdata.Id(NS_arista_exp_eos, 'eos')
+_ID_arista_exp_eos_evpn__config: ygdata.Id = ygdata.Id(NS_arista_exp_eos_evpn, 'config')
+_ID_arista_exp_eos_evpn__evpn: ygdata.Id = ygdata.Id(NS_arista_exp_eos_evpn, 'evpn')
+_ID_arista_exp_eos_evpn__evpn_instance: ygdata.Id = ygdata.Id(NS_arista_exp_eos_evpn, 'evpn-instance')
+_ID_arista_exp_eos_evpn__evpn_instances: ygdata.Id = ygdata.Id(NS_arista_exp_eos_evpn, 'evpn-instances')
+_ID_arista_exp_eos_evpn__export: ygdata.Id = ygdata.Id(NS_arista_exp_eos_evpn, 'export')
+_ID_arista_exp_eos_evpn__import: ygdata.Id = ygdata.Id(NS_arista_exp_eos_evpn, 'import')
+_ID_arista_exp_eos_evpn__name: ygdata.Id = ygdata.Id(NS_arista_exp_eos_evpn, 'name')
+_ID_arista_exp_eos_evpn__redistribute: ygdata.Id = ygdata.Id(NS_arista_exp_eos_evpn, 'redistribute')
+_ID_arista_exp_eos_evpn__route_distinguisher: ygdata.Id = ygdata.Id(NS_arista_exp_eos_evpn, 'route-distinguisher')
+_ID_arista_exp_eos_evpn__route_target: ygdata.Id = ygdata.Id(NS_arista_exp_eos_evpn, 'route-target')
+_ID_arista_exp_eos_evpn__vlan: ygdata.Id = ygdata.Id(NS_arista_exp_eos_evpn, 'vlan')
+_ID_arista_exp_eos_evpn__vlan_id: ygdata.Id = ygdata.Id(NS_arista_exp_eos_evpn, 'vlan-id')
+_ID_arista_exp_eos_evpn__vlans: ygdata.Id = ygdata.Id(NS_arista_exp_eos_evpn, 'vlans')
+_ID_arista_exp_eos_varp_intf__arista_varp: ygdata.Id = ygdata.Id(NS_arista_exp_eos_varp_intf, 'arista-varp')
+_ID_arista_exp_eos_varp_intf__config: ygdata.Id = ygdata.Id(NS_arista_exp_eos_varp_intf, 'config')
+_ID_arista_exp_eos_varp_intf__ip: ygdata.Id = ygdata.Id(NS_arista_exp_eos_varp_intf, 'ip')
+_ID_arista_exp_eos_varp_intf__prefix_length: ygdata.Id = ygdata.Id(NS_arista_exp_eos_varp_intf, 'prefix-length')
+_ID_arista_exp_eos_varp_intf__virtual_address: ygdata.Id = ygdata.Id(NS_arista_exp_eos_varp_intf, 'virtual-address')
+_ID_arista_exp_eos_vxlan__arista_vxlan: ygdata.Id = ygdata.Id(NS_arista_exp_eos_vxlan, 'arista-vxlan')
+_ID_arista_exp_eos_vxlan__config: ygdata.Id = ygdata.Id(NS_arista_exp_eos_vxlan, 'config')
+_ID_arista_exp_eos_vxlan__src_ip_intf: ygdata.Id = ygdata.Id(NS_arista_exp_eos_vxlan, 'src-ip-intf')
+_ID_arista_exp_eos_vxlan__udp_port: ygdata.Id = ygdata.Id(NS_arista_exp_eos_vxlan, 'udp-port')
+_ID_arista_exp_eos_vxlan__vlan: ygdata.Id = ygdata.Id(NS_arista_exp_eos_vxlan, 'vlan')
+_ID_arista_exp_eos_vxlan__vlan_to_vni: ygdata.Id = ygdata.Id(NS_arista_exp_eos_vxlan, 'vlan-to-vni')
+_ID_arista_exp_eos_vxlan__vlan_to_vnis: ygdata.Id = ygdata.Id(NS_arista_exp_eos_vxlan, 'vlan-to-vnis')
+_ID_arista_exp_eos_vxlan__vni: ygdata.Id = ygdata.Id(NS_arista_exp_eos_vxlan, 'vni')
+_ID_arista_exp_eos_vxlan__vrf: ygdata.Id = ygdata.Id(NS_arista_exp_eos_vxlan, 'vrf')
+_ID_arista_exp_eos_vxlan__vrf_to_vni: ygdata.Id = ygdata.Id(NS_arista_exp_eos_vxlan, 'vrf-to-vni')
+_ID_arista_exp_eos_vxlan__vrf_to_vnis: ygdata.Id = ygdata.Id(NS_arista_exp_eos_vxlan, 'vrf-to-vnis')
+_ID_arista_netinst_augments__ipv4_routing_enabled: ygdata.Id = ygdata.Id(NS_arista_netinst_augments, 'ipv4-routing-enabled')
+_ID_openconfig_bgp_policy__afi_safi_in: ygdata.Id = ygdata.Id(NS_openconfig_bgp_policy, 'afi-safi-in')
+_ID_openconfig_bgp_policy__bgp_conditions: ygdata.Id = ygdata.Id(NS_openconfig_bgp_policy, 'bgp-conditions')
+_ID_openconfig_bgp_policy__config: ygdata.Id = ygdata.Id(NS_openconfig_bgp_policy, 'config')
+_ID_openconfig_if_aggregate__aggregate_id: ygdata.Id = ygdata.Id(NS_openconfig_if_aggregate, 'aggregate-id')
+_ID_openconfig_if_aggregate__aggregation: ygdata.Id = ygdata.Id(NS_openconfig_if_aggregate, 'aggregation')
+_ID_openconfig_if_aggregate__config: ygdata.Id = ygdata.Id(NS_openconfig_if_aggregate, 'config')
+_ID_openconfig_if_aggregate__lag_type: ygdata.Id = ygdata.Id(NS_openconfig_if_aggregate, 'lag-type')
+_ID_openconfig_if_ethernet__config: ygdata.Id = ygdata.Id(NS_openconfig_if_ethernet, 'config')
+_ID_openconfig_if_ethernet__ethernet: ygdata.Id = ygdata.Id(NS_openconfig_if_ethernet, 'ethernet')
+_ID_openconfig_if_ip__address: ygdata.Id = ygdata.Id(NS_openconfig_if_ip, 'address')
+_ID_openconfig_if_ip__addresses: ygdata.Id = ygdata.Id(NS_openconfig_if_ip, 'addresses')
+_ID_openconfig_if_ip__config: ygdata.Id = ygdata.Id(NS_openconfig_if_ip, 'config')
+_ID_openconfig_if_ip__enabled: ygdata.Id = ygdata.Id(NS_openconfig_if_ip, 'enabled')
+_ID_openconfig_if_ip__ip: ygdata.Id = ygdata.Id(NS_openconfig_if_ip, 'ip')
+_ID_openconfig_if_ip__ipv4: ygdata.Id = ygdata.Id(NS_openconfig_if_ip, 'ipv4')
+_ID_openconfig_if_ip__ipv6: ygdata.Id = ygdata.Id(NS_openconfig_if_ip, 'ipv6')
+_ID_openconfig_if_ip__mtu: ygdata.Id = ygdata.Id(NS_openconfig_if_ip, 'mtu')
+_ID_openconfig_if_ip__prefix_length: ygdata.Id = ygdata.Id(NS_openconfig_if_ip, 'prefix-length')
+_ID_openconfig_interfaces__config: ygdata.Id = ygdata.Id(NS_openconfig_interfaces, 'config')
+_ID_openconfig_interfaces__description: ygdata.Id = ygdata.Id(NS_openconfig_interfaces, 'description')
+_ID_openconfig_interfaces__enabled: ygdata.Id = ygdata.Id(NS_openconfig_interfaces, 'enabled')
+_ID_openconfig_interfaces__index: ygdata.Id = ygdata.Id(NS_openconfig_interfaces, 'index')
+_ID_openconfig_interfaces__interface: ygdata.Id = ygdata.Id(NS_openconfig_interfaces, 'interface')
+_ID_openconfig_interfaces__interfaces: ygdata.Id = ygdata.Id(NS_openconfig_interfaces, 'interfaces')
+_ID_openconfig_interfaces__name: ygdata.Id = ygdata.Id(NS_openconfig_interfaces, 'name')
+_ID_openconfig_interfaces__subinterface: ygdata.Id = ygdata.Id(NS_openconfig_interfaces, 'subinterface')
+_ID_openconfig_interfaces__subinterfaces: ygdata.Id = ygdata.Id(NS_openconfig_interfaces, 'subinterfaces')
+_ID_openconfig_interfaces__type: ygdata.Id = ygdata.Id(NS_openconfig_interfaces, 'type')
+_ID_openconfig_lacp__config: ygdata.Id = ygdata.Id(NS_openconfig_lacp, 'config')
+_ID_openconfig_lacp__interface: ygdata.Id = ygdata.Id(NS_openconfig_lacp, 'interface')
+_ID_openconfig_lacp__interfaces: ygdata.Id = ygdata.Id(NS_openconfig_lacp, 'interfaces')
+_ID_openconfig_lacp__interval: ygdata.Id = ygdata.Id(NS_openconfig_lacp, 'interval')
+_ID_openconfig_lacp__lacp: ygdata.Id = ygdata.Id(NS_openconfig_lacp, 'lacp')
+_ID_openconfig_lacp__lacp_mode: ygdata.Id = ygdata.Id(NS_openconfig_lacp, 'lacp-mode')
+_ID_openconfig_lacp__name: ygdata.Id = ygdata.Id(NS_openconfig_lacp, 'name')
+_ID_openconfig_lacp__system_id_mac: ygdata.Id = ygdata.Id(NS_openconfig_lacp, 'system-id-mac')
+_ID_openconfig_lldp__config: ygdata.Id = ygdata.Id(NS_openconfig_lldp, 'config')
+_ID_openconfig_lldp__enabled: ygdata.Id = ygdata.Id(NS_openconfig_lldp, 'enabled')
+_ID_openconfig_lldp__interface: ygdata.Id = ygdata.Id(NS_openconfig_lldp, 'interface')
+_ID_openconfig_lldp__interfaces: ygdata.Id = ygdata.Id(NS_openconfig_lldp, 'interfaces')
+_ID_openconfig_lldp__lldp: ygdata.Id = ygdata.Id(NS_openconfig_lldp, 'lldp')
+_ID_openconfig_lldp__name: ygdata.Id = ygdata.Id(NS_openconfig_lldp, 'name')
+_ID_openconfig_network_instance__address_family: ygdata.Id = ygdata.Id(NS_openconfig_network_instance, 'address-family')
+_ID_openconfig_network_instance__afi_safi: ygdata.Id = ygdata.Id(NS_openconfig_network_instance, 'afi-safi')
+_ID_openconfig_network_instance__afi_safi_name: ygdata.Id = ygdata.Id(NS_openconfig_network_instance, 'afi-safi-name')
+_ID_openconfig_network_instance__afi_safis: ygdata.Id = ygdata.Id(NS_openconfig_network_instance, 'afi-safis')
+_ID_openconfig_network_instance__apply_policy: ygdata.Id = ygdata.Id(NS_openconfig_network_instance, 'apply-policy')
+_ID_openconfig_network_instance__as: ygdata.Id = ygdata.Id(NS_openconfig_network_instance, 'as')
+_ID_openconfig_network_instance__bgp: ygdata.Id = ygdata.Id(NS_openconfig_network_instance, 'bgp')
+_ID_openconfig_network_instance__config: ygdata.Id = ygdata.Id(NS_openconfig_network_instance, 'config')
+_ID_openconfig_network_instance__description: ygdata.Id = ygdata.Id(NS_openconfig_network_instance, 'description')
+_ID_openconfig_network_instance__dst_protocol: ygdata.Id = ygdata.Id(NS_openconfig_network_instance, 'dst-protocol')
+_ID_openconfig_network_instance__ebgp: ygdata.Id = ygdata.Id(NS_openconfig_network_instance, 'ebgp')
+_ID_openconfig_network_instance__ebgp_multihop: ygdata.Id = ygdata.Id(NS_openconfig_network_instance, 'ebgp-multihop')
+_ID_openconfig_network_instance__enabled: ygdata.Id = ygdata.Id(NS_openconfig_network_instance, 'enabled')
+_ID_openconfig_network_instance__export_policy: ygdata.Id = ygdata.Id(NS_openconfig_network_instance, 'export-policy')
+_ID_openconfig_network_instance__global: ygdata.Id = ygdata.Id(NS_openconfig_network_instance, 'global')
+_ID_openconfig_network_instance__id: ygdata.Id = ygdata.Id(NS_openconfig_network_instance, 'id')
+_ID_openconfig_network_instance__identifier: ygdata.Id = ygdata.Id(NS_openconfig_network_instance, 'identifier')
+_ID_openconfig_network_instance__import_policy: ygdata.Id = ygdata.Id(NS_openconfig_network_instance, 'import-policy')
+_ID_openconfig_network_instance__index: ygdata.Id = ygdata.Id(NS_openconfig_network_instance, 'index')
+_ID_openconfig_network_instance__interface: ygdata.Id = ygdata.Id(NS_openconfig_network_instance, 'interface')
+_ID_openconfig_network_instance__interfaces: ygdata.Id = ygdata.Id(NS_openconfig_network_instance, 'interfaces')
+_ID_openconfig_network_instance__local_address: ygdata.Id = ygdata.Id(NS_openconfig_network_instance, 'local-address')
+_ID_openconfig_network_instance__maximum_paths: ygdata.Id = ygdata.Id(NS_openconfig_network_instance, 'maximum-paths')
+_ID_openconfig_network_instance__members: ygdata.Id = ygdata.Id(NS_openconfig_network_instance, 'members')
+_ID_openconfig_network_instance__multihop_ttl: ygdata.Id = ygdata.Id(NS_openconfig_network_instance, 'multihop-ttl')
+_ID_openconfig_network_instance__name: ygdata.Id = ygdata.Id(NS_openconfig_network_instance, 'name')
+_ID_openconfig_network_instance__neighbor: ygdata.Id = ygdata.Id(NS_openconfig_network_instance, 'neighbor')
+_ID_openconfig_network_instance__neighbor_address: ygdata.Id = ygdata.Id(NS_openconfig_network_instance, 'neighbor-address')
+_ID_openconfig_network_instance__neighbors: ygdata.Id = ygdata.Id(NS_openconfig_network_instance, 'neighbors')
+_ID_openconfig_network_instance__network_instance: ygdata.Id = ygdata.Id(NS_openconfig_network_instance, 'network-instance')
+_ID_openconfig_network_instance__network_instances: ygdata.Id = ygdata.Id(NS_openconfig_network_instance, 'network-instances')
+_ID_openconfig_network_instance__next_hop: ygdata.Id = ygdata.Id(NS_openconfig_network_instance, 'next-hop')
+_ID_openconfig_network_instance__next_hops: ygdata.Id = ygdata.Id(NS_openconfig_network_instance, 'next-hops')
+_ID_openconfig_network_instance__peer_as: ygdata.Id = ygdata.Id(NS_openconfig_network_instance, 'peer-as')
+_ID_openconfig_network_instance__peer_group: ygdata.Id = ygdata.Id(NS_openconfig_network_instance, 'peer-group')
+_ID_openconfig_network_instance__peer_group_name: ygdata.Id = ygdata.Id(NS_openconfig_network_instance, 'peer-group-name')
+_ID_openconfig_network_instance__peer_groups: ygdata.Id = ygdata.Id(NS_openconfig_network_instance, 'peer-groups')
+_ID_openconfig_network_instance__prefix: ygdata.Id = ygdata.Id(NS_openconfig_network_instance, 'prefix')
+_ID_openconfig_network_instance__protocol: ygdata.Id = ygdata.Id(NS_openconfig_network_instance, 'protocol')
+_ID_openconfig_network_instance__protocols: ygdata.Id = ygdata.Id(NS_openconfig_network_instance, 'protocols')
+_ID_openconfig_network_instance__route_distinguisher: ygdata.Id = ygdata.Id(NS_openconfig_network_instance, 'route-distinguisher')
+_ID_openconfig_network_instance__router_id: ygdata.Id = ygdata.Id(NS_openconfig_network_instance, 'router-id')
+_ID_openconfig_network_instance__send_community_type: ygdata.Id = ygdata.Id(NS_openconfig_network_instance, 'send-community-type')
+_ID_openconfig_network_instance__src_protocol: ygdata.Id = ygdata.Id(NS_openconfig_network_instance, 'src-protocol')
+_ID_openconfig_network_instance__static: ygdata.Id = ygdata.Id(NS_openconfig_network_instance, 'static')
+_ID_openconfig_network_instance__static_routes: ygdata.Id = ygdata.Id(NS_openconfig_network_instance, 'static-routes')
+_ID_openconfig_network_instance__subinterface: ygdata.Id = ygdata.Id(NS_openconfig_network_instance, 'subinterface')
+_ID_openconfig_network_instance__table_connection: ygdata.Id = ygdata.Id(NS_openconfig_network_instance, 'table-connection')
+_ID_openconfig_network_instance__table_connections: ygdata.Id = ygdata.Id(NS_openconfig_network_instance, 'table-connections')
+_ID_openconfig_network_instance__transport: ygdata.Id = ygdata.Id(NS_openconfig_network_instance, 'transport')
+_ID_openconfig_network_instance__type: ygdata.Id = ygdata.Id(NS_openconfig_network_instance, 'type')
+_ID_openconfig_network_instance__use_multiple_paths: ygdata.Id = ygdata.Id(NS_openconfig_network_instance, 'use-multiple-paths')
+_ID_openconfig_network_instance__vlan: ygdata.Id = ygdata.Id(NS_openconfig_network_instance, 'vlan')
+_ID_openconfig_network_instance__vlan_id: ygdata.Id = ygdata.Id(NS_openconfig_network_instance, 'vlan-id')
+_ID_openconfig_network_instance__vlans: ygdata.Id = ygdata.Id(NS_openconfig_network_instance, 'vlans')
+_ID_openconfig_routing_policy__actions: ygdata.Id = ygdata.Id(NS_openconfig_routing_policy, 'actions')
+_ID_openconfig_routing_policy__conditions: ygdata.Id = ygdata.Id(NS_openconfig_routing_policy, 'conditions')
+_ID_openconfig_routing_policy__config: ygdata.Id = ygdata.Id(NS_openconfig_routing_policy, 'config')
+_ID_openconfig_routing_policy__defined_sets: ygdata.Id = ygdata.Id(NS_openconfig_routing_policy, 'defined-sets')
+_ID_openconfig_routing_policy__ip_prefix: ygdata.Id = ygdata.Id(NS_openconfig_routing_policy, 'ip-prefix')
+_ID_openconfig_routing_policy__masklength_range: ygdata.Id = ygdata.Id(NS_openconfig_routing_policy, 'masklength-range')
+_ID_openconfig_routing_policy__match_prefix_set: ygdata.Id = ygdata.Id(NS_openconfig_routing_policy, 'match-prefix-set')
+_ID_openconfig_routing_policy__mode: ygdata.Id = ygdata.Id(NS_openconfig_routing_policy, 'mode')
+_ID_openconfig_routing_policy__name: ygdata.Id = ygdata.Id(NS_openconfig_routing_policy, 'name')
+_ID_openconfig_routing_policy__policy_definition: ygdata.Id = ygdata.Id(NS_openconfig_routing_policy, 'policy-definition')
+_ID_openconfig_routing_policy__policy_definitions: ygdata.Id = ygdata.Id(NS_openconfig_routing_policy, 'policy-definitions')
+_ID_openconfig_routing_policy__policy_result: ygdata.Id = ygdata.Id(NS_openconfig_routing_policy, 'policy-result')
+_ID_openconfig_routing_policy__prefix: ygdata.Id = ygdata.Id(NS_openconfig_routing_policy, 'prefix')
+_ID_openconfig_routing_policy__prefix_set: ygdata.Id = ygdata.Id(NS_openconfig_routing_policy, 'prefix-set')
+_ID_openconfig_routing_policy__prefix_sets: ygdata.Id = ygdata.Id(NS_openconfig_routing_policy, 'prefix-sets')
+_ID_openconfig_routing_policy__prefixes: ygdata.Id = ygdata.Id(NS_openconfig_routing_policy, 'prefixes')
+_ID_openconfig_routing_policy__routing_policy: ygdata.Id = ygdata.Id(NS_openconfig_routing_policy, 'routing-policy')
+_ID_openconfig_routing_policy__statement: ygdata.Id = ygdata.Id(NS_openconfig_routing_policy, 'statement')
+_ID_openconfig_routing_policy__statements: ygdata.Id = ygdata.Id(NS_openconfig_routing_policy, 'statements')
+_ID_openconfig_system__config: ygdata.Id = ygdata.Id(NS_openconfig_system, 'config')
+_ID_openconfig_system__hostname: ygdata.Id = ygdata.Id(NS_openconfig_system, 'hostname')
+_ID_openconfig_system__mac_address: ygdata.Id = ygdata.Id(NS_openconfig_system, 'mac-address')
+_ID_openconfig_system__routing_mac: ygdata.Id = ygdata.Id(NS_openconfig_system, 'routing-mac')
+_ID_openconfig_system__system: ygdata.Id = ygdata.Id(NS_openconfig_system, 'system')
+_ID_openconfig_vlan__config: ygdata.Id = ygdata.Id(NS_openconfig_vlan, 'config')
+_ID_openconfig_vlan__interface_mode: ygdata.Id = ygdata.Id(NS_openconfig_vlan, 'interface-mode')
+_ID_openconfig_vlan__native_vlan: ygdata.Id = ygdata.Id(NS_openconfig_vlan, 'native-vlan')
+_ID_openconfig_vlan__routed_vlan: ygdata.Id = ygdata.Id(NS_openconfig_vlan, 'routed-vlan')
+_ID_openconfig_vlan__switched_vlan: ygdata.Id = ygdata.Id(NS_openconfig_vlan, 'switched-vlan')
+_ID_openconfig_vlan__trunk_vlans: ygdata.Id = ygdata.Id(NS_openconfig_vlan, 'trunk-vlans')
+_ID_openconfig_vlan__vlan: ygdata.Id = ygdata.Id(NS_openconfig_vlan, 'vlan')
+_ID_vlan_translation__bridging_vlan: ygdata.Id = ygdata.Id(NS_vlan_translation, 'bridging-vlan')
+_ID_vlan_translation__config: ygdata.Id = ygdata.Id(NS_vlan_translation, 'config')
+_ID_vlan_translation__egress: ygdata.Id = ygdata.Id(NS_vlan_translation, 'egress')
+_ID_vlan_translation__ingress: ygdata.Id = ygdata.Id(NS_vlan_translation, 'ingress')
+_ID_vlan_translation__translation_key: ygdata.Id = ygdata.Id(NS_vlan_translation, 'translation-key')
+_ID_vlan_translation__vlan_translation: ygdata.Id = ygdata.Id(NS_vlan_translation, 'vlan-translation')
+
 
 _breaker1: None = None
 class openconfig_interfaces__interfaces__interface__config(yadata.MNode):
@@ -1490,7 +1663,7 @@ class openconfig_interfaces__interfaces__interface__config(yadata.MNode):
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_interfaces__interfaces__interface__config:
         if n is not None:
-            return openconfig_interfaces__interfaces__interface__config(name=n.get_opt_str(ygdata.Id(NS_openconfig_interfaces, 'name')), type=n.get_opt_Identityref(ygdata.Id(NS_openconfig_interfaces, 'type')), description=n.get_opt_str(ygdata.Id(NS_openconfig_interfaces, 'description')), enabled=n.get_opt_bool(ygdata.Id(NS_openconfig_interfaces, 'enabled')))
+            return openconfig_interfaces__interfaces__interface__config(name=n.get_opt_str(_ID_openconfig_interfaces__name), type=n.get_opt_Identityref(_ID_openconfig_interfaces__type), description=n.get_opt_str(_ID_openconfig_interfaces__description), enabled=n.get_opt_bool(_ID_openconfig_interfaces__enabled))
         return openconfig_interfaces__interfaces__interface__config()
 
     mut def copy(self) -> openconfig_interfaces__interfaces__interface__config:
@@ -1515,7 +1688,7 @@ class openconfig_interfaces__interfaces__interface__subinterfaces__subinterface_
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_interfaces__interfaces__interface__subinterfaces__subinterface__config:
         if n is not None:
-            return openconfig_interfaces__interfaces__interface__subinterfaces__subinterface__config(index=n.get_opt_u64(ygdata.Id(NS_openconfig_interfaces, 'index')), description=n.get_opt_str(ygdata.Id(NS_openconfig_interfaces, 'description')), enabled=n.get_opt_bool(ygdata.Id(NS_openconfig_interfaces, 'enabled')))
+            return openconfig_interfaces__interfaces__interface__subinterfaces__subinterface__config(index=n.get_opt_u64(_ID_openconfig_interfaces__index), description=n.get_opt_str(_ID_openconfig_interfaces__description), enabled=n.get_opt_bool(_ID_openconfig_interfaces__enabled))
         return openconfig_interfaces__interfaces__interface__subinterfaces__subinterface__config()
 
     mut def copy(self) -> openconfig_interfaces__interfaces__interface__subinterfaces__subinterface__config:
@@ -1538,7 +1711,7 @@ class openconfig_interfaces__interfaces__interface__subinterfaces__subinterface_
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_interfaces__interfaces__interface__subinterfaces__subinterface__ipv4__addresses__address__config:
         if n is not None:
-            return openconfig_interfaces__interfaces__interface__subinterfaces__subinterface__ipv4__addresses__address__config(ip=n.get_opt_str(ygdata.Id(NS_openconfig_if_ip, 'ip')), prefix_length=n.get_opt_u64(ygdata.Id(NS_openconfig_if_ip, 'prefix-length')))
+            return openconfig_interfaces__interfaces__interface__subinterfaces__subinterface__ipv4__addresses__address__config(ip=n.get_opt_str(_ID_openconfig_if_ip__ip), prefix_length=n.get_opt_u64(_ID_openconfig_if_ip__prefix_length))
         return openconfig_interfaces__interfaces__interface__subinterfaces__subinterface__ipv4__addresses__address__config()
 
     mut def copy(self) -> openconfig_interfaces__interfaces__interface__subinterfaces__subinterface__ipv4__addresses__address__config:
@@ -1560,7 +1733,7 @@ class openconfig_interfaces__interfaces__interface__subinterfaces__subinterface_
 
     @staticmethod
     mut def from_gdata(n: ygdata.Node) -> openconfig_interfaces__interfaces__interface__subinterfaces__subinterface__ipv4__addresses__address_entry:
-        return openconfig_interfaces__interfaces__interface__subinterfaces__subinterface__ipv4__addresses__address_entry(ip=n.get_str(ygdata.Id(NS_openconfig_if_ip, 'ip')), config=openconfig_interfaces__interfaces__interface__subinterfaces__subinterface__ipv4__addresses__address__config.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_if_ip, 'config'))))
+        return openconfig_interfaces__interfaces__interface__subinterfaces__subinterface__ipv4__addresses__address_entry(ip=n.get_str(_ID_openconfig_if_ip__ip), config=openconfig_interfaces__interfaces__interface__subinterfaces__subinterface__ipv4__addresses__address__config.from_gdata(n.get_opt_cnt(_ID_openconfig_if_ip__config)))
 
     mut def copy(self) -> openconfig_interfaces__interfaces__interface__subinterfaces__subinterface__ipv4__addresses__address_entry:
         """Create a deep copy of this adata object"""
@@ -1610,7 +1783,7 @@ class openconfig_interfaces__interfaces__interface__subinterfaces__subinterface_
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_interfaces__interfaces__interface__subinterfaces__subinterface__ipv4__addresses:
         if n is not None:
-            return openconfig_interfaces__interfaces__interface__subinterfaces__subinterface__ipv4__addresses(address=openconfig_interfaces__interfaces__interface__subinterfaces__subinterface__ipv4__addresses__address.from_gdata(n.get_opt_list(ygdata.Id(NS_openconfig_if_ip, 'address'))))
+            return openconfig_interfaces__interfaces__interface__subinterfaces__subinterface__ipv4__addresses(address=openconfig_interfaces__interfaces__interface__subinterfaces__subinterface__ipv4__addresses__address.from_gdata(n.get_opt_list(_ID_openconfig_if_ip__address)))
         return openconfig_interfaces__interfaces__interface__subinterfaces__subinterface__ipv4__addresses()
 
     mut def copy(self) -> openconfig_interfaces__interfaces__interface__subinterfaces__subinterface__ipv4__addresses:
@@ -1633,7 +1806,7 @@ class openconfig_interfaces__interfaces__interface__subinterfaces__subinterface_
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_interfaces__interfaces__interface__subinterfaces__subinterface__ipv4__config:
         if n is not None:
-            return openconfig_interfaces__interfaces__interface__subinterfaces__subinterface__ipv4__config(enabled=n.get_opt_bool(ygdata.Id(NS_openconfig_if_ip, 'enabled')), mtu=n.get_opt_u64(ygdata.Id(NS_openconfig_if_ip, 'mtu')))
+            return openconfig_interfaces__interfaces__interface__subinterfaces__subinterface__ipv4__config(enabled=n.get_opt_bool(_ID_openconfig_if_ip__enabled), mtu=n.get_opt_u64(_ID_openconfig_if_ip__mtu))
         return openconfig_interfaces__interfaces__interface__subinterfaces__subinterface__ipv4__config()
 
     mut def copy(self) -> openconfig_interfaces__interfaces__interface__subinterfaces__subinterface__ipv4__config:
@@ -1656,7 +1829,7 @@ class openconfig_interfaces__interfaces__interface__subinterfaces__subinterface_
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_interfaces__interfaces__interface__subinterfaces__subinterface__ipv4:
         if n is not None:
-            return openconfig_interfaces__interfaces__interface__subinterfaces__subinterface__ipv4(addresses=openconfig_interfaces__interfaces__interface__subinterfaces__subinterface__ipv4__addresses.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_if_ip, 'addresses'))), config=openconfig_interfaces__interfaces__interface__subinterfaces__subinterface__ipv4__config.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_if_ip, 'config'))))
+            return openconfig_interfaces__interfaces__interface__subinterfaces__subinterface__ipv4(addresses=openconfig_interfaces__interfaces__interface__subinterfaces__subinterface__ipv4__addresses.from_gdata(n.get_opt_cnt(_ID_openconfig_if_ip__addresses)), config=openconfig_interfaces__interfaces__interface__subinterfaces__subinterface__ipv4__config.from_gdata(n.get_opt_cnt(_ID_openconfig_if_ip__config)))
         return openconfig_interfaces__interfaces__interface__subinterfaces__subinterface__ipv4()
 
     mut def copy(self) -> openconfig_interfaces__interfaces__interface__subinterfaces__subinterface__ipv4:
@@ -1677,7 +1850,7 @@ class openconfig_interfaces__interfaces__interface__subinterfaces__subinterface_
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_interfaces__interfaces__interface__subinterfaces__subinterface__ipv6__config:
         if n is not None:
-            return openconfig_interfaces__interfaces__interface__subinterfaces__subinterface__ipv6__config(mtu=n.get_opt_u64(ygdata.Id(NS_openconfig_if_ip, 'mtu')))
+            return openconfig_interfaces__interfaces__interface__subinterfaces__subinterface__ipv6__config(mtu=n.get_opt_u64(_ID_openconfig_if_ip__mtu))
         return openconfig_interfaces__interfaces__interface__subinterfaces__subinterface__ipv6__config()
 
     mut def copy(self) -> openconfig_interfaces__interfaces__interface__subinterfaces__subinterface__ipv6__config:
@@ -1698,7 +1871,7 @@ class openconfig_interfaces__interfaces__interface__subinterfaces__subinterface_
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_interfaces__interfaces__interface__subinterfaces__subinterface__ipv6:
         if n is not None:
-            return openconfig_interfaces__interfaces__interface__subinterfaces__subinterface__ipv6(config=openconfig_interfaces__interfaces__interface__subinterfaces__subinterface__ipv6__config.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_if_ip, 'config'))))
+            return openconfig_interfaces__interfaces__interface__subinterfaces__subinterface__ipv6(config=openconfig_interfaces__interfaces__interface__subinterfaces__subinterface__ipv6__config.from_gdata(n.get_opt_cnt(_ID_openconfig_if_ip__config)))
         return openconfig_interfaces__interfaces__interface__subinterfaces__subinterface__ipv6()
 
     mut def copy(self) -> openconfig_interfaces__interfaces__interface__subinterfaces__subinterface__ipv6:
@@ -1724,7 +1897,7 @@ class openconfig_interfaces__interfaces__interface__subinterfaces__subinterface_
 
     @staticmethod
     mut def from_gdata(n: ygdata.Node) -> openconfig_interfaces__interfaces__interface__subinterfaces__subinterface_entry:
-        return openconfig_interfaces__interfaces__interface__subinterfaces__subinterface_entry(index=n.get_u64(ygdata.Id(NS_openconfig_interfaces, 'index')), config=openconfig_interfaces__interfaces__interface__subinterfaces__subinterface__config.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_interfaces, 'config'))), ipv4=openconfig_interfaces__interfaces__interface__subinterfaces__subinterface__ipv4.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_if_ip, 'ipv4'))), ipv6=openconfig_interfaces__interfaces__interface__subinterfaces__subinterface__ipv6.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_if_ip, 'ipv6'))))
+        return openconfig_interfaces__interfaces__interface__subinterfaces__subinterface_entry(index=n.get_u64(_ID_openconfig_interfaces__index), config=openconfig_interfaces__interfaces__interface__subinterfaces__subinterface__config.from_gdata(n.get_opt_cnt(_ID_openconfig_interfaces__config)), ipv4=openconfig_interfaces__interfaces__interface__subinterfaces__subinterface__ipv4.from_gdata(n.get_opt_cnt(_ID_openconfig_if_ip__ipv4)), ipv6=openconfig_interfaces__interfaces__interface__subinterfaces__subinterface__ipv6.from_gdata(n.get_opt_cnt(_ID_openconfig_if_ip__ipv6)))
 
     mut def copy(self) -> openconfig_interfaces__interfaces__interface__subinterfaces__subinterface_entry:
         """Create a deep copy of this adata object"""
@@ -1774,7 +1947,7 @@ class openconfig_interfaces__interfaces__interface__subinterfaces(yadata.MNode):
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_interfaces__interfaces__interface__subinterfaces:
         if n is not None:
-            return openconfig_interfaces__interfaces__interface__subinterfaces(subinterface=openconfig_interfaces__interfaces__interface__subinterfaces__subinterface.from_gdata(n.get_opt_list(ygdata.Id(NS_openconfig_interfaces, 'subinterface'))))
+            return openconfig_interfaces__interfaces__interface__subinterfaces(subinterface=openconfig_interfaces__interfaces__interface__subinterfaces__subinterface.from_gdata(n.get_opt_list(_ID_openconfig_interfaces__subinterface)))
         return openconfig_interfaces__interfaces__interface__subinterfaces()
 
     mut def copy(self) -> openconfig_interfaces__interfaces__interface__subinterfaces:
@@ -1795,7 +1968,7 @@ class openconfig_interfaces__interfaces__interface__ethernet__config(yadata.MNod
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_interfaces__interfaces__interface__ethernet__config:
         if n is not None:
-            return openconfig_interfaces__interfaces__interface__ethernet__config(aggregate_id=n.get_opt_str(ygdata.Id(NS_openconfig_if_aggregate, 'aggregate-id')))
+            return openconfig_interfaces__interfaces__interface__ethernet__config(aggregate_id=n.get_opt_str(_ID_openconfig_if_aggregate__aggregate_id))
         return openconfig_interfaces__interfaces__interface__ethernet__config()
 
     mut def copy(self) -> openconfig_interfaces__interfaces__interface__ethernet__config:
@@ -1820,7 +1993,7 @@ class openconfig_interfaces__interfaces__interface__ethernet__switched_vlan__con
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_interfaces__interfaces__interface__ethernet__switched_vlan__config:
         if n is not None:
-            return openconfig_interfaces__interfaces__interface__ethernet__switched_vlan__config(interface_mode=n.get_opt_str(ygdata.Id(NS_openconfig_vlan, 'interface-mode')), native_vlan=n.get_opt_u64(ygdata.Id(NS_openconfig_vlan, 'native-vlan')), trunk_vlans=n.get_opt_atoms(ygdata.Id(NS_openconfig_vlan, 'trunk-vlans')))
+            return openconfig_interfaces__interfaces__interface__ethernet__switched_vlan__config(interface_mode=n.get_opt_str(_ID_openconfig_vlan__interface_mode), native_vlan=n.get_opt_u64(_ID_openconfig_vlan__native_vlan), trunk_vlans=n.get_opt_atoms(_ID_openconfig_vlan__trunk_vlans))
         return openconfig_interfaces__interfaces__interface__ethernet__switched_vlan__config()
 
     mut def copy(self) -> openconfig_interfaces__interfaces__interface__ethernet__switched_vlan__config:
@@ -1843,7 +2016,7 @@ class openconfig_interfaces__interfaces__interface__ethernet__switched_vlan__vla
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_interfaces__interfaces__interface__ethernet__switched_vlan__vlan_translation__ingress__config:
         if n is not None:
-            return openconfig_interfaces__interfaces__interface__ethernet__switched_vlan__vlan_translation__ingress__config(translation_key=n.get_opt_atom(ygdata.Id(NS_vlan_translation, 'translation-key')), bridging_vlan=n.get_opt_u64(ygdata.Id(NS_vlan_translation, 'bridging-vlan')))
+            return openconfig_interfaces__interfaces__interface__ethernet__switched_vlan__vlan_translation__ingress__config(translation_key=n.get_opt_atom(_ID_vlan_translation__translation_key), bridging_vlan=n.get_opt_u64(_ID_vlan_translation__bridging_vlan))
         return openconfig_interfaces__interfaces__interface__ethernet__switched_vlan__vlan_translation__ingress__config()
 
     mut def copy(self) -> openconfig_interfaces__interfaces__interface__ethernet__switched_vlan__vlan_translation__ingress__config:
@@ -1865,7 +2038,7 @@ class openconfig_interfaces__interfaces__interface__ethernet__switched_vlan__vla
 
     @staticmethod
     mut def from_gdata(n: ygdata.Node) -> openconfig_interfaces__interfaces__interface__ethernet__switched_vlan__vlan_translation__ingress_entry:
-        return openconfig_interfaces__interfaces__interface__ethernet__switched_vlan__vlan_translation__ingress_entry(translation_key=n.get_atom(ygdata.Id(NS_vlan_translation, 'translation-key')), config=openconfig_interfaces__interfaces__interface__ethernet__switched_vlan__vlan_translation__ingress__config.from_gdata(n.get_opt_cnt(ygdata.Id(NS_vlan_translation, 'config'))))
+        return openconfig_interfaces__interfaces__interface__ethernet__switched_vlan__vlan_translation__ingress_entry(translation_key=n.get_atom(_ID_vlan_translation__translation_key), config=openconfig_interfaces__interfaces__interface__ethernet__switched_vlan__vlan_translation__ingress__config.from_gdata(n.get_opt_cnt(_ID_vlan_translation__config)))
 
     mut def copy(self) -> openconfig_interfaces__interfaces__interface__ethernet__switched_vlan__vlan_translation__ingress_entry:
         """Create a deep copy of this adata object"""
@@ -1917,7 +2090,7 @@ class openconfig_interfaces__interfaces__interface__ethernet__switched_vlan__vla
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_interfaces__interfaces__interface__ethernet__switched_vlan__vlan_translation__egress__config:
         if n is not None:
-            return openconfig_interfaces__interfaces__interface__ethernet__switched_vlan__vlan_translation__egress__config(translation_key=n.get_opt_atom(ygdata.Id(NS_vlan_translation, 'translation-key')), bridging_vlan=n.get_opt_u64(ygdata.Id(NS_vlan_translation, 'bridging-vlan')))
+            return openconfig_interfaces__interfaces__interface__ethernet__switched_vlan__vlan_translation__egress__config(translation_key=n.get_opt_atom(_ID_vlan_translation__translation_key), bridging_vlan=n.get_opt_u64(_ID_vlan_translation__bridging_vlan))
         return openconfig_interfaces__interfaces__interface__ethernet__switched_vlan__vlan_translation__egress__config()
 
     mut def copy(self) -> openconfig_interfaces__interfaces__interface__ethernet__switched_vlan__vlan_translation__egress__config:
@@ -1939,7 +2112,7 @@ class openconfig_interfaces__interfaces__interface__ethernet__switched_vlan__vla
 
     @staticmethod
     mut def from_gdata(n: ygdata.Node) -> openconfig_interfaces__interfaces__interface__ethernet__switched_vlan__vlan_translation__egress_entry:
-        return openconfig_interfaces__interfaces__interface__ethernet__switched_vlan__vlan_translation__egress_entry(translation_key=n.get_atom(ygdata.Id(NS_vlan_translation, 'translation-key')), config=openconfig_interfaces__interfaces__interface__ethernet__switched_vlan__vlan_translation__egress__config.from_gdata(n.get_opt_cnt(ygdata.Id(NS_vlan_translation, 'config'))))
+        return openconfig_interfaces__interfaces__interface__ethernet__switched_vlan__vlan_translation__egress_entry(translation_key=n.get_atom(_ID_vlan_translation__translation_key), config=openconfig_interfaces__interfaces__interface__ethernet__switched_vlan__vlan_translation__egress__config.from_gdata(n.get_opt_cnt(_ID_vlan_translation__config)))
 
     mut def copy(self) -> openconfig_interfaces__interfaces__interface__ethernet__switched_vlan__vlan_translation__egress_entry:
         """Create a deep copy of this adata object"""
@@ -1991,7 +2164,7 @@ class openconfig_interfaces__interfaces__interface__ethernet__switched_vlan__vla
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_interfaces__interfaces__interface__ethernet__switched_vlan__vlan_translation:
         if n is not None:
-            return openconfig_interfaces__interfaces__interface__ethernet__switched_vlan__vlan_translation(ingress=openconfig_interfaces__interfaces__interface__ethernet__switched_vlan__vlan_translation__ingress.from_gdata(n.get_opt_list(ygdata.Id(NS_vlan_translation, 'ingress'))), egress=openconfig_interfaces__interfaces__interface__ethernet__switched_vlan__vlan_translation__egress.from_gdata(n.get_opt_list(ygdata.Id(NS_vlan_translation, 'egress'))))
+            return openconfig_interfaces__interfaces__interface__ethernet__switched_vlan__vlan_translation(ingress=openconfig_interfaces__interfaces__interface__ethernet__switched_vlan__vlan_translation__ingress.from_gdata(n.get_opt_list(_ID_vlan_translation__ingress)), egress=openconfig_interfaces__interfaces__interface__ethernet__switched_vlan__vlan_translation__egress.from_gdata(n.get_opt_list(_ID_vlan_translation__egress)))
         return openconfig_interfaces__interfaces__interface__ethernet__switched_vlan__vlan_translation()
 
     mut def copy(self) -> openconfig_interfaces__interfaces__interface__ethernet__switched_vlan__vlan_translation:
@@ -2014,7 +2187,7 @@ class openconfig_interfaces__interfaces__interface__ethernet__switched_vlan(yada
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_interfaces__interfaces__interface__ethernet__switched_vlan:
         if n is not None:
-            return openconfig_interfaces__interfaces__interface__ethernet__switched_vlan(config=openconfig_interfaces__interfaces__interface__ethernet__switched_vlan__config.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_vlan, 'config'))), vlan_translation=openconfig_interfaces__interfaces__interface__ethernet__switched_vlan__vlan_translation.from_gdata(n.get_opt_cnt(ygdata.Id(NS_vlan_translation, 'vlan-translation'))))
+            return openconfig_interfaces__interfaces__interface__ethernet__switched_vlan(config=openconfig_interfaces__interfaces__interface__ethernet__switched_vlan__config.from_gdata(n.get_opt_cnt(_ID_openconfig_vlan__config)), vlan_translation=openconfig_interfaces__interfaces__interface__ethernet__switched_vlan__vlan_translation.from_gdata(n.get_opt_cnt(_ID_vlan_translation__vlan_translation)))
         return openconfig_interfaces__interfaces__interface__ethernet__switched_vlan()
 
     mut def copy(self) -> openconfig_interfaces__interfaces__interface__ethernet__switched_vlan:
@@ -2037,7 +2210,7 @@ class openconfig_interfaces__interfaces__interface__ethernet(yadata.MNode):
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_interfaces__interfaces__interface__ethernet:
         if n is not None:
-            return openconfig_interfaces__interfaces__interface__ethernet(config=openconfig_interfaces__interfaces__interface__ethernet__config.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_if_ethernet, 'config'))), switched_vlan=openconfig_interfaces__interfaces__interface__ethernet__switched_vlan.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_vlan, 'switched-vlan'))))
+            return openconfig_interfaces__interfaces__interface__ethernet(config=openconfig_interfaces__interfaces__interface__ethernet__config.from_gdata(n.get_opt_cnt(_ID_openconfig_if_ethernet__config)), switched_vlan=openconfig_interfaces__interfaces__interface__ethernet__switched_vlan.from_gdata(n.get_opt_cnt(_ID_openconfig_vlan__switched_vlan)))
         return openconfig_interfaces__interfaces__interface__ethernet()
 
     mut def copy(self) -> openconfig_interfaces__interfaces__interface__ethernet:
@@ -2058,7 +2231,7 @@ class openconfig_interfaces__interfaces__interface__aggregation__config(yadata.M
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_interfaces__interfaces__interface__aggregation__config:
         if n is not None:
-            return openconfig_interfaces__interfaces__interface__aggregation__config(lag_type=n.get_opt_str(ygdata.Id(NS_openconfig_if_aggregate, 'lag-type')))
+            return openconfig_interfaces__interfaces__interface__aggregation__config(lag_type=n.get_opt_str(_ID_openconfig_if_aggregate__lag_type))
         return openconfig_interfaces__interfaces__interface__aggregation__config()
 
     mut def copy(self) -> openconfig_interfaces__interfaces__interface__aggregation__config:
@@ -2083,7 +2256,7 @@ class openconfig_interfaces__interfaces__interface__aggregation__switched_vlan__
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_interfaces__interfaces__interface__aggregation__switched_vlan__config:
         if n is not None:
-            return openconfig_interfaces__interfaces__interface__aggregation__switched_vlan__config(interface_mode=n.get_opt_str(ygdata.Id(NS_openconfig_vlan, 'interface-mode')), native_vlan=n.get_opt_u64(ygdata.Id(NS_openconfig_vlan, 'native-vlan')), trunk_vlans=n.get_opt_atoms(ygdata.Id(NS_openconfig_vlan, 'trunk-vlans')))
+            return openconfig_interfaces__interfaces__interface__aggregation__switched_vlan__config(interface_mode=n.get_opt_str(_ID_openconfig_vlan__interface_mode), native_vlan=n.get_opt_u64(_ID_openconfig_vlan__native_vlan), trunk_vlans=n.get_opt_atoms(_ID_openconfig_vlan__trunk_vlans))
         return openconfig_interfaces__interfaces__interface__aggregation__switched_vlan__config()
 
     mut def copy(self) -> openconfig_interfaces__interfaces__interface__aggregation__switched_vlan__config:
@@ -2106,7 +2279,7 @@ class openconfig_interfaces__interfaces__interface__aggregation__switched_vlan__
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_interfaces__interfaces__interface__aggregation__switched_vlan__vlan_translation__ingress__config:
         if n is not None:
-            return openconfig_interfaces__interfaces__interface__aggregation__switched_vlan__vlan_translation__ingress__config(translation_key=n.get_opt_atom(ygdata.Id(NS_vlan_translation, 'translation-key')), bridging_vlan=n.get_opt_u64(ygdata.Id(NS_vlan_translation, 'bridging-vlan')))
+            return openconfig_interfaces__interfaces__interface__aggregation__switched_vlan__vlan_translation__ingress__config(translation_key=n.get_opt_atom(_ID_vlan_translation__translation_key), bridging_vlan=n.get_opt_u64(_ID_vlan_translation__bridging_vlan))
         return openconfig_interfaces__interfaces__interface__aggregation__switched_vlan__vlan_translation__ingress__config()
 
     mut def copy(self) -> openconfig_interfaces__interfaces__interface__aggregation__switched_vlan__vlan_translation__ingress__config:
@@ -2128,7 +2301,7 @@ class openconfig_interfaces__interfaces__interface__aggregation__switched_vlan__
 
     @staticmethod
     mut def from_gdata(n: ygdata.Node) -> openconfig_interfaces__interfaces__interface__aggregation__switched_vlan__vlan_translation__ingress_entry:
-        return openconfig_interfaces__interfaces__interface__aggregation__switched_vlan__vlan_translation__ingress_entry(translation_key=n.get_atom(ygdata.Id(NS_vlan_translation, 'translation-key')), config=openconfig_interfaces__interfaces__interface__aggregation__switched_vlan__vlan_translation__ingress__config.from_gdata(n.get_opt_cnt(ygdata.Id(NS_vlan_translation, 'config'))))
+        return openconfig_interfaces__interfaces__interface__aggregation__switched_vlan__vlan_translation__ingress_entry(translation_key=n.get_atom(_ID_vlan_translation__translation_key), config=openconfig_interfaces__interfaces__interface__aggregation__switched_vlan__vlan_translation__ingress__config.from_gdata(n.get_opt_cnt(_ID_vlan_translation__config)))
 
     mut def copy(self) -> openconfig_interfaces__interfaces__interface__aggregation__switched_vlan__vlan_translation__ingress_entry:
         """Create a deep copy of this adata object"""
@@ -2180,7 +2353,7 @@ class openconfig_interfaces__interfaces__interface__aggregation__switched_vlan__
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_interfaces__interfaces__interface__aggregation__switched_vlan__vlan_translation__egress__config:
         if n is not None:
-            return openconfig_interfaces__interfaces__interface__aggregation__switched_vlan__vlan_translation__egress__config(translation_key=n.get_opt_atom(ygdata.Id(NS_vlan_translation, 'translation-key')), bridging_vlan=n.get_opt_u64(ygdata.Id(NS_vlan_translation, 'bridging-vlan')))
+            return openconfig_interfaces__interfaces__interface__aggregation__switched_vlan__vlan_translation__egress__config(translation_key=n.get_opt_atom(_ID_vlan_translation__translation_key), bridging_vlan=n.get_opt_u64(_ID_vlan_translation__bridging_vlan))
         return openconfig_interfaces__interfaces__interface__aggregation__switched_vlan__vlan_translation__egress__config()
 
     mut def copy(self) -> openconfig_interfaces__interfaces__interface__aggregation__switched_vlan__vlan_translation__egress__config:
@@ -2202,7 +2375,7 @@ class openconfig_interfaces__interfaces__interface__aggregation__switched_vlan__
 
     @staticmethod
     mut def from_gdata(n: ygdata.Node) -> openconfig_interfaces__interfaces__interface__aggregation__switched_vlan__vlan_translation__egress_entry:
-        return openconfig_interfaces__interfaces__interface__aggregation__switched_vlan__vlan_translation__egress_entry(translation_key=n.get_atom(ygdata.Id(NS_vlan_translation, 'translation-key')), config=openconfig_interfaces__interfaces__interface__aggregation__switched_vlan__vlan_translation__egress__config.from_gdata(n.get_opt_cnt(ygdata.Id(NS_vlan_translation, 'config'))))
+        return openconfig_interfaces__interfaces__interface__aggregation__switched_vlan__vlan_translation__egress_entry(translation_key=n.get_atom(_ID_vlan_translation__translation_key), config=openconfig_interfaces__interfaces__interface__aggregation__switched_vlan__vlan_translation__egress__config.from_gdata(n.get_opt_cnt(_ID_vlan_translation__config)))
 
     mut def copy(self) -> openconfig_interfaces__interfaces__interface__aggregation__switched_vlan__vlan_translation__egress_entry:
         """Create a deep copy of this adata object"""
@@ -2254,7 +2427,7 @@ class openconfig_interfaces__interfaces__interface__aggregation__switched_vlan__
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_interfaces__interfaces__interface__aggregation__switched_vlan__vlan_translation:
         if n is not None:
-            return openconfig_interfaces__interfaces__interface__aggregation__switched_vlan__vlan_translation(ingress=openconfig_interfaces__interfaces__interface__aggregation__switched_vlan__vlan_translation__ingress.from_gdata(n.get_opt_list(ygdata.Id(NS_vlan_translation, 'ingress'))), egress=openconfig_interfaces__interfaces__interface__aggregation__switched_vlan__vlan_translation__egress.from_gdata(n.get_opt_list(ygdata.Id(NS_vlan_translation, 'egress'))))
+            return openconfig_interfaces__interfaces__interface__aggregation__switched_vlan__vlan_translation(ingress=openconfig_interfaces__interfaces__interface__aggregation__switched_vlan__vlan_translation__ingress.from_gdata(n.get_opt_list(_ID_vlan_translation__ingress)), egress=openconfig_interfaces__interfaces__interface__aggregation__switched_vlan__vlan_translation__egress.from_gdata(n.get_opt_list(_ID_vlan_translation__egress)))
         return openconfig_interfaces__interfaces__interface__aggregation__switched_vlan__vlan_translation()
 
     mut def copy(self) -> openconfig_interfaces__interfaces__interface__aggregation__switched_vlan__vlan_translation:
@@ -2277,7 +2450,7 @@ class openconfig_interfaces__interfaces__interface__aggregation__switched_vlan(y
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_interfaces__interfaces__interface__aggregation__switched_vlan:
         if n is not None:
-            return openconfig_interfaces__interfaces__interface__aggregation__switched_vlan(config=openconfig_interfaces__interfaces__interface__aggregation__switched_vlan__config.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_vlan, 'config'))), vlan_translation=openconfig_interfaces__interfaces__interface__aggregation__switched_vlan__vlan_translation.from_gdata(n.get_opt_cnt(ygdata.Id(NS_vlan_translation, 'vlan-translation'))))
+            return openconfig_interfaces__interfaces__interface__aggregation__switched_vlan(config=openconfig_interfaces__interfaces__interface__aggregation__switched_vlan__config.from_gdata(n.get_opt_cnt(_ID_openconfig_vlan__config)), vlan_translation=openconfig_interfaces__interfaces__interface__aggregation__switched_vlan__vlan_translation.from_gdata(n.get_opt_cnt(_ID_vlan_translation__vlan_translation)))
         return openconfig_interfaces__interfaces__interface__aggregation__switched_vlan()
 
     mut def copy(self) -> openconfig_interfaces__interfaces__interface__aggregation__switched_vlan:
@@ -2300,7 +2473,7 @@ class openconfig_interfaces__interfaces__interface__aggregation(yadata.MNode):
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_interfaces__interfaces__interface__aggregation:
         if n is not None:
-            return openconfig_interfaces__interfaces__interface__aggregation(config=openconfig_interfaces__interfaces__interface__aggregation__config.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_if_aggregate, 'config'))), switched_vlan=openconfig_interfaces__interfaces__interface__aggregation__switched_vlan.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_vlan, 'switched-vlan'))))
+            return openconfig_interfaces__interfaces__interface__aggregation(config=openconfig_interfaces__interfaces__interface__aggregation__config.from_gdata(n.get_opt_cnt(_ID_openconfig_if_aggregate__config)), switched_vlan=openconfig_interfaces__interfaces__interface__aggregation__switched_vlan.from_gdata(n.get_opt_cnt(_ID_openconfig_vlan__switched_vlan)))
         return openconfig_interfaces__interfaces__interface__aggregation()
 
     mut def copy(self) -> openconfig_interfaces__interfaces__interface__aggregation:
@@ -2321,7 +2494,7 @@ class openconfig_interfaces__interfaces__interface__routed_vlan__config(yadata.M
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_interfaces__interfaces__interface__routed_vlan__config:
         if n is not None:
-            return openconfig_interfaces__interfaces__interface__routed_vlan__config(vlan=n.get_opt_atom(ygdata.Id(NS_openconfig_vlan, 'vlan')))
+            return openconfig_interfaces__interfaces__interface__routed_vlan__config(vlan=n.get_opt_atom(_ID_openconfig_vlan__vlan))
         return openconfig_interfaces__interfaces__interface__routed_vlan__config()
 
     mut def copy(self) -> openconfig_interfaces__interfaces__interface__routed_vlan__config:
@@ -2342,7 +2515,7 @@ class openconfig_interfaces__interfaces__interface__routed_vlan(yadata.MNode):
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_interfaces__interfaces__interface__routed_vlan:
         if n is not None:
-            return openconfig_interfaces__interfaces__interface__routed_vlan(config=openconfig_interfaces__interfaces__interface__routed_vlan__config.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_vlan, 'config'))))
+            return openconfig_interfaces__interfaces__interface__routed_vlan(config=openconfig_interfaces__interfaces__interface__routed_vlan__config.from_gdata(n.get_opt_cnt(_ID_openconfig_vlan__config)))
         return openconfig_interfaces__interfaces__interface__routed_vlan()
 
     mut def copy(self) -> openconfig_interfaces__interfaces__interface__routed_vlan:
@@ -2365,7 +2538,7 @@ class openconfig_interfaces__interfaces__interface__arista_vxlan__config(yadata.
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_interfaces__interfaces__interface__arista_vxlan__config:
         if n is not None:
-            return openconfig_interfaces__interfaces__interface__arista_vxlan__config(src_ip_intf=n.get_opt_str(ygdata.Id(NS_arista_exp_eos_vxlan, 'src-ip-intf')), udp_port=n.get_opt_u64(ygdata.Id(NS_arista_exp_eos_vxlan, 'udp-port')))
+            return openconfig_interfaces__interfaces__interface__arista_vxlan__config(src_ip_intf=n.get_opt_str(_ID_arista_exp_eos_vxlan__src_ip_intf), udp_port=n.get_opt_u64(_ID_arista_exp_eos_vxlan__udp_port))
         return openconfig_interfaces__interfaces__interface__arista_vxlan__config()
 
     mut def copy(self) -> openconfig_interfaces__interfaces__interface__arista_vxlan__config:
@@ -2388,7 +2561,7 @@ class openconfig_interfaces__interfaces__interface__arista_vxlan__vrf_to_vnis__v
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_interfaces__interfaces__interface__arista_vxlan__vrf_to_vnis__vrf_to_vni__config:
         if n is not None:
-            return openconfig_interfaces__interfaces__interface__arista_vxlan__vrf_to_vnis__vrf_to_vni__config(vrf=n.get_opt_str(ygdata.Id(NS_arista_exp_eos_vxlan, 'vrf')), vni=n.get_opt_u64(ygdata.Id(NS_arista_exp_eos_vxlan, 'vni')))
+            return openconfig_interfaces__interfaces__interface__arista_vxlan__vrf_to_vnis__vrf_to_vni__config(vrf=n.get_opt_str(_ID_arista_exp_eos_vxlan__vrf), vni=n.get_opt_u64(_ID_arista_exp_eos_vxlan__vni))
         return openconfig_interfaces__interfaces__interface__arista_vxlan__vrf_to_vnis__vrf_to_vni__config()
 
     mut def copy(self) -> openconfig_interfaces__interfaces__interface__arista_vxlan__vrf_to_vnis__vrf_to_vni__config:
@@ -2410,7 +2583,7 @@ class openconfig_interfaces__interfaces__interface__arista_vxlan__vrf_to_vnis__v
 
     @staticmethod
     mut def from_gdata(n: ygdata.Node) -> openconfig_interfaces__interfaces__interface__arista_vxlan__vrf_to_vnis__vrf_to_vni_entry:
-        return openconfig_interfaces__interfaces__interface__arista_vxlan__vrf_to_vnis__vrf_to_vni_entry(vrf=n.get_str(ygdata.Id(NS_arista_exp_eos_vxlan, 'vrf')), config=openconfig_interfaces__interfaces__interface__arista_vxlan__vrf_to_vnis__vrf_to_vni__config.from_gdata(n.get_opt_cnt(ygdata.Id(NS_arista_exp_eos_vxlan, 'config'))))
+        return openconfig_interfaces__interfaces__interface__arista_vxlan__vrf_to_vnis__vrf_to_vni_entry(vrf=n.get_str(_ID_arista_exp_eos_vxlan__vrf), config=openconfig_interfaces__interfaces__interface__arista_vxlan__vrf_to_vnis__vrf_to_vni__config.from_gdata(n.get_opt_cnt(_ID_arista_exp_eos_vxlan__config)))
 
     mut def copy(self) -> openconfig_interfaces__interfaces__interface__arista_vxlan__vrf_to_vnis__vrf_to_vni_entry:
         """Create a deep copy of this adata object"""
@@ -2460,7 +2633,7 @@ class openconfig_interfaces__interfaces__interface__arista_vxlan__vrf_to_vnis(ya
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_interfaces__interfaces__interface__arista_vxlan__vrf_to_vnis:
         if n is not None:
-            return openconfig_interfaces__interfaces__interface__arista_vxlan__vrf_to_vnis(vrf_to_vni=openconfig_interfaces__interfaces__interface__arista_vxlan__vrf_to_vnis__vrf_to_vni.from_gdata(n.get_opt_list(ygdata.Id(NS_arista_exp_eos_vxlan, 'vrf-to-vni'))))
+            return openconfig_interfaces__interfaces__interface__arista_vxlan__vrf_to_vnis(vrf_to_vni=openconfig_interfaces__interfaces__interface__arista_vxlan__vrf_to_vnis__vrf_to_vni.from_gdata(n.get_opt_list(_ID_arista_exp_eos_vxlan__vrf_to_vni)))
         return openconfig_interfaces__interfaces__interface__arista_vxlan__vrf_to_vnis()
 
     mut def copy(self) -> openconfig_interfaces__interfaces__interface__arista_vxlan__vrf_to_vnis:
@@ -2483,7 +2656,7 @@ class openconfig_interfaces__interfaces__interface__arista_vxlan__vlan_to_vnis__
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_interfaces__interfaces__interface__arista_vxlan__vlan_to_vnis__vlan_to_vni__config:
         if n is not None:
-            return openconfig_interfaces__interfaces__interface__arista_vxlan__vlan_to_vnis__vlan_to_vni__config(vlan=n.get_opt_u64(ygdata.Id(NS_arista_exp_eos_vxlan, 'vlan')), vni=n.get_opt_u64(ygdata.Id(NS_arista_exp_eos_vxlan, 'vni')))
+            return openconfig_interfaces__interfaces__interface__arista_vxlan__vlan_to_vnis__vlan_to_vni__config(vlan=n.get_opt_u64(_ID_arista_exp_eos_vxlan__vlan), vni=n.get_opt_u64(_ID_arista_exp_eos_vxlan__vni))
         return openconfig_interfaces__interfaces__interface__arista_vxlan__vlan_to_vnis__vlan_to_vni__config()
 
     mut def copy(self) -> openconfig_interfaces__interfaces__interface__arista_vxlan__vlan_to_vnis__vlan_to_vni__config:
@@ -2505,7 +2678,7 @@ class openconfig_interfaces__interfaces__interface__arista_vxlan__vlan_to_vnis__
 
     @staticmethod
     mut def from_gdata(n: ygdata.Node) -> openconfig_interfaces__interfaces__interface__arista_vxlan__vlan_to_vnis__vlan_to_vni_entry:
-        return openconfig_interfaces__interfaces__interface__arista_vxlan__vlan_to_vnis__vlan_to_vni_entry(vlan=n.get_u64(ygdata.Id(NS_arista_exp_eos_vxlan, 'vlan')), config=openconfig_interfaces__interfaces__interface__arista_vxlan__vlan_to_vnis__vlan_to_vni__config.from_gdata(n.get_opt_cnt(ygdata.Id(NS_arista_exp_eos_vxlan, 'config'))))
+        return openconfig_interfaces__interfaces__interface__arista_vxlan__vlan_to_vnis__vlan_to_vni_entry(vlan=n.get_u64(_ID_arista_exp_eos_vxlan__vlan), config=openconfig_interfaces__interfaces__interface__arista_vxlan__vlan_to_vnis__vlan_to_vni__config.from_gdata(n.get_opt_cnt(_ID_arista_exp_eos_vxlan__config)))
 
     mut def copy(self) -> openconfig_interfaces__interfaces__interface__arista_vxlan__vlan_to_vnis__vlan_to_vni_entry:
         """Create a deep copy of this adata object"""
@@ -2555,7 +2728,7 @@ class openconfig_interfaces__interfaces__interface__arista_vxlan__vlan_to_vnis(y
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_interfaces__interfaces__interface__arista_vxlan__vlan_to_vnis:
         if n is not None:
-            return openconfig_interfaces__interfaces__interface__arista_vxlan__vlan_to_vnis(vlan_to_vni=openconfig_interfaces__interfaces__interface__arista_vxlan__vlan_to_vnis__vlan_to_vni.from_gdata(n.get_opt_list(ygdata.Id(NS_arista_exp_eos_vxlan, 'vlan-to-vni'))))
+            return openconfig_interfaces__interfaces__interface__arista_vxlan__vlan_to_vnis(vlan_to_vni=openconfig_interfaces__interfaces__interface__arista_vxlan__vlan_to_vnis__vlan_to_vni.from_gdata(n.get_opt_list(_ID_arista_exp_eos_vxlan__vlan_to_vni)))
         return openconfig_interfaces__interfaces__interface__arista_vxlan__vlan_to_vnis()
 
     mut def copy(self) -> openconfig_interfaces__interfaces__interface__arista_vxlan__vlan_to_vnis:
@@ -2580,7 +2753,7 @@ class openconfig_interfaces__interfaces__interface__arista_vxlan(yadata.MNode):
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_interfaces__interfaces__interface__arista_vxlan:
         if n is not None:
-            return openconfig_interfaces__interfaces__interface__arista_vxlan(config=openconfig_interfaces__interfaces__interface__arista_vxlan__config.from_gdata(n.get_opt_cnt(ygdata.Id(NS_arista_exp_eos_vxlan, 'config'))), vrf_to_vnis=openconfig_interfaces__interfaces__interface__arista_vxlan__vrf_to_vnis.from_gdata(n.get_opt_cnt(ygdata.Id(NS_arista_exp_eos_vxlan, 'vrf-to-vnis'))), vlan_to_vnis=openconfig_interfaces__interfaces__interface__arista_vxlan__vlan_to_vnis.from_gdata(n.get_opt_cnt(ygdata.Id(NS_arista_exp_eos_vxlan, 'vlan-to-vnis'))))
+            return openconfig_interfaces__interfaces__interface__arista_vxlan(config=openconfig_interfaces__interfaces__interface__arista_vxlan__config.from_gdata(n.get_opt_cnt(_ID_arista_exp_eos_vxlan__config)), vrf_to_vnis=openconfig_interfaces__interfaces__interface__arista_vxlan__vrf_to_vnis.from_gdata(n.get_opt_cnt(_ID_arista_exp_eos_vxlan__vrf_to_vnis)), vlan_to_vnis=openconfig_interfaces__interfaces__interface__arista_vxlan__vlan_to_vnis.from_gdata(n.get_opt_cnt(_ID_arista_exp_eos_vxlan__vlan_to_vnis)))
         return openconfig_interfaces__interfaces__interface__arista_vxlan()
 
     mut def copy(self) -> openconfig_interfaces__interfaces__interface__arista_vxlan:
@@ -2603,7 +2776,7 @@ class openconfig_interfaces__interfaces__interface__arista_varp__virtual_address
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_interfaces__interfaces__interface__arista_varp__virtual_address__config:
         if n is not None:
-            return openconfig_interfaces__interfaces__interface__arista_varp__virtual_address__config(ip=n.get_opt_str(ygdata.Id(NS_arista_exp_eos_varp_intf, 'ip')), prefix_length=n.get_opt_u64(ygdata.Id(NS_arista_exp_eos_varp_intf, 'prefix-length')))
+            return openconfig_interfaces__interfaces__interface__arista_varp__virtual_address__config(ip=n.get_opt_str(_ID_arista_exp_eos_varp_intf__ip), prefix_length=n.get_opt_u64(_ID_arista_exp_eos_varp_intf__prefix_length))
         return openconfig_interfaces__interfaces__interface__arista_varp__virtual_address__config()
 
     mut def copy(self) -> openconfig_interfaces__interfaces__interface__arista_varp__virtual_address__config:
@@ -2624,7 +2797,7 @@ class openconfig_interfaces__interfaces__interface__arista_varp__virtual_address
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_interfaces__interfaces__interface__arista_varp__virtual_address:
         if n is not None:
-            return openconfig_interfaces__interfaces__interface__arista_varp__virtual_address(config=openconfig_interfaces__interfaces__interface__arista_varp__virtual_address__config.from_gdata(n.get_opt_cnt(ygdata.Id(NS_arista_exp_eos_varp_intf, 'config'))))
+            return openconfig_interfaces__interfaces__interface__arista_varp__virtual_address(config=openconfig_interfaces__interfaces__interface__arista_varp__virtual_address__config.from_gdata(n.get_opt_cnt(_ID_arista_exp_eos_varp_intf__config)))
         return openconfig_interfaces__interfaces__interface__arista_varp__virtual_address()
 
     mut def copy(self) -> openconfig_interfaces__interfaces__interface__arista_varp__virtual_address:
@@ -2645,7 +2818,7 @@ class openconfig_interfaces__interfaces__interface__arista_varp(yadata.MNode):
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_interfaces__interfaces__interface__arista_varp:
         if n is not None:
-            return openconfig_interfaces__interfaces__interface__arista_varp(virtual_address=openconfig_interfaces__interfaces__interface__arista_varp__virtual_address.from_gdata(n.get_opt_cnt(ygdata.Id(NS_arista_exp_eos_varp_intf, 'virtual-address'))))
+            return openconfig_interfaces__interfaces__interface__arista_varp(virtual_address=openconfig_interfaces__interfaces__interface__arista_varp__virtual_address.from_gdata(n.get_opt_cnt(_ID_arista_exp_eos_varp_intf__virtual_address)))
         return openconfig_interfaces__interfaces__interface__arista_varp()
 
     mut def copy(self) -> openconfig_interfaces__interfaces__interface__arista_varp:
@@ -2679,7 +2852,7 @@ class openconfig_interfaces__interfaces__interface_entry(yadata.MNode):
 
     @staticmethod
     mut def from_gdata(n: ygdata.Node) -> openconfig_interfaces__interfaces__interface_entry:
-        return openconfig_interfaces__interfaces__interface_entry(name=n.get_str(ygdata.Id(NS_openconfig_interfaces, 'name')), config=openconfig_interfaces__interfaces__interface__config.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_interfaces, 'config'))), subinterfaces=openconfig_interfaces__interfaces__interface__subinterfaces.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_interfaces, 'subinterfaces'))), ethernet=openconfig_interfaces__interfaces__interface__ethernet.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_if_ethernet, 'ethernet'))), aggregation=openconfig_interfaces__interfaces__interface__aggregation.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_if_aggregate, 'aggregation'))), routed_vlan=openconfig_interfaces__interfaces__interface__routed_vlan.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_vlan, 'routed-vlan'))), arista_vxlan=openconfig_interfaces__interfaces__interface__arista_vxlan.from_gdata(n.get_opt_cnt(ygdata.Id(NS_arista_exp_eos_vxlan, 'arista-vxlan'))), arista_varp=openconfig_interfaces__interfaces__interface__arista_varp.from_gdata(n.get_opt_cnt(ygdata.Id(NS_arista_exp_eos_varp_intf, 'arista-varp'))))
+        return openconfig_interfaces__interfaces__interface_entry(name=n.get_str(_ID_openconfig_interfaces__name), config=openconfig_interfaces__interfaces__interface__config.from_gdata(n.get_opt_cnt(_ID_openconfig_interfaces__config)), subinterfaces=openconfig_interfaces__interfaces__interface__subinterfaces.from_gdata(n.get_opt_cnt(_ID_openconfig_interfaces__subinterfaces)), ethernet=openconfig_interfaces__interfaces__interface__ethernet.from_gdata(n.get_opt_cnt(_ID_openconfig_if_ethernet__ethernet)), aggregation=openconfig_interfaces__interfaces__interface__aggregation.from_gdata(n.get_opt_cnt(_ID_openconfig_if_aggregate__aggregation)), routed_vlan=openconfig_interfaces__interfaces__interface__routed_vlan.from_gdata(n.get_opt_cnt(_ID_openconfig_vlan__routed_vlan)), arista_vxlan=openconfig_interfaces__interfaces__interface__arista_vxlan.from_gdata(n.get_opt_cnt(_ID_arista_exp_eos_vxlan__arista_vxlan)), arista_varp=openconfig_interfaces__interfaces__interface__arista_varp.from_gdata(n.get_opt_cnt(_ID_arista_exp_eos_varp_intf__arista_varp)))
 
     mut def copy(self) -> openconfig_interfaces__interfaces__interface_entry:
         """Create a deep copy of this adata object"""
@@ -2729,7 +2902,7 @@ class openconfig_interfaces__interfaces(yadata.MNode):
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_interfaces__interfaces:
         if n is not None:
-            return openconfig_interfaces__interfaces(interface=openconfig_interfaces__interfaces__interface.from_gdata(n.get_opt_list(ygdata.Id(NS_openconfig_interfaces, 'interface'))))
+            return openconfig_interfaces__interfaces(interface=openconfig_interfaces__interfaces__interface.from_gdata(n.get_opt_list(_ID_openconfig_interfaces__interface)))
         return openconfig_interfaces__interfaces()
 
     mut def copy(self) -> openconfig_interfaces__interfaces:
@@ -2752,7 +2925,7 @@ class openconfig_routing_policy__routing_policy__defined_sets__prefix_sets__pref
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_routing_policy__routing_policy__defined_sets__prefix_sets__prefix_set__config:
         if n is not None:
-            return openconfig_routing_policy__routing_policy__defined_sets__prefix_sets__prefix_set__config(name=n.get_opt_str(ygdata.Id(NS_openconfig_routing_policy, 'name')), mode=n.get_opt_str(ygdata.Id(NS_openconfig_routing_policy, 'mode')))
+            return openconfig_routing_policy__routing_policy__defined_sets__prefix_sets__prefix_set__config(name=n.get_opt_str(_ID_openconfig_routing_policy__name), mode=n.get_opt_str(_ID_openconfig_routing_policy__mode))
         return openconfig_routing_policy__routing_policy__defined_sets__prefix_sets__prefix_set__config()
 
     mut def copy(self) -> openconfig_routing_policy__routing_policy__defined_sets__prefix_sets__prefix_set__config:
@@ -2775,7 +2948,7 @@ class openconfig_routing_policy__routing_policy__defined_sets__prefix_sets__pref
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_routing_policy__routing_policy__defined_sets__prefix_sets__prefix_set__prefixes__prefix__config:
         if n is not None:
-            return openconfig_routing_policy__routing_policy__defined_sets__prefix_sets__prefix_set__prefixes__prefix__config(ip_prefix=n.get_opt_str(ygdata.Id(NS_openconfig_routing_policy, 'ip-prefix')), masklength_range=n.get_opt_str(ygdata.Id(NS_openconfig_routing_policy, 'masklength-range')))
+            return openconfig_routing_policy__routing_policy__defined_sets__prefix_sets__prefix_set__prefixes__prefix__config(ip_prefix=n.get_opt_str(_ID_openconfig_routing_policy__ip_prefix), masklength_range=n.get_opt_str(_ID_openconfig_routing_policy__masklength_range))
         return openconfig_routing_policy__routing_policy__defined_sets__prefix_sets__prefix_set__prefixes__prefix__config()
 
     mut def copy(self) -> openconfig_routing_policy__routing_policy__defined_sets__prefix_sets__prefix_set__prefixes__prefix__config:
@@ -2799,7 +2972,7 @@ class openconfig_routing_policy__routing_policy__defined_sets__prefix_sets__pref
 
     @staticmethod
     mut def from_gdata(n: ygdata.Node) -> openconfig_routing_policy__routing_policy__defined_sets__prefix_sets__prefix_set__prefixes__prefix_entry:
-        return openconfig_routing_policy__routing_policy__defined_sets__prefix_sets__prefix_set__prefixes__prefix_entry(ip_prefix=n.get_str(ygdata.Id(NS_openconfig_routing_policy, 'ip-prefix')), masklength_range=n.get_str(ygdata.Id(NS_openconfig_routing_policy, 'masklength-range')), config=openconfig_routing_policy__routing_policy__defined_sets__prefix_sets__prefix_set__prefixes__prefix__config.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_routing_policy, 'config'))))
+        return openconfig_routing_policy__routing_policy__defined_sets__prefix_sets__prefix_set__prefixes__prefix_entry(ip_prefix=n.get_str(_ID_openconfig_routing_policy__ip_prefix), masklength_range=n.get_str(_ID_openconfig_routing_policy__masklength_range), config=openconfig_routing_policy__routing_policy__defined_sets__prefix_sets__prefix_set__prefixes__prefix__config.from_gdata(n.get_opt_cnt(_ID_openconfig_routing_policy__config)))
 
     mut def copy(self) -> openconfig_routing_policy__routing_policy__defined_sets__prefix_sets__prefix_set__prefixes__prefix_entry:
         """Create a deep copy of this adata object"""
@@ -2849,7 +3022,7 @@ class openconfig_routing_policy__routing_policy__defined_sets__prefix_sets__pref
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_routing_policy__routing_policy__defined_sets__prefix_sets__prefix_set__prefixes:
         if n is not None:
-            return openconfig_routing_policy__routing_policy__defined_sets__prefix_sets__prefix_set__prefixes(prefix=openconfig_routing_policy__routing_policy__defined_sets__prefix_sets__prefix_set__prefixes__prefix.from_gdata(n.get_opt_list(ygdata.Id(NS_openconfig_routing_policy, 'prefix'))))
+            return openconfig_routing_policy__routing_policy__defined_sets__prefix_sets__prefix_set__prefixes(prefix=openconfig_routing_policy__routing_policy__defined_sets__prefix_sets__prefix_set__prefixes__prefix.from_gdata(n.get_opt_list(_ID_openconfig_routing_policy__prefix)))
         return openconfig_routing_policy__routing_policy__defined_sets__prefix_sets__prefix_set__prefixes()
 
     mut def copy(self) -> openconfig_routing_policy__routing_policy__defined_sets__prefix_sets__prefix_set__prefixes:
@@ -2873,7 +3046,7 @@ class openconfig_routing_policy__routing_policy__defined_sets__prefix_sets__pref
 
     @staticmethod
     mut def from_gdata(n: ygdata.Node) -> openconfig_routing_policy__routing_policy__defined_sets__prefix_sets__prefix_set_entry:
-        return openconfig_routing_policy__routing_policy__defined_sets__prefix_sets__prefix_set_entry(name=n.get_str(ygdata.Id(NS_openconfig_routing_policy, 'name')), config=openconfig_routing_policy__routing_policy__defined_sets__prefix_sets__prefix_set__config.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_routing_policy, 'config'))), prefixes=openconfig_routing_policy__routing_policy__defined_sets__prefix_sets__prefix_set__prefixes.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_routing_policy, 'prefixes'))))
+        return openconfig_routing_policy__routing_policy__defined_sets__prefix_sets__prefix_set_entry(name=n.get_str(_ID_openconfig_routing_policy__name), config=openconfig_routing_policy__routing_policy__defined_sets__prefix_sets__prefix_set__config.from_gdata(n.get_opt_cnt(_ID_openconfig_routing_policy__config)), prefixes=openconfig_routing_policy__routing_policy__defined_sets__prefix_sets__prefix_set__prefixes.from_gdata(n.get_opt_cnt(_ID_openconfig_routing_policy__prefixes)))
 
     mut def copy(self) -> openconfig_routing_policy__routing_policy__defined_sets__prefix_sets__prefix_set_entry:
         """Create a deep copy of this adata object"""
@@ -2923,7 +3096,7 @@ class openconfig_routing_policy__routing_policy__defined_sets__prefix_sets(yadat
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_routing_policy__routing_policy__defined_sets__prefix_sets:
         if n is not None:
-            return openconfig_routing_policy__routing_policy__defined_sets__prefix_sets(prefix_set=openconfig_routing_policy__routing_policy__defined_sets__prefix_sets__prefix_set.from_gdata(n.get_opt_list(ygdata.Id(NS_openconfig_routing_policy, 'prefix-set'))))
+            return openconfig_routing_policy__routing_policy__defined_sets__prefix_sets(prefix_set=openconfig_routing_policy__routing_policy__defined_sets__prefix_sets__prefix_set.from_gdata(n.get_opt_list(_ID_openconfig_routing_policy__prefix_set)))
         return openconfig_routing_policy__routing_policy__defined_sets__prefix_sets()
 
     mut def copy(self) -> openconfig_routing_policy__routing_policy__defined_sets__prefix_sets:
@@ -2944,7 +3117,7 @@ class openconfig_routing_policy__routing_policy__defined_sets(yadata.MNode):
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_routing_policy__routing_policy__defined_sets:
         if n is not None:
-            return openconfig_routing_policy__routing_policy__defined_sets(prefix_sets=openconfig_routing_policy__routing_policy__defined_sets__prefix_sets.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_routing_policy, 'prefix-sets'))))
+            return openconfig_routing_policy__routing_policy__defined_sets(prefix_sets=openconfig_routing_policy__routing_policy__defined_sets__prefix_sets.from_gdata(n.get_opt_cnt(_ID_openconfig_routing_policy__prefix_sets)))
         return openconfig_routing_policy__routing_policy__defined_sets()
 
     mut def copy(self) -> openconfig_routing_policy__routing_policy__defined_sets:
@@ -2965,7 +3138,7 @@ class openconfig_routing_policy__routing_policy__policy_definitions__policy_defi
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__config:
         if n is not None:
-            return openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__config(name=n.get_opt_str(ygdata.Id(NS_openconfig_routing_policy, 'name')))
+            return openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__config(name=n.get_opt_str(_ID_openconfig_routing_policy__name))
         return openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__config()
 
     mut def copy(self) -> openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__config:
@@ -2986,7 +3159,7 @@ class openconfig_routing_policy__routing_policy__policy_definitions__policy_defi
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__statements__statement__config:
         if n is not None:
-            return openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__statements__statement__config(name=n.get_opt_str(ygdata.Id(NS_openconfig_routing_policy, 'name')))
+            return openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__statements__statement__config(name=n.get_opt_str(_ID_openconfig_routing_policy__name))
         return openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__statements__statement__config()
 
     mut def copy(self) -> openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__statements__statement__config:
@@ -3007,7 +3180,7 @@ class openconfig_routing_policy__routing_policy__policy_definitions__policy_defi
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__statements__statement__conditions__match_prefix_set__config:
         if n is not None:
-            return openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__statements__statement__conditions__match_prefix_set__config(prefix_set=n.get_opt_str(ygdata.Id(NS_openconfig_routing_policy, 'prefix-set')))
+            return openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__statements__statement__conditions__match_prefix_set__config(prefix_set=n.get_opt_str(_ID_openconfig_routing_policy__prefix_set))
         return openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__statements__statement__conditions__match_prefix_set__config()
 
     mut def copy(self) -> openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__statements__statement__conditions__match_prefix_set__config:
@@ -3028,7 +3201,7 @@ class openconfig_routing_policy__routing_policy__policy_definitions__policy_defi
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__statements__statement__conditions__match_prefix_set:
         if n is not None:
-            return openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__statements__statement__conditions__match_prefix_set(config=openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__statements__statement__conditions__match_prefix_set__config.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_routing_policy, 'config'))))
+            return openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__statements__statement__conditions__match_prefix_set(config=openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__statements__statement__conditions__match_prefix_set__config.from_gdata(n.get_opt_cnt(_ID_openconfig_routing_policy__config)))
         return openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__statements__statement__conditions__match_prefix_set()
 
     mut def copy(self) -> openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__statements__statement__conditions__match_prefix_set:
@@ -3049,7 +3222,7 @@ class openconfig_routing_policy__routing_policy__policy_definitions__policy_defi
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__statements__statement__conditions__bgp_conditions__config:
         if n is not None:
-            return openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__statements__statement__conditions__bgp_conditions__config(afi_safi_in=n.get_opt_Identityrefs(ygdata.Id(NS_openconfig_bgp_policy, 'afi-safi-in')))
+            return openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__statements__statement__conditions__bgp_conditions__config(afi_safi_in=n.get_opt_Identityrefs(_ID_openconfig_bgp_policy__afi_safi_in))
         return openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__statements__statement__conditions__bgp_conditions__config()
 
     mut def copy(self) -> openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__statements__statement__conditions__bgp_conditions__config:
@@ -3070,7 +3243,7 @@ class openconfig_routing_policy__routing_policy__policy_definitions__policy_defi
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__statements__statement__conditions__bgp_conditions:
         if n is not None:
-            return openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__statements__statement__conditions__bgp_conditions(config=openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__statements__statement__conditions__bgp_conditions__config.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_bgp_policy, 'config'))))
+            return openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__statements__statement__conditions__bgp_conditions(config=openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__statements__statement__conditions__bgp_conditions__config.from_gdata(n.get_opt_cnt(_ID_openconfig_bgp_policy__config)))
         return openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__statements__statement__conditions__bgp_conditions()
 
     mut def copy(self) -> openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__statements__statement__conditions__bgp_conditions:
@@ -3093,7 +3266,7 @@ class openconfig_routing_policy__routing_policy__policy_definitions__policy_defi
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__statements__statement__conditions:
         if n is not None:
-            return openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__statements__statement__conditions(match_prefix_set=openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__statements__statement__conditions__match_prefix_set.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_routing_policy, 'match-prefix-set'))), bgp_conditions=openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__statements__statement__conditions__bgp_conditions.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_bgp_policy, 'bgp-conditions'))))
+            return openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__statements__statement__conditions(match_prefix_set=openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__statements__statement__conditions__match_prefix_set.from_gdata(n.get_opt_cnt(_ID_openconfig_routing_policy__match_prefix_set)), bgp_conditions=openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__statements__statement__conditions__bgp_conditions.from_gdata(n.get_opt_cnt(_ID_openconfig_bgp_policy__bgp_conditions)))
         return openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__statements__statement__conditions()
 
     mut def copy(self) -> openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__statements__statement__conditions:
@@ -3114,7 +3287,7 @@ class openconfig_routing_policy__routing_policy__policy_definitions__policy_defi
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__statements__statement__actions__config:
         if n is not None:
-            return openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__statements__statement__actions__config(policy_result=n.get_opt_str(ygdata.Id(NS_openconfig_routing_policy, 'policy-result')))
+            return openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__statements__statement__actions__config(policy_result=n.get_opt_str(_ID_openconfig_routing_policy__policy_result))
         return openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__statements__statement__actions__config()
 
     mut def copy(self) -> openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__statements__statement__actions__config:
@@ -3135,7 +3308,7 @@ class openconfig_routing_policy__routing_policy__policy_definitions__policy_defi
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__statements__statement__actions:
         if n is not None:
-            return openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__statements__statement__actions(config=openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__statements__statement__actions__config.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_routing_policy, 'config'))))
+            return openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__statements__statement__actions(config=openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__statements__statement__actions__config.from_gdata(n.get_opt_cnt(_ID_openconfig_routing_policy__config)))
         return openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__statements__statement__actions()
 
     mut def copy(self) -> openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__statements__statement__actions:
@@ -3161,7 +3334,7 @@ class openconfig_routing_policy__routing_policy__policy_definitions__policy_defi
 
     @staticmethod
     mut def from_gdata(n: ygdata.Node) -> openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__statements__statement_entry:
-        return openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__statements__statement_entry(name=n.get_str(ygdata.Id(NS_openconfig_routing_policy, 'name')), config=openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__statements__statement__config.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_routing_policy, 'config'))), conditions=openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__statements__statement__conditions.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_routing_policy, 'conditions'))), actions=openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__statements__statement__actions.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_routing_policy, 'actions'))))
+        return openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__statements__statement_entry(name=n.get_str(_ID_openconfig_routing_policy__name), config=openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__statements__statement__config.from_gdata(n.get_opt_cnt(_ID_openconfig_routing_policy__config)), conditions=openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__statements__statement__conditions.from_gdata(n.get_opt_cnt(_ID_openconfig_routing_policy__conditions)), actions=openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__statements__statement__actions.from_gdata(n.get_opt_cnt(_ID_openconfig_routing_policy__actions)))
 
     mut def copy(self) -> openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__statements__statement_entry:
         """Create a deep copy of this adata object"""
@@ -3211,7 +3384,7 @@ class openconfig_routing_policy__routing_policy__policy_definitions__policy_defi
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__statements:
         if n is not None:
-            return openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__statements(statement=openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__statements__statement.from_gdata(n.get_opt_list(ygdata.Id(NS_openconfig_routing_policy, 'statement'))))
+            return openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__statements(statement=openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__statements__statement.from_gdata(n.get_opt_list(_ID_openconfig_routing_policy__statement)))
         return openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__statements()
 
     mut def copy(self) -> openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__statements:
@@ -3235,7 +3408,7 @@ class openconfig_routing_policy__routing_policy__policy_definitions__policy_defi
 
     @staticmethod
     mut def from_gdata(n: ygdata.Node) -> openconfig_routing_policy__routing_policy__policy_definitions__policy_definition_entry:
-        return openconfig_routing_policy__routing_policy__policy_definitions__policy_definition_entry(name=n.get_str(ygdata.Id(NS_openconfig_routing_policy, 'name')), config=openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__config.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_routing_policy, 'config'))), statements=openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__statements.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_routing_policy, 'statements'))))
+        return openconfig_routing_policy__routing_policy__policy_definitions__policy_definition_entry(name=n.get_str(_ID_openconfig_routing_policy__name), config=openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__config.from_gdata(n.get_opt_cnt(_ID_openconfig_routing_policy__config)), statements=openconfig_routing_policy__routing_policy__policy_definitions__policy_definition__statements.from_gdata(n.get_opt_cnt(_ID_openconfig_routing_policy__statements)))
 
     mut def copy(self) -> openconfig_routing_policy__routing_policy__policy_definitions__policy_definition_entry:
         """Create a deep copy of this adata object"""
@@ -3285,7 +3458,7 @@ class openconfig_routing_policy__routing_policy__policy_definitions(yadata.MNode
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_routing_policy__routing_policy__policy_definitions:
         if n is not None:
-            return openconfig_routing_policy__routing_policy__policy_definitions(policy_definition=openconfig_routing_policy__routing_policy__policy_definitions__policy_definition.from_gdata(n.get_opt_list(ygdata.Id(NS_openconfig_routing_policy, 'policy-definition'))))
+            return openconfig_routing_policy__routing_policy__policy_definitions(policy_definition=openconfig_routing_policy__routing_policy__policy_definitions__policy_definition.from_gdata(n.get_opt_list(_ID_openconfig_routing_policy__policy_definition)))
         return openconfig_routing_policy__routing_policy__policy_definitions()
 
     mut def copy(self) -> openconfig_routing_policy__routing_policy__policy_definitions:
@@ -3308,7 +3481,7 @@ class openconfig_routing_policy__routing_policy(yadata.MNode):
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_routing_policy__routing_policy:
         if n is not None:
-            return openconfig_routing_policy__routing_policy(defined_sets=openconfig_routing_policy__routing_policy__defined_sets.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_routing_policy, 'defined-sets'))), policy_definitions=openconfig_routing_policy__routing_policy__policy_definitions.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_routing_policy, 'policy-definitions'))))
+            return openconfig_routing_policy__routing_policy(defined_sets=openconfig_routing_policy__routing_policy__defined_sets.from_gdata(n.get_opt_cnt(_ID_openconfig_routing_policy__defined_sets)), policy_definitions=openconfig_routing_policy__routing_policy__policy_definitions.from_gdata(n.get_opt_cnt(_ID_openconfig_routing_policy__policy_definitions)))
         return openconfig_routing_policy__routing_policy()
 
     mut def copy(self) -> openconfig_routing_policy__routing_policy:
@@ -3335,7 +3508,7 @@ class openconfig_network_instance__network_instances__network_instance__config(y
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_network_instance__network_instances__network_instance__config:
         if n is not None:
-            return openconfig_network_instance__network_instances__network_instance__config(name=n.get_opt_str(ygdata.Id(NS_openconfig_network_instance, 'name')), type=n.get_opt_Identityref(ygdata.Id(NS_openconfig_network_instance, 'type')), route_distinguisher=n.get_opt_str(ygdata.Id(NS_openconfig_network_instance, 'route-distinguisher')), ipv4_routing_enabled=n.get_opt_bool(ygdata.Id(NS_arista_netinst_augments, 'ipv4-routing-enabled')))
+            return openconfig_network_instance__network_instances__network_instance__config(name=n.get_opt_str(_ID_openconfig_network_instance__name), type=n.get_opt_Identityref(_ID_openconfig_network_instance__type), route_distinguisher=n.get_opt_str(_ID_openconfig_network_instance__route_distinguisher), ipv4_routing_enabled=n.get_opt_bool(_ID_arista_netinst_augments__ipv4_routing_enabled))
         return openconfig_network_instance__network_instances__network_instance__config()
 
     mut def copy(self) -> openconfig_network_instance__network_instances__network_instance__config:
@@ -3360,7 +3533,7 @@ class openconfig_network_instance__network_instances__network_instance__table_co
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_network_instance__network_instances__network_instance__table_connections__table_connection__config:
         if n is not None:
-            return openconfig_network_instance__network_instances__network_instance__table_connections__table_connection__config(src_protocol=n.get_opt_Identityref(ygdata.Id(NS_openconfig_network_instance, 'src-protocol')), address_family=n.get_opt_Identityref(ygdata.Id(NS_openconfig_network_instance, 'address-family')), dst_protocol=n.get_opt_Identityref(ygdata.Id(NS_openconfig_network_instance, 'dst-protocol')))
+            return openconfig_network_instance__network_instances__network_instance__table_connections__table_connection__config(src_protocol=n.get_opt_Identityref(_ID_openconfig_network_instance__src_protocol), address_family=n.get_opt_Identityref(_ID_openconfig_network_instance__address_family), dst_protocol=n.get_opt_Identityref(_ID_openconfig_network_instance__dst_protocol))
         return openconfig_network_instance__network_instances__network_instance__table_connections__table_connection__config()
 
     mut def copy(self) -> openconfig_network_instance__network_instances__network_instance__table_connections__table_connection__config:
@@ -3386,7 +3559,7 @@ class openconfig_network_instance__network_instances__network_instance__table_co
 
     @staticmethod
     mut def from_gdata(n: ygdata.Node) -> openconfig_network_instance__network_instances__network_instance__table_connections__table_connection_entry:
-        return openconfig_network_instance__network_instances__network_instance__table_connections__table_connection_entry(src_protocol=n.get_Identityref(ygdata.Id(NS_openconfig_network_instance, 'src-protocol')), dst_protocol=n.get_Identityref(ygdata.Id(NS_openconfig_network_instance, 'dst-protocol')), address_family=n.get_Identityref(ygdata.Id(NS_openconfig_network_instance, 'address-family')), config=openconfig_network_instance__network_instances__network_instance__table_connections__table_connection__config.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_network_instance, 'config'))))
+        return openconfig_network_instance__network_instances__network_instance__table_connections__table_connection_entry(src_protocol=n.get_Identityref(_ID_openconfig_network_instance__src_protocol), dst_protocol=n.get_Identityref(_ID_openconfig_network_instance__dst_protocol), address_family=n.get_Identityref(_ID_openconfig_network_instance__address_family), config=openconfig_network_instance__network_instances__network_instance__table_connections__table_connection__config.from_gdata(n.get_opt_cnt(_ID_openconfig_network_instance__config)))
 
     mut def copy(self) -> openconfig_network_instance__network_instances__network_instance__table_connections__table_connection_entry:
         """Create a deep copy of this adata object"""
@@ -3436,7 +3609,7 @@ class openconfig_network_instance__network_instances__network_instance__table_co
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_network_instance__network_instances__network_instance__table_connections:
         if n is not None:
-            return openconfig_network_instance__network_instances__network_instance__table_connections(table_connection=openconfig_network_instance__network_instances__network_instance__table_connections__table_connection.from_gdata(n.get_opt_list(ygdata.Id(NS_openconfig_network_instance, 'table-connection'))))
+            return openconfig_network_instance__network_instances__network_instance__table_connections(table_connection=openconfig_network_instance__network_instances__network_instance__table_connections__table_connection.from_gdata(n.get_opt_list(_ID_openconfig_network_instance__table_connection)))
         return openconfig_network_instance__network_instances__network_instance__table_connections()
 
     mut def copy(self) -> openconfig_network_instance__network_instances__network_instance__table_connections:
@@ -3461,7 +3634,7 @@ class openconfig_network_instance__network_instances__network_instance__interfac
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_network_instance__network_instances__network_instance__interfaces__interface__config:
         if n is not None:
-            return openconfig_network_instance__network_instances__network_instance__interfaces__interface__config(id=n.get_opt_str(ygdata.Id(NS_openconfig_network_instance, 'id')), interface=n.get_opt_str(ygdata.Id(NS_openconfig_network_instance, 'interface')), subinterface=n.get_opt_u64(ygdata.Id(NS_openconfig_network_instance, 'subinterface')))
+            return openconfig_network_instance__network_instances__network_instance__interfaces__interface__config(id=n.get_opt_str(_ID_openconfig_network_instance__id), interface=n.get_opt_str(_ID_openconfig_network_instance__interface), subinterface=n.get_opt_u64(_ID_openconfig_network_instance__subinterface))
         return openconfig_network_instance__network_instances__network_instance__interfaces__interface__config()
 
     mut def copy(self) -> openconfig_network_instance__network_instances__network_instance__interfaces__interface__config:
@@ -3483,7 +3656,7 @@ class openconfig_network_instance__network_instances__network_instance__interfac
 
     @staticmethod
     mut def from_gdata(n: ygdata.Node) -> openconfig_network_instance__network_instances__network_instance__interfaces__interface_entry:
-        return openconfig_network_instance__network_instances__network_instance__interfaces__interface_entry(id=n.get_str(ygdata.Id(NS_openconfig_network_instance, 'id')), config=openconfig_network_instance__network_instances__network_instance__interfaces__interface__config.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_network_instance, 'config'))))
+        return openconfig_network_instance__network_instances__network_instance__interfaces__interface_entry(id=n.get_str(_ID_openconfig_network_instance__id), config=openconfig_network_instance__network_instances__network_instance__interfaces__interface__config.from_gdata(n.get_opt_cnt(_ID_openconfig_network_instance__config)))
 
     mut def copy(self) -> openconfig_network_instance__network_instances__network_instance__interfaces__interface_entry:
         """Create a deep copy of this adata object"""
@@ -3533,7 +3706,7 @@ class openconfig_network_instance__network_instances__network_instance__interfac
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_network_instance__network_instances__network_instance__interfaces:
         if n is not None:
-            return openconfig_network_instance__network_instances__network_instance__interfaces(interface=openconfig_network_instance__network_instances__network_instance__interfaces__interface.from_gdata(n.get_opt_list(ygdata.Id(NS_openconfig_network_instance, 'interface'))))
+            return openconfig_network_instance__network_instances__network_instance__interfaces(interface=openconfig_network_instance__network_instances__network_instance__interfaces__interface.from_gdata(n.get_opt_list(_ID_openconfig_network_instance__interface)))
         return openconfig_network_instance__network_instances__network_instance__interfaces()
 
     mut def copy(self) -> openconfig_network_instance__network_instances__network_instance__interfaces:
@@ -3556,7 +3729,7 @@ class openconfig_network_instance__network_instances__network_instance__vlans__v
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_network_instance__network_instances__network_instance__vlans__vlan__config:
         if n is not None:
-            return openconfig_network_instance__network_instances__network_instance__vlans__vlan__config(vlan_id=n.get_opt_u64(ygdata.Id(NS_openconfig_network_instance, 'vlan-id')), name=n.get_opt_str(ygdata.Id(NS_openconfig_network_instance, 'name')))
+            return openconfig_network_instance__network_instances__network_instance__vlans__vlan__config(vlan_id=n.get_opt_u64(_ID_openconfig_network_instance__vlan_id), name=n.get_opt_str(_ID_openconfig_network_instance__name))
         return openconfig_network_instance__network_instances__network_instance__vlans__vlan__config()
 
     mut def copy(self) -> openconfig_network_instance__network_instances__network_instance__vlans__vlan__config:
@@ -3600,7 +3773,7 @@ class openconfig_network_instance__network_instances__network_instance__vlans__v
 
     @staticmethod
     mut def from_gdata(n: ygdata.Node) -> openconfig_network_instance__network_instances__network_instance__vlans__vlan_entry:
-        return openconfig_network_instance__network_instances__network_instance__vlans__vlan_entry(vlan_id=n.get_u64(ygdata.Id(NS_openconfig_network_instance, 'vlan-id')), config=openconfig_network_instance__network_instances__network_instance__vlans__vlan__config.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_network_instance, 'config'))), members=openconfig_network_instance__network_instances__network_instance__vlans__vlan__members.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_network_instance, 'members'))))
+        return openconfig_network_instance__network_instances__network_instance__vlans__vlan_entry(vlan_id=n.get_u64(_ID_openconfig_network_instance__vlan_id), config=openconfig_network_instance__network_instances__network_instance__vlans__vlan__config.from_gdata(n.get_opt_cnt(_ID_openconfig_network_instance__config)), members=openconfig_network_instance__network_instances__network_instance__vlans__vlan__members.from_gdata(n.get_opt_cnt(_ID_openconfig_network_instance__members)))
 
     mut def copy(self) -> openconfig_network_instance__network_instances__network_instance__vlans__vlan_entry:
         """Create a deep copy of this adata object"""
@@ -3650,7 +3823,7 @@ class openconfig_network_instance__network_instances__network_instance__vlans(ya
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_network_instance__network_instances__network_instance__vlans:
         if n is not None:
-            return openconfig_network_instance__network_instances__network_instance__vlans(vlan=openconfig_network_instance__network_instances__network_instance__vlans__vlan.from_gdata(n.get_opt_list(ygdata.Id(NS_openconfig_network_instance, 'vlan'))))
+            return openconfig_network_instance__network_instances__network_instance__vlans(vlan=openconfig_network_instance__network_instances__network_instance__vlans__vlan.from_gdata(n.get_opt_list(_ID_openconfig_network_instance__vlan)))
         return openconfig_network_instance__network_instances__network_instance__vlans()
 
     mut def copy(self) -> openconfig_network_instance__network_instances__network_instance__vlans:
@@ -3673,7 +3846,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol__config:
         if n is not None:
-            return openconfig_network_instance__network_instances__network_instance__protocols__protocol__config(identifier=n.get_opt_Identityref(ygdata.Id(NS_openconfig_network_instance, 'identifier')), name=n.get_opt_str(ygdata.Id(NS_openconfig_network_instance, 'name')))
+            return openconfig_network_instance__network_instances__network_instance__protocols__protocol__config(identifier=n.get_opt_Identityref(_ID_openconfig_network_instance__identifier), name=n.get_opt_str(_ID_openconfig_network_instance__name))
         return openconfig_network_instance__network_instances__network_instance__protocols__protocol__config()
 
     mut def copy(self) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol__config:
@@ -3694,7 +3867,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol__static_routes__static__config:
         if n is not None:
-            return openconfig_network_instance__network_instances__network_instance__protocols__protocol__static_routes__static__config(prefix=n.get_opt_str(ygdata.Id(NS_openconfig_network_instance, 'prefix')))
+            return openconfig_network_instance__network_instances__network_instance__protocols__protocol__static_routes__static__config(prefix=n.get_opt_str(_ID_openconfig_network_instance__prefix))
         return openconfig_network_instance__network_instances__network_instance__protocols__protocol__static_routes__static__config()
 
     mut def copy(self) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol__static_routes__static__config:
@@ -3717,7 +3890,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol__static_routes__static__next_hops__next_hop__config:
         if n is not None:
-            return openconfig_network_instance__network_instances__network_instance__protocols__protocol__static_routes__static__next_hops__next_hop__config(index=n.get_opt_str(ygdata.Id(NS_openconfig_network_instance, 'index')), next_hop=n.get_opt_atom(ygdata.Id(NS_openconfig_network_instance, 'next-hop')))
+            return openconfig_network_instance__network_instances__network_instance__protocols__protocol__static_routes__static__next_hops__next_hop__config(index=n.get_opt_str(_ID_openconfig_network_instance__index), next_hop=n.get_opt_atom(_ID_openconfig_network_instance__next_hop))
         return openconfig_network_instance__network_instances__network_instance__protocols__protocol__static_routes__static__next_hops__next_hop__config()
 
     mut def copy(self) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol__static_routes__static__next_hops__next_hop__config:
@@ -3739,7 +3912,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
 
     @staticmethod
     mut def from_gdata(n: ygdata.Node) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol__static_routes__static__next_hops__next_hop_entry:
-        return openconfig_network_instance__network_instances__network_instance__protocols__protocol__static_routes__static__next_hops__next_hop_entry(index=n.get_str(ygdata.Id(NS_openconfig_network_instance, 'index')), config=openconfig_network_instance__network_instances__network_instance__protocols__protocol__static_routes__static__next_hops__next_hop__config.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_network_instance, 'config'))))
+        return openconfig_network_instance__network_instances__network_instance__protocols__protocol__static_routes__static__next_hops__next_hop_entry(index=n.get_str(_ID_openconfig_network_instance__index), config=openconfig_network_instance__network_instances__network_instance__protocols__protocol__static_routes__static__next_hops__next_hop__config.from_gdata(n.get_opt_cnt(_ID_openconfig_network_instance__config)))
 
     mut def copy(self) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol__static_routes__static__next_hops__next_hop_entry:
         """Create a deep copy of this adata object"""
@@ -3789,7 +3962,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol__static_routes__static__next_hops:
         if n is not None:
-            return openconfig_network_instance__network_instances__network_instance__protocols__protocol__static_routes__static__next_hops(next_hop=openconfig_network_instance__network_instances__network_instance__protocols__protocol__static_routes__static__next_hops__next_hop.from_gdata(n.get_opt_list(ygdata.Id(NS_openconfig_network_instance, 'next-hop'))))
+            return openconfig_network_instance__network_instances__network_instance__protocols__protocol__static_routes__static__next_hops(next_hop=openconfig_network_instance__network_instances__network_instance__protocols__protocol__static_routes__static__next_hops__next_hop.from_gdata(n.get_opt_list(_ID_openconfig_network_instance__next_hop)))
         return openconfig_network_instance__network_instances__network_instance__protocols__protocol__static_routes__static__next_hops()
 
     mut def copy(self) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol__static_routes__static__next_hops:
@@ -3813,7 +3986,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
 
     @staticmethod
     mut def from_gdata(n: ygdata.Node) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol__static_routes__static_entry:
-        return openconfig_network_instance__network_instances__network_instance__protocols__protocol__static_routes__static_entry(prefix=n.get_str(ygdata.Id(NS_openconfig_network_instance, 'prefix')), config=openconfig_network_instance__network_instances__network_instance__protocols__protocol__static_routes__static__config.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_network_instance, 'config'))), next_hops=openconfig_network_instance__network_instances__network_instance__protocols__protocol__static_routes__static__next_hops.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_network_instance, 'next-hops'))))
+        return openconfig_network_instance__network_instances__network_instance__protocols__protocol__static_routes__static_entry(prefix=n.get_str(_ID_openconfig_network_instance__prefix), config=openconfig_network_instance__network_instances__network_instance__protocols__protocol__static_routes__static__config.from_gdata(n.get_opt_cnt(_ID_openconfig_network_instance__config)), next_hops=openconfig_network_instance__network_instances__network_instance__protocols__protocol__static_routes__static__next_hops.from_gdata(n.get_opt_cnt(_ID_openconfig_network_instance__next_hops)))
 
     mut def copy(self) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol__static_routes__static_entry:
         """Create a deep copy of this adata object"""
@@ -3863,7 +4036,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol__static_routes:
         if n is not None:
-            return openconfig_network_instance__network_instances__network_instance__protocols__protocol__static_routes(static=openconfig_network_instance__network_instances__network_instance__protocols__protocol__static_routes__static.from_gdata(n.get_opt_list(ygdata.Id(NS_openconfig_network_instance, 'static'))))
+            return openconfig_network_instance__network_instances__network_instance__protocols__protocol__static_routes(static=openconfig_network_instance__network_instances__network_instance__protocols__protocol__static_routes__static.from_gdata(n.get_opt_list(_ID_openconfig_network_instance__static)))
         return openconfig_network_instance__network_instances__network_instance__protocols__protocol__static_routes()
 
     mut def copy(self) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol__static_routes:
@@ -3886,7 +4059,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__config:
         if n is not None:
-            return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__config(as_=n.get_opt_u64(ygdata.Id(NS_openconfig_network_instance, 'as')), router_id=n.get_opt_str(ygdata.Id(NS_openconfig_network_instance, 'router-id')))
+            return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__config(as_=n.get_opt_u64(_ID_openconfig_network_instance__as), router_id=n.get_opt_str(_ID_openconfig_network_instance__router_id))
         return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__config()
 
     mut def copy(self) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__config:
@@ -3909,7 +4082,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis__afi_safi__config:
         if n is not None:
-            return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis__afi_safi__config(afi_safi_name=n.get_opt_Identityref(ygdata.Id(NS_openconfig_network_instance, 'afi-safi-name')), enabled=n.get_opt_bool(ygdata.Id(NS_openconfig_network_instance, 'enabled')))
+            return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis__afi_safi__config(afi_safi_name=n.get_opt_Identityref(_ID_openconfig_network_instance__afi_safi_name), enabled=n.get_opt_bool(_ID_openconfig_network_instance__enabled))
         return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis__afi_safi__config()
 
     mut def copy(self) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis__afi_safi__config:
@@ -3930,7 +4103,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis__afi_safi__use_multiple_paths__ebgp__config:
         if n is not None:
-            return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis__afi_safi__use_multiple_paths__ebgp__config(maximum_paths=n.get_opt_u64(ygdata.Id(NS_openconfig_network_instance, 'maximum-paths')))
+            return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis__afi_safi__use_multiple_paths__ebgp__config(maximum_paths=n.get_opt_u64(_ID_openconfig_network_instance__maximum_paths))
         return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis__afi_safi__use_multiple_paths__ebgp__config()
 
     mut def copy(self) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis__afi_safi__use_multiple_paths__ebgp__config:
@@ -3951,7 +4124,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis__afi_safi__use_multiple_paths__ebgp:
         if n is not None:
-            return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis__afi_safi__use_multiple_paths__ebgp(config=openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis__afi_safi__use_multiple_paths__ebgp__config.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_network_instance, 'config'))))
+            return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis__afi_safi__use_multiple_paths__ebgp(config=openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis__afi_safi__use_multiple_paths__ebgp__config.from_gdata(n.get_opt_cnt(_ID_openconfig_network_instance__config)))
         return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis__afi_safi__use_multiple_paths__ebgp()
 
     mut def copy(self) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis__afi_safi__use_multiple_paths__ebgp:
@@ -3972,7 +4145,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis__afi_safi__use_multiple_paths:
         if n is not None:
-            return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis__afi_safi__use_multiple_paths(ebgp=openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis__afi_safi__use_multiple_paths__ebgp.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_network_instance, 'ebgp'))))
+            return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis__afi_safi__use_multiple_paths(ebgp=openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis__afi_safi__use_multiple_paths__ebgp.from_gdata(n.get_opt_cnt(_ID_openconfig_network_instance__ebgp)))
         return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis__afi_safi__use_multiple_paths()
 
     mut def copy(self) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis__afi_safi__use_multiple_paths:
@@ -3993,7 +4166,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis__afi_safi__next_hop__config:
         if n is not None:
-            return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis__afi_safi__next_hop__config(preserve_next_hop=n.get_opt_bool(ygdata.Id(NS_arista_bgp_augments, 'preserve-next-hop')))
+            return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis__afi_safi__next_hop__config(preserve_next_hop=n.get_opt_bool(_ID_arista_bgp_augments__preserve_next_hop))
         return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis__afi_safi__next_hop__config()
 
     mut def copy(self) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis__afi_safi__next_hop__config:
@@ -4014,7 +4187,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis__afi_safi__next_hop:
         if n is not None:
-            return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis__afi_safi__next_hop(config=openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis__afi_safi__next_hop__config.from_gdata(n.get_opt_cnt(ygdata.Id(NS_arista_bgp_augments, 'config'))))
+            return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis__afi_safi__next_hop(config=openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis__afi_safi__next_hop__config.from_gdata(n.get_opt_cnt(_ID_arista_bgp_augments__config)))
         return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis__afi_safi__next_hop()
 
     mut def copy(self) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis__afi_safi__next_hop:
@@ -4040,7 +4213,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
 
     @staticmethod
     mut def from_gdata(n: ygdata.Node) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis__afi_safi_entry:
-        return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis__afi_safi_entry(afi_safi_name=n.get_Identityref(ygdata.Id(NS_openconfig_network_instance, 'afi-safi-name')), config=openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis__afi_safi__config.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_network_instance, 'config'))), use_multiple_paths=openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis__afi_safi__use_multiple_paths.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_network_instance, 'use-multiple-paths'))), next_hop=openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis__afi_safi__next_hop.from_gdata(n.get_opt_cnt(ygdata.Id(NS_arista_bgp_augments, 'next-hop'))))
+        return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis__afi_safi_entry(afi_safi_name=n.get_Identityref(_ID_openconfig_network_instance__afi_safi_name), config=openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis__afi_safi__config.from_gdata(n.get_opt_cnt(_ID_openconfig_network_instance__config)), use_multiple_paths=openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis__afi_safi__use_multiple_paths.from_gdata(n.get_opt_cnt(_ID_openconfig_network_instance__use_multiple_paths)), next_hop=openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis__afi_safi__next_hop.from_gdata(n.get_opt_cnt(_ID_arista_bgp_augments__next_hop)))
 
     mut def copy(self) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis__afi_safi_entry:
         """Create a deep copy of this adata object"""
@@ -4090,7 +4263,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis:
         if n is not None:
-            return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis(afi_safi=openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis__afi_safi.from_gdata(n.get_opt_list(ygdata.Id(NS_openconfig_network_instance, 'afi-safi'))))
+            return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis(afi_safi=openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis__afi_safi.from_gdata(n.get_opt_list(_ID_openconfig_network_instance__afi_safi)))
         return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis()
 
     mut def copy(self) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis:
@@ -4113,7 +4286,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__evpn:
         if n is not None:
-            return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__evpn(import_target=n.get_opt_strs(ygdata.Id(NS_arista_bgp_augments, 'import-target')), export_target=n.get_opt_strs(ygdata.Id(NS_arista_bgp_augments, 'export-target')))
+            return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__evpn(import_target=n.get_opt_strs(_ID_arista_bgp_augments__import_target), export_target=n.get_opt_strs(_ID_arista_bgp_augments__export_target))
         return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__evpn()
 
     mut def copy(self) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__evpn:
@@ -4138,7 +4311,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global:
         if n is not None:
-            return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global(config=openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__config.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_network_instance, 'config'))), afi_safis=openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_network_instance, 'afi-safis'))), evpn=openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__evpn.from_gdata(n.get_opt_cnt(ygdata.Id(NS_arista_bgp_augments, 'evpn'))))
+            return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global(config=openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__config.from_gdata(n.get_opt_cnt(_ID_openconfig_network_instance__config)), afi_safis=openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__afi_safis.from_gdata(n.get_opt_cnt(_ID_openconfig_network_instance__afi_safis)), evpn=openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global__evpn.from_gdata(n.get_opt_cnt(_ID_arista_bgp_augments__evpn)))
         return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global()
 
     mut def copy(self) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global:
@@ -4167,7 +4340,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__neighbors__neighbor__config:
         if n is not None:
-            return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__neighbors__neighbor__config(peer_group=n.get_opt_str(ygdata.Id(NS_openconfig_network_instance, 'peer-group')), neighbor_address=n.get_opt_str(ygdata.Id(NS_openconfig_network_instance, 'neighbor-address')), enabled=n.get_opt_bool(ygdata.Id(NS_openconfig_network_instance, 'enabled')), peer_as=n.get_opt_u64(ygdata.Id(NS_openconfig_network_instance, 'peer-as')), description=n.get_opt_str(ygdata.Id(NS_openconfig_network_instance, 'description')))
+            return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__neighbors__neighbor__config(peer_group=n.get_opt_str(_ID_openconfig_network_instance__peer_group), neighbor_address=n.get_opt_str(_ID_openconfig_network_instance__neighbor_address), enabled=n.get_opt_bool(_ID_openconfig_network_instance__enabled), peer_as=n.get_opt_u64(_ID_openconfig_network_instance__peer_as), description=n.get_opt_str(_ID_openconfig_network_instance__description))
         return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__neighbors__neighbor__config()
 
     mut def copy(self) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__neighbors__neighbor__config:
@@ -4189,7 +4362,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
 
     @staticmethod
     mut def from_gdata(n: ygdata.Node) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__neighbors__neighbor_entry:
-        return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__neighbors__neighbor_entry(neighbor_address=n.get_str(ygdata.Id(NS_openconfig_network_instance, 'neighbor-address')), config=openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__neighbors__neighbor__config.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_network_instance, 'config'))))
+        return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__neighbors__neighbor_entry(neighbor_address=n.get_str(_ID_openconfig_network_instance__neighbor_address), config=openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__neighbors__neighbor__config.from_gdata(n.get_opt_cnt(_ID_openconfig_network_instance__config)))
 
     mut def copy(self) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__neighbors__neighbor_entry:
         """Create a deep copy of this adata object"""
@@ -4239,7 +4412,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__neighbors:
         if n is not None:
-            return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__neighbors(neighbor=openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__neighbors__neighbor.from_gdata(n.get_opt_list(ygdata.Id(NS_openconfig_network_instance, 'neighbor'))))
+            return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__neighbors(neighbor=openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__neighbors__neighbor.from_gdata(n.get_opt_list(_ID_openconfig_network_instance__neighbor)))
         return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__neighbors()
 
     mut def copy(self) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__neighbors:
@@ -4262,7 +4435,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__config:
         if n is not None:
-            return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__config(peer_group_name=n.get_opt_str(ygdata.Id(NS_openconfig_network_instance, 'peer-group-name')), send_community_type=n.get_opt_strs(ygdata.Id(NS_openconfig_network_instance, 'send-community-type')))
+            return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__config(peer_group_name=n.get_opt_str(_ID_openconfig_network_instance__peer_group_name), send_community_type=n.get_opt_strs(_ID_openconfig_network_instance__send_community_type))
         return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__config()
 
     mut def copy(self) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__config:
@@ -4283,7 +4456,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__transport__config:
         if n is not None:
-            return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__transport__config(local_address=n.get_opt_str(ygdata.Id(NS_openconfig_network_instance, 'local-address')))
+            return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__transport__config(local_address=n.get_opt_str(_ID_openconfig_network_instance__local_address))
         return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__transport__config()
 
     mut def copy(self) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__transport__config:
@@ -4304,7 +4477,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__transport:
         if n is not None:
-            return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__transport(config=openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__transport__config.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_network_instance, 'config'))))
+            return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__transport(config=openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__transport__config.from_gdata(n.get_opt_cnt(_ID_openconfig_network_instance__config)))
         return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__transport()
 
     mut def copy(self) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__transport:
@@ -4327,7 +4500,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__ebgp_multihop__config:
         if n is not None:
-            return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__ebgp_multihop__config(enabled=n.get_opt_bool(ygdata.Id(NS_openconfig_network_instance, 'enabled')), multihop_ttl=n.get_opt_u64(ygdata.Id(NS_openconfig_network_instance, 'multihop-ttl')))
+            return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__ebgp_multihop__config(enabled=n.get_opt_bool(_ID_openconfig_network_instance__enabled), multihop_ttl=n.get_opt_u64(_ID_openconfig_network_instance__multihop_ttl))
         return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__ebgp_multihop__config()
 
     mut def copy(self) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__ebgp_multihop__config:
@@ -4348,7 +4521,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__ebgp_multihop:
         if n is not None:
-            return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__ebgp_multihop(config=openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__ebgp_multihop__config.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_network_instance, 'config'))))
+            return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__ebgp_multihop(config=openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__ebgp_multihop__config.from_gdata(n.get_opt_cnt(_ID_openconfig_network_instance__config)))
         return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__ebgp_multihop()
 
     mut def copy(self) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__ebgp_multihop:
@@ -4371,7 +4544,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__apply_policy__config:
         if n is not None:
-            return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__apply_policy__config(import_policy=n.get_opt_strs(ygdata.Id(NS_openconfig_network_instance, 'import-policy')), export_policy=n.get_opt_strs(ygdata.Id(NS_openconfig_network_instance, 'export-policy')))
+            return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__apply_policy__config(import_policy=n.get_opt_strs(_ID_openconfig_network_instance__import_policy), export_policy=n.get_opt_strs(_ID_openconfig_network_instance__export_policy))
         return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__apply_policy__config()
 
     mut def copy(self) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__apply_policy__config:
@@ -4392,7 +4565,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__apply_policy:
         if n is not None:
-            return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__apply_policy(config=openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__apply_policy__config.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_network_instance, 'config'))))
+            return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__apply_policy(config=openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__apply_policy__config.from_gdata(n.get_opt_cnt(_ID_openconfig_network_instance__config)))
         return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__apply_policy()
 
     mut def copy(self) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__apply_policy:
@@ -4415,7 +4588,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__afi_safis__afi_safi__config:
         if n is not None:
-            return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__afi_safis__afi_safi__config(afi_safi_name=n.get_opt_Identityref(ygdata.Id(NS_openconfig_network_instance, 'afi-safi-name')), enabled=n.get_opt_bool(ygdata.Id(NS_openconfig_network_instance, 'enabled')))
+            return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__afi_safis__afi_safi__config(afi_safi_name=n.get_opt_Identityref(_ID_openconfig_network_instance__afi_safi_name), enabled=n.get_opt_bool(_ID_openconfig_network_instance__enabled))
         return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__afi_safis__afi_safi__config()
 
     mut def copy(self) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__afi_safis__afi_safi__config:
@@ -4438,7 +4611,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__afi_safis__afi_safi__apply_policy__config:
         if n is not None:
-            return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__afi_safis__afi_safi__apply_policy__config(import_policy=n.get_opt_strs(ygdata.Id(NS_openconfig_network_instance, 'import-policy')), export_policy=n.get_opt_strs(ygdata.Id(NS_openconfig_network_instance, 'export-policy')))
+            return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__afi_safis__afi_safi__apply_policy__config(import_policy=n.get_opt_strs(_ID_openconfig_network_instance__import_policy), export_policy=n.get_opt_strs(_ID_openconfig_network_instance__export_policy))
         return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__afi_safis__afi_safi__apply_policy__config()
 
     mut def copy(self) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__afi_safis__afi_safi__apply_policy__config:
@@ -4459,7 +4632,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__afi_safis__afi_safi__apply_policy:
         if n is not None:
-            return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__afi_safis__afi_safi__apply_policy(config=openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__afi_safis__afi_safi__apply_policy__config.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_network_instance, 'config'))))
+            return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__afi_safis__afi_safi__apply_policy(config=openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__afi_safis__afi_safi__apply_policy__config.from_gdata(n.get_opt_cnt(_ID_openconfig_network_instance__config)))
         return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__afi_safis__afi_safi__apply_policy()
 
     mut def copy(self) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__afi_safis__afi_safi__apply_policy:
@@ -4483,7 +4656,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
 
     @staticmethod
     mut def from_gdata(n: ygdata.Node) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__afi_safis__afi_safi_entry:
-        return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__afi_safis__afi_safi_entry(afi_safi_name=n.get_Identityref(ygdata.Id(NS_openconfig_network_instance, 'afi-safi-name')), config=openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__afi_safis__afi_safi__config.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_network_instance, 'config'))), apply_policy=openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__afi_safis__afi_safi__apply_policy.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_network_instance, 'apply-policy'))))
+        return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__afi_safis__afi_safi_entry(afi_safi_name=n.get_Identityref(_ID_openconfig_network_instance__afi_safi_name), config=openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__afi_safis__afi_safi__config.from_gdata(n.get_opt_cnt(_ID_openconfig_network_instance__config)), apply_policy=openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__afi_safis__afi_safi__apply_policy.from_gdata(n.get_opt_cnt(_ID_openconfig_network_instance__apply_policy)))
 
     mut def copy(self) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__afi_safis__afi_safi_entry:
         """Create a deep copy of this adata object"""
@@ -4533,7 +4706,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__afi_safis:
         if n is not None:
-            return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__afi_safis(afi_safi=openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__afi_safis__afi_safi.from_gdata(n.get_opt_list(ygdata.Id(NS_openconfig_network_instance, 'afi-safi'))))
+            return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__afi_safis(afi_safi=openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__afi_safis__afi_safi.from_gdata(n.get_opt_list(_ID_openconfig_network_instance__afi_safi)))
         return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__afi_safis()
 
     mut def copy(self) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__afi_safis:
@@ -4563,7 +4736,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
 
     @staticmethod
     mut def from_gdata(n: ygdata.Node) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group_entry:
-        return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group_entry(peer_group_name=n.get_str(ygdata.Id(NS_openconfig_network_instance, 'peer-group-name')), config=openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__config.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_network_instance, 'config'))), transport=openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__transport.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_network_instance, 'transport'))), ebgp_multihop=openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__ebgp_multihop.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_network_instance, 'ebgp-multihop'))), apply_policy=openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__apply_policy.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_network_instance, 'apply-policy'))), afi_safis=openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__afi_safis.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_network_instance, 'afi-safis'))))
+        return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group_entry(peer_group_name=n.get_str(_ID_openconfig_network_instance__peer_group_name), config=openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__config.from_gdata(n.get_opt_cnt(_ID_openconfig_network_instance__config)), transport=openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__transport.from_gdata(n.get_opt_cnt(_ID_openconfig_network_instance__transport)), ebgp_multihop=openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__ebgp_multihop.from_gdata(n.get_opt_cnt(_ID_openconfig_network_instance__ebgp_multihop)), apply_policy=openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__apply_policy.from_gdata(n.get_opt_cnt(_ID_openconfig_network_instance__apply_policy)), afi_safis=openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group__afi_safis.from_gdata(n.get_opt_cnt(_ID_openconfig_network_instance__afi_safis)))
 
     mut def copy(self) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group_entry:
         """Create a deep copy of this adata object"""
@@ -4613,7 +4786,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups:
         if n is not None:
-            return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups(peer_group=openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group.from_gdata(n.get_opt_list(ygdata.Id(NS_openconfig_network_instance, 'peer-group'))))
+            return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups(peer_group=openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups__peer_group.from_gdata(n.get_opt_list(_ID_openconfig_network_instance__peer_group)))
         return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups()
 
     mut def copy(self) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups:
@@ -4638,7 +4811,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp:
         if n is not None:
-            return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp(global=openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_network_instance, 'global'))), neighbors=openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__neighbors.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_network_instance, 'neighbors'))), peer_groups=openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_network_instance, 'peer-groups'))))
+            return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp(global=openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__global.from_gdata(n.get_opt_cnt(_ID_openconfig_network_instance__global)), neighbors=openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__neighbors.from_gdata(n.get_opt_cnt(_ID_openconfig_network_instance__neighbors)), peer_groups=openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp__peer_groups.from_gdata(n.get_opt_cnt(_ID_openconfig_network_instance__peer_groups)))
         return openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp()
 
     mut def copy(self) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp:
@@ -4666,7 +4839,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
 
     @staticmethod
     mut def from_gdata(n: ygdata.Node) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol_entry:
-        return openconfig_network_instance__network_instances__network_instance__protocols__protocol_entry(identifier=n.get_Identityref(ygdata.Id(NS_openconfig_network_instance, 'identifier')), name=n.get_str(ygdata.Id(NS_openconfig_network_instance, 'name')), config=openconfig_network_instance__network_instances__network_instance__protocols__protocol__config.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_network_instance, 'config'))), static_routes=openconfig_network_instance__network_instances__network_instance__protocols__protocol__static_routes.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_network_instance, 'static-routes'))), bgp=openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_network_instance, 'bgp'))))
+        return openconfig_network_instance__network_instances__network_instance__protocols__protocol_entry(identifier=n.get_Identityref(_ID_openconfig_network_instance__identifier), name=n.get_str(_ID_openconfig_network_instance__name), config=openconfig_network_instance__network_instances__network_instance__protocols__protocol__config.from_gdata(n.get_opt_cnt(_ID_openconfig_network_instance__config)), static_routes=openconfig_network_instance__network_instances__network_instance__protocols__protocol__static_routes.from_gdata(n.get_opt_cnt(_ID_openconfig_network_instance__static_routes)), bgp=openconfig_network_instance__network_instances__network_instance__protocols__protocol__bgp.from_gdata(n.get_opt_cnt(_ID_openconfig_network_instance__bgp)))
 
     mut def copy(self) -> openconfig_network_instance__network_instances__network_instance__protocols__protocol_entry:
         """Create a deep copy of this adata object"""
@@ -4716,7 +4889,7 @@ class openconfig_network_instance__network_instances__network_instance__protocol
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_network_instance__network_instances__network_instance__protocols:
         if n is not None:
-            return openconfig_network_instance__network_instances__network_instance__protocols(protocol=openconfig_network_instance__network_instances__network_instance__protocols__protocol.from_gdata(n.get_opt_list(ygdata.Id(NS_openconfig_network_instance, 'protocol'))))
+            return openconfig_network_instance__network_instances__network_instance__protocols(protocol=openconfig_network_instance__network_instances__network_instance__protocols__protocol.from_gdata(n.get_opt_list(_ID_openconfig_network_instance__protocol)))
         return openconfig_network_instance__network_instances__network_instance__protocols()
 
     mut def copy(self) -> openconfig_network_instance__network_instances__network_instance__protocols:
@@ -4746,7 +4919,7 @@ class openconfig_network_instance__network_instances__network_instance_entry(yad
 
     @staticmethod
     mut def from_gdata(n: ygdata.Node) -> openconfig_network_instance__network_instances__network_instance_entry:
-        return openconfig_network_instance__network_instances__network_instance_entry(name=n.get_str(ygdata.Id(NS_openconfig_network_instance, 'name')), config=openconfig_network_instance__network_instances__network_instance__config.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_network_instance, 'config'))), table_connections=openconfig_network_instance__network_instances__network_instance__table_connections.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_network_instance, 'table-connections'))), interfaces=openconfig_network_instance__network_instances__network_instance__interfaces.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_network_instance, 'interfaces'))), vlans=openconfig_network_instance__network_instances__network_instance__vlans.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_network_instance, 'vlans'))), protocols=openconfig_network_instance__network_instances__network_instance__protocols.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_network_instance, 'protocols'))))
+        return openconfig_network_instance__network_instances__network_instance_entry(name=n.get_str(_ID_openconfig_network_instance__name), config=openconfig_network_instance__network_instances__network_instance__config.from_gdata(n.get_opt_cnt(_ID_openconfig_network_instance__config)), table_connections=openconfig_network_instance__network_instances__network_instance__table_connections.from_gdata(n.get_opt_cnt(_ID_openconfig_network_instance__table_connections)), interfaces=openconfig_network_instance__network_instances__network_instance__interfaces.from_gdata(n.get_opt_cnt(_ID_openconfig_network_instance__interfaces)), vlans=openconfig_network_instance__network_instances__network_instance__vlans.from_gdata(n.get_opt_cnt(_ID_openconfig_network_instance__vlans)), protocols=openconfig_network_instance__network_instances__network_instance__protocols.from_gdata(n.get_opt_cnt(_ID_openconfig_network_instance__protocols)))
 
     mut def copy(self) -> openconfig_network_instance__network_instances__network_instance_entry:
         """Create a deep copy of this adata object"""
@@ -4796,7 +4969,7 @@ class openconfig_network_instance__network_instances(yadata.MNode):
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_network_instance__network_instances:
         if n is not None:
-            return openconfig_network_instance__network_instances(network_instance=openconfig_network_instance__network_instances__network_instance.from_gdata(n.get_opt_list(ygdata.Id(NS_openconfig_network_instance, 'network-instance'))))
+            return openconfig_network_instance__network_instances(network_instance=openconfig_network_instance__network_instances__network_instance.from_gdata(n.get_opt_list(_ID_openconfig_network_instance__network_instance)))
         return openconfig_network_instance__network_instances()
 
     mut def copy(self) -> openconfig_network_instance__network_instances:
@@ -4817,7 +4990,7 @@ class openconfig_system__system__config(yadata.MNode):
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_system__system__config:
         if n is not None:
-            return openconfig_system__system__config(hostname=n.get_opt_str(ygdata.Id(NS_openconfig_system, 'hostname')))
+            return openconfig_system__system__config(hostname=n.get_opt_str(_ID_openconfig_system__hostname))
         return openconfig_system__system__config()
 
     mut def copy(self) -> openconfig_system__system__config:
@@ -4838,7 +5011,7 @@ class openconfig_system__system__mac_address__config(yadata.MNode):
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_system__system__mac_address__config:
         if n is not None:
-            return openconfig_system__system__mac_address__config(routing_mac=n.get_opt_str(ygdata.Id(NS_openconfig_system, 'routing-mac')))
+            return openconfig_system__system__mac_address__config(routing_mac=n.get_opt_str(_ID_openconfig_system__routing_mac))
         return openconfig_system__system__mac_address__config()
 
     mut def copy(self) -> openconfig_system__system__mac_address__config:
@@ -4859,7 +5032,7 @@ class openconfig_system__system__mac_address(yadata.MNode):
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_system__system__mac_address:
         if n is not None:
-            return openconfig_system__system__mac_address(config=openconfig_system__system__mac_address__config.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_system, 'config'))))
+            return openconfig_system__system__mac_address(config=openconfig_system__system__mac_address__config.from_gdata(n.get_opt_cnt(_ID_openconfig_system__config)))
         return openconfig_system__system__mac_address()
 
     mut def copy(self) -> openconfig_system__system__mac_address:
@@ -4882,7 +5055,7 @@ class openconfig_system__system(yadata.MNode):
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_system__system:
         if n is not None:
-            return openconfig_system__system(config=openconfig_system__system__config.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_system, 'config'))), mac_address=openconfig_system__system__mac_address.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_system, 'mac-address'))))
+            return openconfig_system__system(config=openconfig_system__system__config.from_gdata(n.get_opt_cnt(_ID_openconfig_system__config)), mac_address=openconfig_system__system__mac_address.from_gdata(n.get_opt_cnt(_ID_openconfig_system__mac_address)))
         return openconfig_system__system()
 
     mut def copy(self) -> openconfig_system__system:
@@ -4903,7 +5076,7 @@ class openconfig_lldp__lldp__config(yadata.MNode):
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_lldp__lldp__config:
         if n is not None:
-            return openconfig_lldp__lldp__config(enabled=n.get_opt_bool(ygdata.Id(NS_openconfig_lldp, 'enabled')))
+            return openconfig_lldp__lldp__config(enabled=n.get_opt_bool(_ID_openconfig_lldp__enabled))
         return openconfig_lldp__lldp__config()
 
     mut def copy(self) -> openconfig_lldp__lldp__config:
@@ -4926,7 +5099,7 @@ class openconfig_lldp__lldp__interfaces__interface__config(yadata.MNode):
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_lldp__lldp__interfaces__interface__config:
         if n is not None:
-            return openconfig_lldp__lldp__interfaces__interface__config(name=n.get_opt_str(ygdata.Id(NS_openconfig_lldp, 'name')), enabled=n.get_opt_bool(ygdata.Id(NS_openconfig_lldp, 'enabled')))
+            return openconfig_lldp__lldp__interfaces__interface__config(name=n.get_opt_str(_ID_openconfig_lldp__name), enabled=n.get_opt_bool(_ID_openconfig_lldp__enabled))
         return openconfig_lldp__lldp__interfaces__interface__config()
 
     mut def copy(self) -> openconfig_lldp__lldp__interfaces__interface__config:
@@ -4948,7 +5121,7 @@ class openconfig_lldp__lldp__interfaces__interface_entry(yadata.MNode):
 
     @staticmethod
     mut def from_gdata(n: ygdata.Node) -> openconfig_lldp__lldp__interfaces__interface_entry:
-        return openconfig_lldp__lldp__interfaces__interface_entry(name=n.get_str(ygdata.Id(NS_openconfig_lldp, 'name')), config=openconfig_lldp__lldp__interfaces__interface__config.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_lldp, 'config'))))
+        return openconfig_lldp__lldp__interfaces__interface_entry(name=n.get_str(_ID_openconfig_lldp__name), config=openconfig_lldp__lldp__interfaces__interface__config.from_gdata(n.get_opt_cnt(_ID_openconfig_lldp__config)))
 
     mut def copy(self) -> openconfig_lldp__lldp__interfaces__interface_entry:
         """Create a deep copy of this adata object"""
@@ -4998,7 +5171,7 @@ class openconfig_lldp__lldp__interfaces(yadata.MNode):
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_lldp__lldp__interfaces:
         if n is not None:
-            return openconfig_lldp__lldp__interfaces(interface=openconfig_lldp__lldp__interfaces__interface.from_gdata(n.get_opt_list(ygdata.Id(NS_openconfig_lldp, 'interface'))))
+            return openconfig_lldp__lldp__interfaces(interface=openconfig_lldp__lldp__interfaces__interface.from_gdata(n.get_opt_list(_ID_openconfig_lldp__interface)))
         return openconfig_lldp__lldp__interfaces()
 
     mut def copy(self) -> openconfig_lldp__lldp__interfaces:
@@ -5021,7 +5194,7 @@ class openconfig_lldp__lldp(yadata.MNode):
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_lldp__lldp:
         if n is not None:
-            return openconfig_lldp__lldp(config=openconfig_lldp__lldp__config.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_lldp, 'config'))), interfaces=openconfig_lldp__lldp__interfaces.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_lldp, 'interfaces'))))
+            return openconfig_lldp__lldp(config=openconfig_lldp__lldp__config.from_gdata(n.get_opt_cnt(_ID_openconfig_lldp__config)), interfaces=openconfig_lldp__lldp__interfaces.from_gdata(n.get_opt_cnt(_ID_openconfig_lldp__interfaces)))
         return openconfig_lldp__lldp()
 
     mut def copy(self) -> openconfig_lldp__lldp:
@@ -5048,7 +5221,7 @@ class openconfig_lacp__lacp__interfaces__interface__config(yadata.MNode):
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_lacp__lacp__interfaces__interface__config:
         if n is not None:
-            return openconfig_lacp__lacp__interfaces__interface__config(name=n.get_opt_str(ygdata.Id(NS_openconfig_lacp, 'name')), interval=n.get_opt_str(ygdata.Id(NS_openconfig_lacp, 'interval')), lacp_mode=n.get_opt_str(ygdata.Id(NS_openconfig_lacp, 'lacp-mode')), system_id_mac=n.get_opt_str(ygdata.Id(NS_openconfig_lacp, 'system-id-mac')))
+            return openconfig_lacp__lacp__interfaces__interface__config(name=n.get_opt_str(_ID_openconfig_lacp__name), interval=n.get_opt_str(_ID_openconfig_lacp__interval), lacp_mode=n.get_opt_str(_ID_openconfig_lacp__lacp_mode), system_id_mac=n.get_opt_str(_ID_openconfig_lacp__system_id_mac))
         return openconfig_lacp__lacp__interfaces__interface__config()
 
     mut def copy(self) -> openconfig_lacp__lacp__interfaces__interface__config:
@@ -5070,7 +5243,7 @@ class openconfig_lacp__lacp__interfaces__interface_entry(yadata.MNode):
 
     @staticmethod
     mut def from_gdata(n: ygdata.Node) -> openconfig_lacp__lacp__interfaces__interface_entry:
-        return openconfig_lacp__lacp__interfaces__interface_entry(name=n.get_str(ygdata.Id(NS_openconfig_lacp, 'name')), config=openconfig_lacp__lacp__interfaces__interface__config.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_lacp, 'config'))))
+        return openconfig_lacp__lacp__interfaces__interface_entry(name=n.get_str(_ID_openconfig_lacp__name), config=openconfig_lacp__lacp__interfaces__interface__config.from_gdata(n.get_opt_cnt(_ID_openconfig_lacp__config)))
 
     mut def copy(self) -> openconfig_lacp__lacp__interfaces__interface_entry:
         """Create a deep copy of this adata object"""
@@ -5120,7 +5293,7 @@ class openconfig_lacp__lacp__interfaces(yadata.MNode):
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_lacp__lacp__interfaces:
         if n is not None:
-            return openconfig_lacp__lacp__interfaces(interface=openconfig_lacp__lacp__interfaces__interface.from_gdata(n.get_opt_list(ygdata.Id(NS_openconfig_lacp, 'interface'))))
+            return openconfig_lacp__lacp__interfaces(interface=openconfig_lacp__lacp__interfaces__interface.from_gdata(n.get_opt_list(_ID_openconfig_lacp__interface)))
         return openconfig_lacp__lacp__interfaces()
 
     mut def copy(self) -> openconfig_lacp__lacp__interfaces:
@@ -5141,7 +5314,7 @@ class openconfig_lacp__lacp(yadata.MNode):
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> openconfig_lacp__lacp:
         if n is not None:
-            return openconfig_lacp__lacp(interfaces=openconfig_lacp__lacp__interfaces.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_lacp, 'interfaces'))))
+            return openconfig_lacp__lacp(interfaces=openconfig_lacp__lacp__interfaces.from_gdata(n.get_opt_cnt(_ID_openconfig_lacp__interfaces)))
         return openconfig_lacp__lacp()
 
     mut def copy(self) -> openconfig_lacp__lacp:
@@ -5166,7 +5339,7 @@ class arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__config(y
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__config:
         if n is not None:
-            return arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__config(name=n.get_opt_str(ygdata.Id(NS_arista_exp_eos_evpn, 'name')), route_distinguisher=n.get_opt_str(ygdata.Id(NS_arista_exp_eos_evpn, 'route-distinguisher')), redistribute=n.get_opt_strs(ygdata.Id(NS_arista_exp_eos_evpn, 'redistribute')))
+            return arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__config(name=n.get_opt_str(_ID_arista_exp_eos_evpn__name), route_distinguisher=n.get_opt_str(_ID_arista_exp_eos_evpn__route_distinguisher), redistribute=n.get_opt_strs(_ID_arista_exp_eos_evpn__redistribute))
         return arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__config()
 
     mut def copy(self) -> arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__config:
@@ -5189,7 +5362,7 @@ class arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__route_ta
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__route_target__config:
         if n is not None:
-            return arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__route_target__config(import=n.get_opt_strs(ygdata.Id(NS_arista_exp_eos_evpn, 'import')), export=n.get_opt_strs(ygdata.Id(NS_arista_exp_eos_evpn, 'export')))
+            return arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__route_target__config(import=n.get_opt_strs(_ID_arista_exp_eos_evpn__import), export=n.get_opt_strs(_ID_arista_exp_eos_evpn__export))
         return arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__route_target__config()
 
     mut def copy(self) -> arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__route_target__config:
@@ -5210,7 +5383,7 @@ class arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__route_ta
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__route_target:
         if n is not None:
-            return arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__route_target(config=arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__route_target__config.from_gdata(n.get_opt_cnt(ygdata.Id(NS_arista_exp_eos_evpn, 'config'))))
+            return arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__route_target(config=arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__route_target__config.from_gdata(n.get_opt_cnt(_ID_arista_exp_eos_evpn__config)))
         return arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__route_target()
 
     mut def copy(self) -> arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__route_target:
@@ -5231,7 +5404,7 @@ class arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__vlans__v
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__vlans__vlan__config:
         if n is not None:
-            return arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__vlans__vlan__config(vlan_id=n.get_opt_u64(ygdata.Id(NS_arista_exp_eos_evpn, 'vlan-id')))
+            return arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__vlans__vlan__config(vlan_id=n.get_opt_u64(_ID_arista_exp_eos_evpn__vlan_id))
         return arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__vlans__vlan__config()
 
     mut def copy(self) -> arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__vlans__vlan__config:
@@ -5253,7 +5426,7 @@ class arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__vlans__v
 
     @staticmethod
     mut def from_gdata(n: ygdata.Node) -> arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__vlans__vlan_entry:
-        return arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__vlans__vlan_entry(vlan_id=n.get_u64(ygdata.Id(NS_arista_exp_eos_evpn, 'vlan-id')), config=arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__vlans__vlan__config.from_gdata(n.get_opt_cnt(ygdata.Id(NS_arista_exp_eos_evpn, 'config'))))
+        return arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__vlans__vlan_entry(vlan_id=n.get_u64(_ID_arista_exp_eos_evpn__vlan_id), config=arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__vlans__vlan__config.from_gdata(n.get_opt_cnt(_ID_arista_exp_eos_evpn__config)))
 
     mut def copy(self) -> arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__vlans__vlan_entry:
         """Create a deep copy of this adata object"""
@@ -5303,7 +5476,7 @@ class arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__vlans(ya
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__vlans:
         if n is not None:
-            return arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__vlans(vlan=arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__vlans__vlan.from_gdata(n.get_opt_list(ygdata.Id(NS_arista_exp_eos_evpn, 'vlan'))))
+            return arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__vlans(vlan=arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__vlans__vlan.from_gdata(n.get_opt_list(_ID_arista_exp_eos_evpn__vlan)))
         return arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__vlans()
 
     mut def copy(self) -> arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__vlans:
@@ -5329,7 +5502,7 @@ class arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance_entry(yad
 
     @staticmethod
     mut def from_gdata(n: ygdata.Node) -> arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance_entry:
-        return arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance_entry(name=n.get_str(ygdata.Id(NS_arista_exp_eos_evpn, 'name')), config=arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__config.from_gdata(n.get_opt_cnt(ygdata.Id(NS_arista_exp_eos_evpn, 'config'))), route_target=arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__route_target.from_gdata(n.get_opt_cnt(ygdata.Id(NS_arista_exp_eos_evpn, 'route-target'))), vlans=arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__vlans.from_gdata(n.get_opt_cnt(ygdata.Id(NS_arista_exp_eos_evpn, 'vlans'))))
+        return arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance_entry(name=n.get_str(_ID_arista_exp_eos_evpn__name), config=arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__config.from_gdata(n.get_opt_cnt(_ID_arista_exp_eos_evpn__config)), route_target=arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__route_target.from_gdata(n.get_opt_cnt(_ID_arista_exp_eos_evpn__route_target)), vlans=arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__vlans.from_gdata(n.get_opt_cnt(_ID_arista_exp_eos_evpn__vlans)))
 
     mut def copy(self) -> arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance_entry:
         """Create a deep copy of this adata object"""
@@ -5379,7 +5552,7 @@ class arista_exp_eos__arista__eos__evpn__evpn_instances(yadata.MNode):
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> arista_exp_eos__arista__eos__evpn__evpn_instances:
         if n is not None:
-            return arista_exp_eos__arista__eos__evpn__evpn_instances(evpn_instance=arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance.from_gdata(n.get_opt_list(ygdata.Id(NS_arista_exp_eos_evpn, 'evpn-instance'))))
+            return arista_exp_eos__arista__eos__evpn__evpn_instances(evpn_instance=arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance.from_gdata(n.get_opt_list(_ID_arista_exp_eos_evpn__evpn_instance)))
         return arista_exp_eos__arista__eos__evpn__evpn_instances()
 
     mut def copy(self) -> arista_exp_eos__arista__eos__evpn__evpn_instances:
@@ -5400,7 +5573,7 @@ class arista_exp_eos__arista__eos__evpn(yadata.MNode):
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> arista_exp_eos__arista__eos__evpn:
         if n is not None:
-            return arista_exp_eos__arista__eos__evpn(evpn_instances=arista_exp_eos__arista__eos__evpn__evpn_instances.from_gdata(n.get_opt_cnt(ygdata.Id(NS_arista_exp_eos_evpn, 'evpn-instances'))))
+            return arista_exp_eos__arista__eos__evpn(evpn_instances=arista_exp_eos__arista__eos__evpn__evpn_instances.from_gdata(n.get_opt_cnt(_ID_arista_exp_eos_evpn__evpn_instances)))
         return arista_exp_eos__arista__eos__evpn()
 
     mut def copy(self) -> arista_exp_eos__arista__eos__evpn:
@@ -5421,7 +5594,7 @@ class arista_exp_eos__arista__eos(yadata.MNode):
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> arista_exp_eos__arista__eos:
         if n is not None:
-            return arista_exp_eos__arista__eos(evpn=arista_exp_eos__arista__eos__evpn.from_gdata(n.get_opt_cnt(ygdata.Id(NS_arista_exp_eos_evpn, 'evpn'))))
+            return arista_exp_eos__arista__eos(evpn=arista_exp_eos__arista__eos__evpn.from_gdata(n.get_opt_cnt(_ID_arista_exp_eos_evpn__evpn)))
         return arista_exp_eos__arista__eos()
 
     mut def copy(self) -> arista_exp_eos__arista__eos:
@@ -5442,7 +5615,7 @@ class arista_exp_eos__arista(yadata.MNode):
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> arista_exp_eos__arista:
         if n is not None:
-            return arista_exp_eos__arista(eos=arista_exp_eos__arista__eos.from_gdata(n.get_opt_cnt(ygdata.Id(NS_arista_exp_eos, 'eos'))))
+            return arista_exp_eos__arista(eos=arista_exp_eos__arista__eos.from_gdata(n.get_opt_cnt(_ID_arista_exp_eos__eos)))
         return arista_exp_eos__arista()
 
     mut def copy(self) -> arista_exp_eos__arista:
@@ -5475,7 +5648,7 @@ class root(yadata.MNode):
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> root:
         if n is not None:
-            return root(interfaces=openconfig_interfaces__interfaces.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_interfaces, 'interfaces'))), routing_policy=openconfig_routing_policy__routing_policy.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_routing_policy, 'routing-policy'))), network_instances=openconfig_network_instance__network_instances.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_network_instance, 'network-instances'))), system=openconfig_system__system.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_system, 'system'))), lldp=openconfig_lldp__lldp.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_lldp, 'lldp'))), lacp=openconfig_lacp__lacp.from_gdata(n.get_opt_cnt(ygdata.Id(NS_openconfig_lacp, 'lacp'))), arista=arista_exp_eos__arista.from_gdata(n.get_opt_cnt(ygdata.Id(NS_arista_exp_eos, 'arista'))))
+            return root(interfaces=openconfig_interfaces__interfaces.from_gdata(n.get_opt_cnt(_ID_openconfig_interfaces__interfaces)), routing_policy=openconfig_routing_policy__routing_policy.from_gdata(n.get_opt_cnt(_ID_openconfig_routing_policy__routing_policy)), network_instances=openconfig_network_instance__network_instances.from_gdata(n.get_opt_cnt(_ID_openconfig_network_instance__network_instances)), system=openconfig_system__system.from_gdata(n.get_opt_cnt(_ID_openconfig_system__system)), lldp=openconfig_lldp__lldp.from_gdata(n.get_opt_cnt(_ID_openconfig_lldp__lldp)), lacp=openconfig_lacp__lacp.from_gdata(n.get_opt_cnt(_ID_openconfig_lacp__lacp)), arista=arista_exp_eos__arista.from_gdata(n.get_opt_cnt(_ID_arista_exp_eos__arista)))
         return root()
 
     mut def copy(self) -> root:

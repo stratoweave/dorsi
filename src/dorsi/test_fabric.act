@@ -257,8 +257,12 @@ def three_stage_mixed_crpd_overlay():
 # the snapshot has not changed for two seconds. On a busy machine a device can
 # get its configuration in parts, with a pause between them while the mock
 # device connects, so a fixed or shorter wait can catch it half done.
-actor FabricTester(t: testing.AsyncT, input_config: gdata.Node):
+proc def FabricTester(t: testing.AsyncT, input_config: gdata.Node):
     tr = swts.TestRig.build(sysspec.SYSSPEC, t.log_handler)
+    FabricTesterActor(t, input_config, tr)
+
+
+actor FabricTesterActor(t: testing.AsyncT, input_config: gdata.Node, tr: swts.TestRig):
     var last: ?str = None
     var unchanged = 0
 
@@ -280,64 +284,76 @@ actor FabricTester(t: testing.AsyncT, input_config: gdata.Node):
             return
         after 1.0: snapshot()
 
-    tr.edit_config(input_config, cont, 0)
+    proc def __startup__():
+        tr.edit_config(input_config, cont, 0)
 
 actor _test_fabric_three_stage(t: testing.AsyncT):
-    t.timeout(30.0)
-    FabricTester(t, three_stage().to_gdata())
+    proc def __startup__():
+        t.timeout(30.0)
+        FabricTester(t, three_stage().to_gdata())
 
 actor _test_fabric_three_stage_overlay(t: testing.AsyncT):
-    t.timeout(30.0)
-    FabricTester(t, three_stage_overlay().to_gdata())
+    proc def __startup__():
+        t.timeout(30.0)
+        FabricTester(t, three_stage_overlay().to_gdata())
 
 actor _test_fabric_five_stage_overlay(t: testing.AsyncT):
-    t.timeout(30.0)
-    FabricTester(t, five_stage_overlay().to_gdata())
+    proc def __startup__():
+        t.timeout(30.0)
+        FabricTester(t, five_stage_overlay().to_gdata())
 
 actor _test_fabric_five_stage_srl(t: testing.AsyncT):
-    t.timeout(30.0)
-    FabricTester(t, five_stage_srl().to_gdata())
+    proc def __startup__():
+        t.timeout(30.0)
+        FabricTester(t, five_stage_srl().to_gdata())
 
 actor _test_fabric_three_stage_mixed_overlay(t: testing.AsyncT):
-    t.timeout(30.0)
-    FabricTester(t, three_stage_mixed_overlay().to_gdata())
+    proc def __startup__():
+        t.timeout(30.0)
+        FabricTester(t, three_stage_mixed_overlay().to_gdata())
 
 actor _test_fabric_three_stage_mixed(t: testing.AsyncT):
-    t.timeout(30.0)
-    FabricTester(t, three_stage_mixed().to_gdata())
+    proc def __startup__():
+        t.timeout(30.0)
+        FabricTester(t, three_stage_mixed().to_gdata())
 
 actor _test_fabric_five_stage(t: testing.AsyncT):
-    t.timeout(30.0)
-    FabricTester(t, five_stage().to_gdata())
+    proc def __startup__():
+        t.timeout(30.0)
+        FabricTester(t, five_stage().to_gdata())
 
 actor _test_fabric_five_stage_mixed(t: testing.AsyncT):
-    t.timeout(30.0)
-    FabricTester(t, five_stage_mixed().to_gdata())
+    proc def __startup__():
+        t.timeout(30.0)
+        FabricTester(t, five_stage_mixed().to_gdata())
 
 # An invalid fabric is rejected as a whole, with the problems listed.
 actor _test_fabric_invalid_is_rejected(t: testing.AsyncT):
-    t.timeout(5.0)
-    root = three_stage()
-    f = root.ip_fabric.fabric.get("dc1")!
-    add_server(f, "bad", "single-homed", [("spine1", "ethernet-1/9", "eth1")])
-    tr = swts.TestRig.build(sysspec.SYSSPEC, t.log_handler)
-
     def cont(r: value):
         if isinstance(r, Exception):
             t.success("rejected: {r}")
         else:
             t.failure(ValueError("the invalid fabric was accepted"))
 
-    tr.edit_config(root.to_gdata(), cont, 0)
+    proc def __startup__():
+        t.timeout(5.0)
+        root = three_stage()
+        f = root.ip_fabric.fabric.get("dc1")!
+        add_server(f, "bad", "single-homed", [("spine1", "ethernet-1/9", "eth1")])
+        tr = swts.TestRig.build(sysspec.SYSSPEC, t.log_handler)
+        tr.edit_config(root.to_gdata(), cont, 0)
 
 actor _test_fabric_three_stage_crpd(t: testing.AsyncT):
-    t.timeout(30.0)
-    FabricTester(t, three_stage_crpd().to_gdata())
+    proc def __startup__():
+        t.timeout(30.0)
+        FabricTester(t, three_stage_crpd().to_gdata())
 
 actor _test_fabric_three_stage_mixed_crpd(t: testing.AsyncT):
-    t.timeout(30.0)
-    FabricTester(t, three_stage_mixed_crpd().to_gdata())
+    proc def __startup__():
+        t.timeout(30.0)
+        FabricTester(t, three_stage_mixed_crpd().to_gdata())
 
 actor _test_fabric_three_stage_mixed_crpd_overlay(t: testing.AsyncT):
-    t.timeout(30.0)
-    FabricTester(t, three_stage_mixed_crpd_overlay().to_gdata())
+    proc def __startup__():
+        t.timeout(30.0)
+        FabricTester(t, three_stage_mixed_crpd_overlay().to_gdata())

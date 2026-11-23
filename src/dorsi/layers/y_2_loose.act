@@ -1,5 +1,5 @@
-import base64
-import json
+import std.base64
+import std.json
 import std.xml as xml
 import yang.adata as yadata
 import yang.gdata as ygdata
@@ -18,12 +18,12 @@ from yang.type import Decimal, Ranges
 _identities: list[DIdentity] = []
 
 
-SRC_DNODE_CHILD_0: DContainer = DContainer(module='stratoweave-device', namespace='http://stratoweave.org/yang/stratoweave-device', prefix='sw-dev', name='devices', config=True, presence=False, children=[
+SRC_DNODE_CHILD_0: DContainer = DContainer(module='stratoweave-device', namespace='http://stratoweave.org/yang/stratoweave-device', prefix='sw-dev', name='devices', config=True, presence=False, adata_name='devices', children=[
     DList(module='stratoweave-device', namespace='http://stratoweave.org/yang/stratoweave-device', prefix='sw-dev', name='device', key=['name'], config=True, min_elements=0, ordered_by='system', exts=[
             DExt(module='stratoweave', namespace='http://stratoweave.org/yang/stratoweave', prefix='sw', name='device-config', arg=None, exts=[])
-        ], children=[
-        DLeaf(module='stratoweave-device', namespace='http://stratoweave.org/yang/stratoweave-device', prefix='sw-dev', name='name', config=True, is_key=True, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
-        DLeaf(module='stratoweave-device', namespace='http://stratoweave.org/yang/stratoweave-device', prefix='sw-dev', name='modset_id', config=True, is_key=False, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[]))
+        ], adata_name='device', children=[
+        DLeaf(module='stratoweave-device', namespace='http://stratoweave.org/yang/stratoweave-device', prefix='sw-dev', name='name', config=True, is_key=True, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[]), adata_name='name'),
+        DLeaf(module='stratoweave-device', namespace='http://stratoweave.org/yang/stratoweave-device', prefix='sw-dev', name='modset_id', config=True, is_key=False, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[]), adata_name='modset_id')
     ])
 ])
 
@@ -134,15 +134,20 @@ SRC_YANG_1: str = r"""module stratoweave-device {
 }
 """
 
-pure def src_yang() -> list[str]:
+pure def src_yang() -> list[YangSource]:
     return [
-        SRC_YANG_0,
-        SRC_YANG_1,
+        (name='stratoweave', revision='2026-04-01', src=SRC_YANG_0),
+        (name='stratoweave-device', revision=None, src=SRC_YANG_1),
     ]
 
 
 NS_stratoweave: str = 'http://stratoweave.org/yang/stratoweave'
 NS_stratoweave_device: str = 'http://stratoweave.org/yang/stratoweave-device'
+
+_ID_stratoweave_device__device: ygdata.Id = ygdata.Id(NS_stratoweave_device, 'device')
+_ID_stratoweave_device__devices: ygdata.Id = ygdata.Id(NS_stratoweave_device, 'devices')
+_ID_stratoweave_device__modset_id: ygdata.Id = ygdata.Id(NS_stratoweave_device, 'modset_id')
+_ID_stratoweave_device__name: ygdata.Id = ygdata.Id(NS_stratoweave_device, 'name')
 
 
 _breaker1: None = None
@@ -159,7 +164,7 @@ class stratoweave_device__devices__device_entry(yadata.MNode):
 
     @staticmethod
     mut def from_gdata(n: ygdata.Node) -> stratoweave_device__devices__device_entry:
-        return stratoweave_device__devices__device_entry(name=n.get_str(ygdata.Id(NS_stratoweave_device, 'name')), modset_id=n.get_opt_str(ygdata.Id(NS_stratoweave_device, 'modset_id')))
+        return stratoweave_device__devices__device_entry(name=n.get_str(_ID_stratoweave_device__name), modset_id=n.get_opt_str(_ID_stratoweave_device__modset_id))
 
     mut def copy(self) -> stratoweave_device__devices__device_entry:
         """Create a deep copy of this adata object"""
@@ -211,7 +216,7 @@ class stratoweave_device__devices(yadata.MNode):
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> stratoweave_device__devices:
         if n is not None:
-            return stratoweave_device__devices(device=stratoweave_device__devices__device.from_gdata(n.get_opt_list(ygdata.Id(NS_stratoweave_device, 'device'))))
+            return stratoweave_device__devices(device=stratoweave_device__devices__device.from_gdata(n.get_opt_list(_ID_stratoweave_device__device)))
         return stratoweave_device__devices()
 
     mut def copy(self) -> stratoweave_device__devices:
@@ -232,7 +237,7 @@ class root(yadata.MNode):
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> root:
         if n is not None:
-            return root(devices=stratoweave_device__devices.from_gdata(n.get_opt_cnt(ygdata.Id(NS_stratoweave_device, 'devices'))))
+            return root(devices=stratoweave_device__devices.from_gdata(n.get_opt_cnt(_ID_stratoweave_device__devices)))
         return root()
 
     mut def copy(self) -> root:

@@ -106,7 +106,7 @@ actor main(env):
     "/pfi-im-cmd-oper:interfaces/interface-xr/interface",
     "/pfi-im-cmd-oper:interfaces/interface-xr/interface/interface-name",
     "/pfi-im-cmd-oper:interfaces/interface-xr/interface/state",
-]
+    ]
 
     # Keep only the cRPD configuration nodes that dorsi's RFS transforms
     # actively write to. dorsi owns everything under these nodes, so none of
@@ -161,7 +161,7 @@ actor main(env):
     "/jc:configuration/routing-instances/instance/bridge-domains/domain/vlan-id",
     "/jc:configuration/routing-instances/instance/bridge-domains/domain/interface/name",
     "/jc:configuration/routing-instances/instance/bridge-domains/domain/vxlan/vni",
-]
+    ]
 
     # Keep only the SRL configuration nodes that dorsi's RFS transforms
     # actively write to.
@@ -281,7 +281,12 @@ actor main(env):
     "/srl_nokia-system:system/network-instance/protocols/evpn/ethernet-segments/bgp-instance/ethernet-segment/esi",
     "/srl_nokia-system:system/network-instance/protocols/evpn/ethernet-segments/bgp-instance/ethernet-segment/multi-homing-mode",
     "/srl_nokia-system:system/network-instance/protocols/evpn/ethernet-segments/bgp-instance/ethernet-segment/interface/ethernet-interface",
-]
+    # Read by StratoWeave's SR Linux platform probe
+    "/srl_nokia-system:system/information/version",
+    "/srl_nokia-system:system/information/last-booted",
+    "/srl_nokia-platform:platform/chassis/type",
+    "/srl_nokia-platform:platform/chassis/serial-number",
+    ]
 
     # Keep only the EOS OpenConfig nodes that dorsi's RFS transforms actively
     # write to or poll. EOS has no use-multiple-paths/config, so ECMP is set
@@ -440,7 +445,7 @@ actor main(env):
     "/oc-lacp:lacp/interfaces/interface/config/interval",
     "/oc-lacp:lacp/interfaces/interface/config/lacp-mode",
     "/oc-lacp:lacp/interfaces/interface/config/system-id-mac",
-]
+    ]
 
     # The paths referenced by these leafrefs are invalid - missing module
     # imports. We explicitly allow resolving the target leaf type to fallback to
@@ -459,44 +464,46 @@ actor main(env):
         "/network-instance/protocols/bgp/neighbor/send-default-route/export-policy",
     ]
 
-    try:
-        cfs_layer = stratoweave.build.Layer.from_dir(fc, "yang/cfs")
-        cfs_layer.models.extend([
-            swyang.stratoweave,
-            swyang.ietf_inet_types,
-            tmf_yang.ietf_yang_tmf_map,
-            tmf_yang.swtmf.replace("TMF640_STORE_TRANSFORM", "dorsi.tmf.Tmf640Store"),
-            tmf_yang.swtmf640
-        ])
-        rfs_layer = stratoweave.build.Layer.from_dir(fc, "yang/rfs")
-        rfs_layer.models.extend([swyang.stratoweave, swyang.rfs, swyang.ssh, swyang.ietf_inet_types, swyang.ietf_yang_types])
+    proc def __startup__():
+        try:
+            cfs_layer = stratoweave.build.Layer.from_dir(fc, "yang/cfs")
+            cfs_layer.models.extend([
+                swyang.stratoweave,
+                swyang.ietf_inet_types,
+                swyang.ietf_yang_types,
+                tmf_yang.ietf_yang_tmf_map,
+                tmf_yang.swtmf.replace("TMF640_STORE_TRANSFORM", "dorsi.tmf.Tmf640Store"),
+                tmf_yang.swtmf640
+            ])
+            rfs_layer = stratoweave.build.Layer.from_dir(fc, "yang/rfs")
+            rfs_layer.models.extend([swyang.stratoweave, swyang.rfs, swyang.ssh, swyang.ietf_inet_types, swyang.ietf_yang_types])
 
-        spec = stratoweave.build.SysSpec("dorsi", [
-            cfs_layer,
-            rfs_layer,
-        ], [
-            stratoweave.build.DeviceType.from_dir(fc, "AristaEOS_4_36_3_2M", "yang/AristaEOS_4_36_3_2M",
-                transforms=[
-                    swds.filter_schema(eos_paths),
-                ]),
-            stratoweave.build.DeviceType.from_dir(fc, "CiscoIosXr_25_3_1", "yang/CiscoIosXr_25_3_1",
-                transforms=[
-                    swds.filter_schema(xr_paths),
-                ]),
-            stratoweave.build.DeviceType.from_dir(fc, "JuniperCRPD_24_4R1_9", "yang/JuniperCRPD_24_4R1_9",
-                transforms=[
-                    swds.filter_schema(crpd_paths),
-                    swds.remove_list_user_order(crpd_order_paths),
-                ]),
-            stratoweave.build.DeviceType.from_dir(fc, "NokiaSRLinux_25_3_2", "yang/NokiaSRLinux_25_3_2",
-                transforms=[
-                    swds.filter_schema(srl_paths),
-                ]),
-        ])
-        compiled_spec = spec.compile(broken_leafrefs)
-        compiled_spec.gen_app(fc, "../src/")
-    except Exception as exc:
-        print(exc, err=True)
-        env.exit(1)
-    else:
-        env.exit(0)
+            spec = stratoweave.build.SysSpec("dorsi", [
+                cfs_layer,
+                rfs_layer,
+            ], [
+                stratoweave.build.DeviceType.from_dir(fc, "AristaEOS_4_36_3_2M", "yang/AristaEOS_4_36_3_2M",
+                    transforms=[
+                        swds.filter_schema(eos_paths),
+                    ]),
+                stratoweave.build.DeviceType.from_dir(fc, "CiscoIosXr_25_3_1", "yang/CiscoIosXr_25_3_1",
+                    transforms=[
+                        swds.filter_schema(xr_paths),
+                    ]),
+                stratoweave.build.DeviceType.from_dir(fc, "JuniperCRPD_24_4R1_9", "yang/JuniperCRPD_24_4R1_9",
+                    transforms=[
+                        swds.filter_schema(crpd_paths),
+                        swds.remove_list_user_order(crpd_order_paths),
+                    ]),
+                stratoweave.build.DeviceType.from_dir(fc, "NokiaSRLinux_25_3_2", "yang/NokiaSRLinux_25_3_2",
+                    transforms=[
+                        swds.filter_schema(srl_paths),
+                    ]),
+            ])
+            compiled_spec = spec.compile(broken_leafrefs)
+            compiled_spec.gen_app(fc, "../src/")
+        except Exception as exc:
+            print(exc, err=True)
+            env.exit(1)
+        else:
+            env.exit(0)
