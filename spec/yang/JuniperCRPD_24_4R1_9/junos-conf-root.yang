@@ -52908,6 +52908,13 @@
      leaf service-type {
        description "Sevice type";
        type enumeration {
+         // Added for dorsi: cRPD refuses a mac-vrf instance without a service
+         // type ("service-type must be configured for mac-vrf instance") and
+         // takes vlan-based, which this YANG of cRPD 24.4R1.9 lacks. The
+         // YANG compiler of dorsi does not apply deviations.
+         enum "vlan-based" {
+           description "Instance service type vlan-based";
+         }
          enum "vlan-bundle" {
            description "Instance service type vlan-bundle";
          }

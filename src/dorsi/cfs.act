@@ -134,6 +134,9 @@ def irb_index(evi: int) -> int:
 # Device types that bridge in VLANs and name LAGs Port-Channel<n>, apart from
 # SR Linux
 _EOS = "AristaEOS_4_36_3_2M"
+_CRPD = "JuniperCRPD_24_4R1_9"
+# Device types that take the EVPN-VXLAN overlay
+_OVERLAY_TYPES = {"NokiaSRLinux_25_3_2", _EOS, _CRPD}
 
 
 def server_lag_name(ports: list[str], switch_type: str) -> str:
@@ -404,11 +407,11 @@ def validate_overlay(f: y_0.ip_fabric__ip_fabric__fabric_entry, switches: dict[s
     if len(f.tenant) == 0:
         return errors
 
-    # The overlay is built on SR Linux and Arista EOS: every switch carries
-    # EVPN routes, the spines too
+    # The overlay is built on SR Linux, Arista EOS and Juniper cRPD: every
+    # switch carries EVPN routes, the spines too
     for sw in f.switch:
-        if sw.type != "NokiaSRLinux_25_3_2" and sw.type != _EOS:
-            errors.append("switch {sw.name}: the EVPN overlay is supported on NokiaSRLinux_25_3_2 and {_EOS} only, not {sw.type}")
+        if sw.type not in _OVERLAY_TYPES:
+            errors.append("switch {sw.name}: the EVPN overlay is supported on NokiaSRLinux_25_3_2, {_EOS} and {_CRPD} only, not {sw.type}")
 
     # Identifiers derived or set must be unique in the fabric, those of VRFs
     # and networks together: they share the VNIs, EVIs and the names of
@@ -463,6 +466,8 @@ def validate_overlay(f: y_0.ip_fabric__ip_fabric__fabric_entry, switches: dict[s
                         # EOS creates a VLAN interface of its own for the layer
                         # 3 VNI of a VRF, which dorsi would try to remove
                         errors.append("{what}: a routed network cannot be placed on {leaf} ({_EOS}) yet")
+                    if sw is not None and sw.type == _CRPD:
+                        errors.append("{what}: a routed network cannot be placed on {leaf} ({_CRPD}) yet")
                 irb = irb_index(overlay_evi(vni))
                 if irb in irbs:
                     errors.append("{what}: its IRB subinterface irb0.{irb}, derived from VNI {vni}, is also that of {irbs[irb]}, set another vni on one of them")
@@ -550,6 +555,14 @@ def validate_overlay(f: y_0.ip_fabric__ip_fabric__fabric_entry, switches: dict[s
                         tag = att.vlan
                         if tag is not None and int(tag) in internal_vlans:
                             errors.append("{what}: its VLAN {tag} on {leaf} is the internal VLAN of {internal_vlans[int(tag)]}, the switch would bridge it there")
+                if sw is not None and sw.type == _CRPD:
+                    # cRPD bridges a server port as a VLAN subinterface; an
+                    # untagged port and a LAG did not come up in the lab
+                    if server_uses_lag(server, leaf_ports[leaf]):
+                        errors.append("{what}: a server on a LAG cannot be attached on {leaf} ({_CRPD}) yet")
+                    for att in server.attachment:
+                        if att.vlan is None:
+                            errors.append("{what}: an untagged attachment cannot be placed on {leaf} ({_CRPD}) yet, set a vlan")
         if len(server.attachment) > 0 and server.connectivity.profile == "dual-homed":
             es = server_es_name(server.name)
             if not _is_srl_name(es, 32):
@@ -585,6 +598,7 @@ class Fabric(base.Fabric):
         o = base.o_root()
 
         switches = {}
+        base_configs = {}
         for sw in i.switch:
             switches[sw.name] = sw
             dev = o.device.create(sw.name, type=sw.type)
@@ -608,6 +622,7 @@ class Fabric(base.Fabric):
             base_config.management_address = sw.management_address
             base_config.management_gateway = sw.management_gateway
             base_config.evpn = len(i.tenant) > 0
+            base_configs[sw.name] = base_config
 
         for link in i.fabric_link:
             print("CFS fabric-link %s [%s] <-> %s [%s]" % (link.lower_switch, link.lower_port, link.upper_switch, link.upper_port))
@@ -628,6 +643,12 @@ class Fabric(base.Fabric):
             ui.remote.interface = link.lower_port
             ui.bgp.peer_address = lower_addr
             ui.bgp.peer_asn = u64(lower_asn)
+
+            # A Juniper cRPD leaf sends its EVPN routes from its loopback to
+            # the loopback of each of its spines (see overlay-peer)
+            if len(i.tenant) > 0 and lower.role == "leaf" and lower.type == _CRPD:
+                base_configs[link.lower_switch].overlay_peer.create(fabric_loopback(int(upper.id)), u64(upper_asn), link.upper_switch)
+                base_configs[link.upper_switch].overlay_peer.create(fabric_loopback(int(lower.id)), u64(lower_asn), link.lower_switch)
 
         # The port or LAG of every server on each of its leaves, by server and
         # leaf, for the networks it is attached to

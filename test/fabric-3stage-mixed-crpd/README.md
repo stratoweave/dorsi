@@ -1,7 +1,7 @@
 # Fabric 3-stage, three vendors
 
 The [fabric-3stage](../fabric-3stage/README.md) lab with switches of all three
-vendors dorsi supports, the underlay only: three leaves, each connected to both
+vendors dorsi supports: three leaves, each connected to both
 of the two spines. Its links join Juniper cRPD to SR Linux, to Arista cEOS and
 to another cRPD, in both directions where a vendor is on both layers.
 
@@ -59,6 +59,55 @@ removed over RESTCONF leaves the configuration of both ends and the state of
 the fabric, and comes up again when added back. The PATCH that adds it back
 gets no answer within 120 s, as with EOS in the other labs, though its change
 is applied.
+
+## Overlay
+
+`ip-fabric-overlay.xml` is the same fabric with an EVPN-VXLAN overlay across
+the vendors, layer 2 only. Network `t1/web` joins a server on each leaf, all
+tagged with VLAN 30:
+
+| Server | Leaf side | Address |
+|---|---|---|
+| server1 | `ethernet-1/1` on leaf1 (SR Linux) | 10.10.10.11/24 |
+| server2 | `Ethernet1` on leaf2 (EOS) | 10.10.10.12/24 |
+| server3 | `eth1` on leaf3 (cRPD) | 10.10.10.13/24 |
+
+Run dorsi with `ip-fabric-overlay.xml` instead of `ip-fabric.xml` (`make copy
+CONFIG=ip-fabric-overlay.xml`), then `make check-overlay` pings between the
+servers, also with full 1500 byte frames, and fails on any lost or duplicated
+reply. It has passed, with the expired cRPD license of the `licenses`
+repository: cRPD only logs `RPD_CONTAINER_LICENSE_ERROR`.
+
+On cRPD the network is a `mac-vrf` routing instance of service type
+`vlan-based` with one bridge domain, which cRPD makes a Linux bridge with a
+VXLAN device of the VNI. The server port is a unit of the VLAN tag with
+`encapsulation vlan-bridge`, which cRPD makes the Linux subinterface `eth1.30`
+in the bridge; without that encapsulation rpd counts the port as not there
+and advertises no EVPN route. The YANG of cRPD lacks `vlan-based`, which cRPD
+requires; `spec/yang/JuniperCRPD_24_4R1_9/junos-conf-root.yang` has it added.
+An untagged server port and a server LAG did not come up on cRPD, so the
+validation refuses them, as it does a routed network.
+
+cRPD advertises the EVPN routes of its own networks with the local address of
+the session as next hop, whatever the export policy sets. Over the sessions of
+the links that address is that of the link, not the VTEP, so a cRPD leaf sends
+its EVPN routes over eBGP sessions between loopbacks instead (group `overlay`,
+multihop), to each of its spines, which have the matching sessions in their
+own `overlay` group. A cRPD spine passes the EVPN routes on over the sessions
+of the links with their next hop: they are multihop with `no-nexthop-change`,
+and the loopback routes go out with `next-hop self`.
+
+rpd starts with a VXLAN device `irb` of its own on UDP port 4789 that collects
+every VNI, and the device of the VNI of a network then cannot come up
+(`EADDRINUSE`). No Junos statement removes it, so the lab takes it down on
+leaf3 when the container starts (the `exec` of leaf3 in the topology); it stays
+down. A cRPD leaf outside this lab needs the same.
+
+DORSI reports the network up on all three leaves, with its EVPN instance up.
+On cRPD it polls the EVPN instance and the VXLAN device of the VNI with Junos
+RPCs: the network reads down while no server port of it is up (leaf3 `eth1`
+set down), and its EVPN instance down while the VXLAN device is down (`irb`
+brought back up before the network is created); both come back.
 
 ## Running it
 

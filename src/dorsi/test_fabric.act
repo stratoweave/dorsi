@@ -239,6 +239,19 @@ def three_stage_mixed_crpd():
     add_server(f, "server3", "single-homed", [("leaf3", "eth1", "eth1")])
     return root
 
+# The EVPN-VXLAN overlay of the fabric-3stage-mixed-crpd lab: network t1/web
+# joins a server on each leaf, all tagged with VLAN 30, across SR Linux (leaf1),
+# Arista EOS (leaf2) and Juniper cRPD (leaf3). leaf3 sends its EVPN routes from
+# its loopback to those of both spines, cRPD (spine1) and EOS (spine2).
+def three_stage_mixed_crpd_overlay():
+    root = three_stage_mixed_crpd()
+    f = root.ip_fabric.fabric.get("dc1")!
+    f.tenant.create("t1").network.create("web")
+    f.server.get("server1")!.attachment.create(("t1", "web"), vlan=30, ipv4_address="10.10.10.11/24")
+    f.server.get("server2")!.attachment.create(("t1", "web"), vlan=30, ipv4_address="10.10.10.12/24")
+    f.server.get("server3")!.attachment.create(("t1", "web"), vlan=30, ipv4_address="10.10.10.13/24")
+    return root
+
 # TransformTester takes its snapshot as soon as the CFS commit completes, which
 # can be before the device configuration exists. Wait for it to settle: until
 # the snapshot has not changed for two seconds. On a busy machine a device can
@@ -324,3 +337,7 @@ actor _test_fabric_three_stage_crpd(t: testing.AsyncT):
 actor _test_fabric_three_stage_mixed_crpd(t: testing.AsyncT):
     t.timeout(30.0)
     FabricTester(t, three_stage_mixed_crpd().to_gdata())
+
+actor _test_fabric_three_stage_mixed_crpd_overlay(t: testing.AsyncT):
+    t.timeout(30.0)
+    FabricTester(t, three_stage_mixed_crpd_overlay().to_gdata())
