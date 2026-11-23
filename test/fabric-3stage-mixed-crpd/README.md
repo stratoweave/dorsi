@@ -103,7 +103,11 @@ every VNI, and the device of the VNI of a network then cannot come up
 leaf3 when the container starts (the `exec` of leaf3 in the topology); it stays
 down. A cRPD leaf outside this lab needs the same.
 
-DORSI reports no state of the network on cRPD yet.
+DORSI reports the network up on all three leaves, with its EVPN instance up.
+On cRPD it polls the EVPN instance and the VXLAN device of the VNI with Junos
+RPCs: the network reads down while no server port of it is up (leaf3 `eth1`
+set down), and its EVPN instance down while the VXLAN device is down (`irb`
+brought back up before the network is created); both come back.
 
 ## Running it
 
