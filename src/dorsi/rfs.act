@@ -757,11 +757,17 @@ actor _CrpdPortPoll(path, dev: swdev.DeviceMgr, on_state: proc(?str, ?str, ?str,
                 dev.rpc_xml(on_bgp, _crpd_rpc("get-bgp-neighbor-information", "neighbor-address", peer_address))
         after _POLL_PERIOD: _poll()
 
-    _poll()
+    proc def __startup__():
+        _poll()
 
 
-actor FabricInterfaceTransform(path, update_oper: proc(?y_1_oper.stratoweave_rfs__rfs__fabric_interface_entry)->None, dev: swdev.DeviceMgr):
-    _subs = gdata.SubscriptionManager(dev.tree_provider(), str(path))
+proc def FabricInterfaceTransform(path, update_oper: proc(?y_1_oper.stratoweave_rfs__rfs__fabric_interface_entry)->None, dev: swdev.DeviceMgr):
+    provider = await async dev.tree_provider()
+    return FabricInterfaceTransformActor(path, update_oper, dev, provider)
+
+
+actor FabricInterfaceTransformActor(path, update_oper: proc(?y_1_oper.stratoweave_rfs__rfs__fabric_interface_entry)->None, dev: swdev.DeviceMgr, provider: gdata.TreeProvider):
+    _subs = gdata.SubscriptionManager(provider, str(path))
     _oper = base.FabricInterface.new_state(path)
     var _last_delivery: ?int = None
     var _stale = False
@@ -908,7 +914,8 @@ actor FabricInterfaceTransform(path, update_oper: proc(?y_1_oper.stratoweave_rfs
         if poll is not None:
             poll.stop()
 
-    after _POLL_PERIOD: _watchdog()
+    proc def __startup__():
+        after _POLL_PERIOD: _watchdog()
 
 
 # How long a port of a server LAG is held down after it comes up. When a port
@@ -1252,8 +1259,13 @@ class ServerLag(base.ServerLag):
         raise UnsupportedDevice()
 
 
-actor ServerPortTransform(path, update_oper: proc(?y_1_oper.stratoweave_rfs__rfs__server_port_entry)->None, dev: swdev.DeviceMgr):
-    _subs = gdata.SubscriptionManager(dev.tree_provider(), str(path))
+proc def ServerPortTransform(path, update_oper: proc(?y_1_oper.stratoweave_rfs__rfs__server_port_entry)->None, dev: swdev.DeviceMgr):
+    provider = await async dev.tree_provider()
+    return ServerPortTransformActor(path, update_oper, dev, provider)
+
+
+actor ServerPortTransformActor(path, update_oper: proc(?y_1_oper.stratoweave_rfs__rfs__server_port_entry)->None, dev: swdev.DeviceMgr, provider: gdata.TreeProvider):
+    _subs = gdata.SubscriptionManager(provider, str(path))
     _oper = base.ServerPort.new_state(path)
     var _last_delivery: ?int = None
     var _stale = False
@@ -1336,7 +1348,8 @@ actor ServerPortTransform(path, update_oper: proc(?y_1_oper.stratoweave_rfs__rfs
         if poll is not None:
             poll.stop()
 
-    after _POLL_PERIOD: _watchdog()
+    proc def __startup__():
+        after _POLL_PERIOD: _watchdog()
 
 
 # --- Overlay state --------------------------------------------------------------
@@ -1356,12 +1369,12 @@ def _srl_status(raw: ?str) -> ?str:
     return None
 
 
-actor _OverlayPoll(path, dev: swdev.DeviceMgr, on_srl: proc(?srl25_oper_root)->None, on_eos: proc(?eos436_oper_root, ?Exception)->None):
+actor _OverlayPoll(path, dev: swdev.DeviceMgr, provider: gdata.TreeProvider, on_srl: proc(?srl25_oper_root)->None, on_eos: proc(?eos436_oper_root, ?Exception)->None):
     """Polls subscriptions from an SR Linux or Arista EOS device and hands
     each delivery to on_srl or on_eos, and None once the device stops
     answering, like FabricInterfaceTransform. An EOS error goes to on_eos,
     which tells a node EOS does not have yet from a failure."""
-    _subs = gdata.SubscriptionManager(dev.tree_provider(), str(path))
+    _subs = gdata.SubscriptionManager(provider, str(path))
     var _last_delivery: ?int = None
     var _stale = False
     var _running = True
@@ -1407,7 +1420,8 @@ actor _OverlayPoll(path, dev: swdev.DeviceMgr, on_srl: proc(?srl25_oper_root)->N
     def shutdown():
         _running = False
 
-    after _POLL_PERIOD: _watchdog()
+    proc def __startup__():
+        after _POLL_PERIOD: _watchdog()
 
 
 def _srl_network_instance_subscriptions(name: str) -> set[gdata.SubscriptionSpec]:
@@ -1536,10 +1550,16 @@ actor _CrpdMacVrfPoll(path, dev: swdev.DeviceMgr, on_state: proc(?str, ?str)->No
             on_state(None, None)
         after _POLL_PERIOD: _poll()
 
-    _poll()
+    proc def __startup__():
+        _poll()
 
 
-actor MacVrfTransform(path, update_oper: proc(?y_1_oper.stratoweave_rfs__rfs__mac_vrf_entry)->None, dev: swdev.DeviceMgr):
+proc def MacVrfTransform(path, update_oper: proc(?y_1_oper.stratoweave_rfs__rfs__mac_vrf_entry)->None, dev: swdev.DeviceMgr):
+    provider = await async dev.tree_provider()
+    return MacVrfTransformActor(path, update_oper, dev, provider)
+
+
+actor MacVrfTransformActor(path, update_oper: proc(?y_1_oper.stratoweave_rfs__rfs__mac_vrf_entry)->None, dev: swdev.DeviceMgr, provider: gdata.TreeProvider):
     _oper = base.MacVrf.new_state(path)
     var _running = True
     var _crpd_poll: ?_CrpdMacVrfPoll = None
@@ -1563,7 +1583,7 @@ actor MacVrfTransform(path, update_oper: proc(?y_1_oper.stratoweave_rfs__rfs__ma
         oper_status, evpn_status = _eos_network_status(root)
         publish(oper_status, evpn_status)
 
-    _poll = _OverlayPoll(path, dev, on_srl, on_eos)
+    _poll = _OverlayPoll(path, dev, provider, on_srl, on_eos)
 
     def on_conf(conf: y_1.stratoweave_rfs__rfs__mac_vrf_entry):
         vlan = conf.vlan
@@ -1586,7 +1606,12 @@ actor MacVrfTransform(path, update_oper: proc(?y_1_oper.stratoweave_rfs__rfs__ma
             poll.stop()
 
 
-actor IpVrfTransform(path, update_oper: proc(?y_1_oper.stratoweave_rfs__rfs__ip_vrf_entry)->None, dev: swdev.DeviceMgr):
+proc def IpVrfTransform(path, update_oper: proc(?y_1_oper.stratoweave_rfs__rfs__ip_vrf_entry)->None, dev: swdev.DeviceMgr):
+    provider = await async dev.tree_provider()
+    return IpVrfTransformActor(path, update_oper, dev, provider)
+
+
+actor IpVrfTransformActor(path, update_oper: proc(?y_1_oper.stratoweave_rfs__rfs__ip_vrf_entry)->None, dev: swdev.DeviceMgr, provider: gdata.TreeProvider):
     _oper = base.IpVrf.new_state(path)
 
     def on_srl(root: ?srl25_oper_root):
@@ -1599,7 +1624,7 @@ actor IpVrfTransform(path, update_oper: proc(?y_1_oper.stratoweave_rfs__rfs__ip_
         # The CFS places no VRF on EOS yet, so nothing is polled
         pass
 
-    _poll = _OverlayPoll(path, dev, on_srl, on_eos)
+    _poll = _OverlayPoll(path, dev, provider, on_srl, on_eos)
 
     def on_conf(conf: y_1.stratoweave_rfs__rfs__ip_vrf_entry):
         _poll.declare(_srl_network_instance_subscriptions(conf.name), set())
@@ -1608,7 +1633,12 @@ actor IpVrfTransform(path, update_oper: proc(?y_1_oper.stratoweave_rfs__rfs__ip_
         _poll.shutdown()
 
 
-actor ServerLagTransform(path, update_oper: proc(?y_1_oper.stratoweave_rfs__rfs__server_lag_entry)->None, dev: swdev.DeviceMgr):
+proc def ServerLagTransform(path, update_oper: proc(?y_1_oper.stratoweave_rfs__rfs__server_lag_entry)->None, dev: swdev.DeviceMgr):
+    provider = await async dev.tree_provider()
+    return ServerLagTransformActor(path, update_oper, dev, provider)
+
+
+actor ServerLagTransformActor(path, update_oper: proc(?y_1_oper.stratoweave_rfs__rfs__server_lag_entry)->None, dev: swdev.DeviceMgr, provider: gdata.TreeProvider):
     _oper = base.ServerLag.new_state(path)
 
     def publish(oper_status: ?str, es_status: ?str):
@@ -1638,7 +1668,7 @@ actor ServerLagTransform(path, update_oper: proc(?y_1_oper.stratoweave_rfs__rfs_
             print("ServerLagTransform {path}: subscription error: {err}", err=True)
         publish(_eos_oper_status(root) if root is not None else None, None)
 
-    _poll = _OverlayPoll(path, dev, on_srl, on_eos)
+    _poll = _OverlayPoll(path, dev, provider, on_srl, on_eos)
 
     def on_conf(conf: y_1.stratoweave_rfs__rfs__server_lag_entry):
         srl_subs = {srl25_oper.subs.interface.entry(conf.name).oper_state.subscribe(period=_POLL_PERIOD)}

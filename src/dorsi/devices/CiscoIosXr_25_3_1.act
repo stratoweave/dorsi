@@ -1,5 +1,5 @@
-import base64
-import json
+import std.base64
+import std.json
 import std.xml as xml
 import yang.adata as yadata
 import yang.gdata as ygdata
@@ -18,7 +18,7 @@ import dorsi.devices.CiscoIosXr_25_3_1_schema
 
 SRC_DNODE: DRoot = dorsi.devices.CiscoIosXr_25_3_1_schema.SRC_DNODE
 
-pure def src_yang() -> list[str]:
+pure def src_yang() -> list[YangSource]:
     return dorsi.devices.CiscoIosXr_25_3_1_schema.src_yang()
 
 
@@ -250,6 +250,79 @@ NS_tailf_common: str = 'http://tail-f.com/yang/common'
 NS_ietf_inet_types: str = 'urn:ietf:params:xml:ns:yang:ietf-inet-types'
 NS_ietf_yang_types: str = 'urn:ietf:params:xml:ns:yang:ietf-yang-types'
 
+_ID_Cisco_IOS_XR_um_hostname_cfg__hostname: ygdata.Id = ygdata.Id(NS_Cisco_IOS_XR_um_hostname_cfg, 'hostname')
+_ID_Cisco_IOS_XR_um_hostname_cfg__system_network_name: ygdata.Id = ygdata.Id(NS_Cisco_IOS_XR_um_hostname_cfg, 'system-network-name')
+_ID_Cisco_IOS_XR_um_if_ip_address_cfg__address: ygdata.Id = ygdata.Id(NS_Cisco_IOS_XR_um_if_ip_address_cfg, 'address')
+_ID_Cisco_IOS_XR_um_if_ip_address_cfg__addresses: ygdata.Id = ygdata.Id(NS_Cisco_IOS_XR_um_if_ip_address_cfg, 'addresses')
+_ID_Cisco_IOS_XR_um_if_ip_address_cfg__netmask: ygdata.Id = ygdata.Id(NS_Cisco_IOS_XR_um_if_ip_address_cfg, 'netmask')
+_ID_Cisco_IOS_XR_um_interface_cfg__description: ygdata.Id = ygdata.Id(NS_Cisco_IOS_XR_um_interface_cfg, 'description')
+_ID_Cisco_IOS_XR_um_interface_cfg__interface: ygdata.Id = ygdata.Id(NS_Cisco_IOS_XR_um_interface_cfg, 'interface')
+_ID_Cisco_IOS_XR_um_interface_cfg__interface_name: ygdata.Id = ygdata.Id(NS_Cisco_IOS_XR_um_interface_cfg, 'interface-name')
+_ID_Cisco_IOS_XR_um_interface_cfg__interfaces: ygdata.Id = ygdata.Id(NS_Cisco_IOS_XR_um_interface_cfg, 'interfaces')
+_ID_Cisco_IOS_XR_um_interface_cfg__ipv4: ygdata.Id = ygdata.Id(NS_Cisco_IOS_XR_um_interface_cfg, 'ipv4')
+_ID_Cisco_IOS_XR_um_interface_cfg__shutdown: ygdata.Id = ygdata.Id(NS_Cisco_IOS_XR_um_interface_cfg, 'shutdown')
+_ID_Cisco_IOS_XR_um_l2_ethernet_cfg__dot1q: ygdata.Id = ygdata.Id(NS_Cisco_IOS_XR_um_l2_ethernet_cfg, 'dot1q')
+_ID_Cisco_IOS_XR_um_l2_ethernet_cfg__encapsulation: ygdata.Id = ygdata.Id(NS_Cisco_IOS_XR_um_l2_ethernet_cfg, 'encapsulation')
+_ID_Cisco_IOS_XR_um_l2_ethernet_cfg__vlan_id: ygdata.Id = ygdata.Id(NS_Cisco_IOS_XR_um_l2_ethernet_cfg, 'vlan-id')
+_ID_Cisco_IOS_XR_um_mpls_ldp_cfg__address_families: ygdata.Id = ygdata.Id(NS_Cisco_IOS_XR_um_mpls_ldp_cfg, 'address-families')
+_ID_Cisco_IOS_XR_um_mpls_ldp_cfg__address_family: ygdata.Id = ygdata.Id(NS_Cisco_IOS_XR_um_mpls_ldp_cfg, 'address-family')
+_ID_Cisco_IOS_XR_um_mpls_ldp_cfg__af_name: ygdata.Id = ygdata.Id(NS_Cisco_IOS_XR_um_mpls_ldp_cfg, 'af-name')
+_ID_Cisco_IOS_XR_um_mpls_ldp_cfg__interface: ygdata.Id = ygdata.Id(NS_Cisco_IOS_XR_um_mpls_ldp_cfg, 'interface')
+_ID_Cisco_IOS_XR_um_mpls_ldp_cfg__interface_name: ygdata.Id = ygdata.Id(NS_Cisco_IOS_XR_um_mpls_ldp_cfg, 'interface-name')
+_ID_Cisco_IOS_XR_um_mpls_ldp_cfg__interfaces: ygdata.Id = ygdata.Id(NS_Cisco_IOS_XR_um_mpls_ldp_cfg, 'interfaces')
+_ID_Cisco_IOS_XR_um_mpls_ldp_cfg__ldp: ygdata.Id = ygdata.Id(NS_Cisco_IOS_XR_um_mpls_ldp_cfg, 'ldp')
+_ID_Cisco_IOS_XR_um_mpls_ldp_cfg__mpls: ygdata.Id = ygdata.Id(NS_Cisco_IOS_XR_um_mpls_ldp_cfg, 'mpls')
+_ID_Cisco_IOS_XR_um_route_policy_cfg__route_policies: ygdata.Id = ygdata.Id(NS_Cisco_IOS_XR_um_route_policy_cfg, 'route-policies')
+_ID_Cisco_IOS_XR_um_route_policy_cfg__route_policy: ygdata.Id = ygdata.Id(NS_Cisco_IOS_XR_um_route_policy_cfg, 'route-policy')
+_ID_Cisco_IOS_XR_um_route_policy_cfg__route_policy_name: ygdata.Id = ygdata.Id(NS_Cisco_IOS_XR_um_route_policy_cfg, 'route-policy-name')
+_ID_Cisco_IOS_XR_um_route_policy_cfg__routing_policy: ygdata.Id = ygdata.Id(NS_Cisco_IOS_XR_um_route_policy_cfg, 'routing-policy')
+_ID_Cisco_IOS_XR_um_route_policy_cfg__rpl_route_policy: ygdata.Id = ygdata.Id(NS_Cisco_IOS_XR_um_route_policy_cfg, 'rpl-route-policy')
+_ID_Cisco_IOS_XR_um_router_bgp_cfg__address: ygdata.Id = ygdata.Id(NS_Cisco_IOS_XR_um_router_bgp_cfg, 'address')
+_ID_Cisco_IOS_XR_um_router_bgp_cfg__address_families: ygdata.Id = ygdata.Id(NS_Cisco_IOS_XR_um_router_bgp_cfg, 'address-families')
+_ID_Cisco_IOS_XR_um_router_bgp_cfg__address_family: ygdata.Id = ygdata.Id(NS_Cisco_IOS_XR_um_router_bgp_cfg, 'address-family')
+_ID_Cisco_IOS_XR_um_router_bgp_cfg__af_name: ygdata.Id = ygdata.Id(NS_Cisco_IOS_XR_um_router_bgp_cfg, 'af-name')
+_ID_Cisco_IOS_XR_um_router_bgp_cfg__as: ygdata.Id = ygdata.Id(NS_Cisco_IOS_XR_um_router_bgp_cfg, 'as')
+_ID_Cisco_IOS_XR_um_router_bgp_cfg__as_number: ygdata.Id = ygdata.Id(NS_Cisco_IOS_XR_um_router_bgp_cfg, 'as-number')
+_ID_Cisco_IOS_XR_um_router_bgp_cfg__bgp: ygdata.Id = ygdata.Id(NS_Cisco_IOS_XR_um_router_bgp_cfg, 'bgp')
+_ID_Cisco_IOS_XR_um_router_bgp_cfg__description: ygdata.Id = ygdata.Id(NS_Cisco_IOS_XR_um_router_bgp_cfg, 'description')
+_ID_Cisco_IOS_XR_um_router_bgp_cfg__encrypted: ygdata.Id = ygdata.Id(NS_Cisco_IOS_XR_um_router_bgp_cfg, 'encrypted')
+_ID_Cisco_IOS_XR_um_router_bgp_cfg__neighbor: ygdata.Id = ygdata.Id(NS_Cisco_IOS_XR_um_router_bgp_cfg, 'neighbor')
+_ID_Cisco_IOS_XR_um_router_bgp_cfg__neighbor_group: ygdata.Id = ygdata.Id(NS_Cisco_IOS_XR_um_router_bgp_cfg, 'neighbor-group')
+_ID_Cisco_IOS_XR_um_router_bgp_cfg__neighbor_group_name: ygdata.Id = ygdata.Id(NS_Cisco_IOS_XR_um_router_bgp_cfg, 'neighbor-group-name')
+_ID_Cisco_IOS_XR_um_router_bgp_cfg__neighbor_groups: ygdata.Id = ygdata.Id(NS_Cisco_IOS_XR_um_router_bgp_cfg, 'neighbor-groups')
+_ID_Cisco_IOS_XR_um_router_bgp_cfg__neighbors: ygdata.Id = ygdata.Id(NS_Cisco_IOS_XR_um_router_bgp_cfg, 'neighbors')
+_ID_Cisco_IOS_XR_um_router_bgp_cfg__password: ygdata.Id = ygdata.Id(NS_Cisco_IOS_XR_um_router_bgp_cfg, 'password')
+_ID_Cisco_IOS_XR_um_router_bgp_cfg__remote_as: ygdata.Id = ygdata.Id(NS_Cisco_IOS_XR_um_router_bgp_cfg, 'remote-as')
+_ID_Cisco_IOS_XR_um_router_bgp_cfg__router: ygdata.Id = ygdata.Id(NS_Cisco_IOS_XR_um_router_bgp_cfg, 'router')
+_ID_Cisco_IOS_XR_um_router_bgp_cfg__router_id: ygdata.Id = ygdata.Id(NS_Cisco_IOS_XR_um_router_bgp_cfg, 'router-id')
+_ID_Cisco_IOS_XR_um_router_bgp_cfg__update_source: ygdata.Id = ygdata.Id(NS_Cisco_IOS_XR_um_router_bgp_cfg, 'update-source')
+_ID_Cisco_IOS_XR_um_router_bgp_cfg__use: ygdata.Id = ygdata.Id(NS_Cisco_IOS_XR_um_router_bgp_cfg, 'use')
+_ID_Cisco_IOS_XR_um_router_isis_cfg__address_families: ygdata.Id = ygdata.Id(NS_Cisco_IOS_XR_um_router_isis_cfg, 'address-families')
+_ID_Cisco_IOS_XR_um_router_isis_cfg__address_family: ygdata.Id = ygdata.Id(NS_Cisco_IOS_XR_um_router_isis_cfg, 'address-family')
+_ID_Cisco_IOS_XR_um_router_isis_cfg__af_name: ygdata.Id = ygdata.Id(NS_Cisco_IOS_XR_um_router_isis_cfg, 'af-name')
+_ID_Cisco_IOS_XR_um_router_isis_cfg__circuit_type: ygdata.Id = ygdata.Id(NS_Cisco_IOS_XR_um_router_isis_cfg, 'circuit-type')
+_ID_Cisco_IOS_XR_um_router_isis_cfg__default_metric: ygdata.Id = ygdata.Id(NS_Cisco_IOS_XR_um_router_isis_cfg, 'default-metric')
+_ID_Cisco_IOS_XR_um_router_isis_cfg__interface: ygdata.Id = ygdata.Id(NS_Cisco_IOS_XR_um_router_isis_cfg, 'interface')
+_ID_Cisco_IOS_XR_um_router_isis_cfg__interface_name: ygdata.Id = ygdata.Id(NS_Cisco_IOS_XR_um_router_isis_cfg, 'interface-name')
+_ID_Cisco_IOS_XR_um_router_isis_cfg__interfaces: ygdata.Id = ygdata.Id(NS_Cisco_IOS_XR_um_router_isis_cfg, 'interfaces')
+_ID_Cisco_IOS_XR_um_router_isis_cfg__is_type: ygdata.Id = ygdata.Id(NS_Cisco_IOS_XR_um_router_isis_cfg, 'is-type')
+_ID_Cisco_IOS_XR_um_router_isis_cfg__isis: ygdata.Id = ygdata.Id(NS_Cisco_IOS_XR_um_router_isis_cfg, 'isis')
+_ID_Cisco_IOS_XR_um_router_isis_cfg__level_number: ygdata.Id = ygdata.Id(NS_Cisco_IOS_XR_um_router_isis_cfg, 'level-number')
+_ID_Cisco_IOS_XR_um_router_isis_cfg__metric_level: ygdata.Id = ygdata.Id(NS_Cisco_IOS_XR_um_router_isis_cfg, 'metric-level')
+_ID_Cisco_IOS_XR_um_router_isis_cfg__metric_levels: ygdata.Id = ygdata.Id(NS_Cisco_IOS_XR_um_router_isis_cfg, 'metric-levels')
+_ID_Cisco_IOS_XR_um_router_isis_cfg__metric_style: ygdata.Id = ygdata.Id(NS_Cisco_IOS_XR_um_router_isis_cfg, 'metric-style')
+_ID_Cisco_IOS_XR_um_router_isis_cfg__net: ygdata.Id = ygdata.Id(NS_Cisco_IOS_XR_um_router_isis_cfg, 'net')
+_ID_Cisco_IOS_XR_um_router_isis_cfg__net_id: ygdata.Id = ygdata.Id(NS_Cisco_IOS_XR_um_router_isis_cfg, 'net-id')
+_ID_Cisco_IOS_XR_um_router_isis_cfg__nets: ygdata.Id = ygdata.Id(NS_Cisco_IOS_XR_um_router_isis_cfg, 'nets')
+_ID_Cisco_IOS_XR_um_router_isis_cfg__point_to_point: ygdata.Id = ygdata.Id(NS_Cisco_IOS_XR_um_router_isis_cfg, 'point-to-point')
+_ID_Cisco_IOS_XR_um_router_isis_cfg__process: ygdata.Id = ygdata.Id(NS_Cisco_IOS_XR_um_router_isis_cfg, 'process')
+_ID_Cisco_IOS_XR_um_router_isis_cfg__process_id: ygdata.Id = ygdata.Id(NS_Cisco_IOS_XR_um_router_isis_cfg, 'process-id')
+_ID_Cisco_IOS_XR_um_router_isis_cfg__processes: ygdata.Id = ygdata.Id(NS_Cisco_IOS_XR_um_router_isis_cfg, 'processes')
+_ID_Cisco_IOS_XR_um_router_isis_cfg__router: ygdata.Id = ygdata.Id(NS_Cisco_IOS_XR_um_router_isis_cfg, 'router')
+_ID_Cisco_IOS_XR_um_router_isis_cfg__saf_name: ygdata.Id = ygdata.Id(NS_Cisco_IOS_XR_um_router_isis_cfg, 'saf-name')
+_ID_Cisco_IOS_XR_um_router_isis_cfg__state: ygdata.Id = ygdata.Id(NS_Cisco_IOS_XR_um_router_isis_cfg, 'state')
+_ID_Cisco_IOS_XR_um_router_isis_cfg__wide: ygdata.Id = ygdata.Id(NS_Cisco_IOS_XR_um_router_isis_cfg, 'wide')
+
 
 _breaker1: None = None
 class Cisco_IOS_XR_um_interface_cfg__interfaces__interface__ipv4__addresses__address(yadata.MNode):
@@ -266,7 +339,7 @@ class Cisco_IOS_XR_um_interface_cfg__interfaces__interface__ipv4__addresses__add
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> ?Cisco_IOS_XR_um_interface_cfg__interfaces__interface__ipv4__addresses__address:
         if n is not None:
-            return Cisco_IOS_XR_um_interface_cfg__interfaces__interface__ipv4__addresses__address(address=n.get_opt_str(ygdata.Id(NS_Cisco_IOS_XR_um_if_ip_address_cfg, 'address')), netmask=n.get_opt_str(ygdata.Id(NS_Cisco_IOS_XR_um_if_ip_address_cfg, 'netmask')))
+            return Cisco_IOS_XR_um_interface_cfg__interfaces__interface__ipv4__addresses__address(address=n.get_opt_str(_ID_Cisco_IOS_XR_um_if_ip_address_cfg__address), netmask=n.get_opt_str(_ID_Cisco_IOS_XR_um_if_ip_address_cfg__netmask))
         return None
 
     mut def copy(self) -> Cisco_IOS_XR_um_interface_cfg__interfaces__interface__ipv4__addresses__address:
@@ -302,7 +375,7 @@ class Cisco_IOS_XR_um_interface_cfg__interfaces__interface__ipv4__addresses(yada
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> Cisco_IOS_XR_um_interface_cfg__interfaces__interface__ipv4__addresses:
         if n is not None:
-            return Cisco_IOS_XR_um_interface_cfg__interfaces__interface__ipv4__addresses(address=Cisco_IOS_XR_um_interface_cfg__interfaces__interface__ipv4__addresses__address.from_gdata(n.get_opt_cnt(ygdata.Id(NS_Cisco_IOS_XR_um_if_ip_address_cfg, 'address'))))
+            return Cisco_IOS_XR_um_interface_cfg__interfaces__interface__ipv4__addresses(address=Cisco_IOS_XR_um_interface_cfg__interfaces__interface__ipv4__addresses__address.from_gdata(n.get_opt_cnt(_ID_Cisco_IOS_XR_um_if_ip_address_cfg__address)))
         return Cisco_IOS_XR_um_interface_cfg__interfaces__interface__ipv4__addresses()
 
     mut def copy(self) -> Cisco_IOS_XR_um_interface_cfg__interfaces__interface__ipv4__addresses:
@@ -323,7 +396,7 @@ class Cisco_IOS_XR_um_interface_cfg__interfaces__interface__ipv4(yadata.MNode):
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> Cisco_IOS_XR_um_interface_cfg__interfaces__interface__ipv4:
         if n is not None:
-            return Cisco_IOS_XR_um_interface_cfg__interfaces__interface__ipv4(addresses=Cisco_IOS_XR_um_interface_cfg__interfaces__interface__ipv4__addresses.from_gdata(n.get_opt_cnt(ygdata.Id(NS_Cisco_IOS_XR_um_if_ip_address_cfg, 'addresses'))))
+            return Cisco_IOS_XR_um_interface_cfg__interfaces__interface__ipv4(addresses=Cisco_IOS_XR_um_interface_cfg__interfaces__interface__ipv4__addresses.from_gdata(n.get_opt_cnt(_ID_Cisco_IOS_XR_um_if_ip_address_cfg__addresses)))
         return Cisco_IOS_XR_um_interface_cfg__interfaces__interface__ipv4()
 
     mut def copy(self) -> Cisco_IOS_XR_um_interface_cfg__interfaces__interface__ipv4:
@@ -367,7 +440,7 @@ class Cisco_IOS_XR_um_interface_cfg__interfaces__interface__encapsulation__dot1q
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> Cisco_IOS_XR_um_interface_cfg__interfaces__interface__encapsulation__dot1q:
         if n is not None:
-            return Cisco_IOS_XR_um_interface_cfg__interfaces__interface__encapsulation__dot1q(vlan_id=n.get_opt_u64(ygdata.Id(NS_Cisco_IOS_XR_um_l2_ethernet_cfg, 'vlan-id')))
+            return Cisco_IOS_XR_um_interface_cfg__interfaces__interface__encapsulation__dot1q(vlan_id=n.get_opt_u64(_ID_Cisco_IOS_XR_um_l2_ethernet_cfg__vlan_id))
         return Cisco_IOS_XR_um_interface_cfg__interfaces__interface__encapsulation__dot1q()
 
     mut def copy(self) -> Cisco_IOS_XR_um_interface_cfg__interfaces__interface__encapsulation__dot1q:
@@ -388,7 +461,7 @@ class Cisco_IOS_XR_um_interface_cfg__interfaces__interface__encapsulation(yadata
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> Cisco_IOS_XR_um_interface_cfg__interfaces__interface__encapsulation:
         if n is not None:
-            return Cisco_IOS_XR_um_interface_cfg__interfaces__interface__encapsulation(dot1q=Cisco_IOS_XR_um_interface_cfg__interfaces__interface__encapsulation__dot1q.from_gdata(n.get_opt_cnt(ygdata.Id(NS_Cisco_IOS_XR_um_l2_ethernet_cfg, 'dot1q'))))
+            return Cisco_IOS_XR_um_interface_cfg__interfaces__interface__encapsulation(dot1q=Cisco_IOS_XR_um_interface_cfg__interfaces__interface__encapsulation__dot1q.from_gdata(n.get_opt_cnt(_ID_Cisco_IOS_XR_um_l2_ethernet_cfg__dot1q)))
         return Cisco_IOS_XR_um_interface_cfg__interfaces__interface__encapsulation()
 
     mut def copy(self) -> Cisco_IOS_XR_um_interface_cfg__interfaces__interface__encapsulation:
@@ -424,7 +497,7 @@ class Cisco_IOS_XR_um_interface_cfg__interfaces__interface_entry(yadata.MNode):
 
     @staticmethod
     mut def from_gdata(n: ygdata.Node) -> Cisco_IOS_XR_um_interface_cfg__interfaces__interface_entry:
-        return Cisco_IOS_XR_um_interface_cfg__interfaces__interface_entry(interface_name=n.get_str(ygdata.Id(NS_Cisco_IOS_XR_um_interface_cfg, 'interface-name')), ipv4=Cisco_IOS_XR_um_interface_cfg__interfaces__interface__ipv4.from_gdata(n.get_opt_cnt(ygdata.Id(NS_Cisco_IOS_XR_um_interface_cfg, 'ipv4'))), shutdown=Cisco_IOS_XR_um_interface_cfg__interfaces__interface__shutdown.from_gdata(n.get_opt_cnt(ygdata.Id(NS_Cisco_IOS_XR_um_interface_cfg, 'shutdown'))), description=n.get_opt_str(ygdata.Id(NS_Cisco_IOS_XR_um_interface_cfg, 'description')), encapsulation=Cisco_IOS_XR_um_interface_cfg__interfaces__interface__encapsulation.from_gdata(n.get_opt_cnt(ygdata.Id(NS_Cisco_IOS_XR_um_l2_ethernet_cfg, 'encapsulation'))))
+        return Cisco_IOS_XR_um_interface_cfg__interfaces__interface_entry(interface_name=n.get_str(_ID_Cisco_IOS_XR_um_interface_cfg__interface_name), ipv4=Cisco_IOS_XR_um_interface_cfg__interfaces__interface__ipv4.from_gdata(n.get_opt_cnt(_ID_Cisco_IOS_XR_um_interface_cfg__ipv4)), shutdown=Cisco_IOS_XR_um_interface_cfg__interfaces__interface__shutdown.from_gdata(n.get_opt_cnt(_ID_Cisco_IOS_XR_um_interface_cfg__shutdown)), description=n.get_opt_str(_ID_Cisco_IOS_XR_um_interface_cfg__description), encapsulation=Cisco_IOS_XR_um_interface_cfg__interfaces__interface__encapsulation.from_gdata(n.get_opt_cnt(_ID_Cisco_IOS_XR_um_l2_ethernet_cfg__encapsulation)))
 
     mut def copy(self) -> Cisco_IOS_XR_um_interface_cfg__interfaces__interface_entry:
         """Create a deep copy of this adata object"""
@@ -476,7 +549,7 @@ class Cisco_IOS_XR_um_interface_cfg__interfaces(yadata.MNode):
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> Cisco_IOS_XR_um_interface_cfg__interfaces:
         if n is not None:
-            return Cisco_IOS_XR_um_interface_cfg__interfaces(interface=Cisco_IOS_XR_um_interface_cfg__interfaces__interface.from_gdata(n.get_opt_list(ygdata.Id(NS_Cisco_IOS_XR_um_interface_cfg, 'interface'))))
+            return Cisco_IOS_XR_um_interface_cfg__interfaces(interface=Cisco_IOS_XR_um_interface_cfg__interfaces__interface.from_gdata(n.get_opt_list(_ID_Cisco_IOS_XR_um_interface_cfg__interface)))
         return Cisco_IOS_XR_um_interface_cfg__interfaces()
 
     mut def copy(self) -> Cisco_IOS_XR_um_interface_cfg__interfaces:
@@ -496,7 +569,7 @@ class Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processe
 
     @staticmethod
     mut def from_gdata(n: ygdata.Node) -> Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__nets__net_entry:
-        return Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__nets__net_entry(net_id=n.get_str(ygdata.Id(NS_Cisco_IOS_XR_um_router_isis_cfg, 'net-id')))
+        return Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__nets__net_entry(net_id=n.get_str(_ID_Cisco_IOS_XR_um_router_isis_cfg__net_id))
 
     mut def copy(self) -> Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__nets__net_entry:
         """Create a deep copy of this adata object"""
@@ -546,7 +619,7 @@ class Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processe
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__nets:
         if n is not None:
-            return Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__nets(net=Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__nets__net.from_gdata(n.get_opt_list(ygdata.Id(NS_Cisco_IOS_XR_um_router_isis_cfg, 'net'))))
+            return Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__nets(net=Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__nets__net.from_gdata(n.get_opt_list(_ID_Cisco_IOS_XR_um_router_isis_cfg__net)))
         return Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__nets()
 
     mut def copy(self) -> Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__nets:
@@ -568,7 +641,7 @@ class Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processe
 
     @staticmethod
     mut def from_gdata(n: ygdata.Node) -> Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__interfaces__interface__address_families__address_family__metric_levels__metric_level_entry:
-        return Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__interfaces__interface__address_families__address_family__metric_levels__metric_level_entry(level_number=n.get_u64(ygdata.Id(NS_Cisco_IOS_XR_um_router_isis_cfg, 'level-number')), default_metric=n.get_opt_u64(ygdata.Id(NS_Cisco_IOS_XR_um_router_isis_cfg, 'default-metric')))
+        return Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__interfaces__interface__address_families__address_family__metric_levels__metric_level_entry(level_number=n.get_u64(_ID_Cisco_IOS_XR_um_router_isis_cfg__level_number), default_metric=n.get_opt_u64(_ID_Cisco_IOS_XR_um_router_isis_cfg__default_metric))
 
     mut def copy(self) -> Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__interfaces__interface__address_families__address_family__metric_levels__metric_level_entry:
         """Create a deep copy of this adata object"""
@@ -620,7 +693,7 @@ class Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processe
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__interfaces__interface__address_families__address_family__metric_levels:
         if n is not None:
-            return Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__interfaces__interface__address_families__address_family__metric_levels(metric_level=Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__interfaces__interface__address_families__address_family__metric_levels__metric_level.from_gdata(n.get_opt_list(ygdata.Id(NS_Cisco_IOS_XR_um_router_isis_cfg, 'metric-level'))))
+            return Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__interfaces__interface__address_families__address_family__metric_levels(metric_level=Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__interfaces__interface__address_families__address_family__metric_levels__metric_level.from_gdata(n.get_opt_list(_ID_Cisco_IOS_XR_um_router_isis_cfg__metric_level)))
         return Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__interfaces__interface__address_families__address_family__metric_levels()
 
     mut def copy(self) -> Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__interfaces__interface__address_families__address_family__metric_levels:
@@ -644,7 +717,7 @@ class Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processe
 
     @staticmethod
     mut def from_gdata(n: ygdata.Node) -> Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__interfaces__interface__address_families__address_family_entry:
-        return Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__interfaces__interface__address_families__address_family_entry(af_name=n.get_str(ygdata.Id(NS_Cisco_IOS_XR_um_router_isis_cfg, 'af-name')), saf_name=n.get_str(ygdata.Id(NS_Cisco_IOS_XR_um_router_isis_cfg, 'saf-name')), metric_levels=Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__interfaces__interface__address_families__address_family__metric_levels.from_gdata(n.get_opt_cnt(ygdata.Id(NS_Cisco_IOS_XR_um_router_isis_cfg, 'metric-levels'))))
+        return Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__interfaces__interface__address_families__address_family_entry(af_name=n.get_str(_ID_Cisco_IOS_XR_um_router_isis_cfg__af_name), saf_name=n.get_str(_ID_Cisco_IOS_XR_um_router_isis_cfg__saf_name), metric_levels=Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__interfaces__interface__address_families__address_family__metric_levels.from_gdata(n.get_opt_cnt(_ID_Cisco_IOS_XR_um_router_isis_cfg__metric_levels)))
 
     mut def copy(self) -> Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__interfaces__interface__address_families__address_family_entry:
         """Create a deep copy of this adata object"""
@@ -694,7 +767,7 @@ class Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processe
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__interfaces__interface__address_families:
         if n is not None:
-            return Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__interfaces__interface__address_families(address_family=Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__interfaces__interface__address_families__address_family.from_gdata(n.get_opt_list(ygdata.Id(NS_Cisco_IOS_XR_um_router_isis_cfg, 'address-family'))))
+            return Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__interfaces__interface__address_families(address_family=Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__interfaces__interface__address_families__address_family.from_gdata(n.get_opt_list(_ID_Cisco_IOS_XR_um_router_isis_cfg__address_family)))
         return Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__interfaces__interface__address_families()
 
     mut def copy(self) -> Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__interfaces__interface__address_families:
@@ -722,7 +795,7 @@ class Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processe
 
     @staticmethod
     mut def from_gdata(n: ygdata.Node) -> Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__interfaces__interface_entry:
-        return Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__interfaces__interface_entry(interface_name=n.get_str(ygdata.Id(NS_Cisco_IOS_XR_um_router_isis_cfg, 'interface-name')), state=n.get_opt_str(ygdata.Id(NS_Cisco_IOS_XR_um_router_isis_cfg, 'state')), circuit_type=n.get_opt_str(ygdata.Id(NS_Cisco_IOS_XR_um_router_isis_cfg, 'circuit-type')), point_to_point=n.get_opt_empty(ygdata.Id(NS_Cisco_IOS_XR_um_router_isis_cfg, 'point-to-point')), address_families=Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__interfaces__interface__address_families.from_gdata(n.get_opt_cnt(ygdata.Id(NS_Cisco_IOS_XR_um_router_isis_cfg, 'address-families'))))
+        return Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__interfaces__interface_entry(interface_name=n.get_str(_ID_Cisco_IOS_XR_um_router_isis_cfg__interface_name), state=n.get_opt_str(_ID_Cisco_IOS_XR_um_router_isis_cfg__state), circuit_type=n.get_opt_str(_ID_Cisco_IOS_XR_um_router_isis_cfg__circuit_type), point_to_point=n.get_opt_empty(_ID_Cisco_IOS_XR_um_router_isis_cfg__point_to_point), address_families=Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__interfaces__interface__address_families.from_gdata(n.get_opt_cnt(_ID_Cisco_IOS_XR_um_router_isis_cfg__address_families)))
 
     mut def copy(self) -> Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__interfaces__interface_entry:
         """Create a deep copy of this adata object"""
@@ -778,7 +851,7 @@ class Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processe
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__interfaces:
         if n is not None:
-            return Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__interfaces(interface=Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__interfaces__interface.from_gdata(n.get_opt_list(ygdata.Id(NS_Cisco_IOS_XR_um_router_isis_cfg, 'interface'))))
+            return Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__interfaces(interface=Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__interfaces__interface.from_gdata(n.get_opt_list(_ID_Cisco_IOS_XR_um_router_isis_cfg__interface)))
         return Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__interfaces()
 
     mut def copy(self) -> Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__interfaces:
@@ -830,7 +903,7 @@ class Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processe
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__address_families__address_family__metric_style:
         if n is not None:
-            return Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__address_families__address_family__metric_style(wide=Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__address_families__address_family__metric_style__wide.from_gdata(n.get_opt_cnt(ygdata.Id(NS_Cisco_IOS_XR_um_router_isis_cfg, 'wide'))))
+            return Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__address_families__address_family__metric_style(wide=Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__address_families__address_family__metric_style__wide.from_gdata(n.get_opt_cnt(_ID_Cisco_IOS_XR_um_router_isis_cfg__wide)))
         return Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__address_families__address_family__metric_style()
 
     mut def copy(self) -> Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__address_families__address_family__metric_style:
@@ -854,7 +927,7 @@ class Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processe
 
     @staticmethod
     mut def from_gdata(n: ygdata.Node) -> Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__address_families__address_family_entry:
-        return Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__address_families__address_family_entry(af_name=n.get_str(ygdata.Id(NS_Cisco_IOS_XR_um_router_isis_cfg, 'af-name')), saf_name=n.get_str(ygdata.Id(NS_Cisco_IOS_XR_um_router_isis_cfg, 'saf-name')), metric_style=Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__address_families__address_family__metric_style.from_gdata(n.get_opt_cnt(ygdata.Id(NS_Cisco_IOS_XR_um_router_isis_cfg, 'metric-style'))))
+        return Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__address_families__address_family_entry(af_name=n.get_str(_ID_Cisco_IOS_XR_um_router_isis_cfg__af_name), saf_name=n.get_str(_ID_Cisco_IOS_XR_um_router_isis_cfg__saf_name), metric_style=Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__address_families__address_family__metric_style.from_gdata(n.get_opt_cnt(_ID_Cisco_IOS_XR_um_router_isis_cfg__metric_style)))
 
     mut def copy(self) -> Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__address_families__address_family_entry:
         """Create a deep copy of this adata object"""
@@ -904,7 +977,7 @@ class Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processe
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__address_families:
         if n is not None:
-            return Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__address_families(address_family=Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__address_families__address_family.from_gdata(n.get_opt_list(ygdata.Id(NS_Cisco_IOS_XR_um_router_isis_cfg, 'address-family'))))
+            return Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__address_families(address_family=Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__address_families__address_family.from_gdata(n.get_opt_list(_ID_Cisco_IOS_XR_um_router_isis_cfg__address_family)))
         return Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__address_families()
 
     mut def copy(self) -> Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__address_families:
@@ -932,7 +1005,7 @@ class Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processe
 
     @staticmethod
     mut def from_gdata(n: ygdata.Node) -> Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process_entry:
-        return Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process_entry(process_id=n.get_str(ygdata.Id(NS_Cisco_IOS_XR_um_router_isis_cfg, 'process-id')), is_type=n.get_opt_str(ygdata.Id(NS_Cisco_IOS_XR_um_router_isis_cfg, 'is-type')), nets=Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__nets.from_gdata(n.get_opt_cnt(ygdata.Id(NS_Cisco_IOS_XR_um_router_isis_cfg, 'nets'))), interfaces=Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__interfaces.from_gdata(n.get_opt_cnt(ygdata.Id(NS_Cisco_IOS_XR_um_router_isis_cfg, 'interfaces'))), address_families=Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__address_families.from_gdata(n.get_opt_cnt(ygdata.Id(NS_Cisco_IOS_XR_um_router_isis_cfg, 'address-families'))))
+        return Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process_entry(process_id=n.get_str(_ID_Cisco_IOS_XR_um_router_isis_cfg__process_id), is_type=n.get_opt_str(_ID_Cisco_IOS_XR_um_router_isis_cfg__is_type), nets=Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__nets.from_gdata(n.get_opt_cnt(_ID_Cisco_IOS_XR_um_router_isis_cfg__nets)), interfaces=Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__interfaces.from_gdata(n.get_opt_cnt(_ID_Cisco_IOS_XR_um_router_isis_cfg__interfaces)), address_families=Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process__address_families.from_gdata(n.get_opt_cnt(_ID_Cisco_IOS_XR_um_router_isis_cfg__address_families)))
 
     mut def copy(self) -> Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process_entry:
         """Create a deep copy of this adata object"""
@@ -984,7 +1057,7 @@ class Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processe
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes:
         if n is not None:
-            return Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes(process=Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process.from_gdata(n.get_opt_list(ygdata.Id(NS_Cisco_IOS_XR_um_router_isis_cfg, 'process'))))
+            return Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes(process=Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes__process.from_gdata(n.get_opt_list(_ID_Cisco_IOS_XR_um_router_isis_cfg__process)))
         return Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes()
 
     mut def copy(self) -> Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes:
@@ -1005,7 +1078,7 @@ class Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis(yadata.MN
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis:
         if n is not None:
-            return Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis(processes=Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes.from_gdata(n.get_opt_cnt(ygdata.Id(NS_Cisco_IOS_XR_um_router_isis_cfg, 'processes'))))
+            return Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis(processes=Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis__processes.from_gdata(n.get_opt_cnt(_ID_Cisco_IOS_XR_um_router_isis_cfg__processes)))
         return Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis()
 
     mut def copy(self) -> Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis:
@@ -1026,7 +1099,7 @@ class Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router(yadata.MNode):
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router:
         if n is not None:
-            return Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router(isis=Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis.from_gdata(n.get_opt_cnt(ygdata.Id(NS_Cisco_IOS_XR_um_router_isis_cfg, 'isis'))))
+            return Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router(isis=Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router__isis.from_gdata(n.get_opt_cnt(_ID_Cisco_IOS_XR_um_router_isis_cfg__isis)))
         return Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router()
 
     mut def copy(self) -> Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router:
@@ -1047,7 +1120,7 @@ class Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__neighbo
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__neighbors__neighbor__use:
         if n is not None:
-            return Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__neighbors__neighbor__use(neighbor_group=n.get_opt_str(ygdata.Id(NS_Cisco_IOS_XR_um_router_bgp_cfg, 'neighbor-group')))
+            return Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__neighbors__neighbor__use(neighbor_group=n.get_opt_str(_ID_Cisco_IOS_XR_um_router_bgp_cfg__neighbor_group))
         return Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__neighbors__neighbor__use()
 
     mut def copy(self) -> Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__neighbors__neighbor__use:
@@ -1071,7 +1144,7 @@ class Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__neighbo
 
     @staticmethod
     mut def from_gdata(n: ygdata.Node) -> Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__neighbors__neighbor_entry:
-        return Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__neighbors__neighbor_entry(address=n.get_str(ygdata.Id(NS_Cisco_IOS_XR_um_router_bgp_cfg, 'address')), use=Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__neighbors__neighbor__use.from_gdata(n.get_opt_cnt(ygdata.Id(NS_Cisco_IOS_XR_um_router_bgp_cfg, 'use'))), description=n.get_opt_str(ygdata.Id(NS_Cisco_IOS_XR_um_router_bgp_cfg, 'description')))
+        return Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__neighbors__neighbor_entry(address=n.get_str(_ID_Cisco_IOS_XR_um_router_bgp_cfg__address), use=Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__neighbors__neighbor__use.from_gdata(n.get_opt_cnt(_ID_Cisco_IOS_XR_um_router_bgp_cfg__use)), description=n.get_opt_str(_ID_Cisco_IOS_XR_um_router_bgp_cfg__description))
 
     mut def copy(self) -> Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__neighbors__neighbor_entry:
         """Create a deep copy of this adata object"""
@@ -1123,7 +1196,7 @@ class Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__neighbo
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__neighbors:
         if n is not None:
-            return Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__neighbors(neighbor=Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__neighbors__neighbor.from_gdata(n.get_opt_list(ygdata.Id(NS_Cisco_IOS_XR_um_router_bgp_cfg, 'neighbor'))))
+            return Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__neighbors(neighbor=Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__neighbors__neighbor.from_gdata(n.get_opt_list(_ID_Cisco_IOS_XR_um_router_bgp_cfg__neighbor)))
         return Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__neighbors()
 
     mut def copy(self) -> Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__neighbors:
@@ -1144,7 +1217,7 @@ class Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__neighbo
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__neighbor_groups__neighbor_group__password:
         if n is not None:
-            return Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__neighbor_groups__neighbor_group__password(encrypted=n.get_opt_str(ygdata.Id(NS_Cisco_IOS_XR_um_router_bgp_cfg, 'encrypted')))
+            return Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__neighbor_groups__neighbor_group__password(encrypted=n.get_opt_str(_ID_Cisco_IOS_XR_um_router_bgp_cfg__encrypted))
         return Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__neighbor_groups__neighbor_group__password()
 
     mut def copy(self) -> Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__neighbor_groups__neighbor_group__password:
@@ -1164,7 +1237,7 @@ class Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__neighbo
 
     @staticmethod
     mut def from_gdata(n: ygdata.Node) -> Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__neighbor_groups__neighbor_group__address_families__address_family_entry:
-        return Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__neighbor_groups__neighbor_group__address_families__address_family_entry(af_name=n.get_str(ygdata.Id(NS_Cisco_IOS_XR_um_router_bgp_cfg, 'af-name')))
+        return Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__neighbor_groups__neighbor_group__address_families__address_family_entry(af_name=n.get_str(_ID_Cisco_IOS_XR_um_router_bgp_cfg__af_name))
 
     mut def copy(self) -> Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__neighbor_groups__neighbor_group__address_families__address_family_entry:
         """Create a deep copy of this adata object"""
@@ -1214,7 +1287,7 @@ class Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__neighbo
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__neighbor_groups__neighbor_group__address_families:
         if n is not None:
-            return Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__neighbor_groups__neighbor_group__address_families(address_family=Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__neighbor_groups__neighbor_group__address_families__address_family.from_gdata(n.get_opt_list(ygdata.Id(NS_Cisco_IOS_XR_um_router_bgp_cfg, 'address-family'))))
+            return Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__neighbor_groups__neighbor_group__address_families(address_family=Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__neighbor_groups__neighbor_group__address_families__address_family.from_gdata(n.get_opt_list(_ID_Cisco_IOS_XR_um_router_bgp_cfg__address_family)))
         return Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__neighbor_groups__neighbor_group__address_families()
 
     mut def copy(self) -> Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__neighbor_groups__neighbor_group__address_families:
@@ -1242,7 +1315,7 @@ class Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__neighbo
 
     @staticmethod
     mut def from_gdata(n: ygdata.Node) -> Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__neighbor_groups__neighbor_group_entry:
-        return Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__neighbor_groups__neighbor_group_entry(neighbor_group_name=n.get_str(ygdata.Id(NS_Cisco_IOS_XR_um_router_bgp_cfg, 'neighbor-group-name')), remote_as=n.get_opt_atom(ygdata.Id(NS_Cisco_IOS_XR_um_router_bgp_cfg, 'remote-as')), password=Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__neighbor_groups__neighbor_group__password.from_gdata(n.get_opt_cnt(ygdata.Id(NS_Cisco_IOS_XR_um_router_bgp_cfg, 'password'))), update_source=n.get_opt_str(ygdata.Id(NS_Cisco_IOS_XR_um_router_bgp_cfg, 'update-source')), address_families=Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__neighbor_groups__neighbor_group__address_families.from_gdata(n.get_opt_cnt(ygdata.Id(NS_Cisco_IOS_XR_um_router_bgp_cfg, 'address-families'))))
+        return Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__neighbor_groups__neighbor_group_entry(neighbor_group_name=n.get_str(_ID_Cisco_IOS_XR_um_router_bgp_cfg__neighbor_group_name), remote_as=n.get_opt_atom(_ID_Cisco_IOS_XR_um_router_bgp_cfg__remote_as), password=Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__neighbor_groups__neighbor_group__password.from_gdata(n.get_opt_cnt(_ID_Cisco_IOS_XR_um_router_bgp_cfg__password)), update_source=n.get_opt_str(_ID_Cisco_IOS_XR_um_router_bgp_cfg__update_source), address_families=Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__neighbor_groups__neighbor_group__address_families.from_gdata(n.get_opt_cnt(_ID_Cisco_IOS_XR_um_router_bgp_cfg__address_families)))
 
     mut def copy(self) -> Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__neighbor_groups__neighbor_group_entry:
         """Create a deep copy of this adata object"""
@@ -1296,7 +1369,7 @@ class Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__neighbo
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__neighbor_groups:
         if n is not None:
-            return Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__neighbor_groups(neighbor_group=Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__neighbor_groups__neighbor_group.from_gdata(n.get_opt_list(ygdata.Id(NS_Cisco_IOS_XR_um_router_bgp_cfg, 'neighbor-group'))))
+            return Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__neighbor_groups(neighbor_group=Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__neighbor_groups__neighbor_group.from_gdata(n.get_opt_list(_ID_Cisco_IOS_XR_um_router_bgp_cfg__neighbor_group)))
         return Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__neighbor_groups()
 
     mut def copy(self) -> Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__neighbor_groups:
@@ -1316,7 +1389,7 @@ class Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__address
 
     @staticmethod
     mut def from_gdata(n: ygdata.Node) -> Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__address_families__address_family_entry:
-        return Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__address_families__address_family_entry(af_name=n.get_str(ygdata.Id(NS_Cisco_IOS_XR_um_router_bgp_cfg, 'af-name')))
+        return Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__address_families__address_family_entry(af_name=n.get_str(_ID_Cisco_IOS_XR_um_router_bgp_cfg__af_name))
 
     mut def copy(self) -> Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__address_families__address_family_entry:
         """Create a deep copy of this adata object"""
@@ -1366,7 +1439,7 @@ class Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__address
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__address_families:
         if n is not None:
-            return Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__address_families(address_family=Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__address_families__address_family.from_gdata(n.get_opt_list(ygdata.Id(NS_Cisco_IOS_XR_um_router_bgp_cfg, 'address-family'))))
+            return Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__address_families(address_family=Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__address_families__address_family.from_gdata(n.get_opt_list(_ID_Cisco_IOS_XR_um_router_bgp_cfg__address_family)))
         return Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__address_families()
 
     mut def copy(self) -> Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__address_families:
@@ -1387,7 +1460,7 @@ class Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__bgp(yad
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__bgp:
         if n is not None:
-            return Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__bgp(router_id=n.get_opt_str(ygdata.Id(NS_Cisco_IOS_XR_um_router_bgp_cfg, 'router-id')))
+            return Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__bgp(router_id=n.get_opt_str(_ID_Cisco_IOS_XR_um_router_bgp_cfg__router_id))
         return Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__bgp()
 
     mut def copy(self) -> Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__bgp:
@@ -1415,7 +1488,7 @@ class Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as_entry(ya
 
     @staticmethod
     mut def from_gdata(n: ygdata.Node) -> Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as_entry:
-        return Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as_entry(as_number=n.get_atom(ygdata.Id(NS_Cisco_IOS_XR_um_router_bgp_cfg, 'as-number')), neighbors=Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__neighbors.from_gdata(n.get_opt_cnt(ygdata.Id(NS_Cisco_IOS_XR_um_router_bgp_cfg, 'neighbors'))), neighbor_groups=Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__neighbor_groups.from_gdata(n.get_opt_cnt(ygdata.Id(NS_Cisco_IOS_XR_um_router_bgp_cfg, 'neighbor-groups'))), address_families=Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__address_families.from_gdata(n.get_opt_cnt(ygdata.Id(NS_Cisco_IOS_XR_um_router_bgp_cfg, 'address-families'))), bgp=Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__bgp.from_gdata(n.get_opt_cnt(ygdata.Id(NS_Cisco_IOS_XR_um_router_bgp_cfg, 'bgp'))))
+        return Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as_entry(as_number=n.get_atom(_ID_Cisco_IOS_XR_um_router_bgp_cfg__as_number), neighbors=Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__neighbors.from_gdata(n.get_opt_cnt(_ID_Cisco_IOS_XR_um_router_bgp_cfg__neighbors)), neighbor_groups=Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__neighbor_groups.from_gdata(n.get_opt_cnt(_ID_Cisco_IOS_XR_um_router_bgp_cfg__neighbor_groups)), address_families=Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__address_families.from_gdata(n.get_opt_cnt(_ID_Cisco_IOS_XR_um_router_bgp_cfg__address_families)), bgp=Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as__bgp.from_gdata(n.get_opt_cnt(_ID_Cisco_IOS_XR_um_router_bgp_cfg__bgp)))
 
     mut def copy(self) -> Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as_entry:
         """Create a deep copy of this adata object"""
@@ -1465,7 +1538,7 @@ class Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp(yadata.MNode
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp:
         if n is not None:
-            return Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp(as_=Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as.from_gdata(n.get_opt_list(ygdata.Id(NS_Cisco_IOS_XR_um_router_bgp_cfg, 'as'))))
+            return Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp(as_=Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp__as.from_gdata(n.get_opt_list(_ID_Cisco_IOS_XR_um_router_bgp_cfg__as)))
         return Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp()
 
     mut def copy(self) -> Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp:
@@ -1486,7 +1559,7 @@ class Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router(yadata.MNode):
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router:
         if n is not None:
-            return Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router(bgp=Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp.from_gdata(n.get_opt_cnt(ygdata.Id(NS_Cisco_IOS_XR_um_router_bgp_cfg, 'bgp'))))
+            return Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router(bgp=Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router__bgp.from_gdata(n.get_opt_cnt(_ID_Cisco_IOS_XR_um_router_bgp_cfg__bgp)))
         return Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router()
 
     mut def copy(self) -> Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router:
@@ -1508,7 +1581,7 @@ class Cisco_IOS_XR_um_route_policy_cfg__routing_policy__route_policies__route_po
 
     @staticmethod
     mut def from_gdata(n: ygdata.Node) -> Cisco_IOS_XR_um_route_policy_cfg__routing_policy__route_policies__route_policy_entry:
-        return Cisco_IOS_XR_um_route_policy_cfg__routing_policy__route_policies__route_policy_entry(route_policy_name=n.get_str(ygdata.Id(NS_Cisco_IOS_XR_um_route_policy_cfg, 'route-policy-name')), rpl_route_policy=n.get_opt_str(ygdata.Id(NS_Cisco_IOS_XR_um_route_policy_cfg, 'rpl-route-policy')))
+        return Cisco_IOS_XR_um_route_policy_cfg__routing_policy__route_policies__route_policy_entry(route_policy_name=n.get_str(_ID_Cisco_IOS_XR_um_route_policy_cfg__route_policy_name), rpl_route_policy=n.get_opt_str(_ID_Cisco_IOS_XR_um_route_policy_cfg__rpl_route_policy))
 
     mut def copy(self) -> Cisco_IOS_XR_um_route_policy_cfg__routing_policy__route_policies__route_policy_entry:
         """Create a deep copy of this adata object"""
@@ -1560,7 +1633,7 @@ class Cisco_IOS_XR_um_route_policy_cfg__routing_policy__route_policies(yadata.MN
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> Cisco_IOS_XR_um_route_policy_cfg__routing_policy__route_policies:
         if n is not None:
-            return Cisco_IOS_XR_um_route_policy_cfg__routing_policy__route_policies(route_policy=Cisco_IOS_XR_um_route_policy_cfg__routing_policy__route_policies__route_policy.from_gdata(n.get_opt_list(ygdata.Id(NS_Cisco_IOS_XR_um_route_policy_cfg, 'route-policy'))))
+            return Cisco_IOS_XR_um_route_policy_cfg__routing_policy__route_policies(route_policy=Cisco_IOS_XR_um_route_policy_cfg__routing_policy__route_policies__route_policy.from_gdata(n.get_opt_list(_ID_Cisco_IOS_XR_um_route_policy_cfg__route_policy)))
         return Cisco_IOS_XR_um_route_policy_cfg__routing_policy__route_policies()
 
     mut def copy(self) -> Cisco_IOS_XR_um_route_policy_cfg__routing_policy__route_policies:
@@ -1581,7 +1654,7 @@ class Cisco_IOS_XR_um_route_policy_cfg__routing_policy(yadata.MNode):
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> Cisco_IOS_XR_um_route_policy_cfg__routing_policy:
         if n is not None:
-            return Cisco_IOS_XR_um_route_policy_cfg__routing_policy(route_policies=Cisco_IOS_XR_um_route_policy_cfg__routing_policy__route_policies.from_gdata(n.get_opt_cnt(ygdata.Id(NS_Cisco_IOS_XR_um_route_policy_cfg, 'route-policies'))))
+            return Cisco_IOS_XR_um_route_policy_cfg__routing_policy(route_policies=Cisco_IOS_XR_um_route_policy_cfg__routing_policy__route_policies.from_gdata(n.get_opt_cnt(_ID_Cisco_IOS_XR_um_route_policy_cfg__route_policies)))
         return Cisco_IOS_XR_um_route_policy_cfg__routing_policy()
 
     mut def copy(self) -> Cisco_IOS_XR_um_route_policy_cfg__routing_policy:
@@ -1601,7 +1674,7 @@ class Cisco_IOS_XR_um_mpls_ldp_cfg__mpls__ldp__address_families__address_family_
 
     @staticmethod
     mut def from_gdata(n: ygdata.Node) -> Cisco_IOS_XR_um_mpls_ldp_cfg__mpls__ldp__address_families__address_family_entry:
-        return Cisco_IOS_XR_um_mpls_ldp_cfg__mpls__ldp__address_families__address_family_entry(af_name=n.get_str(ygdata.Id(NS_Cisco_IOS_XR_um_mpls_ldp_cfg, 'af-name')))
+        return Cisco_IOS_XR_um_mpls_ldp_cfg__mpls__ldp__address_families__address_family_entry(af_name=n.get_str(_ID_Cisco_IOS_XR_um_mpls_ldp_cfg__af_name))
 
     mut def copy(self) -> Cisco_IOS_XR_um_mpls_ldp_cfg__mpls__ldp__address_families__address_family_entry:
         """Create a deep copy of this adata object"""
@@ -1651,7 +1724,7 @@ class Cisco_IOS_XR_um_mpls_ldp_cfg__mpls__ldp__address_families(yadata.MNode):
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> Cisco_IOS_XR_um_mpls_ldp_cfg__mpls__ldp__address_families:
         if n is not None:
-            return Cisco_IOS_XR_um_mpls_ldp_cfg__mpls__ldp__address_families(address_family=Cisco_IOS_XR_um_mpls_ldp_cfg__mpls__ldp__address_families__address_family.from_gdata(n.get_opt_list(ygdata.Id(NS_Cisco_IOS_XR_um_mpls_ldp_cfg, 'address-family'))))
+            return Cisco_IOS_XR_um_mpls_ldp_cfg__mpls__ldp__address_families(address_family=Cisco_IOS_XR_um_mpls_ldp_cfg__mpls__ldp__address_families__address_family.from_gdata(n.get_opt_list(_ID_Cisco_IOS_XR_um_mpls_ldp_cfg__address_family)))
         return Cisco_IOS_XR_um_mpls_ldp_cfg__mpls__ldp__address_families()
 
     mut def copy(self) -> Cisco_IOS_XR_um_mpls_ldp_cfg__mpls__ldp__address_families:
@@ -1671,7 +1744,7 @@ class Cisco_IOS_XR_um_mpls_ldp_cfg__mpls__ldp__interfaces__interface_entry(yadat
 
     @staticmethod
     mut def from_gdata(n: ygdata.Node) -> Cisco_IOS_XR_um_mpls_ldp_cfg__mpls__ldp__interfaces__interface_entry:
-        return Cisco_IOS_XR_um_mpls_ldp_cfg__mpls__ldp__interfaces__interface_entry(interface_name=n.get_str(ygdata.Id(NS_Cisco_IOS_XR_um_mpls_ldp_cfg, 'interface-name')))
+        return Cisco_IOS_XR_um_mpls_ldp_cfg__mpls__ldp__interfaces__interface_entry(interface_name=n.get_str(_ID_Cisco_IOS_XR_um_mpls_ldp_cfg__interface_name))
 
     mut def copy(self) -> Cisco_IOS_XR_um_mpls_ldp_cfg__mpls__ldp__interfaces__interface_entry:
         """Create a deep copy of this adata object"""
@@ -1721,7 +1794,7 @@ class Cisco_IOS_XR_um_mpls_ldp_cfg__mpls__ldp__interfaces(yadata.MNode):
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> Cisco_IOS_XR_um_mpls_ldp_cfg__mpls__ldp__interfaces:
         if n is not None:
-            return Cisco_IOS_XR_um_mpls_ldp_cfg__mpls__ldp__interfaces(interface=Cisco_IOS_XR_um_mpls_ldp_cfg__mpls__ldp__interfaces__interface.from_gdata(n.get_opt_list(ygdata.Id(NS_Cisco_IOS_XR_um_mpls_ldp_cfg, 'interface'))))
+            return Cisco_IOS_XR_um_mpls_ldp_cfg__mpls__ldp__interfaces(interface=Cisco_IOS_XR_um_mpls_ldp_cfg__mpls__ldp__interfaces__interface.from_gdata(n.get_opt_list(_ID_Cisco_IOS_XR_um_mpls_ldp_cfg__interface)))
         return Cisco_IOS_XR_um_mpls_ldp_cfg__mpls__ldp__interfaces()
 
     mut def copy(self) -> Cisco_IOS_XR_um_mpls_ldp_cfg__mpls__ldp__interfaces:
@@ -1744,7 +1817,7 @@ class Cisco_IOS_XR_um_mpls_ldp_cfg__mpls__ldp(yadata.MNode):
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> ?Cisco_IOS_XR_um_mpls_ldp_cfg__mpls__ldp:
         if n is not None:
-            return Cisco_IOS_XR_um_mpls_ldp_cfg__mpls__ldp(address_families=Cisco_IOS_XR_um_mpls_ldp_cfg__mpls__ldp__address_families.from_gdata(n.get_opt_cnt(ygdata.Id(NS_Cisco_IOS_XR_um_mpls_ldp_cfg, 'address-families'))), interfaces=Cisco_IOS_XR_um_mpls_ldp_cfg__mpls__ldp__interfaces.from_gdata(n.get_opt_cnt(ygdata.Id(NS_Cisco_IOS_XR_um_mpls_ldp_cfg, 'interfaces'))))
+            return Cisco_IOS_XR_um_mpls_ldp_cfg__mpls__ldp(address_families=Cisco_IOS_XR_um_mpls_ldp_cfg__mpls__ldp__address_families.from_gdata(n.get_opt_cnt(_ID_Cisco_IOS_XR_um_mpls_ldp_cfg__address_families)), interfaces=Cisco_IOS_XR_um_mpls_ldp_cfg__mpls__ldp__interfaces.from_gdata(n.get_opt_cnt(_ID_Cisco_IOS_XR_um_mpls_ldp_cfg__interfaces)))
         return None
 
     mut def copy(self) -> Cisco_IOS_XR_um_mpls_ldp_cfg__mpls__ldp:
@@ -1776,7 +1849,7 @@ class Cisco_IOS_XR_um_mpls_ldp_cfg__mpls(yadata.MNode):
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> Cisco_IOS_XR_um_mpls_ldp_cfg__mpls:
         if n is not None:
-            return Cisco_IOS_XR_um_mpls_ldp_cfg__mpls(ldp=Cisco_IOS_XR_um_mpls_ldp_cfg__mpls__ldp.from_gdata(n.get_opt_cnt(ygdata.Id(NS_Cisco_IOS_XR_um_mpls_ldp_cfg, 'ldp'))))
+            return Cisco_IOS_XR_um_mpls_ldp_cfg__mpls(ldp=Cisco_IOS_XR_um_mpls_ldp_cfg__mpls__ldp.from_gdata(n.get_opt_cnt(_ID_Cisco_IOS_XR_um_mpls_ldp_cfg__ldp)))
         return Cisco_IOS_XR_um_mpls_ldp_cfg__mpls()
 
     mut def copy(self) -> Cisco_IOS_XR_um_mpls_ldp_cfg__mpls:
@@ -1797,7 +1870,7 @@ class Cisco_IOS_XR_um_hostname_cfg__hostname(yadata.MNode):
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> Cisco_IOS_XR_um_hostname_cfg__hostname:
         if n is not None:
-            return Cisco_IOS_XR_um_hostname_cfg__hostname(system_network_name=n.get_opt_str(ygdata.Id(NS_Cisco_IOS_XR_um_hostname_cfg, 'system-network-name')))
+            return Cisco_IOS_XR_um_hostname_cfg__hostname(system_network_name=n.get_opt_str(_ID_Cisco_IOS_XR_um_hostname_cfg__system_network_name))
         return Cisco_IOS_XR_um_hostname_cfg__hostname()
 
     mut def copy(self) -> Cisco_IOS_XR_um_hostname_cfg__hostname:
@@ -1828,7 +1901,7 @@ class root(yadata.MNode):
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> root:
         if n is not None:
-            return root(interfaces=Cisco_IOS_XR_um_interface_cfg__interfaces.from_gdata(n.get_opt_cnt(ygdata.Id(NS_Cisco_IOS_XR_um_interface_cfg, 'interfaces'))), um_router_isis_cfg_router=Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router.from_gdata(n.get_opt_cnt(ygdata.Id(NS_Cisco_IOS_XR_um_router_isis_cfg, 'router'))), um_router_bgp_cfg_router=Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router.from_gdata(n.get_opt_cnt(ygdata.Id(NS_Cisco_IOS_XR_um_router_bgp_cfg, 'router'))), routing_policy=Cisco_IOS_XR_um_route_policy_cfg__routing_policy.from_gdata(n.get_opt_cnt(ygdata.Id(NS_Cisco_IOS_XR_um_route_policy_cfg, 'routing-policy'))), mpls=Cisco_IOS_XR_um_mpls_ldp_cfg__mpls.from_gdata(n.get_opt_cnt(ygdata.Id(NS_Cisco_IOS_XR_um_mpls_ldp_cfg, 'mpls'))), hostname=Cisco_IOS_XR_um_hostname_cfg__hostname.from_gdata(n.get_opt_cnt(ygdata.Id(NS_Cisco_IOS_XR_um_hostname_cfg, 'hostname'))))
+            return root(interfaces=Cisco_IOS_XR_um_interface_cfg__interfaces.from_gdata(n.get_opt_cnt(_ID_Cisco_IOS_XR_um_interface_cfg__interfaces)), um_router_isis_cfg_router=Cisco_IOS_XR_um_router_isis_cfg__um_router_isis_cfg_router.from_gdata(n.get_opt_cnt(_ID_Cisco_IOS_XR_um_router_isis_cfg__router)), um_router_bgp_cfg_router=Cisco_IOS_XR_um_router_bgp_cfg__um_router_bgp_cfg_router.from_gdata(n.get_opt_cnt(_ID_Cisco_IOS_XR_um_router_bgp_cfg__router)), routing_policy=Cisco_IOS_XR_um_route_policy_cfg__routing_policy.from_gdata(n.get_opt_cnt(_ID_Cisco_IOS_XR_um_route_policy_cfg__routing_policy)), mpls=Cisco_IOS_XR_um_mpls_ldp_cfg__mpls.from_gdata(n.get_opt_cnt(_ID_Cisco_IOS_XR_um_mpls_ldp_cfg__mpls)), hostname=Cisco_IOS_XR_um_hostname_cfg__hostname.from_gdata(n.get_opt_cnt(_ID_Cisco_IOS_XR_um_hostname_cfg__hostname)))
         return root()
 
     mut def copy(self) -> root:

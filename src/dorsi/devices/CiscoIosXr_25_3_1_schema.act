@@ -1,4 +1,4 @@
-import base64
+import std.base64
 import yang.xpath as yxpath
 from yang.identityref import Identityref, PartialIdentityref
 from yang.pattern import YangPattern
@@ -11,56 +11,56 @@ from yang.type import Decimal, Ranges
 _identities: list[DIdentity] = []
 
 
-SRC_DNODE_CHILD_0: DContainer = DContainer(module='Cisco-IOS-XR-um-interface-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-interface-cfg', prefix='um-interface-cfg', name='interfaces', config=True, description='Interface configuration', presence=False, children=[
-    DList(module='Cisco-IOS-XR-um-interface-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-interface-cfg', prefix='um-interface-cfg', name='interface', key=['interface-name'], config=True, description='Interface configuration subcommands', min_elements=0, ordered_by='system', children=[
-        DLeaf(module='Cisco-IOS-XR-um-interface-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-interface-cfg', prefix='um-interface-cfg', name='interface-name', config=True, description='Interface configuration subcommands', is_key=True, mandatory=False, type=DTypeString(name='xr:Interface-name', description='An interface name specifying an interface type and\ninstance.\nInterface represents a string defining an interface\ntype and instance, e.g. MgmtEth0/4/CPU1/0 or\nTenGigE0/2/0/0.2 or Bundle-Ether9 or\nBundle-Ether9.98 or Serial0/0/0/0/3/1:1', reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[YangPattern(yang_regex='[a-zA-Z0-9.:_/-]+', pcre='^([a-zA-Z0-9.:_/-]+)$', invert=False)])),
-        DContainer(module='Cisco-IOS-XR-um-interface-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-interface-cfg', prefix='um-interface-cfg', name='ipv4', config=True, description='Interface IPv4 config commands', presence=False, children=[
-            DContainer(module='Cisco-IOS-XR-um-if-ip-address-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-if-ip-address-cfg', prefix='um-if-ip-address-cfg', name='addresses', config=True, description='Set the IPv4 address of an interface', presence=False, children=[
-                DContainer(module='Cisco-IOS-XR-um-if-ip-address-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-if-ip-address-cfg', prefix='um-if-ip-address-cfg', name='address', config=True, description='IP address and Mask', presence=True, children=[
-                    DLeaf(module='Cisco-IOS-XR-um-if-ip-address-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-if-ip-address-cfg', prefix='um-if-ip-address-cfg', name='address', config=True, description='IP address', is_key=False, mandatory=True, type=DTypeString(name='inet:ipv4-address-no-zone', description='An IPv4 address without a zone index.  This type, derived from\nipv4-address, may be used in situations where the zone is\nknown from the context and hence no zone index is needed.', reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[YangPattern(yang_regex='(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.){{3}}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(%[\\p{{N}}\\p{{L}}]+)?', pcre='^((([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.){{3}}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(%[\\p{{N}}\\p{{L}}]+)?)$', invert=False), YangPattern(yang_regex='[0-9\\.]*', pcre='^([0-9\\.]*)$', invert=False)])),
-                    DLeaf(module='Cisco-IOS-XR-um-if-ip-address-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-if-ip-address-cfg', prefix='um-if-ip-address-cfg', name='netmask', config=True, description='IP subnet mask', is_key=False, mandatory=True, type=DTypeString(name='inet:ipv4-address-no-zone', description='An IPv4 address without a zone index.  This type, derived from\nipv4-address, may be used in situations where the zone is\nknown from the context and hence no zone index is needed.', reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[YangPattern(yang_regex='(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.){{3}}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(%[\\p{{N}}\\p{{L}}]+)?', pcre='^((([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.){{3}}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(%[\\p{{N}}\\p{{L}}]+)?)$', invert=False), YangPattern(yang_regex='[0-9\\.]*', pcre='^([0-9\\.]*)$', invert=False)]))
+SRC_DNODE_CHILD_0: DContainer = DContainer(module='Cisco-IOS-XR-um-interface-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-interface-cfg', prefix='um-interface-cfg', name='interfaces', config=True, description='Interface configuration', presence=False, adata_name='interfaces', children=[
+    DList(module='Cisco-IOS-XR-um-interface-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-interface-cfg', prefix='um-interface-cfg', name='interface', key=['interface-name'], config=True, description='Interface configuration subcommands', min_elements=0, ordered_by='system', adata_name='interface', children=[
+        DLeaf(module='Cisco-IOS-XR-um-interface-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-interface-cfg', prefix='um-interface-cfg', name='interface-name', config=True, description='Interface configuration subcommands', is_key=True, mandatory=False, type=DTypeString(name='xr:Interface-name', description='An interface name specifying an interface type and\ninstance.\nInterface represents a string defining an interface\ntype and instance, e.g. MgmtEth0/4/CPU1/0 or\nTenGigE0/2/0/0.2 or Bundle-Ether9 or\nBundle-Ether9.98 or Serial0/0/0/0/3/1:1', reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[YangPattern(yang_regex='[a-zA-Z0-9.:_/-]+', pcre='^([a-zA-Z0-9.:_/-]+)$', invert=False)]), adata_name='interface_name'),
+        DContainer(module='Cisco-IOS-XR-um-interface-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-interface-cfg', prefix='um-interface-cfg', name='ipv4', config=True, description='Interface IPv4 config commands', presence=False, adata_name='ipv4', children=[
+            DContainer(module='Cisco-IOS-XR-um-if-ip-address-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-if-ip-address-cfg', prefix='um-if-ip-address-cfg', name='addresses', config=True, description='Set the IPv4 address of an interface', presence=False, adata_name='addresses', children=[
+                DContainer(module='Cisco-IOS-XR-um-if-ip-address-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-if-ip-address-cfg', prefix='um-if-ip-address-cfg', name='address', config=True, description='IP address and Mask', presence=True, adata_name='address', children=[
+                    DLeaf(module='Cisco-IOS-XR-um-if-ip-address-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-if-ip-address-cfg', prefix='um-if-ip-address-cfg', name='address', config=True, description='IP address', is_key=False, mandatory=True, type=DTypeString(name='inet:ipv4-address-no-zone', description='An IPv4 address without a zone index.  This type, derived from\nipv4-address, may be used in situations where the zone is\nknown from the context and hence no zone index is needed.', reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[YangPattern(yang_regex='(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.){{3}}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(%[\\p{{N}}\\p{{L}}]+)?', pcre='^((([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.){{3}}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(%[\\p{{N}}\\p{{L}}]+)?)$', invert=False), YangPattern(yang_regex='[0-9\\.]*', pcre='^([0-9\\.]*)$', invert=False)]), adata_name='address'),
+                    DLeaf(module='Cisco-IOS-XR-um-if-ip-address-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-if-ip-address-cfg', prefix='um-if-ip-address-cfg', name='netmask', config=True, description='IP subnet mask', is_key=False, mandatory=True, type=DTypeString(name='inet:ipv4-address-no-zone', description='An IPv4 address without a zone index.  This type, derived from\nipv4-address, may be used in situations where the zone is\nknown from the context and hence no zone index is needed.', reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[YangPattern(yang_regex='(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.){{3}}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(%[\\p{{N}}\\p{{L}}]+)?', pcre='^((([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.){{3}}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(%[\\p{{N}}\\p{{L}}]+)?)$', invert=False), YangPattern(yang_regex='[0-9\\.]*', pcre='^([0-9\\.]*)$', invert=False)]), adata_name='netmask')
                 ])
             ])
         ]),
-        DContainer(module='Cisco-IOS-XR-um-interface-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-interface-cfg', prefix='um-interface-cfg', name='shutdown', config=True, description='shutdown the given interface', presence=True),
-        DLeaf(module='Cisco-IOS-XR-um-interface-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-interface-cfg', prefix='um-interface-cfg', name='description', config=True, description='Set description for this interface', is_key=False, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=Ranges([(1, 1024)]), patterns=[])),
-        DContainer(module='Cisco-IOS-XR-um-l2-ethernet-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-l2-ethernet-cfg', prefix='um-l2-ethernet-cfg', name='encapsulation', config=True, description='Specify which packets will be matched by this sub-interface', presence=False, when="(../um-interface-cfg:interface-name[starts-with(text(),'FastEthernet')] or ../um-interface-cfg:interface-name[starts-with(text(),'GigabitEthernet')] or ../um-interface-cfg:interface-name[starts-with(text(),'TenGigE')] or ../um-interface-cfg:interface-name[starts-with(text(),'FortyGigE')] or ../um-interface-cfg:interface-name[starts-with(text(),'HundredGigE')] or ../um-interface-cfg:interface-name[starts-with(text(),'TwoHundredGigE')] or ../um-interface-cfg:interface-name[starts-with(text(),'FourHundredGigE')] or ../um-interface-cfg:interface-name[starts-with(text(),'EightHundredGigE')] or ../um-interface-cfg:interface-name[starts-with(text(),'TwentyFiveGigE')] or ../um-interface-cfg:interface-name[starts-with(text(),'FiftyGigE')] or ../um-interface-cfg:interface-name[starts-with(text(),'Bundle-Ether')] or ../um-interface-cfg:interface-name[starts-with(text(),'PW-Ether')])and ../um-interface-cfg:interface-name[contains(text(),'.')]and not(../um-interface-cfg:sub-interface-type/um-interface-cfg:l2transport)", children=[
-            DContainer(module='Cisco-IOS-XR-um-l2-ethernet-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-l2-ethernet-cfg', prefix='um-l2-ethernet-cfg', name='dot1q', config=True, description='IEEE 802.1Q VLAN-tagged packets', presence=False, children=[
-                DLeaf(module='Cisco-IOS-XR-um-l2-ethernet-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-l2-ethernet-cfg', prefix='um-l2-ethernet-cfg', name='vlan-id', config=True, description='Configure first (outer) VLAN ID on the subinterface', is_key=False, mandatory=False, type=DTypeIntegerUnsigned(name='uint32', description=None, reference=None, units=None, exts=[], builtin_type='uint32', default=None, ranges=Ranges([(1, 4094)])))
+        DContainer(module='Cisco-IOS-XR-um-interface-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-interface-cfg', prefix='um-interface-cfg', name='shutdown', config=True, description='shutdown the given interface', presence=True, adata_name='shutdown'),
+        DLeaf(module='Cisco-IOS-XR-um-interface-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-interface-cfg', prefix='um-interface-cfg', name='description', config=True, description='Set description for this interface', is_key=False, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=Ranges([(1, 1024)]), patterns=[]), adata_name='description'),
+        DContainer(module='Cisco-IOS-XR-um-l2-ethernet-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-l2-ethernet-cfg', prefix='um-l2-ethernet-cfg', name='encapsulation', config=True, description='Specify which packets will be matched by this sub-interface', presence=False, when="(../um-interface-cfg:interface-name[starts-with(text(),'FastEthernet')] or ../um-interface-cfg:interface-name[starts-with(text(),'GigabitEthernet')] or ../um-interface-cfg:interface-name[starts-with(text(),'TenGigE')] or ../um-interface-cfg:interface-name[starts-with(text(),'FortyGigE')] or ../um-interface-cfg:interface-name[starts-with(text(),'HundredGigE')] or ../um-interface-cfg:interface-name[starts-with(text(),'TwoHundredGigE')] or ../um-interface-cfg:interface-name[starts-with(text(),'FourHundredGigE')] or ../um-interface-cfg:interface-name[starts-with(text(),'EightHundredGigE')] or ../um-interface-cfg:interface-name[starts-with(text(),'TwentyFiveGigE')] or ../um-interface-cfg:interface-name[starts-with(text(),'FiftyGigE')] or ../um-interface-cfg:interface-name[starts-with(text(),'Bundle-Ether')] or ../um-interface-cfg:interface-name[starts-with(text(),'PW-Ether')])and ../um-interface-cfg:interface-name[contains(text(),'.')]and not(../um-interface-cfg:sub-interface-type/um-interface-cfg:l2transport)", adata_name='encapsulation', children=[
+            DContainer(module='Cisco-IOS-XR-um-l2-ethernet-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-l2-ethernet-cfg', prefix='um-l2-ethernet-cfg', name='dot1q', config=True, description='IEEE 802.1Q VLAN-tagged packets', presence=False, adata_name='dot1q', children=[
+                DLeaf(module='Cisco-IOS-XR-um-l2-ethernet-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-l2-ethernet-cfg', prefix='um-l2-ethernet-cfg', name='vlan-id', config=True, description='Configure first (outer) VLAN ID on the subinterface', is_key=False, mandatory=False, type=DTypeIntegerUnsigned(name='uint32', description=None, reference=None, units=None, exts=[], builtin_type='uint32', default=None, ranges=Ranges([(1, 4094)])), adata_name='vlan_id')
             ])
         ])
     ])
 ])
 
-SRC_DNODE_CHILD_5: DLeaf = DLeaf(module='Cisco-IOS-XR-um-router-isis-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-isis-cfg', prefix='um-router-isis-cfg', name='process-id', config=True, description='Process ID', is_key=True, mandatory=False, type=DTypeString(name='xr:Cisco-ios-xr-string', description='Special characters are not allowed.', reference=None, units=None, exts=[], builtin_type='string', default=None, length=Ranges([(1, 36)]), patterns=[YangPattern(yang_regex='[\\w\\-\\.:,_@#%$\\+=\\| ;]+', pcre='^(([\\-\\.:,_@#%$\\+=\\| ;]|(?![\\p{{P}}\\p{{Z}}\\p{{C}}])[\\x{{0000}}-\\x{{10FFFF}}])+)$', invert=False)]))
+SRC_DNODE_CHILD_5: DLeaf = DLeaf(module='Cisco-IOS-XR-um-router-isis-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-isis-cfg', prefix='um-router-isis-cfg', name='process-id', config=True, description='Process ID', is_key=True, mandatory=False, type=DTypeString(name='xr:Cisco-ios-xr-string', description='Special characters are not allowed.', reference=None, units=None, exts=[], builtin_type='string', default=None, length=Ranges([(1, 36)]), patterns=[YangPattern(yang_regex='[\\w\\-\\.:,_@#%$\\+=\\| ;]+', pcre='^(([\\-\\.:,_@#%$\\+=\\| ;]|(?![\\p{{P}}\\p{{Z}}\\p{{C}}])[\\x{{0000}}-\\x{{10FFFF}}])+)$', invert=False)]), adata_name='process_id')
 
-SRC_DNODE_CHILD_6: DLeaf = DLeaf(module='Cisco-IOS-XR-um-router-isis-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-isis-cfg', prefix='um-router-isis-cfg', name='is-type', config=True, description='Area type (level)', is_key=False, mandatory=False, type=DTypeEnum(name='enumeration', description=None, reference=None, units=None, exts=[], builtin_type='enumeration', default=None, name_to_val={'level-1':1, 'level-2-only':2, 'level-1-2':3}))
+SRC_DNODE_CHILD_6: DLeaf = DLeaf(module='Cisco-IOS-XR-um-router-isis-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-isis-cfg', prefix='um-router-isis-cfg', name='is-type', config=True, description='Area type (level)', is_key=False, mandatory=False, type=DTypeEnum(name='enumeration', description=None, reference=None, units=None, exts=[], builtin_type='enumeration', default=None, name_to_val={'level-1':1, 'level-2-only':2, 'level-1-2':3}), adata_name='is_type')
 
-SRC_DNODE_CHILD_7: DContainer = DContainer(module='Cisco-IOS-XR-um-router-isis-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-isis-cfg', prefix='um-router-isis-cfg', name='nets', config=True, description='A Network Entity Title (NET) for this process', presence=False, children=[
-    DList(module='Cisco-IOS-XR-um-router-isis-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-isis-cfg', prefix='um-router-isis-cfg', name='net', key=['net-id'], config=True, description='A Network Entity Title (NET) for this process', min_elements=0, ordered_by='system', children=[
-        DLeaf(module='Cisco-IOS-XR-um-router-isis-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-isis-cfg', prefix='um-router-isis-cfg', name='net-id', config=True, description='NET (XX.XXXX. ... .XXXX.XX)', is_key=True, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=Ranges([(1, 1024)]), patterns=[]))
+SRC_DNODE_CHILD_7: DContainer = DContainer(module='Cisco-IOS-XR-um-router-isis-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-isis-cfg', prefix='um-router-isis-cfg', name='nets', config=True, description='A Network Entity Title (NET) for this process', presence=False, adata_name='nets', children=[
+    DList(module='Cisco-IOS-XR-um-router-isis-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-isis-cfg', prefix='um-router-isis-cfg', name='net', key=['net-id'], config=True, description='A Network Entity Title (NET) for this process', min_elements=0, ordered_by='system', adata_name='net', children=[
+        DLeaf(module='Cisco-IOS-XR-um-router-isis-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-isis-cfg', prefix='um-router-isis-cfg', name='net-id', config=True, description='NET (XX.XXXX. ... .XXXX.XX)', is_key=True, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=Ranges([(1, 1024)]), patterns=[]), adata_name='net_id')
     ])
 ])
 
-SRC_DNODE_CHILD_8: DContainer = DContainer(module='Cisco-IOS-XR-um-router-isis-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-isis-cfg', prefix='um-router-isis-cfg', name='interfaces', config=True, description='Enter the IS-IS interface configuration submode', presence=False, children=[
-    DList(module='Cisco-IOS-XR-um-router-isis-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-isis-cfg', prefix='um-router-isis-cfg', name='interface', key=['interface-name'], config=True, description='Enter the IS-IS interface configuration submode', min_elements=0, ordered_by='system', children=[
-        DLeaf(module='Cisco-IOS-XR-um-router-isis-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-isis-cfg', prefix='um-router-isis-cfg', name='interface-name', config=True, description='Interface to configure', is_key=True, mandatory=False, type=DTypeString(name='xr:Interface-name', description='An interface name specifying an interface type and\ninstance.\nInterface represents a string defining an interface\ntype and instance, e.g. MgmtEth0/4/CPU1/0 or\nTenGigE0/2/0/0.2 or Bundle-Ether9 or\nBundle-Ether9.98 or Serial0/0/0/0/3/1:1', reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[YangPattern(yang_regex='[a-zA-Z0-9.:_/-]+', pcre='^([a-zA-Z0-9.:_/-]+)$', invert=False)])),
-        DLeaf(module='Cisco-IOS-XR-um-router-isis-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-isis-cfg', prefix='um-router-isis-cfg', name='state', config=True, description='Do not establish adjacencies over this interface', is_key=False, mandatory=False, type=DTypeEnum(name='enumeration', description=None, reference=None, units=None, exts=[], builtin_type='enumeration', default=None, name_to_val={'passive':2, 'suppressed':1, 'shutdown':0})),
-        DLeaf(module='Cisco-IOS-XR-um-router-isis-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-isis-cfg', prefix='um-router-isis-cfg', name='circuit-type', config=True, description='Configure circuit type for interface', is_key=False, mandatory=False, type=DTypeEnum(name='enumeration', description=None, reference=None, units=None, exts=[], builtin_type='enumeration', default=None, name_to_val={'level-1':1, 'level-2-only':2, 'level-1-2':3})),
-        DLeaf(module='Cisco-IOS-XR-um-router-isis-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-isis-cfg', prefix='um-router-isis-cfg', name='point-to-point', config=True, description='Treat active LAN interface as point-to-point', is_key=False, mandatory=False, type=DTypeEmpty(name='empty', description=None, reference=None, units=None, exts=[], builtin_type='empty', default=None)),
-        DContainer(module='Cisco-IOS-XR-um-router-isis-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-isis-cfg', prefix='um-router-isis-cfg', name='address-families', config=True, description='Enter the IS-IS interface address-family configuration submode', presence=False, children=[
+SRC_DNODE_CHILD_8: DContainer = DContainer(module='Cisco-IOS-XR-um-router-isis-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-isis-cfg', prefix='um-router-isis-cfg', name='interfaces', config=True, description='Enter the IS-IS interface configuration submode', presence=False, adata_name='interfaces', children=[
+    DList(module='Cisco-IOS-XR-um-router-isis-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-isis-cfg', prefix='um-router-isis-cfg', name='interface', key=['interface-name'], config=True, description='Enter the IS-IS interface configuration submode', min_elements=0, ordered_by='system', adata_name='interface', children=[
+        DLeaf(module='Cisco-IOS-XR-um-router-isis-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-isis-cfg', prefix='um-router-isis-cfg', name='interface-name', config=True, description='Interface to configure', is_key=True, mandatory=False, type=DTypeString(name='xr:Interface-name', description='An interface name specifying an interface type and\ninstance.\nInterface represents a string defining an interface\ntype and instance, e.g. MgmtEth0/4/CPU1/0 or\nTenGigE0/2/0/0.2 or Bundle-Ether9 or\nBundle-Ether9.98 or Serial0/0/0/0/3/1:1', reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[YangPattern(yang_regex='[a-zA-Z0-9.:_/-]+', pcre='^([a-zA-Z0-9.:_/-]+)$', invert=False)]), adata_name='interface_name'),
+        DLeaf(module='Cisco-IOS-XR-um-router-isis-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-isis-cfg', prefix='um-router-isis-cfg', name='state', config=True, description='Do not establish adjacencies over this interface', is_key=False, mandatory=False, type=DTypeEnum(name='enumeration', description=None, reference=None, units=None, exts=[], builtin_type='enumeration', default=None, name_to_val={'passive':2, 'suppressed':1, 'shutdown':0}), adata_name='state'),
+        DLeaf(module='Cisco-IOS-XR-um-router-isis-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-isis-cfg', prefix='um-router-isis-cfg', name='circuit-type', config=True, description='Configure circuit type for interface', is_key=False, mandatory=False, type=DTypeEnum(name='enumeration', description=None, reference=None, units=None, exts=[], builtin_type='enumeration', default=None, name_to_val={'level-1':1, 'level-2-only':2, 'level-1-2':3}), adata_name='circuit_type'),
+        DLeaf(module='Cisco-IOS-XR-um-router-isis-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-isis-cfg', prefix='um-router-isis-cfg', name='point-to-point', config=True, description='Treat active LAN interface as point-to-point', is_key=False, mandatory=False, type=DTypeEmpty(name='empty', description=None, reference=None, units=None, exts=[], builtin_type='empty', default=None), adata_name='point_to_point'),
+        DContainer(module='Cisco-IOS-XR-um-router-isis-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-isis-cfg', prefix='um-router-isis-cfg', name='address-families', config=True, description='Enter the IS-IS interface address-family configuration submode', presence=False, adata_name='address_families', children=[
             DList(module='Cisco-IOS-XR-um-router-isis-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-isis-cfg', prefix='um-router-isis-cfg', name='address-family', key=[
 'af-name',
 'saf-name'
-                ], config=True, description='Enter the IS-IS interface address-family configuration submode', min_elements=0, ordered_by='system', children=[
-                DLeaf(module='Cisco-IOS-XR-um-router-isis-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-isis-cfg', prefix='um-router-isis-cfg', name='af-name', config=True, description='af-name', is_key=True, mandatory=False, type=DTypeEnum(name='enumeration', description=None, reference=None, units=None, exts=[], builtin_type='enumeration', default=None, name_to_val={'ipv4':0, 'ipv6':1})),
-                DLeaf(module='Cisco-IOS-XR-um-router-isis-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-isis-cfg', prefix='um-router-isis-cfg', name='saf-name', config=True, description='saf-name', is_key=True, mandatory=False, type=DTypeEnum(name='enumeration', description=None, reference=None, units=None, exts=[], builtin_type='enumeration', default=None, name_to_val={'unicast':0, 'multicast':1})),
-                DContainer(module='Cisco-IOS-XR-um-router-isis-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-isis-cfg', prefix='um-router-isis-cfg', name='metric-levels', config=True, description='Set metric for one level only', presence=False, children=[
+                ], config=True, description='Enter the IS-IS interface address-family configuration submode', min_elements=0, ordered_by='system', adata_name='address_family', children=[
+                DLeaf(module='Cisco-IOS-XR-um-router-isis-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-isis-cfg', prefix='um-router-isis-cfg', name='af-name', config=True, description='af-name', is_key=True, mandatory=False, type=DTypeEnum(name='enumeration', description=None, reference=None, units=None, exts=[], builtin_type='enumeration', default=None, name_to_val={'ipv4':0, 'ipv6':1}), adata_name='af_name'),
+                DLeaf(module='Cisco-IOS-XR-um-router-isis-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-isis-cfg', prefix='um-router-isis-cfg', name='saf-name', config=True, description='saf-name', is_key=True, mandatory=False, type=DTypeEnum(name='enumeration', description=None, reference=None, units=None, exts=[], builtin_type='enumeration', default=None, name_to_val={'unicast':0, 'multicast':1}), adata_name='saf_name'),
+                DContainer(module='Cisco-IOS-XR-um-router-isis-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-isis-cfg', prefix='um-router-isis-cfg', name='metric-levels', config=True, description='Set metric for one level only', presence=False, adata_name='metric_levels', children=[
                     DList(module='Cisco-IOS-XR-um-router-isis-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-isis-cfg', prefix='um-router-isis-cfg', name='metric-level', key=['level-number'], config=True, description='Set metric for one level only', min_elements=0, must=[
 DMust(condition='maximum or default-metric', description=None, error_app_tag=None, error_message=None, reference=None)
-                        ], ordered_by='system', children=[
-                        DLeaf(module='Cisco-IOS-XR-um-router-isis-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-isis-cfg', prefix='um-router-isis-cfg', name='level-number', config=True, description='Set metric at this level only', is_key=True, mandatory=False, type=DTypeIntegerUnsigned(name='uint32', description=None, reference=None, units=None, exts=[], builtin_type='uint32', default=None, ranges=Ranges([(1, 2)]))),
-                        DLeaf(module='Cisco-IOS-XR-um-router-isis-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-isis-cfg', prefix='um-router-isis-cfg', name='default-metric', config=True, description='Default metric: <1-63> for narrow, <1-16777214> for wide', is_key=False, mandatory=False, type=DTypeIntegerUnsigned(name='uint32', description=None, reference=None, units=None, exts=[], builtin_type='uint32', default=None, ranges=Ranges([(1, 16777214)])))
+                        ], ordered_by='system', adata_name='metric_level', children=[
+                        DLeaf(module='Cisco-IOS-XR-um-router-isis-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-isis-cfg', prefix='um-router-isis-cfg', name='level-number', config=True, description='Set metric at this level only', is_key=True, mandatory=False, type=DTypeIntegerUnsigned(name='uint32', description=None, reference=None, units=None, exts=[], builtin_type='uint32', default=None, ranges=Ranges([(1, 2)])), adata_name='level_number'),
+                        DLeaf(module='Cisco-IOS-XR-um-router-isis-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-isis-cfg', prefix='um-router-isis-cfg', name='default-metric', config=True, description='Default metric: <1-63> for narrow, <1-16777214> for wide', is_key=False, mandatory=False, type=DTypeIntegerUnsigned(name='uint32', description=None, reference=None, units=None, exts=[], builtin_type='uint32', default=None, ranges=Ranges([(1, 16777214)])), adata_name='default_metric')
                     ])
                 ])
             ])
@@ -68,109 +68,109 @@ DMust(condition='maximum or default-metric', description=None, error_app_tag=Non
     ])
 ])
 
-SRC_DNODE_CHILD_9: DContainer = DContainer(module='Cisco-IOS-XR-um-router-isis-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-isis-cfg', prefix='um-router-isis-cfg', name='address-families', config=True, description='Enter the IS-IS address-family configuration submode', presence=False, children=[
+SRC_DNODE_CHILD_9: DContainer = DContainer(module='Cisco-IOS-XR-um-router-isis-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-isis-cfg', prefix='um-router-isis-cfg', name='address-families', config=True, description='Enter the IS-IS address-family configuration submode', presence=False, adata_name='address_families', children=[
     DList(module='Cisco-IOS-XR-um-router-isis-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-isis-cfg', prefix='um-router-isis-cfg', name='address-family', key=[
 'af-name',
 'saf-name'
-        ], config=True, description='Enter the IS-IS address-family configuration submode', min_elements=0, ordered_by='system', children=[
-        DLeaf(module='Cisco-IOS-XR-um-router-isis-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-isis-cfg', prefix='um-router-isis-cfg', name='af-name', config=True, description='af-name', is_key=True, mandatory=False, type=DTypeEnum(name='enumeration', description=None, reference=None, units=None, exts=[], builtin_type='enumeration', default=None, name_to_val={'ipv4':0, 'ipv6':1})),
-        DLeaf(module='Cisco-IOS-XR-um-router-isis-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-isis-cfg', prefix='um-router-isis-cfg', name='saf-name', config=True, description='saf-name', is_key=True, mandatory=False, type=DTypeEnum(name='enumeration', description=None, reference=None, units=None, exts=[], builtin_type='enumeration', default=None, name_to_val={'unicast':0, 'multicast':1})),
-        DContainer(module='Cisco-IOS-XR-um-router-isis-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-isis-cfg', prefix='um-router-isis-cfg', name='metric-style', config=True, description='Use old-style (ISO 10589) or new-style packet formats', presence=False, children=[
-            DContainer(module='Cisco-IOS-XR-um-router-isis-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-isis-cfg', prefix='um-router-isis-cfg', name='wide', config=True, description='Use new style of TLVs to carry wider metric', presence=True)
+        ], config=True, description='Enter the IS-IS address-family configuration submode', min_elements=0, ordered_by='system', adata_name='address_family', children=[
+        DLeaf(module='Cisco-IOS-XR-um-router-isis-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-isis-cfg', prefix='um-router-isis-cfg', name='af-name', config=True, description='af-name', is_key=True, mandatory=False, type=DTypeEnum(name='enumeration', description=None, reference=None, units=None, exts=[], builtin_type='enumeration', default=None, name_to_val={'ipv4':0, 'ipv6':1}), adata_name='af_name'),
+        DLeaf(module='Cisco-IOS-XR-um-router-isis-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-isis-cfg', prefix='um-router-isis-cfg', name='saf-name', config=True, description='saf-name', is_key=True, mandatory=False, type=DTypeEnum(name='enumeration', description=None, reference=None, units=None, exts=[], builtin_type='enumeration', default=None, name_to_val={'unicast':0, 'multicast':1}), adata_name='saf_name'),
+        DContainer(module='Cisco-IOS-XR-um-router-isis-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-isis-cfg', prefix='um-router-isis-cfg', name='metric-style', config=True, description='Use old-style (ISO 10589) or new-style packet formats', presence=False, adata_name='metric_style', children=[
+            DContainer(module='Cisco-IOS-XR-um-router-isis-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-isis-cfg', prefix='um-router-isis-cfg', name='wide', config=True, description='Use new style of TLVs to carry wider metric', presence=True, adata_name='wide')
         ])
     ])
 ])
 
-SRC_DNODE_CHILD_4: DList = DList(module='Cisco-IOS-XR-um-router-isis-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-isis-cfg', prefix='um-router-isis-cfg', name='process', key=['process-id'], config=True, description='ISO IS-IS', min_elements=0, ordered_by='system', children=[SRC_DNODE_CHILD_5, SRC_DNODE_CHILD_6, SRC_DNODE_CHILD_7, SRC_DNODE_CHILD_8, SRC_DNODE_CHILD_9])
+SRC_DNODE_CHILD_4: DList = DList(module='Cisco-IOS-XR-um-router-isis-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-isis-cfg', prefix='um-router-isis-cfg', name='process', key=['process-id'], config=True, description='ISO IS-IS', min_elements=0, ordered_by='system', adata_name='process', children=[SRC_DNODE_CHILD_5, SRC_DNODE_CHILD_6, SRC_DNODE_CHILD_7, SRC_DNODE_CHILD_8, SRC_DNODE_CHILD_9])
 
-SRC_DNODE_CHILD_3: DContainer = DContainer(module='Cisco-IOS-XR-um-router-isis-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-isis-cfg', prefix='um-router-isis-cfg', name='processes', config=True, description='ISO IS-IS', presence=False, children=[SRC_DNODE_CHILD_4])
+SRC_DNODE_CHILD_3: DContainer = DContainer(module='Cisco-IOS-XR-um-router-isis-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-isis-cfg', prefix='um-router-isis-cfg', name='processes', config=True, description='ISO IS-IS', presence=False, adata_name='processes', children=[SRC_DNODE_CHILD_4])
 
-SRC_DNODE_CHILD_2: DContainer = DContainer(module='Cisco-IOS-XR-um-router-isis-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-isis-cfg', prefix='um-router-isis-cfg', name='isis', config=True, description='ISO IS-IS', presence=False, children=[SRC_DNODE_CHILD_3])
+SRC_DNODE_CHILD_2: DContainer = DContainer(module='Cisco-IOS-XR-um-router-isis-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-isis-cfg', prefix='um-router-isis-cfg', name='isis', config=True, description='ISO IS-IS', presence=False, adata_name='isis', children=[SRC_DNODE_CHILD_3])
 
-SRC_DNODE_CHILD_1: DContainer = DContainer(module='Cisco-IOS-XR-um-router-isis-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-isis-cfg', prefix='um-router-isis-cfg', name='router', config=True, description='ISO IS-IS', presence=False, children=[SRC_DNODE_CHILD_2])
+SRC_DNODE_CHILD_1: DContainer = DContainer(module='Cisco-IOS-XR-um-router-isis-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-isis-cfg', prefix='um-router-isis-cfg', name='router', config=True, description='ISO IS-IS', presence=False, adata_name='um_router_isis_cfg_router', children=[SRC_DNODE_CHILD_2])
 
-SRC_DNODE_CHILD_13: DLeaf = DLeaf(module='Cisco-IOS-XR-um-router-bgp-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-bgp-cfg', prefix='um-router-bgp-cfg', name='as-number', config=True, description='bgp as-number', is_key=True, mandatory=False, type=DTypeUnion(name='xr:Bgp-as-number', description='BGP AS number type', reference=None, units=None, exts=[], builtin_type='union', default=None, types=[DTypeIntegerUnsigned(name='uint32', description=None, reference=None, units=None, exts=[], builtin_type='uint32', default=None, ranges=Ranges([(1, 65535)])), DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[YangPattern(yang_regex='([1-9][0-9]{{0,4}}).([0-9]{{1,5}})', pcre='^(([1-9][0-9]{{0,4}}).([0-9]{{1,5}}))$', invert=False)]), DTypeIntegerUnsigned(name='uint32', description=None, reference=None, units=None, exts=[], builtin_type='uint32', default=None, ranges=Ranges([(65536, 4294967295)]))]))
+SRC_DNODE_CHILD_13: DLeaf = DLeaf(module='Cisco-IOS-XR-um-router-bgp-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-bgp-cfg', prefix='um-router-bgp-cfg', name='as-number', config=True, description='bgp as-number', is_key=True, mandatory=False, type=DTypeUnion(name='xr:Bgp-as-number', description='BGP AS number type', reference=None, units=None, exts=[], builtin_type='union', default=None, types=[DTypeIntegerUnsigned(name='uint32', description=None, reference=None, units=None, exts=[], builtin_type='uint32', default=None, ranges=Ranges([(1, 65535)])), DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[YangPattern(yang_regex='([1-9][0-9]{{0,4}}).([0-9]{{1,5}})', pcre='^(([1-9][0-9]{{0,4}}).([0-9]{{1,5}}))$', invert=False)]), DTypeIntegerUnsigned(name='uint32', description=None, reference=None, units=None, exts=[], builtin_type='uint32', default=None, ranges=Ranges([(65536, 4294967295)]))]), adata_name='as_number')
 
-SRC_DNODE_CHILD_14: DContainer = DContainer(module='Cisco-IOS-XR-um-router-bgp-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-bgp-cfg', prefix='um-router-bgp-cfg', name='neighbors', config=True, description='Specify a neighbor router', presence=False, children=[
-    DList(module='Cisco-IOS-XR-um-router-bgp-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-bgp-cfg', prefix='um-router-bgp-cfg', name='neighbor', key=['address'], config=True, description='Specify a neighbor router', min_elements=0, ordered_by='system', children=[
-        DLeaf(module='Cisco-IOS-XR-um-router-bgp-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-bgp-cfg', prefix='um-router-bgp-cfg', name='address', config=True, description='IPaddress', is_key=True, mandatory=False, type=DTypeUnion(name='inet:ip-address-no-zone', description='The ip-address-no-zone type represents an IP address and is\nIP version neutral.  The format of the textual representation\nimplies the IP version.  This type does not support scoped\naddresses since it does not allow zone identifiers in the\naddress format.', reference='RFC 4007: IPv6 Scoped Address Architecture', units=None, exts=[], builtin_type='union', default=None, types=[DTypeString(name='inet:ipv4-address-no-zone', description='An IPv4 address without a zone index.  This type, derived from\nipv4-address, may be used in situations where the zone is\nknown from the context and hence no zone index is needed.', reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[YangPattern(yang_regex='(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.){{3}}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(%[\\p{{N}}\\p{{L}}]+)?', pcre='^((([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.){{3}}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(%[\\p{{N}}\\p{{L}}]+)?)$', invert=False), YangPattern(yang_regex='[0-9\\.]*', pcre='^([0-9\\.]*)$', invert=False)]), DTypeString(name='inet:ipv6-address-no-zone', description='An IPv6 address without a zone index.  This type, derived from\nipv6-address, may be used in situations where the zone is\nknown from the context and hence no zone index is needed.', reference='RFC 4291: IP Version 6 Addressing Architecture\nRFC 4007: IPv6 Scoped Address Architecture\nRFC 5952: A Recommendation for IPv6 Address Text\n          Representation', units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[YangPattern(yang_regex='((:|[0-9a-fA-F]{{0,4}}):)([0-9a-fA-F]{{0,4}}:){{0,5}}((([0-9a-fA-F]{{0,4}}:)?(:|[0-9a-fA-F]{{0,4}}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\\.){{3}}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))(%[\\p{{N}}\\p{{L}}]+)?', pcre='^(((:|[0-9a-fA-F]{{0,4}}):)([0-9a-fA-F]{{0,4}}:){{0,5}}((([0-9a-fA-F]{{0,4}}:)?(:|[0-9a-fA-F]{{0,4}}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\\.){{3}}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))(%[\\p{{N}}\\p{{L}}]+)?)$', invert=False), YangPattern(yang_regex='(([^:]+:){{6}}(([^:]+:[^:]+)|(.*\\..*)))|((([^:]+:)*[^:]+)?::(([^:]+:)*[^:]+)?)(%.+)?', pcre='^((([^\\:]+:){{6}}(([^\\:]+:[^\\:]+)|(.*\\..*)))|((([^\\:]+:)*[^\\:]+)?::(([^\\:]+:)*[^\\:]+)?)(%.+)?)$', invert=False), YangPattern(yang_regex='[0-9a-fA-F:\\.]*', pcre='^([0-9a-fA-F:\\.]*)$', invert=False)])])),
-        DContainer(module='Cisco-IOS-XR-um-router-bgp-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-bgp-cfg', prefix='um-router-bgp-cfg', name='use', config=True, description='Inherit configuration from a group', presence=False, children=[
-            DLeaf(module='Cisco-IOS-XR-um-router-bgp-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-bgp-cfg', prefix='um-router-bgp-cfg', name='neighbor-group', config=True, description='Inherit configuration from a neighbor-group', is_key=False, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=Ranges([(1, 1024)]), patterns=[]))
+SRC_DNODE_CHILD_14: DContainer = DContainer(module='Cisco-IOS-XR-um-router-bgp-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-bgp-cfg', prefix='um-router-bgp-cfg', name='neighbors', config=True, description='Specify a neighbor router', presence=False, adata_name='neighbors', children=[
+    DList(module='Cisco-IOS-XR-um-router-bgp-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-bgp-cfg', prefix='um-router-bgp-cfg', name='neighbor', key=['address'], config=True, description='Specify a neighbor router', min_elements=0, ordered_by='system', adata_name='neighbor', children=[
+        DLeaf(module='Cisco-IOS-XR-um-router-bgp-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-bgp-cfg', prefix='um-router-bgp-cfg', name='address', config=True, description='IPaddress', is_key=True, mandatory=False, type=DTypeUnion(name='inet:ip-address-no-zone', description='The ip-address-no-zone type represents an IP address and is\nIP version neutral.  The format of the textual representation\nimplies the IP version.  This type does not support scoped\naddresses since it does not allow zone identifiers in the\naddress format.', reference='RFC 4007: IPv6 Scoped Address Architecture', units=None, exts=[], builtin_type='union', default=None, types=[DTypeString(name='inet:ipv4-address-no-zone', description='An IPv4 address without a zone index.  This type, derived from\nipv4-address, may be used in situations where the zone is\nknown from the context and hence no zone index is needed.', reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[YangPattern(yang_regex='(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.){{3}}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(%[\\p{{N}}\\p{{L}}]+)?', pcre='^((([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.){{3}}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(%[\\p{{N}}\\p{{L}}]+)?)$', invert=False), YangPattern(yang_regex='[0-9\\.]*', pcre='^([0-9\\.]*)$', invert=False)]), DTypeString(name='inet:ipv6-address-no-zone', description='An IPv6 address without a zone index.  This type, derived from\nipv6-address, may be used in situations where the zone is\nknown from the context and hence no zone index is needed.', reference='RFC 4291: IP Version 6 Addressing Architecture\nRFC 4007: IPv6 Scoped Address Architecture\nRFC 5952: A Recommendation for IPv6 Address Text\n          Representation', units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[YangPattern(yang_regex='((:|[0-9a-fA-F]{{0,4}}):)([0-9a-fA-F]{{0,4}}:){{0,5}}((([0-9a-fA-F]{{0,4}}:)?(:|[0-9a-fA-F]{{0,4}}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\\.){{3}}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))(%[\\p{{N}}\\p{{L}}]+)?', pcre='^(((:|[0-9a-fA-F]{{0,4}}):)([0-9a-fA-F]{{0,4}}:){{0,5}}((([0-9a-fA-F]{{0,4}}:)?(:|[0-9a-fA-F]{{0,4}}))|(((25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])\\.){{3}}(25[0-5]|2[0-4][0-9]|[01]?[0-9]?[0-9])))(%[\\p{{N}}\\p{{L}}]+)?)$', invert=False), YangPattern(yang_regex='(([^:]+:){{6}}(([^:]+:[^:]+)|(.*\\..*)))|((([^:]+:)*[^:]+)?::(([^:]+:)*[^:]+)?)(%.+)?', pcre='^((([^\\:]+:){{6}}(([^\\:]+:[^\\:]+)|(.*\\..*)))|((([^\\:]+:)*[^\\:]+)?::(([^\\:]+:)*[^\\:]+)?)(%.+)?)$', invert=False), YangPattern(yang_regex='[0-9a-fA-F:\\.]*', pcre='^([0-9a-fA-F:\\.]*)$', invert=False)])]), adata_name='address'),
+        DContainer(module='Cisco-IOS-XR-um-router-bgp-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-bgp-cfg', prefix='um-router-bgp-cfg', name='use', config=True, description='Inherit configuration from a group', presence=False, adata_name='use', children=[
+            DLeaf(module='Cisco-IOS-XR-um-router-bgp-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-bgp-cfg', prefix='um-router-bgp-cfg', name='neighbor-group', config=True, description='Inherit configuration from a neighbor-group', is_key=False, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=Ranges([(1, 1024)]), patterns=[]), adata_name='neighbor_group')
         ]),
-        DLeaf(module='Cisco-IOS-XR-um-router-bgp-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-bgp-cfg', prefix='um-router-bgp-cfg', name='description', config=True, description='Neighbor specific description', is_key=False, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=Ranges([(1, 1024)]), patterns=[]))
+        DLeaf(module='Cisco-IOS-XR-um-router-bgp-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-bgp-cfg', prefix='um-router-bgp-cfg', name='description', config=True, description='Neighbor specific description', is_key=False, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=Ranges([(1, 1024)]), patterns=[]), adata_name='description')
     ])
 ])
 
-SRC_DNODE_CHILD_15: DContainer = DContainer(module='Cisco-IOS-XR-um-router-bgp-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-bgp-cfg', prefix='um-router-bgp-cfg', name='neighbor-groups', config=True, description='Specify a Neighbor-group', presence=False, children=[
+SRC_DNODE_CHILD_15: DContainer = DContainer(module='Cisco-IOS-XR-um-router-bgp-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-bgp-cfg', prefix='um-router-bgp-cfg', name='neighbor-groups', config=True, description='Specify a Neighbor-group', presence=False, adata_name='neighbor_groups', children=[
     DList(module='Cisco-IOS-XR-um-router-bgp-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-bgp-cfg', prefix='um-router-bgp-cfg', name='neighbor-group', key=[
 'neighbor-group-name'
-        ], config=True, description='Specify a Neighbor-group', min_elements=0, ordered_by='system', children=[
-        DLeaf(module='Cisco-IOS-XR-um-router-bgp-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-bgp-cfg', prefix='um-router-bgp-cfg', name='neighbor-group-name', config=True, description='Neighbor-group name', is_key=True, mandatory=False, type=DTypeString(name='xr:Cisco-ios-xr-string', description='Special characters are not allowed.', reference=None, units=None, exts=[], builtin_type='string', default=None, length=Ranges([(1, 900)]), patterns=[YangPattern(yang_regex='[\\w\\-\\.:,_@#%$\\+=\\| ;]+', pcre='^(([\\-\\.:,_@#%$\\+=\\| ;]|(?![\\p{{P}}\\p{{Z}}\\p{{C}}])[\\x{{0000}}-\\x{{10FFFF}}])+)$', invert=False)])),
-        DLeaf(module='Cisco-IOS-XR-um-router-bgp-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-bgp-cfg', prefix='um-router-bgp-cfg', name='remote-as', config=True, description='Set remote AS', is_key=False, mandatory=False, type=DTypeUnion(name='xr:Bgp-as-number', description='BGP AS number type', reference=None, units=None, exts=[], builtin_type='union', default=None, types=[DTypeIntegerUnsigned(name='uint32', description=None, reference=None, units=None, exts=[], builtin_type='uint32', default=None, ranges=Ranges([(1, 65535)])), DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[YangPattern(yang_regex='([1-9][0-9]{{0,4}}).([0-9]{{1,5}})', pcre='^(([1-9][0-9]{{0,4}}).([0-9]{{1,5}}))$', invert=False)]), DTypeIntegerUnsigned(name='uint32', description=None, reference=None, units=None, exts=[], builtin_type='uint32', default=None, ranges=Ranges([(65536, 4294967295)]))])),
-        DContainer(module='Cisco-IOS-XR-um-router-bgp-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-bgp-cfg', prefix='um-router-bgp-cfg', name='password', config=True, description='Set a password', presence=False, children=[
-            DLeaf(module='Cisco-IOS-XR-um-router-bgp-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-bgp-cfg', prefix='um-router-bgp-cfg', name='encrypted', config=True, description='Specifies a password will follow', is_key=False, mandatory=False, type=DTypeString(name='xr:Proprietary-password', description="The Proprietary-password type is used to store password\nusing the Cisco proprietary hash function.\nWhen a clear text value is set to a leaf of this type, the\nserver calculates a password hash and stores the result\nin the datastore. The password is never stored in clear text.\n\nWhen a leaf of this type is read, the stored password hash is\nreturned.\n\nA value of this type matches one of the forms:\n\n  !<clear text password>\n  <password hash>\n\nThe '!' prefix signals that the value is clear text. When\nsuch a value is received by the server, a hash value is\ncalculated. This value is stored in the configuration data\nstore.\n\nIf a value starting without '!' is received, the server knows\nthat the value already represents a hashed value, and stores\nit as is in the data store.", reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[YangPattern(yang_regex='(!.+)|([^!].+)', pcre='^((!.+)|([^!].+))$', invert=False)]))
+        ], config=True, description='Specify a Neighbor-group', min_elements=0, ordered_by='system', adata_name='neighbor_group', children=[
+        DLeaf(module='Cisco-IOS-XR-um-router-bgp-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-bgp-cfg', prefix='um-router-bgp-cfg', name='neighbor-group-name', config=True, description='Neighbor-group name', is_key=True, mandatory=False, type=DTypeString(name='xr:Cisco-ios-xr-string', description='Special characters are not allowed.', reference=None, units=None, exts=[], builtin_type='string', default=None, length=Ranges([(1, 900)]), patterns=[YangPattern(yang_regex='[\\w\\-\\.:,_@#%$\\+=\\| ;]+', pcre='^(([\\-\\.:,_@#%$\\+=\\| ;]|(?![\\p{{P}}\\p{{Z}}\\p{{C}}])[\\x{{0000}}-\\x{{10FFFF}}])+)$', invert=False)]), adata_name='neighbor_group_name'),
+        DLeaf(module='Cisco-IOS-XR-um-router-bgp-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-bgp-cfg', prefix='um-router-bgp-cfg', name='remote-as', config=True, description='Set remote AS', is_key=False, mandatory=False, type=DTypeUnion(name='xr:Bgp-as-number', description='BGP AS number type', reference=None, units=None, exts=[], builtin_type='union', default=None, types=[DTypeIntegerUnsigned(name='uint32', description=None, reference=None, units=None, exts=[], builtin_type='uint32', default=None, ranges=Ranges([(1, 65535)])), DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[YangPattern(yang_regex='([1-9][0-9]{{0,4}}).([0-9]{{1,5}})', pcre='^(([1-9][0-9]{{0,4}}).([0-9]{{1,5}}))$', invert=False)]), DTypeIntegerUnsigned(name='uint32', description=None, reference=None, units=None, exts=[], builtin_type='uint32', default=None, ranges=Ranges([(65536, 4294967295)]))]), adata_name='remote_as'),
+        DContainer(module='Cisco-IOS-XR-um-router-bgp-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-bgp-cfg', prefix='um-router-bgp-cfg', name='password', config=True, description='Set a password', presence=False, adata_name='password', children=[
+            DLeaf(module='Cisco-IOS-XR-um-router-bgp-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-bgp-cfg', prefix='um-router-bgp-cfg', name='encrypted', config=True, description='Specifies a password will follow', is_key=False, mandatory=False, type=DTypeString(name='xr:Proprietary-password', description="The Proprietary-password type is used to store password\nusing the Cisco proprietary hash function.\nWhen a clear text value is set to a leaf of this type, the\nserver calculates a password hash and stores the result\nin the datastore. The password is never stored in clear text.\n\nWhen a leaf of this type is read, the stored password hash is\nreturned.\n\nA value of this type matches one of the forms:\n\n  !<clear text password>\n  <password hash>\n\nThe '!' prefix signals that the value is clear text. When\nsuch a value is received by the server, a hash value is\ncalculated. This value is stored in the configuration data\nstore.\n\nIf a value starting without '!' is received, the server knows\nthat the value already represents a hashed value, and stores\nit as is in the data store.", reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[YangPattern(yang_regex='(!.+)|([^!].+)', pcre='^((!.+)|([^!].+))$', invert=False)]), adata_name='encrypted')
         ]),
-        DLeaf(module='Cisco-IOS-XR-um-router-bgp-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-bgp-cfg', prefix='um-router-bgp-cfg', name='update-source', config=True, description='Source of routing updates', is_key=False, mandatory=False, type=DTypeString(name='xr:Interface-name', description='An interface name specifying an interface type and\ninstance.\nInterface represents a string defining an interface\ntype and instance, e.g. MgmtEth0/4/CPU1/0 or\nTenGigE0/2/0/0.2 or Bundle-Ether9 or\nBundle-Ether9.98 or Serial0/0/0/0/3/1:1', reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[YangPattern(yang_regex='[a-zA-Z0-9.:_/-]+', pcre='^([a-zA-Z0-9.:_/-]+)$', invert=False)])),
-        DContainer(module='Cisco-IOS-XR-um-router-bgp-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-bgp-cfg', prefix='um-router-bgp-cfg', name='address-families', config=True, description='Enter Address Family command mode', presence=False, children=[
-            DList(module='Cisco-IOS-XR-um-router-bgp-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-bgp-cfg', prefix='um-router-bgp-cfg', name='address-family', key=['af-name'], config=True, description='Enter Address Family command mode', min_elements=0, ordered_by='system', children=[
-                DLeaf(module='Cisco-IOS-XR-um-router-bgp-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-bgp-cfg', prefix='um-router-bgp-cfg', name='af-name', config=True, description='Enter Address Family command mode', is_key=True, mandatory=False, type=DTypeEnum(name='Bgp-address-family', description='Bgp address family', reference=None, units=None, exts=[], builtin_type='enumeration', default=None, name_to_val={'ipv4-unicast':0, 'ipv4-multicast':1, 'ipv4-labeled-unicast':2, 'ipv4-tunnel':3, 'vpnv4-unicast':4, 'ipv6-unicast':5, 'ipv6-multicast':6, 'ipv6-labeled-unicast':7, 'vpnv6-unicast':8, 'ipv4-mdt':9, 'l2vpn-vpls-vpws':10, 'ipv4-rt-filter':11, 'ipv4-mvpn':12, 'ipv6-mvpn':13, 'l2vpn-evpn':14, 'link-state-link-state':15, 'vpnv4-multicast':16, 'vpnv6-multicast':17, 'ipv4-flowspec':18, 'ipv6-flowspec':19, 'vpnv4-flowspec':20, 'vpnv6-flowspec':21, 'l2vpn-mspw':22, 'ipv4-sr-policy':23, 'ipv6-sr-policy':24, 'all-address-family':25}))
+        DLeaf(module='Cisco-IOS-XR-um-router-bgp-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-bgp-cfg', prefix='um-router-bgp-cfg', name='update-source', config=True, description='Source of routing updates', is_key=False, mandatory=False, type=DTypeString(name='xr:Interface-name', description='An interface name specifying an interface type and\ninstance.\nInterface represents a string defining an interface\ntype and instance, e.g. MgmtEth0/4/CPU1/0 or\nTenGigE0/2/0/0.2 or Bundle-Ether9 or\nBundle-Ether9.98 or Serial0/0/0/0/3/1:1', reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[YangPattern(yang_regex='[a-zA-Z0-9.:_/-]+', pcre='^([a-zA-Z0-9.:_/-]+)$', invert=False)]), adata_name='update_source'),
+        DContainer(module='Cisco-IOS-XR-um-router-bgp-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-bgp-cfg', prefix='um-router-bgp-cfg', name='address-families', config=True, description='Enter Address Family command mode', presence=False, adata_name='address_families', children=[
+            DList(module='Cisco-IOS-XR-um-router-bgp-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-bgp-cfg', prefix='um-router-bgp-cfg', name='address-family', key=['af-name'], config=True, description='Enter Address Family command mode', min_elements=0, ordered_by='system', adata_name='address_family', children=[
+                DLeaf(module='Cisco-IOS-XR-um-router-bgp-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-bgp-cfg', prefix='um-router-bgp-cfg', name='af-name', config=True, description='Enter Address Family command mode', is_key=True, mandatory=False, type=DTypeEnum(name='Bgp-address-family', description='Bgp address family', reference=None, units=None, exts=[], builtin_type='enumeration', default=None, name_to_val={'ipv4-unicast':0, 'ipv4-multicast':1, 'ipv4-labeled-unicast':2, 'ipv4-tunnel':3, 'vpnv4-unicast':4, 'ipv6-unicast':5, 'ipv6-multicast':6, 'ipv6-labeled-unicast':7, 'vpnv6-unicast':8, 'ipv4-mdt':9, 'l2vpn-vpls-vpws':10, 'ipv4-rt-filter':11, 'ipv4-mvpn':12, 'ipv6-mvpn':13, 'l2vpn-evpn':14, 'link-state-link-state':15, 'vpnv4-multicast':16, 'vpnv6-multicast':17, 'ipv4-flowspec':18, 'ipv6-flowspec':19, 'vpnv4-flowspec':20, 'vpnv6-flowspec':21, 'l2vpn-mspw':22, 'ipv4-sr-policy':23, 'ipv6-sr-policy':24, 'all-address-family':25}), adata_name='af_name')
             ])
         ])
     ])
 ])
 
-SRC_DNODE_CHILD_16: DContainer = DContainer(module='Cisco-IOS-XR-um-router-bgp-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-bgp-cfg', prefix='um-router-bgp-cfg', name='address-families', config=True, description='Enter Address Family command mode', presence=False, children=[
-    DList(module='Cisco-IOS-XR-um-router-bgp-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-bgp-cfg', prefix='um-router-bgp-cfg', name='address-family', key=['af-name'], config=True, description='Enter Address Family command mode', min_elements=0, ordered_by='system', children=[
-        DLeaf(module='Cisco-IOS-XR-um-router-bgp-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-bgp-cfg', prefix='um-router-bgp-cfg', name='af-name', config=True, description='Enter Address Family command mode', is_key=True, mandatory=False, type=DTypeEnum(name='Bgp-address-family', description='Bgp address family', reference=None, units=None, exts=[], builtin_type='enumeration', default=None, name_to_val={'ipv4-unicast':0, 'ipv4-multicast':1, 'ipv4-labeled-unicast':2, 'ipv4-tunnel':3, 'vpnv4-unicast':4, 'ipv6-unicast':5, 'ipv6-multicast':6, 'ipv6-labeled-unicast':7, 'vpnv6-unicast':8, 'ipv4-mdt':9, 'l2vpn-vpls-vpws':10, 'ipv4-rt-filter':11, 'ipv4-mvpn':12, 'ipv6-mvpn':13, 'l2vpn-evpn':14, 'link-state-link-state':15, 'vpnv4-multicast':16, 'vpnv6-multicast':17, 'ipv4-flowspec':18, 'ipv6-flowspec':19, 'vpnv4-flowspec':20, 'vpnv6-flowspec':21, 'l2vpn-mspw':22, 'ipv4-sr-policy':23, 'ipv6-sr-policy':24, 'all-address-family':25}))
+SRC_DNODE_CHILD_16: DContainer = DContainer(module='Cisco-IOS-XR-um-router-bgp-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-bgp-cfg', prefix='um-router-bgp-cfg', name='address-families', config=True, description='Enter Address Family command mode', presence=False, adata_name='address_families', children=[
+    DList(module='Cisco-IOS-XR-um-router-bgp-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-bgp-cfg', prefix='um-router-bgp-cfg', name='address-family', key=['af-name'], config=True, description='Enter Address Family command mode', min_elements=0, ordered_by='system', adata_name='address_family', children=[
+        DLeaf(module='Cisco-IOS-XR-um-router-bgp-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-bgp-cfg', prefix='um-router-bgp-cfg', name='af-name', config=True, description='Enter Address Family command mode', is_key=True, mandatory=False, type=DTypeEnum(name='Bgp-address-family', description='Bgp address family', reference=None, units=None, exts=[], builtin_type='enumeration', default=None, name_to_val={'ipv4-unicast':0, 'ipv4-multicast':1, 'ipv4-labeled-unicast':2, 'ipv4-tunnel':3, 'vpnv4-unicast':4, 'ipv6-unicast':5, 'ipv6-multicast':6, 'ipv6-labeled-unicast':7, 'vpnv6-unicast':8, 'ipv4-mdt':9, 'l2vpn-vpls-vpws':10, 'ipv4-rt-filter':11, 'ipv4-mvpn':12, 'ipv6-mvpn':13, 'l2vpn-evpn':14, 'link-state-link-state':15, 'vpnv4-multicast':16, 'vpnv6-multicast':17, 'ipv4-flowspec':18, 'ipv6-flowspec':19, 'vpnv4-flowspec':20, 'vpnv6-flowspec':21, 'l2vpn-mspw':22, 'ipv4-sr-policy':23, 'ipv6-sr-policy':24, 'all-address-family':25}), adata_name='af_name')
     ])
 ])
 
-SRC_DNODE_CHILD_17: DContainer = DContainer(module='Cisco-IOS-XR-um-router-bgp-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-bgp-cfg', prefix='um-router-bgp-cfg', name='bgp', config=True, description='BGP commands', presence=False, children=[
-    DLeaf(module='Cisco-IOS-XR-um-router-bgp-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-bgp-cfg', prefix='um-router-bgp-cfg', name='router-id', config=True, description='Configure Router-id', is_key=False, mandatory=False, type=DTypeString(name='inet:ipv4-address-no-zone', description='An IPv4 address without a zone index.  This type, derived from\nipv4-address, may be used in situations where the zone is\nknown from the context and hence no zone index is needed.', reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[YangPattern(yang_regex='(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.){{3}}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(%[\\p{{N}}\\p{{L}}]+)?', pcre='^((([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.){{3}}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(%[\\p{{N}}\\p{{L}}]+)?)$', invert=False), YangPattern(yang_regex='[0-9\\.]*', pcre='^([0-9\\.]*)$', invert=False)]))
+SRC_DNODE_CHILD_17: DContainer = DContainer(module='Cisco-IOS-XR-um-router-bgp-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-bgp-cfg', prefix='um-router-bgp-cfg', name='bgp', config=True, description='BGP commands', presence=False, adata_name='bgp', children=[
+    DLeaf(module='Cisco-IOS-XR-um-router-bgp-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-bgp-cfg', prefix='um-router-bgp-cfg', name='router-id', config=True, description='Configure Router-id', is_key=False, mandatory=False, type=DTypeString(name='inet:ipv4-address-no-zone', description='An IPv4 address without a zone index.  This type, derived from\nipv4-address, may be used in situations where the zone is\nknown from the context and hence no zone index is needed.', reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[YangPattern(yang_regex='(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.){{3}}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(%[\\p{{N}}\\p{{L}}]+)?', pcre='^((([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.){{3}}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(%[\\p{{N}}\\p{{L}}]+)?)$', invert=False), YangPattern(yang_regex='[0-9\\.]*', pcre='^([0-9\\.]*)$', invert=False)]), adata_name='router_id')
 ])
 
-SRC_DNODE_CHILD_12: DList = DList(module='Cisco-IOS-XR-um-router-bgp-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-bgp-cfg', prefix='um-router-bgp-cfg', name='as', key=['as-number'], config=True, description='bgp as-number', min_elements=0, ordered_by='system', children=[SRC_DNODE_CHILD_13, SRC_DNODE_CHILD_14, SRC_DNODE_CHILD_15, SRC_DNODE_CHILD_16, SRC_DNODE_CHILD_17])
+SRC_DNODE_CHILD_12: DList = DList(module='Cisco-IOS-XR-um-router-bgp-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-bgp-cfg', prefix='um-router-bgp-cfg', name='as', key=['as-number'], config=True, description='bgp as-number', min_elements=0, ordered_by='system', adata_name='as_', children=[SRC_DNODE_CHILD_13, SRC_DNODE_CHILD_14, SRC_DNODE_CHILD_15, SRC_DNODE_CHILD_16, SRC_DNODE_CHILD_17])
 
-SRC_DNODE_CHILD_11: DContainer = DContainer(module='Cisco-IOS-XR-um-router-bgp-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-bgp-cfg', prefix='um-router-bgp-cfg', name='bgp', config=True, description='BGP configuration subcommands', presence=False, children=[SRC_DNODE_CHILD_12])
+SRC_DNODE_CHILD_11: DContainer = DContainer(module='Cisco-IOS-XR-um-router-bgp-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-bgp-cfg', prefix='um-router-bgp-cfg', name='bgp', config=True, description='BGP configuration subcommands', presence=False, adata_name='bgp', children=[SRC_DNODE_CHILD_12])
 
-SRC_DNODE_CHILD_10: DContainer = DContainer(module='Cisco-IOS-XR-um-router-bgp-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-bgp-cfg', prefix='um-router-bgp-cfg', name='router', config=True, description='Enable a routing process', presence=False, children=[SRC_DNODE_CHILD_11])
+SRC_DNODE_CHILD_10: DContainer = DContainer(module='Cisco-IOS-XR-um-router-bgp-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-router-bgp-cfg', prefix='um-router-bgp-cfg', name='router', config=True, description='Enable a routing process', presence=False, adata_name='um_router_bgp_cfg_router', children=[SRC_DNODE_CHILD_11])
 
 SRC_DNODE_CHILD_18: DContainer = DContainer(module='Cisco-IOS-XR-um-route-policy-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-route-policy-cfg', prefix='um-route-policy-cfg', name='routing-policy', config=True, description='Routing policy configuration', presence=False, exts=[
         DExt(module='Cisco-IOS-XR-types', namespace='http://cisco.com/ns/yang/cisco-xr-types', prefix='xr', name='xr-xml-map', arg='rpl_cfg:RoutingPolicy', exts=[])
-    ], children=[
+    ], adata_name='routing_policy', children=[
     DContainer(module='Cisco-IOS-XR-um-route-policy-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-route-policy-cfg', prefix='um-route-policy-cfg', name='route-policies', config=True, description='All configured policies', presence=False, exts=[
             DExt(module='Cisco-IOS-XR-types', namespace='http://cisco.com/ns/yang/cisco-xr-types', prefix='xr', name='xr-xml-map', arg='rpl_cfg:RoutePolicyTable', exts=[])
-        ], children=[
+        ], adata_name='route_policies', children=[
         DList(module='Cisco-IOS-XR-um-route-policy-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-route-policy-cfg', prefix='um-route-policy-cfg', name='route-policy', key=['route-policy-name'], config=True, description='Information about an individual policy', min_elements=0, ordered_by='system', exts=[
                 DExt(module='Cisco-IOS-XR-types', namespace='http://cisco.com/ns/yang/cisco-xr-types', prefix='xr', name='xr-xml-map', arg='rpl_cfg:RoutePolicy', exts=[])
-            ], children=[
+            ], adata_name='route_policy', children=[
             DLeaf(module='Cisco-IOS-XR-um-route-policy-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-route-policy-cfg', prefix='um-route-policy-cfg', name='route-policy-name', config=True, description='Route policy name', is_key=True, mandatory=False, type=DTypeString(name='xr:Cisco-ios-xr-string', description='Special characters are not allowed.', reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[YangPattern(yang_regex='[\\w\\-\\.:,_@#%$\\+=\\| ;]+', pcre='^(([\\-\\.:,_@#%$\\+=\\| ;]|(?![\\p{{P}}\\p{{Z}}\\p{{C}}])[\\x{{0000}}-\\x{{10FFFF}}])+)$', invert=False)]), exts=[
                     DExt(module='Cisco-IOS-XR-types', namespace='http://cisco.com/ns/yang/cisco-xr-types', prefix='xr', name='xr-xml-map', arg='rpl_cfg:RoutePolicyName', exts=[])
-                ]),
+                ], adata_name='route_policy_name'),
             DLeaf(module='Cisco-IOS-XR-um-route-policy-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-route-policy-cfg', prefix='um-route-policy-cfg', name='rpl-route-policy', config=True, description="Configures a route policy, This leaf accepts a complete Cisco IOS XR CLI configuration string that defines a route-policy by its name and a route-policy contains a sequence of policy statements.\n\nroute-policy sample\n[ . . . policy statements . . . ]\nend-policy\n\nNote: The entire route-policy configuration should be provided as a single string. The 'end-policy' keyword indicates the end of the route-policy definition.", is_key=False, mandatory=True, type=DTypeString(name='xr:Rpl-policy', description='RPL Policy info', reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[]), exts=[
                     DExt(module='Cisco-IOS-XR-types', namespace='http://cisco.com/ns/yang/cisco-xr-types', prefix='xr', name='xr-xml-map', arg='rpl_cfg:PolicyAsText', exts=[])
-                ])
+                ], adata_name='rpl_route_policy')
         ])
     ])
 ])
 
-SRC_DNODE_CHILD_19: DContainer = DContainer(module='Cisco-IOS-XR-um-mpls-ldp-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-mpls-ldp-cfg', prefix='um-mpls-ldp-cfg', name='mpls', config=True, description='Global MPLS configuration subcommands', presence=False, children=[
-    DContainer(module='Cisco-IOS-XR-um-mpls-ldp-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-mpls-ldp-cfg', prefix='um-mpls-ldp-cfg', name='ldp', config=True, description='Label Distribution Protocol', presence=True, children=[
-        DContainer(module='Cisco-IOS-XR-um-mpls-ldp-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-mpls-ldp-cfg', prefix='um-mpls-ldp-cfg', name='address-families', config=True, description='Configure Address Family and its parameters', presence=False, children=[
-            DList(module='Cisco-IOS-XR-um-mpls-ldp-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-mpls-ldp-cfg', prefix='um-mpls-ldp-cfg', name='address-family', key=['af-name'], config=True, description='Configure Address Family and its parameters', min_elements=0, ordered_by='system', children=[
-                DLeaf(module='Cisco-IOS-XR-um-mpls-ldp-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-mpls-ldp-cfg', prefix='um-mpls-ldp-cfg', name='af-name', config=True, description='Configure Address Family and its parameters', is_key=True, mandatory=False, type=DTypeEnum(name='enumeration', description=None, reference=None, units=None, exts=[], builtin_type='enumeration', default=None, name_to_val={'ipv4':4, 'ipv6':6}))
+SRC_DNODE_CHILD_19: DContainer = DContainer(module='Cisco-IOS-XR-um-mpls-ldp-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-mpls-ldp-cfg', prefix='um-mpls-ldp-cfg', name='mpls', config=True, description='Global MPLS configuration subcommands', presence=False, adata_name='mpls', children=[
+    DContainer(module='Cisco-IOS-XR-um-mpls-ldp-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-mpls-ldp-cfg', prefix='um-mpls-ldp-cfg', name='ldp', config=True, description='Label Distribution Protocol', presence=True, adata_name='ldp', children=[
+        DContainer(module='Cisco-IOS-XR-um-mpls-ldp-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-mpls-ldp-cfg', prefix='um-mpls-ldp-cfg', name='address-families', config=True, description='Configure Address Family and its parameters', presence=False, adata_name='address_families', children=[
+            DList(module='Cisco-IOS-XR-um-mpls-ldp-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-mpls-ldp-cfg', prefix='um-mpls-ldp-cfg', name='address-family', key=['af-name'], config=True, description='Configure Address Family and its parameters', min_elements=0, ordered_by='system', adata_name='address_family', children=[
+                DLeaf(module='Cisco-IOS-XR-um-mpls-ldp-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-mpls-ldp-cfg', prefix='um-mpls-ldp-cfg', name='af-name', config=True, description='Configure Address Family and its parameters', is_key=True, mandatory=False, type=DTypeEnum(name='enumeration', description=None, reference=None, units=None, exts=[], builtin_type='enumeration', default=None, name_to_val={'ipv4':4, 'ipv6':6}), adata_name='af_name')
             ])
         ]),
-        DContainer(module='Cisco-IOS-XR-um-mpls-ldp-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-mpls-ldp-cfg', prefix='um-mpls-ldp-cfg', name='interfaces', config=True, description='Enable LDP on an interface and enter interface submode', presence=False, children=[
-            DList(module='Cisco-IOS-XR-um-mpls-ldp-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-mpls-ldp-cfg', prefix='um-mpls-ldp-cfg', name='interface', key=['interface-name'], config=True, description='Enable LDP on an interface and enter interface submode', min_elements=0, ordered_by='system', children=[
-                DLeaf(module='Cisco-IOS-XR-um-mpls-ldp-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-mpls-ldp-cfg', prefix='um-mpls-ldp-cfg', name='interface-name', config=True, description='Enable LDP on an interface and enter interface submode', is_key=True, mandatory=False, type=DTypeString(name='xr:Interface-name', description='An interface name specifying an interface type and\ninstance.\nInterface represents a string defining an interface\ntype and instance, e.g. MgmtEth0/4/CPU1/0 or\nTenGigE0/2/0/0.2 or Bundle-Ether9 or\nBundle-Ether9.98 or Serial0/0/0/0/3/1:1', reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[YangPattern(yang_regex='[a-zA-Z0-9.:_/-]+', pcre='^([a-zA-Z0-9.:_/-]+)$', invert=False)]))
+        DContainer(module='Cisco-IOS-XR-um-mpls-ldp-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-mpls-ldp-cfg', prefix='um-mpls-ldp-cfg', name='interfaces', config=True, description='Enable LDP on an interface and enter interface submode', presence=False, adata_name='interfaces', children=[
+            DList(module='Cisco-IOS-XR-um-mpls-ldp-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-mpls-ldp-cfg', prefix='um-mpls-ldp-cfg', name='interface', key=['interface-name'], config=True, description='Enable LDP on an interface and enter interface submode', min_elements=0, ordered_by='system', adata_name='interface', children=[
+                DLeaf(module='Cisco-IOS-XR-um-mpls-ldp-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-mpls-ldp-cfg', prefix='um-mpls-ldp-cfg', name='interface-name', config=True, description='Enable LDP on an interface and enter interface submode', is_key=True, mandatory=False, type=DTypeString(name='xr:Interface-name', description='An interface name specifying an interface type and\ninstance.\nInterface represents a string defining an interface\ntype and instance, e.g. MgmtEth0/4/CPU1/0 or\nTenGigE0/2/0/0.2 or Bundle-Ether9 or\nBundle-Ether9.98 or Serial0/0/0/0/3/1:1', reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[YangPattern(yang_regex='[a-zA-Z0-9.:_/-]+', pcre='^([a-zA-Z0-9.:_/-]+)$', invert=False)]), adata_name='interface_name')
             ])
         ])
     ])
 ])
 
-SRC_DNODE_CHILD_20: DContainer = DContainer(module='Cisco-IOS-XR-um-hostname-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-hostname-cfg', prefix='um-hostname-cfg', name='hostname', config=True, description="Set system's network name", presence=False, children=[
-    DLeaf(module='Cisco-IOS-XR-um-hostname-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-hostname-cfg', prefix='um-hostname-cfg', name='system-network-name', config=True, description="Set system's network name", is_key=False, mandatory=False, type=DTypeString(name='xr:Cisco-ios-xr-string', description='Special characters are not allowed.', reference=None, units=None, exts=[], builtin_type='string', default=None, length=Ranges([(1, 253)]), patterns=[YangPattern(yang_regex='[\\w\\-\\.:,_@#%$\\+=\\| ;]+', pcre='^(([\\-\\.:,_@#%$\\+=\\| ;]|(?![\\p{{P}}\\p{{Z}}\\p{{C}}])[\\x{{0000}}-\\x{{10FFFF}}])+)$', invert=False), YangPattern(yang_regex='[a-zA-Z0-9_\\.-]+', pcre='^([a-zA-Z0-9_\\.-]+)$', invert=False)]))
+SRC_DNODE_CHILD_20: DContainer = DContainer(module='Cisco-IOS-XR-um-hostname-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-hostname-cfg', prefix='um-hostname-cfg', name='hostname', config=True, description="Set system's network name", presence=False, adata_name='hostname', children=[
+    DLeaf(module='Cisco-IOS-XR-um-hostname-cfg', namespace='http://cisco.com/ns/yang/Cisco-IOS-XR-um-hostname-cfg', prefix='um-hostname-cfg', name='system-network-name', config=True, description="Set system's network name", is_key=False, mandatory=False, type=DTypeString(name='xr:Cisco-ios-xr-string', description='Special characters are not allowed.', reference=None, units=None, exts=[], builtin_type='string', default=None, length=Ranges([(1, 253)]), patterns=[YangPattern(yang_regex='[\\w\\-\\.:,_@#%$\\+=\\| ;]+', pcre='^(([\\-\\.:,_@#%$\\+=\\| ;]|(?![\\p{{P}}\\p{{Z}}\\p{{C}}])[\\x{{0000}}-\\x{{10FFFF}}])+)$', invert=False), YangPattern(yang_regex='[a-zA-Z0-9_\\.-]+', pcre='^([a-zA-Z0-9_\\.-]+)$', invert=False)]), adata_name='system_network_name')
 ])
 
 SRC_DNODE: DRoot = DRoot(
@@ -374829,239 +374829,239 @@ SRC_YANG_231: str = r"""submodule tailf-meta-extensions {
 }
 """
 
-pure def src_yang() -> list[str]:
+pure def src_yang() -> list[YangSource]:
     return [
-        SRC_YANG_0,
-        SRC_YANG_1,
-        SRC_YANG_2,
-        SRC_YANG_3,
-        SRC_YANG_4,
-        SRC_YANG_5,
-        SRC_YANG_6,
-        SRC_YANG_7,
-        SRC_YANG_8,
-        SRC_YANG_9,
-        SRC_YANG_10,
-        SRC_YANG_11,
-        SRC_YANG_12,
-        SRC_YANG_13,
-        SRC_YANG_14,
-        SRC_YANG_15,
-        SRC_YANG_16,
-        SRC_YANG_17,
-        SRC_YANG_18,
-        SRC_YANG_19,
-        SRC_YANG_20,
-        SRC_YANG_21,
-        SRC_YANG_22,
-        SRC_YANG_23,
-        SRC_YANG_24,
-        SRC_YANG_25,
-        SRC_YANG_26,
-        SRC_YANG_27,
-        SRC_YANG_28,
-        SRC_YANG_29,
-        SRC_YANG_30,
-        SRC_YANG_31,
-        SRC_YANG_32,
-        SRC_YANG_33,
-        SRC_YANG_34,
-        SRC_YANG_35,
-        SRC_YANG_36,
-        SRC_YANG_37,
-        SRC_YANG_38,
-        SRC_YANG_39,
-        SRC_YANG_40,
-        SRC_YANG_41,
-        SRC_YANG_42,
-        SRC_YANG_43,
-        SRC_YANG_44,
-        SRC_YANG_45,
-        SRC_YANG_46,
-        SRC_YANG_47,
-        SRC_YANG_48,
-        SRC_YANG_49,
-        SRC_YANG_50,
-        SRC_YANG_51,
-        SRC_YANG_52,
-        SRC_YANG_53,
-        SRC_YANG_54,
-        SRC_YANG_55,
-        SRC_YANG_56,
-        SRC_YANG_57,
-        SRC_YANG_58,
-        SRC_YANG_59,
-        SRC_YANG_60,
-        SRC_YANG_61,
-        SRC_YANG_62,
-        SRC_YANG_63,
-        SRC_YANG_64,
-        SRC_YANG_65,
-        SRC_YANG_66,
-        SRC_YANG_67,
-        SRC_YANG_68,
-        SRC_YANG_69,
-        SRC_YANG_70,
-        SRC_YANG_71,
-        SRC_YANG_72,
-        SRC_YANG_73,
-        SRC_YANG_74,
-        SRC_YANG_75,
-        SRC_YANG_76,
-        SRC_YANG_77,
-        SRC_YANG_78,
-        SRC_YANG_79,
-        SRC_YANG_80,
-        SRC_YANG_81,
-        SRC_YANG_82,
-        SRC_YANG_83,
-        SRC_YANG_84,
-        SRC_YANG_85,
-        SRC_YANG_86,
-        SRC_YANG_87,
-        SRC_YANG_88,
-        SRC_YANG_89,
-        SRC_YANG_90,
-        SRC_YANG_91,
-        SRC_YANG_92,
-        SRC_YANG_93,
-        SRC_YANG_94,
-        SRC_YANG_95,
-        SRC_YANG_96,
-        SRC_YANG_97,
-        SRC_YANG_98,
-        SRC_YANG_99,
-        SRC_YANG_100,
-        SRC_YANG_101,
-        SRC_YANG_102,
-        SRC_YANG_103,
-        SRC_YANG_104,
-        SRC_YANG_105,
-        SRC_YANG_106,
-        SRC_YANG_107,
-        SRC_YANG_108,
-        SRC_YANG_109,
-        SRC_YANG_110,
-        SRC_YANG_111,
-        SRC_YANG_112,
-        SRC_YANG_113,
-        SRC_YANG_114,
-        SRC_YANG_115,
-        SRC_YANG_116,
-        SRC_YANG_117,
-        SRC_YANG_118,
-        SRC_YANG_119,
-        SRC_YANG_120,
-        SRC_YANG_121,
-        SRC_YANG_122,
-        SRC_YANG_123,
-        SRC_YANG_124,
-        SRC_YANG_125,
-        SRC_YANG_126,
-        SRC_YANG_127,
-        SRC_YANG_128,
-        SRC_YANG_129,
-        SRC_YANG_130,
-        SRC_YANG_131,
-        SRC_YANG_132,
-        SRC_YANG_133,
-        SRC_YANG_134,
-        SRC_YANG_135,
-        SRC_YANG_136,
-        SRC_YANG_137,
-        SRC_YANG_138,
-        SRC_YANG_139,
-        SRC_YANG_140,
-        SRC_YANG_141,
-        SRC_YANG_142,
-        SRC_YANG_143,
-        SRC_YANG_144,
-        SRC_YANG_145,
-        SRC_YANG_146,
-        SRC_YANG_147,
-        SRC_YANG_148,
-        SRC_YANG_149,
-        SRC_YANG_150,
-        SRC_YANG_151,
-        SRC_YANG_152,
-        SRC_YANG_153,
-        SRC_YANG_154,
-        SRC_YANG_155,
-        SRC_YANG_156,
-        SRC_YANG_157,
-        SRC_YANG_158,
-        SRC_YANG_159,
-        SRC_YANG_160,
-        SRC_YANG_161,
-        SRC_YANG_162,
-        SRC_YANG_163,
-        SRC_YANG_164,
-        SRC_YANG_165,
-        SRC_YANG_166,
-        SRC_YANG_167,
-        SRC_YANG_168,
-        SRC_YANG_169,
-        SRC_YANG_170,
-        SRC_YANG_171,
-        SRC_YANG_172,
-        SRC_YANG_173,
-        SRC_YANG_174,
-        SRC_YANG_175,
-        SRC_YANG_176,
-        SRC_YANG_177,
-        SRC_YANG_178,
-        SRC_YANG_179,
-        SRC_YANG_180,
-        SRC_YANG_181,
-        SRC_YANG_182,
-        SRC_YANG_183,
-        SRC_YANG_184,
-        SRC_YANG_185,
-        SRC_YANG_186,
-        SRC_YANG_187,
-        SRC_YANG_188,
-        SRC_YANG_189,
-        SRC_YANG_190,
-        SRC_YANG_191,
-        SRC_YANG_192,
-        SRC_YANG_193,
-        SRC_YANG_194,
-        SRC_YANG_195,
-        SRC_YANG_196,
-        SRC_YANG_197,
-        SRC_YANG_198,
-        SRC_YANG_199,
-        SRC_YANG_200,
-        SRC_YANG_201,
-        SRC_YANG_202,
-        SRC_YANG_203,
-        SRC_YANG_204,
-        SRC_YANG_205,
-        SRC_YANG_206,
-        SRC_YANG_207,
-        SRC_YANG_208,
-        SRC_YANG_209,
-        SRC_YANG_210,
-        SRC_YANG_211,
-        SRC_YANG_212,
-        SRC_YANG_213,
-        SRC_YANG_214,
-        SRC_YANG_215,
-        SRC_YANG_216,
-        SRC_YANG_217,
-        SRC_YANG_218,
-        SRC_YANG_219,
-        SRC_YANG_220,
-        SRC_YANG_221,
-        SRC_YANG_222,
-        SRC_YANG_223,
-        SRC_YANG_224,
-        SRC_YANG_225,
-        SRC_YANG_226,
-        SRC_YANG_227,
-        SRC_YANG_228,
-        SRC_YANG_229,
-        SRC_YANG_230,
-        SRC_YANG_231,
+        (name='Cisco-IOS-XR-ipv4-bgp-datatypes', revision='2024-11-26', src=SRC_YANG_0),
+        (name='Cisco-IOS-XR-ipv4-bgp-oper-sub1', revision='2025-07-30', src=SRC_YANG_1),
+        (name='Cisco-IOS-XR-ipv4-bgp-oper', revision='2025-07-30', src=SRC_YANG_2),
+        (name='Cisco-IOS-XR-pfi-im-cmd-oper-sub1', revision='2024-02-29', src=SRC_YANG_3),
+        (name='Cisco-IOS-XR-pfi-im-cmd-oper-sub2', revision='2024-02-29', src=SRC_YANG_4),
+        (name='Cisco-IOS-XR-pfi-im-cmd-oper', revision='2024-02-29', src=SRC_YANG_5),
+        (name='Cisco-IOS-XR-types', revision='2024-11-26', src=SRC_YANG_6),
+        (name='Cisco-IOS-XR-um-8000-udf-cfg', revision='2020-12-07', src=SRC_YANG_7),
+        (name='Cisco-IOS-XR-um-aaa-cfg', revision='2024-08-08', src=SRC_YANG_8),
+        (name='Cisco-IOS-XR-um-aaa-diameter-cfg', revision='2023-02-24', src=SRC_YANG_9),
+        (name='Cisco-IOS-XR-um-aaa-nacm-cfg', revision='2022-08-05', src=SRC_YANG_10),
+        (name='Cisco-IOS-XR-um-aaa-radius-server-cfg', revision='2025-07-21', src=SRC_YANG_11),
+        (name='Cisco-IOS-XR-um-aaa-tacacs-server-cfg', revision='2025-03-21', src=SRC_YANG_12),
+        (name='Cisco-IOS-XR-um-aaa-task-user-cfg', revision='2024-10-18', src=SRC_YANG_13),
+        (name='Cisco-IOS-XR-um-access-list-datatypes', revision='2022-11-02', src=SRC_YANG_14),
+        (name='Cisco-IOS-XR-um-adt-cfg', revision='2021-07-07', src=SRC_YANG_15),
+        (name='Cisco-IOS-XR-um-arp-cfg', revision='2025-03-20', src=SRC_YANG_16),
+        (name='Cisco-IOS-XR-um-attestation-cfg', revision='2020-09-10', src=SRC_YANG_17),
+        (name='Cisco-IOS-XR-um-auto-ip-ring-cfg', revision='2022-07-11', src=SRC_YANG_18),
+        (name='Cisco-IOS-XR-um-banner-cfg', revision='2022-01-10', src=SRC_YANG_19),
+        (name='Cisco-IOS-XR-um-bfd-sbfd-cfg', revision='2024-08-26', src=SRC_YANG_20),
+        (name='Cisco-IOS-XR-um-call-home-cfg', revision='2022-02-15', src=SRC_YANG_21),
+        (name='Cisco-IOS-XR-um-cdp-cfg', revision='2022-07-11', src=SRC_YANG_22),
+        (name='Cisco-IOS-XR-um-cef-accounting-cfg', revision='2025-06-09', src=SRC_YANG_23),
+        (name='Cisco-IOS-XR-um-cfg-mibs-cfg', revision='2022-07-11', src=SRC_YANG_24),
+        (name='Cisco-IOS-XR-um-cinetd-cfg', revision='2020-03-27', src=SRC_YANG_25),
+        (name='Cisco-IOS-XR-um-cli-alias-cfg', revision='2022-06-03', src=SRC_YANG_26),
+        (name='Cisco-IOS-XR-um-clock-cfg', revision='2020-07-07', src=SRC_YANG_27),
+        (name='Cisco-IOS-XR-um-config-commit-cfg', revision='2023-01-20', src=SRC_YANG_28),
+        (name='Cisco-IOS-XR-um-config-display-cfg', revision='2021-04-14', src=SRC_YANG_29),
+        (name='Cisco-IOS-XR-um-config-hostname-cfg', revision='2020-12-14', src=SRC_YANG_30),
+        (name='Cisco-IOS-XR-um-config-mode-cfg', revision='2021-02-02', src=SRC_YANG_31),
+        (name='Cisco-IOS-XR-um-conflict-policy-cfg', revision='2022-07-11', src=SRC_YANG_32),
+        (name='Cisco-IOS-XR-um-cont-cpri-cfg', revision='2022-07-11', src=SRC_YANG_33),
+        (name='Cisco-IOS-XR-um-cont-dwdm-cfg', revision='2022-07-11', src=SRC_YANG_34),
+        (name='Cisco-IOS-XR-um-cont-ether-cfg', revision='2022-07-20', src=SRC_YANG_35),
+        (name='Cisco-IOS-XR-um-cont-ether-macsec-pm-cfg', revision='2022-07-11', src=SRC_YANG_36),
+        (name='Cisco-IOS-XR-um-cont-oc-pm-cfg', revision='2022-07-11', src=SRC_YANG_37),
+        (name='Cisco-IOS-XR-um-cont-odu-cfg', revision='2022-09-05', src=SRC_YANG_38),
+        (name='Cisco-IOS-XR-um-cont-odu-otu-dwdm-optics-pm-cfg', revision='2022-07-11', src=SRC_YANG_39),
+        (name='Cisco-IOS-XR-um-cont-optics-cfg', revision='2025-04-25', src=SRC_YANG_40),
+        (name='Cisco-IOS-XR-um-cont-otu-cfg', revision='2022-07-11', src=SRC_YANG_41),
+        (name='Cisco-IOS-XR-um-cont-sonet-cfg', revision='2022-07-11', src=SRC_YANG_42),
+        (name='Cisco-IOS-XR-um-cont-sonet-pm-cfg', revision='2022-07-11', src=SRC_YANG_43),
+        (name='Cisco-IOS-XR-um-cont-stm-cfg', revision='2023-04-26', src=SRC_YANG_44),
+        (name='Cisco-IOS-XR-um-cont-stm-pm-cfg', revision='2022-07-11', src=SRC_YANG_45),
+        (name='Cisco-IOS-XR-um-cont-sts-cfg', revision='2022-07-11', src=SRC_YANG_46),
+        (name='Cisco-IOS-XR-um-cont-sts-pm-cfg', revision='2022-07-11', src=SRC_YANG_47),
+        (name='Cisco-IOS-XR-um-cont-vc-pm-cfg', revision='2022-07-11', src=SRC_YANG_48),
+        (name='Cisco-IOS-XR-um-control-plane-cfg', revision='2022-09-30', src=SRC_YANG_49),
+        (name='Cisco-IOS-XR-um-control-plane-local-cfg', revision='2022-07-11', src=SRC_YANG_50),
+        (name='Cisco-IOS-XR-um-crypto-cfg', revision='2024-11-15', src=SRC_YANG_51),
+        (name='Cisco-IOS-XR-um-dhcp-ipv4-cfg', revision='2021-01-08', src=SRC_YANG_52),
+        (name='Cisco-IOS-XR-um-dhcp-ipv6-cfg', revision='2021-01-05', src=SRC_YANG_53),
+        (name='Cisco-IOS-XR-um-display-qos-cfg', revision='2020-12-01', src=SRC_YANG_54),
+        (name='Cisco-IOS-XR-um-domain-cfg', revision='2021-02-04', src=SRC_YANG_55),
+        (name='Cisco-IOS-XR-um-dyn-tmpl-service-policy-cfg', revision='2022-07-11', src=SRC_YANG_56),
+        (name='Cisco-IOS-XR-um-dynamic-template-access-group-cfg', revision='2022-07-11', src=SRC_YANG_57),
+        (name='Cisco-IOS-XR-um-dynamic-template-cfg', revision='2021-05-10', src=SRC_YANG_58),
+        (name='Cisco-IOS-XR-um-error-disable-cfg', revision='2022-08-08', src=SRC_YANG_59),
+        (name='Cisco-IOS-XR-um-ethernet-cfm-cfg', revision='2023-05-19', src=SRC_YANG_60),
+        (name='Cisco-IOS-XR-um-ethernet-oam-cfg', revision='2023-05-30', src=SRC_YANG_61),
+        (name='Cisco-IOS-XR-um-ethernet-services-access-list-cfg', revision='2024-07-23', src=SRC_YANG_62),
+        (name='Cisco-IOS-XR-um-ethernet-sla-cfg', revision='2024-11-04', src=SRC_YANG_63),
+        (name='Cisco-IOS-XR-um-event-manager-cfg', revision='2023-10-24', src=SRC_YANG_64),
+        (name='Cisco-IOS-XR-um-evpn-host-cfg', revision='2022-07-11', src=SRC_YANG_65),
+        (name='Cisco-IOS-XR-um-exception-cfg', revision='2020-09-30', src=SRC_YANG_66),
+        (name='Cisco-IOS-XR-um-explicit-paths-cfg', revision='2022-12-06', src=SRC_YANG_67),
+        (name='Cisco-IOS-XR-um-fault-profile-cfg', revision='2021-12-15', src=SRC_YANG_68),
+        (name='Cisco-IOS-XR-um-filesystem-inventory-cfg', revision='2021-11-15', src=SRC_YANG_69),
+        (name='Cisco-IOS-XR-um-flow-cfg', revision='2024-06-24', src=SRC_YANG_70),
+        (name='Cisco-IOS-XR-um-flowspec-cfg', revision='2022-07-11', src=SRC_YANG_71),
+        (name='Cisco-IOS-XR-um-ftp-tftp-cfg', revision='2021-05-12', src=SRC_YANG_72),
+        (name='Cisco-IOS-XR-um-gnss-receiver-cfg', revision='2022-07-11', src=SRC_YANG_73),
+        (name='Cisco-IOS-XR-um-grpc-cfg', revision='2025-03-19', src=SRC_YANG_74),
+        (name='Cisco-IOS-XR-um-hostname-cfg', revision='2021-04-21', src=SRC_YANG_75),
+        (name='Cisco-IOS-XR-um-http-client-cfg', revision='2025-08-13', src=SRC_YANG_76),
+        (name='Cisco-IOS-XR-um-hw-module-quad-cfg', revision='2022-07-11', src=SRC_YANG_77),
+        (name='Cisco-IOS-XR-um-icmp-cfg', revision='2022-07-11', src=SRC_YANG_78),
+        (name='Cisco-IOS-XR-um-if-access-group-cfg', revision='2024-07-23', src=SRC_YANG_79),
+        (name='Cisco-IOS-XR-um-if-arp-cfg', revision='2024-09-09', src=SRC_YANG_80),
+        (name='Cisco-IOS-XR-um-if-bundle-cfg', revision='2022-07-11', src=SRC_YANG_81),
+        (name='Cisco-IOS-XR-um-if-dhcp-client-options-cfg', revision='2022-07-11', src=SRC_YANG_82),
+        (name='Cisco-IOS-XR-um-if-encap-ambiguous-cfg', revision='2022-07-11', src=SRC_YANG_83),
+        (name='Cisco-IOS-XR-um-if-ethernet-cfg', revision='2025-01-15', src=SRC_YANG_84),
+        (name='Cisco-IOS-XR-um-if-ethernet-lmi-cfg', revision='2022-07-11', src=SRC_YANG_85),
+        (name='Cisco-IOS-XR-um-if-ip-address-cfg', revision='2022-07-11', src=SRC_YANG_86),
+        (name='Cisco-IOS-XR-um-if-ipsubscriber-cfg', revision='2022-07-11', src=SRC_YANG_87),
+        (name='Cisco-IOS-XR-um-if-ipv4-cfg', revision='2022-07-11', src=SRC_YANG_88),
+        (name='Cisco-IOS-XR-um-if-ipv6-cfg', revision='2022-07-11', src=SRC_YANG_89),
+        (name='Cisco-IOS-XR-um-if-l2trans-service-policy-cfg', revision='2024-04-12', src=SRC_YANG_90),
+        (name='Cisco-IOS-XR-um-if-l2transport-cfg', revision='2022-07-11', src=SRC_YANG_91),
+        (name='Cisco-IOS-XR-um-if-mac-address-cfg', revision='2022-07-11', src=SRC_YANG_92),
+        (name='Cisco-IOS-XR-um-if-mpls-cfg', revision='2022-07-11', src=SRC_YANG_93),
+        (name='Cisco-IOS-XR-um-if-nve-cfg', revision='2024-01-30', src=SRC_YANG_94),
+        (name='Cisco-IOS-XR-um-if-service-policy-qos-cfg', revision='2022-07-11', src=SRC_YANG_95),
+        (name='Cisco-IOS-XR-um-if-tunnel-cfg', revision='2025-01-31', src=SRC_YANG_96),
+        (name='Cisco-IOS-XR-um-if-vrf-cfg', revision='2022-07-11', src=SRC_YANG_97),
+        (name='Cisco-IOS-XR-um-iidmgr-cfg', revision='2021-06-25', src=SRC_YANG_98),
+        (name='Cisco-IOS-XR-um-interface-cfg', revision='2022-07-11', src=SRC_YANG_99),
+        (name='Cisco-IOS-XR-um-ip-virtual-cfg', revision='2020-04-02', src=SRC_YANG_100),
+        (name='Cisco-IOS-XR-um-ipsla-cfg', revision='2024-02-13', src=SRC_YANG_101),
+        (name='Cisco-IOS-XR-um-ipv4-access-list-cfg', revision='2024-07-23', src=SRC_YANG_102),
+        (name='Cisco-IOS-XR-um-ipv4-cfg', revision='2021-02-19', src=SRC_YANG_103),
+        (name='Cisco-IOS-XR-um-ipv4-prefix-list-cfg', revision='2024-07-23', src=SRC_YANG_104),
+        (name='Cisco-IOS-XR-um-ipv6-access-list-cfg', revision='2024-07-23', src=SRC_YANG_105),
+        (name='Cisco-IOS-XR-um-ipv6-cfg', revision='2021-05-06', src=SRC_YANG_106),
+        (name='Cisco-IOS-XR-um-ipv6-nd-cfg', revision='2024-09-09', src=SRC_YANG_107),
+        (name='Cisco-IOS-XR-um-ipv6-prefix-list-cfg', revision='2024-07-23', src=SRC_YANG_108),
+        (name='Cisco-IOS-XR-um-key-chain-cfg', revision='2022-10-22', src=SRC_YANG_109),
+        (name='Cisco-IOS-XR-um-l2-ethernet-cfg', revision='2023-06-15', src=SRC_YANG_110),
+        (name='Cisco-IOS-XR-um-l2snoop-cfg', revision='2022-03-08', src=SRC_YANG_111),
+        (name='Cisco-IOS-XR-um-l2vpn-cfg', revision='2025-05-21', src=SRC_YANG_112),
+        (name='Cisco-IOS-XR-um-lacp-cfg', revision='2019-06-10', src=SRC_YANG_113),
+        (name='Cisco-IOS-XR-um-license-smart-cfg', revision='2022-03-05', src=SRC_YANG_114),
+        (name='Cisco-IOS-XR-um-line-cfg', revision='2021-05-10', src=SRC_YANG_115),
+        (name='Cisco-IOS-XR-um-line-exec-timeout-cfg', revision='2022-07-11', src=SRC_YANG_116),
+        (name='Cisco-IOS-XR-um-line-general-cfg', revision='2022-07-11', src=SRC_YANG_117),
+        (name='Cisco-IOS-XR-um-line-timestamp-cfg', revision='2022-07-11', src=SRC_YANG_118),
+        (name='Cisco-IOS-XR-um-linux-networking-cfg', revision='2023-04-05', src=SRC_YANG_119),
+        (name='Cisco-IOS-XR-um-lldp-cfg', revision='2024-11-20', src=SRC_YANG_120),
+        (name='Cisco-IOS-XR-um-location-cfg', revision='2020-01-07', src=SRC_YANG_121),
+        (name='Cisco-IOS-XR-um-logging-cfg', revision='2025-08-13', src=SRC_YANG_122),
+        (name='Cisco-IOS-XR-um-logging-correlator-cfg', revision='2022-07-11', src=SRC_YANG_123),
+        (name='Cisco-IOS-XR-um-logging-events-cfg', revision='2022-07-11', src=SRC_YANG_124),
+        (name='Cisco-IOS-XR-um-lpts-pifib-cfg', revision='2022-07-11', src=SRC_YANG_125),
+        (name='Cisco-IOS-XR-um-lpts-pifib-domain-cfg', revision='2022-07-28', src=SRC_YANG_126),
+        (name='Cisco-IOS-XR-um-lpts-pifib-dynamic-flows-cfg', revision='2022-07-11', src=SRC_YANG_127),
+        (name='Cisco-IOS-XR-um-lpts-pifib-police-acl-cfg', revision='2022-07-11', src=SRC_YANG_128),
+        (name='Cisco-IOS-XR-um-lpts-pifib-police-np-cfg', revision='2022-07-11', src=SRC_YANG_129),
+        (name='Cisco-IOS-XR-um-lpts-profiling-cfg', revision='2021-05-10', src=SRC_YANG_130),
+        (name='Cisco-IOS-XR-um-lslib-server-cfg', revision='2024-10-24', src=SRC_YANG_131),
+        (name='Cisco-IOS-XR-um-ltrace-cfg', revision='2022-07-11', src=SRC_YANG_132),
+        (name='Cisco-IOS-XR-um-mibs-cbqosmib-cfg', revision='2023-09-21', src=SRC_YANG_133),
+        (name='Cisco-IOS-XR-um-mibs-eventmib-cfg', revision='2022-07-11', src=SRC_YANG_134),
+        (name='Cisco-IOS-XR-um-mibs-ifmib-cfg', revision='2022-07-11', src=SRC_YANG_135),
+        (name='Cisco-IOS-XR-um-mibs-rfmib-cfg', revision='2022-07-11', src=SRC_YANG_136),
+        (name='Cisco-IOS-XR-um-mibs-sensormib-cfg', revision='2022-07-11', src=SRC_YANG_137),
+        (name='Cisco-IOS-XR-um-mirror-cfg', revision='2021-06-01', src=SRC_YANG_138),
+        (name='Cisco-IOS-XR-um-mpls-acl-cfg', revision='2025-01-30', src=SRC_YANG_139),
+        (name='Cisco-IOS-XR-um-mpls-l3vpn-cfg', revision='2022-07-11', src=SRC_YANG_140),
+        (name='Cisco-IOS-XR-um-mpls-ldp-cfg', revision='2022-06-01', src=SRC_YANG_141),
+        (name='Cisco-IOS-XR-um-mpls-lsd-cfg', revision='2021-01-28', src=SRC_YANG_142),
+        (name='Cisco-IOS-XR-um-mpls-oam-cfg', revision='2025-06-12', src=SRC_YANG_143),
+        (name='Cisco-IOS-XR-um-mpls-static-cfg', revision='2025-04-29', src=SRC_YANG_144),
+        (name='Cisco-IOS-XR-um-mpls-te-cfg', revision='2024-10-04', src=SRC_YANG_145),
+        (name='Cisco-IOS-XR-um-multicast-routing-cfg', revision='2024-05-16', src=SRC_YANG_146),
+        (name='Cisco-IOS-XR-um-netconf-yang-cfg', revision='2025-07-31', src=SRC_YANG_147),
+        (name='Cisco-IOS-XR-um-nsr-cfg', revision='2020-03-23', src=SRC_YANG_148),
+        (name='Cisco-IOS-XR-um-ntp-cfg', revision='2023-07-06', src=SRC_YANG_149),
+        (name='Cisco-IOS-XR-um-object-group-cfg', revision='2024-04-21', src=SRC_YANG_150),
+        (name='Cisco-IOS-XR-um-password6-cfg', revision='2020-03-23', src=SRC_YANG_151),
+        (name='Cisco-IOS-XR-um-pbr-policy-cfg', revision='2022-07-11', src=SRC_YANG_152),
+        (name='Cisco-IOS-XR-um-pce-cfg', revision='2022-03-25', src=SRC_YANG_153),
+        (name='Cisco-IOS-XR-um-performance-measurement-cfg', revision='2024-12-02', src=SRC_YANG_154),
+        (name='Cisco-IOS-XR-um-performance-mgmt-cfg', revision='2023-05-24', src=SRC_YANG_155),
+        (name='Cisco-IOS-XR-um-policymap-classmap-cfg', revision='2025-05-01', src=SRC_YANG_156),
+        (name='Cisco-IOS-XR-um-pool-cfg', revision='2023-05-15', src=SRC_YANG_157),
+        (name='Cisco-IOS-XR-um-process-cfg', revision='2021-03-31', src=SRC_YANG_158),
+        (name='Cisco-IOS-XR-um-ptp-cfg', revision='2024-08-28', src=SRC_YANG_159),
+        (name='Cisco-IOS-XR-um-raw-cfg', revision='2022-03-08', src=SRC_YANG_160),
+        (name='Cisco-IOS-XR-um-rcc-cfg', revision='2020-09-09', src=SRC_YANG_161),
+        (name='Cisco-IOS-XR-um-redundancy-cfg', revision='2021-06-29', src=SRC_YANG_162),
+        (name='Cisco-IOS-XR-um-route-policy-cfg', revision='2024-11-21', src=SRC_YANG_163),
+        (name='Cisco-IOS-XR-um-router-amt-cfg', revision='2019-08-20', src=SRC_YANG_164),
+        (name='Cisco-IOS-XR-um-router-bgp-cfg', revision='2025-05-14', src=SRC_YANG_165),
+        (name='Cisco-IOS-XR-um-router-eigrp-cfg', revision='2023-05-18', src=SRC_YANG_166),
+        (name='Cisco-IOS-XR-um-router-hsrp-cfg', revision='2022-07-11', src=SRC_YANG_167),
+        (name='Cisco-IOS-XR-um-router-igmp-cfg', revision='2022-12-06', src=SRC_YANG_168),
+        (name='Cisco-IOS-XR-um-router-isis-cfg', revision='2024-11-22', src=SRC_YANG_169),
+        (name='Cisco-IOS-XR-um-router-mld-cfg', revision='2022-12-07', src=SRC_YANG_170),
+        (name='Cisco-IOS-XR-um-router-msdp-cfg', revision='2021-01-08', src=SRC_YANG_171),
+        (name='Cisco-IOS-XR-um-router-ospf-cfg', revision='2023-02-21', src=SRC_YANG_172),
+        (name='Cisco-IOS-XR-um-router-ospfv3-cfg', revision='2022-07-11', src=SRC_YANG_173),
+        (name='Cisco-IOS-XR-um-router-pim-cfg', revision='2023-11-30', src=SRC_YANG_174),
+        (name='Cisco-IOS-XR-um-router-rib-cfg', revision='2024-06-20', src=SRC_YANG_175),
+        (name='Cisco-IOS-XR-um-router-rip-cfg', revision='2021-12-27', src=SRC_YANG_176),
+        (name='Cisco-IOS-XR-um-router-static-cfg', revision='2025-04-17', src=SRC_YANG_177),
+        (name='Cisco-IOS-XR-um-router-vrrp-cfg', revision='2023-03-28', src=SRC_YANG_178),
+        (name='Cisco-IOS-XR-um-rsvp-cfg', revision='2024-07-04', src=SRC_YANG_179),
+        (name='Cisco-IOS-XR-um-sap-cfg', revision='2021-05-10', src=SRC_YANG_180),
+        (name='Cisco-IOS-XR-um-script-cfg', revision='2023-05-10', src=SRC_YANG_181),
+        (name='Cisco-IOS-XR-um-segment-routing-cfg', revision='2025-03-06', src=SRC_YANG_182),
+        (name='Cisco-IOS-XR-um-segment-routing-srv6-cfg', revision='2022-05-31', src=SRC_YANG_183),
+        (name='Cisco-IOS-XR-um-service-cfg', revision='2024-02-21', src=SRC_YANG_184),
+        (name='Cisco-IOS-XR-um-service-sysadmin-login-banner-cfg', revision='2021-05-07', src=SRC_YANG_185),
+        (name='Cisco-IOS-XR-um-session-redundancy-cfg', revision='2021-06-29', src=SRC_YANG_186),
+        (name='Cisco-IOS-XR-um-snmp-server-cfg', revision='2022-07-11', src=SRC_YANG_187),
+        (name='Cisco-IOS-XR-um-snmp-server-mroutemib-cfg', revision='2022-07-11', src=SRC_YANG_188),
+        (name='Cisco-IOS-XR-um-snmp-server-notification-log-mib-cfg', revision='2022-07-11', src=SRC_YANG_189),
+        (name='Cisco-IOS-XR-um-ssh-cfg', revision='2025-08-13', src=SRC_YANG_190),
+        (name='Cisco-IOS-XR-um-ssm-cfg', revision='2021-01-18', src=SRC_YANG_191),
+        (name='Cisco-IOS-XR-um-statistics-cfg', revision='2022-07-11', src=SRC_YANG_192),
+        (name='Cisco-IOS-XR-um-tcp-cfg', revision='2021-05-10', src=SRC_YANG_193),
+        (name='Cisco-IOS-XR-um-telemetry-model-driven-cfg', revision='2025-05-29', src=SRC_YANG_194),
+        (name='Cisco-IOS-XR-um-telnet-cfg', revision='2022-07-11', src=SRC_YANG_195),
+        (name='Cisco-IOS-XR-um-track-cfg', revision='2023-01-20', src=SRC_YANG_196),
+        (name='Cisco-IOS-XR-um-traffic-collector-cfg', revision='2022-11-18', src=SRC_YANG_197),
+        (name='Cisco-IOS-XR-um-traps-alarm-cfg', revision='2022-07-11', src=SRC_YANG_198),
+        (name='Cisco-IOS-XR-um-traps-bridgemib-cfg', revision='2022-07-11', src=SRC_YANG_199),
+        (name='Cisco-IOS-XR-um-traps-bulkstat-cfg', revision='2022-07-11', src=SRC_YANG_200),
+        (name='Cisco-IOS-XR-um-traps-config-copy-cfg', revision='2022-07-11', src=SRC_YANG_201),
+        (name='Cisco-IOS-XR-um-traps-entity-cfg', revision='2022-07-11', src=SRC_YANG_202),
+        (name='Cisco-IOS-XR-um-traps-entity-redundancy-cfg', revision='2022-07-11', src=SRC_YANG_203),
+        (name='Cisco-IOS-XR-um-traps-entity-state-cfg', revision='2022-07-11', src=SRC_YANG_204),
+        (name='Cisco-IOS-XR-um-traps-flash-cfg', revision='2022-07-11', src=SRC_YANG_205),
+        (name='Cisco-IOS-XR-um-traps-fru-ctrl-cfg', revision='2022-07-11', src=SRC_YANG_206),
+        (name='Cisco-IOS-XR-um-traps-ipsec-cfg', revision='2022-07-11', src=SRC_YANG_207),
+        (name='Cisco-IOS-XR-um-traps-ipsla-cfg', revision='2022-07-11', src=SRC_YANG_208),
+        (name='Cisco-IOS-XR-um-traps-l2tun-cfg', revision='2022-07-11', src=SRC_YANG_209),
+        (name='Cisco-IOS-XR-um-traps-mpls-ldp-cfg', revision='2022-07-11', src=SRC_YANG_210),
+        (name='Cisco-IOS-XR-um-traps-msdp-cfg', revision='2022-07-11', src=SRC_YANG_211),
+        (name='Cisco-IOS-XR-um-traps-otn-cfg', revision='2022-07-11', src=SRC_YANG_212),
+        (name='Cisco-IOS-XR-um-traps-pim-cfg', revision='2022-07-11', src=SRC_YANG_213),
+        (name='Cisco-IOS-XR-um-traps-power-cfg', revision='2022-07-11', src=SRC_YANG_214),
+        (name='Cisco-IOS-XR-um-traps-rsvp-cfg', revision='2022-07-11', src=SRC_YANG_215),
+        (name='Cisco-IOS-XR-um-traps-selective-vrf-download-cfg', revision='2022-07-11', src=SRC_YANG_216),
+        (name='Cisco-IOS-XR-um-traps-syslog-cfg', revision='2022-07-11', src=SRC_YANG_217),
+        (name='Cisco-IOS-XR-um-traps-system-cfg', revision='2022-07-11', src=SRC_YANG_218),
+        (name='Cisco-IOS-XR-um-udp-cfg', revision='2021-01-11', src=SRC_YANG_219),
+        (name='Cisco-IOS-XR-um-vrf-cfg', revision='2022-07-11', src=SRC_YANG_220),
+        (name='Cisco-IOS-XR-um-vty-pool-cfg', revision='2023-07-26', src=SRC_YANG_221),
+        (name='Cisco-IOS-XR-um-watchdog-cfg', revision='2024-09-20', src=SRC_YANG_222),
+        (name='Cisco-IOS-XR-um-xml-agent-cfg', revision='2023-11-15', src=SRC_YANG_223),
+        (name='Cisco-IOS-XR-um-yang-push-cfg', revision='2025-04-14', src=SRC_YANG_224),
+        (name='Cisco-IOS-XR-um-yang-server-cfg', revision='2024-10-29', src=SRC_YANG_225),
+        (name='cisco-semver', revision='2019-03-13', src=SRC_YANG_226),
+        (name='ietf-inet-types', revision='2013-07-15', src=SRC_YANG_227),
+        (name='ietf-yang-types', revision='2013-07-15', src=SRC_YANG_228),
+        (name='tailf-cli-extensions', revision='2018-09-11', src=SRC_YANG_229),
+        (name='tailf-common', revision='2018-09-11', src=SRC_YANG_230),
+        (name='tailf-meta-extensions', revision='2017-03-08', src=SRC_YANG_231),
     ]
 

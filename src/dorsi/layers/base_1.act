@@ -66,7 +66,7 @@ class MacVrf(ttt.RFSFunction):
         return stratoweave_rfs__rfs__mac_vrf_entry__oper
 
     @staticmethod
-    def new_state(path: ttt.Path):
+    pure def new_state(path: ttt.Path):
         """Create modeled operational state for this transform path"""
         return stratoweave_rfs__rfs__mac_vrf_entry__oper.from_gdata(ttt.path_key_data(path))
 
@@ -101,7 +101,7 @@ class IpVrf(ttt.RFSFunction):
         return stratoweave_rfs__rfs__ip_vrf_entry__oper
 
     @staticmethod
-    def new_state(path: ttt.Path):
+    pure def new_state(path: ttt.Path):
         """Create modeled operational state for this transform path"""
         return stratoweave_rfs__rfs__ip_vrf_entry__oper.from_gdata(ttt.path_key_data(path))
 
@@ -136,7 +136,7 @@ class ServerLag(ttt.RFSFunction):
         return stratoweave_rfs__rfs__server_lag_entry__oper
 
     @staticmethod
-    def new_state(path: ttt.Path):
+    pure def new_state(path: ttt.Path):
         """Create modeled operational state for this transform path"""
         return stratoweave_rfs__rfs__server_lag_entry__oper.from_gdata(ttt.path_key_data(path))
 
@@ -171,7 +171,7 @@ class FabricInterface(ttt.RFSFunction):
         return stratoweave_rfs__rfs__fabric_interface_entry__oper
 
     @staticmethod
-    def new_state(path: ttt.Path):
+    pure def new_state(path: ttt.Path):
         """Create modeled operational state for this transform path"""
         return stratoweave_rfs__rfs__fabric_interface_entry__oper.from_gdata(ttt.path_key_data(path))
 
@@ -206,7 +206,7 @@ class ServerPort(ttt.RFSFunction):
         return stratoweave_rfs__rfs__server_port_entry__oper
 
     @staticmethod
-    def new_state(path: ttt.Path):
+    pure def new_state(path: ttt.Path):
         """Create modeled operational state for this transform path"""
         return stratoweave_rfs__rfs__server_port_entry__oper.from_gdata(ttt.path_key_data(path))
 

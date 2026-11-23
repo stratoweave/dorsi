@@ -1,5 +1,5 @@
-import base64
-import json
+import std.base64
+import std.json
 import std.xml as xml
 import yang.adata as yadata
 import yang.gdata as ygdata
@@ -19,12 +19,12 @@ from yang.sdata import SubscriptionPath, SubscriptionNode
 _identities: list[DIdentity] = []
 
 
-SRC_DNODE_CHILD_0: DContainer = DContainer(module='stratoweave-device', namespace='http://stratoweave.org/yang/stratoweave-device', prefix='sw-dev', name='devices', config=True, presence=False, children=[
+SRC_DNODE_CHILD_0: DContainer = DContainer(module='stratoweave-device', namespace='http://stratoweave.org/yang/stratoweave-device', prefix='sw-dev', name='devices', config=True, presence=False, adata_name='devices', children=[
     DList(module='stratoweave-device', namespace='http://stratoweave.org/yang/stratoweave-device', prefix='sw-dev', name='device', key=['name'], config=True, min_elements=0, ordered_by='system', exts=[
             DExt(module='stratoweave', namespace='http://stratoweave.org/yang/stratoweave', prefix='sw', name='device-config', arg=None, exts=[])
-        ], children=[
-        DLeaf(module='stratoweave-device', namespace='http://stratoweave.org/yang/stratoweave-device', prefix='sw-dev', name='name', config=True, is_key=True, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[])),
-        DLeaf(module='stratoweave-device', namespace='http://stratoweave.org/yang/stratoweave-device', prefix='sw-dev', name='modset_id', config=True, is_key=False, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[]))
+        ], adata_name='device', children=[
+        DLeaf(module='stratoweave-device', namespace='http://stratoweave.org/yang/stratoweave-device', prefix='sw-dev', name='name', config=True, is_key=True, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[]), adata_name='name'),
+        DLeaf(module='stratoweave-device', namespace='http://stratoweave.org/yang/stratoweave-device', prefix='sw-dev', name='modset_id', config=True, is_key=False, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[]), adata_name='modset_id')
     ])
 ])
 
@@ -135,15 +135,20 @@ SRC_YANG_1: str = r"""module stratoweave-device {
 }
 """
 
-pure def src_yang() -> list[str]:
+pure def src_yang() -> list[YangSource]:
     return [
-        SRC_YANG_0,
-        SRC_YANG_1,
+        (name='stratoweave', revision='2026-04-01', src=SRC_YANG_0),
+        (name='stratoweave-device', revision=None, src=SRC_YANG_1),
     ]
 
 
 NS_stratoweave: str = 'http://stratoweave.org/yang/stratoweave'
 NS_stratoweave_device: str = 'http://stratoweave.org/yang/stratoweave-device'
+
+_ID_stratoweave_device__device: ygdata.Id = ygdata.Id(NS_stratoweave_device, 'device')
+_ID_stratoweave_device__devices: ygdata.Id = ygdata.Id(NS_stratoweave_device, 'devices')
+_ID_stratoweave_device__modset_id: ygdata.Id = ygdata.Id(NS_stratoweave_device, 'modset_id')
+_ID_stratoweave_device__name: ygdata.Id = ygdata.Id(NS_stratoweave_device, 'name')
 
 
 _breaker1: None = None
@@ -160,7 +165,7 @@ class stratoweave_device__devices__device_entry(yadata.MNode):
 
     @staticmethod
     mut def from_gdata(n: ygdata.Node) -> stratoweave_device__devices__device_entry:
-        return stratoweave_device__devices__device_entry(name=n.get_str(ygdata.Id(NS_stratoweave_device, 'name')), modset_id=n.get_opt_str(ygdata.Id(NS_stratoweave_device, 'modset_id')))
+        return stratoweave_device__devices__device_entry(name=n.get_str(_ID_stratoweave_device__name), modset_id=n.get_opt_str(_ID_stratoweave_device__modset_id))
 
     mut def copy(self) -> stratoweave_device__devices__device_entry:
         """Create a deep copy of this adata object"""
@@ -212,7 +217,7 @@ class stratoweave_device__devices(yadata.MNode):
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> stratoweave_device__devices:
         if n is not None:
-            return stratoweave_device__devices(device=stratoweave_device__devices__device.from_gdata(n.get_opt_list(ygdata.Id(NS_stratoweave_device, 'device'))))
+            return stratoweave_device__devices(device=stratoweave_device__devices__device.from_gdata(n.get_opt_list(_ID_stratoweave_device__device)))
         return stratoweave_device__devices()
 
     mut def copy(self) -> stratoweave_device__devices:
@@ -233,7 +238,7 @@ class root(yadata.MNode):
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> root:
         if n is not None:
-            return root(devices=stratoweave_device__devices.from_gdata(n.get_opt_cnt(ygdata.Id(NS_stratoweave_device, 'devices'))))
+            return root(devices=stratoweave_device__devices.from_gdata(n.get_opt_cnt(_ID_stratoweave_device__devices)))
         return root()
 
     mut def copy(self) -> root:
@@ -274,85 +279,95 @@ class stratoweave_device__devices__device_entry_subs(SubscriptionNode):
 
     pure def __init__(self, path: ?SubscriptionPath=None) -> None:
         SubscriptionNode.__init__(self, path)
-        self.name = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_stratoweave_device, 'name'), parent=path))
-        self.modset_id = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_stratoweave_device, 'modset_id'), parent=path))
+        self.name = SubscriptionNode(SubscriptionPath(_ID_stratoweave_device__name, parent=path))
+        self.modset_id = SubscriptionNode(SubscriptionPath(_ID_stratoweave_device__modset_id, parent=path))
 
     pure def _direct_children(self) -> list[SubscriptionNode]:
         direct: list[SubscriptionNode] = [self.name, self.modset_id]
         return direct
 
 _breaker6: None = None
-proc def stratoweave_device__devices__device_deliver(cb: action(?(device_name: str), ?stratoweave_device__devices__device_entry, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
-    keys: ?(device_name: str) = None
-    inst: ?stratoweave_device__devices__device_entry = None
-    if n is not None:
-        try:
-            c1 = _at(n, ygdata.Id(NS_stratoweave_device, 'devices'))
-            e2 = _one(_at(c1, ygdata.Id(NS_stratoweave_device, 'device')), 'device')
-            keys = (device_name=e2.get_str(ygdata.Id(NS_stratoweave_device, 'name')))
-            here = _present(e2)
-            if here is not None:
-                inst = stratoweave_device__devices__device_entry.from_gdata(here)
-        except Exception as e:
-            cb(None, None, e)
-            return
-    cb(keys, inst, err)
+actor stratoweave_device__devices__device_dst(cb: action(?(device_name: str), ?stratoweave_device__devices__device_entry, ?Exception) -> None):
+    def on_update(n: ?ygdata.Node, err: ?Exception) -> None:
+        keys: ?(device_name: str) = None
+        inst: ?stratoweave_device__devices__device_entry = None
+        if n is not None:
+            try:
+                c1 = _at(n, _ID_stratoweave_device__devices)
+                e2 = _one(_at(c1, _ID_stratoweave_device__device), 'device')
+                keys = (device_name=e2.get_str(_ID_stratoweave_device__name))
+                here = _present(e2)
+                if here is not None:
+                    inst = stratoweave_device__devices__device_entry.from_gdata(here)
+            except Exception as e:
+                cb(None, None, e)
+                return
+        cb(keys, inst, err)
+
+    def synced(done: action(str) -> None, owner_id: str) -> None:
+        done(owner_id)
 
 class stratoweave_device__devices__device_subs(SubscriptionNode):
     name: SubscriptionNode
     modset_id: SubscriptionNode
     pure def __init__(self, path: ?SubscriptionPath=None) -> None:
         SubscriptionNode.__init__(self, path)
-        self.name = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_stratoweave_device, 'name'), parent=path))
-        self.modset_id = SubscriptionNode(SubscriptionPath(ygdata.Id(NS_stratoweave_device, 'modset_id'), parent=path))
+        self.name = SubscriptionNode(SubscriptionPath(_ID_stratoweave_device__name, parent=path))
+        self.modset_id = SubscriptionNode(SubscriptionPath(_ID_stratoweave_device__modset_id, parent=path))
 
     pure def entry(self, name: str) -> stratoweave_device__devices__device_entry_subs:
         predicates = [
-            ygdata.FNode(ygdata.Id(NS_stratoweave_device, 'name'), value_match=name),
+            ygdata.FNode(_ID_stratoweave_device__name, value_match=name),
         ]
         base_path = self._path!.parent
-        return stratoweave_device__devices__device_entry_subs(SubscriptionPath(ygdata.Id(NS_stratoweave_device, 'device'), predicates=predicates, parent=base_path))
+        return stratoweave_device__devices__device_entry_subs(SubscriptionPath(_ID_stratoweave_device__device, predicates=predicates, parent=base_path))
 
-    def dst(self, cb: action(?(device_name: str), ?stratoweave_device__devices__device_entry, ?Exception) -> None) -> ygdata.Dst:
+    proc def dst(self, cb: action(?(device_name: str), ?stratoweave_device__devices__device_entry, ?Exception) -> None) -> ygdata.Dst:
         """A destination rooted here: cb gets, one instance at a time,
         the keys of the lists on the way down, this entry as it is
         after a change or None when it is gone, and an error."""
-        return ygdata.Dst(lambda n, err: stratoweave_device__devices__device_deliver(cb, n, err), root=self.filt())
+        a = stratoweave_device__devices__device_dst(cb)
+        return ygdata.Dst(a.on_update, root=self.filt(), synced=a.synced)
 
     pure def _direct_children(self) -> list[SubscriptionNode]:
         direct: list[SubscriptionNode] = [self.name, self.modset_id]
         return direct
 
 _breaker7: None = None
-proc def stratoweave_device__devices_deliver(cb: action(?stratoweave_device__devices, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
-    inst: ?stratoweave_device__devices = None
-    if n is not None:
-        try:
-            c1 = _at(n, ygdata.Id(NS_stratoweave_device, 'devices'))
-            here = _present(c1)
-            if here is not None:
-                inst = stratoweave_device__devices.from_gdata(here)
-        except Exception as e:
-            cb(None, e)
-            return
-    cb(inst, err)
+actor stratoweave_device__devices_dst(cb: action(?stratoweave_device__devices, ?Exception) -> None):
+    def on_update(n: ?ygdata.Node, err: ?Exception) -> None:
+        inst: ?stratoweave_device__devices = None
+        if n is not None:
+            try:
+                c1 = _at(n, _ID_stratoweave_device__devices)
+                here = _present(c1)
+                if here is not None:
+                    inst = stratoweave_device__devices.from_gdata(here)
+            except Exception as e:
+                cb(None, e)
+                return
+        cb(inst, err)
+
+    def synced(done: action(str) -> None, owner_id: str) -> None:
+        done(owner_id)
 
 class stratoweave_device__devices_subs(SubscriptionNode):
     device: stratoweave_device__devices__device_subs
 
     pure def __init__(self, path: ?SubscriptionPath=None) -> None:
         SubscriptionNode.__init__(self, path)
-        self.device = stratoweave_device__devices__device_subs(SubscriptionPath(ygdata.Id(NS_stratoweave_device, 'device'), parent=path))
+        self.device = stratoweave_device__devices__device_subs(SubscriptionPath(_ID_stratoweave_device__device, parent=path))
 
     pure def _direct_children(self) -> list[SubscriptionNode]:
         direct: list[SubscriptionNode] = [self.device]
         return direct
 
-    def dst(self, cb: action(?stratoweave_device__devices, ?Exception) -> None) -> ygdata.Dst:
+    proc def dst(self, cb: action(?stratoweave_device__devices, ?Exception) -> None) -> ygdata.Dst:
         """A destination rooted here: cb gets, one instance at a time,
         this container as it is after a change or None when it is gone,
         and an error."""
-        return ygdata.Dst(lambda n, err: stratoweave_device__devices_deliver(cb, n, err), root=self.filt())
+        a = stratoweave_device__devices_dst(cb)
+        return ygdata.Dst(a.on_update, root=self.filt(), synced=a.synced)
 
 _breaker8: None = None
 class root_subs(SubscriptionNode):
@@ -360,7 +375,7 @@ class root_subs(SubscriptionNode):
 
     pure def __init__(self, path: ?SubscriptionPath=None) -> None:
         SubscriptionNode.__init__(self, path)
-        self.devices = stratoweave_device__devices_subs(SubscriptionPath(ygdata.Id(NS_stratoweave_device, 'devices'), parent=path))
+        self.devices = stratoweave_device__devices_subs(SubscriptionPath(_ID_stratoweave_device__devices, parent=path))
 
     pure def _direct_children(self) -> list[SubscriptionNode]:
         direct: list[SubscriptionNode] = [self.devices]
@@ -368,15 +383,20 @@ class root_subs(SubscriptionNode):
 
 subs: root_subs = root_subs()
 
-proc def _deliver_root(cb: action(?root, ?Exception) -> None, n: ?ygdata.Node, err: ?Exception) -> None:
-    if err is not None:
-        cb(None, err)
-    elif n is not None:
-        cb(root.from_gdata(n), None)
-    else:
-        cb(None, None)
+actor _root_dst(cb: action(?root, ?Exception) -> None):
+    def on_update(n: ?ygdata.Node, err: ?Exception) -> None:
+        if err is not None:
+            cb(None, err)
+        elif n is not None:
+            cb(root.from_gdata(n), None)
+        else:
+            cb(None, None)
 
-def dst(cb: action(?root, ?Exception) -> None) -> ygdata.Dst:
+    def synced(done: action(str) -> None, owner_id: str) -> None:
+        done(owner_id)
+
+proc def dst(cb: action(?root, ?Exception) -> None) -> ygdata.Dst:
     """A destination at the top of the tree: cb gets the whole subscribed
     tree on every delivery."""
-    return ygdata.Dst(lambda n, err: _deliver_root(cb, n, err))
+    a = _root_dst(cb)
+    return ygdata.Dst(a.on_update, synced=a.synced)
