@@ -476,12 +476,12 @@ def validate_overlay(f: y_0.ip_fabric__ip_fabric__fabric_entry, switches: dict[s
                 irb = irb_index(overlay_evi(vni))
                 for leaf in leaves:
                     sw = switches.get(leaf)
-                    if sw is not None and sw.type == _EOS:
-                        # EOS creates a VLAN interface of its own for the layer
-                        # 3 VNI of a VRF, which dorsi would try to remove
-                        errors.append("{what}: a routed network cannot be placed on {leaf} ({_EOS}) yet")
-                    elif sw is not None and sw.type == _CRPD:
+                    if sw is not None and sw.type == _CRPD:
                         errors.append("{what}: a routed network cannot be placed on {leaf} ({_CRPD}) yet")
+                    elif sw is not None and sw.type == _EOS:
+                        # The gateway of EOS is on the VLAN interface of the
+                        # internal VLAN, checked above
+                        pass
                     else:
                         if leaf not in leaf_irbs:
                             leaf_irbs[leaf] = {}
@@ -565,8 +565,6 @@ def validate_overlay(f: y_0.ip_fabric__ip_fabric__fabric_entry, switches: dict[s
             for leaf in leaf_ports.keys():
                 sw = switches.get(leaf)
                 if sw is not None and sw.type == _EOS:
-                    if server.connectivity.profile == "dual-homed":
-                        errors.append("{what}: a dual-homed server is an ethernet segment, which dorsi cannot configure on {leaf} ({_EOS}) yet")
                     for att in server.attachment:
                         tag = att.vlan
                         if tag is not None and leaf in leaf_vlans and int(tag) in leaf_vlans[leaf]:

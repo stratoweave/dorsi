@@ -27,6 +27,21 @@ module dorsi-rfs {
             leaf asn {
                 type inet:as-number;
             }
+            container dynstate {
+                description
+                    "What the device has made of its own that dorsi must keep
+                     in its configuration.";
+                sw:dynstate;
+                leaf-list eos-dynamic-vlan-interface {
+                    description
+                        "The VLAN interfaces EOS makes for the layer 3 VNIs of
+                         its VRFs, such as Vlan4097. They are in the
+                         configuration of the device, but EOS refuses to have
+                         them created or removed, so the transform renders
+                         them as EOS has them.";
+                    type string;
+                }
+            }
             leaf role {
                 type string;
             }
@@ -268,6 +283,17 @@ module dorsi-rfs {
                     "Ethernet segment identifier of a dual-homed server,
                      absent for a single-homed one.";
                 type string;
+            }
+            container dynstate {
+                description
+                    "What the device reports of the LAG. EOS takes an
+                     ethernet segment only on a LAG that is already there,
+                     so the transform adds it once the LAG is.";
+                sw:dynstate;
+                leaf lag-present {
+                    description "Whether the device has the LAG.";
+                    type boolean;
+                }
             }
             container state {
                 config false;

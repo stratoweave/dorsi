@@ -63,8 +63,7 @@ addresses of the cEOS switches stay in place.
 ## Overlay
 
 `ip-fabric-overlay.xml` is the same fabric with an EVPN-VXLAN overlay across
-the vendors, layer 2 only (dorsi cannot put an ethernet segment or a VRF on
-EOS yet), and server2 single-homed to leaf3 for it. Network `t1/web` joins:
+the vendors, layer 2 only, and server2 single-homed to leaf3 for it. Network `t1/web` joins:
 
 | Server | Leaf side | VLAN | Address |
 |---|---|---|---|

@@ -1397,6 +1397,7 @@ NS_openconfig_bgp: str = 'http://openconfig.net/yang/bgp'
 NS_openconfig_bgp_policy: str = 'http://openconfig.net/yang/bgp-policy'
 NS_openconfig_bgp_types: str = 'http://openconfig.net/yang/bgp-types'
 NS_openconfig_defined_sets: str = 'http://openconfig.net/yang/defined-sets'
+NS_openconfig_ethernet_segments: str = 'http://openconfig.net/yang/ethernet-segments'
 NS_openconfig_evpn: str = 'http://openconfig.net/yang/evpn'
 NS_openconfig_evpn_types: str = 'http://openconfig.net/yang/evpn-types'
 NS_openconfig_aft_types: str = 'http://openconfig.net/yang/fib-types'
@@ -1511,6 +1512,15 @@ _ID_arista_netinst_augments__ipv4_routing_enabled: ygdata.Id = ygdata.Id(NS_aris
 _ID_openconfig_bgp_policy__afi_safi_in: ygdata.Id = ygdata.Id(NS_openconfig_bgp_policy, 'afi-safi-in')
 _ID_openconfig_bgp_policy__bgp_conditions: ygdata.Id = ygdata.Id(NS_openconfig_bgp_policy, 'bgp-conditions')
 _ID_openconfig_bgp_policy__config: ygdata.Id = ygdata.Id(NS_openconfig_bgp_policy, 'config')
+_ID_openconfig_ethernet_segments__config: ygdata.Id = ygdata.Id(NS_openconfig_ethernet_segments, 'config')
+_ID_openconfig_ethernet_segments__es_import_route_target: ygdata.Id = ygdata.Id(NS_openconfig_ethernet_segments, 'es-import-route-target')
+_ID_openconfig_ethernet_segments__esi: ygdata.Id = ygdata.Id(NS_openconfig_ethernet_segments, 'esi')
+_ID_openconfig_ethernet_segments__esi_type: ygdata.Id = ygdata.Id(NS_openconfig_ethernet_segments, 'esi-type')
+_ID_openconfig_ethernet_segments__ethernet_segment: ygdata.Id = ygdata.Id(NS_openconfig_ethernet_segments, 'ethernet-segment')
+_ID_openconfig_ethernet_segments__ethernet_segments: ygdata.Id = ygdata.Id(NS_openconfig_ethernet_segments, 'ethernet-segments')
+_ID_openconfig_ethernet_segments__interface: ygdata.Id = ygdata.Id(NS_openconfig_ethernet_segments, 'interface')
+_ID_openconfig_ethernet_segments__name: ygdata.Id = ygdata.Id(NS_openconfig_ethernet_segments, 'name')
+_ID_openconfig_ethernet_segments__redundancy_mode: ygdata.Id = ygdata.Id(NS_openconfig_ethernet_segments, 'redundancy-mode')
 _ID_openconfig_if_aggregate__aggregate_id: ygdata.Id = ygdata.Id(NS_openconfig_if_aggregate, 'aggregate-id')
 _ID_openconfig_if_aggregate__aggregation: ygdata.Id = ygdata.Id(NS_openconfig_if_aggregate, 'aggregation')
 _ID_openconfig_if_aggregate__config: ygdata.Id = ygdata.Id(NS_openconfig_if_aggregate, 'config')
@@ -5323,6 +5333,109 @@ class openconfig_lacp__lacp(yadata.MNode):
 
 
 _breaker156: None = None
+class openconfig_ethernet_segments__ethernet_segments__ethernet_segment__config(yadata.MNode):
+    name: ?str
+    esi_type: ?str
+    esi: ?str
+    redundancy_mode: ?str
+    es_import_route_target: ?str
+    interface: ?str
+
+    mut def __init__(self, name: ?str=None, esi_type: ?str=None, esi: ?str=None, redundancy_mode: ?str=None, es_import_route_target: ?str=None, interface: ?str=None) -> None:
+        self.name = name
+        self.esi_type = esi_type
+        self.esi = esi
+        self.redundancy_mode = redundancy_mode
+        self.es_import_route_target = es_import_route_target
+        self.interface = interface
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['openconfig-ethernet-segments:ethernet-segments', 'ethernet-segment', 'config'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> openconfig_ethernet_segments__ethernet_segments__ethernet_segment__config:
+        if n is not None:
+            return openconfig_ethernet_segments__ethernet_segments__ethernet_segment__config(name=n.get_opt_str(_ID_openconfig_ethernet_segments__name), esi_type=n.get_opt_str(_ID_openconfig_ethernet_segments__esi_type), esi=n.get_opt_str(_ID_openconfig_ethernet_segments__esi), redundancy_mode=n.get_opt_str(_ID_openconfig_ethernet_segments__redundancy_mode), es_import_route_target=n.get_opt_str(_ID_openconfig_ethernet_segments__es_import_route_target), interface=n.get_opt_str(_ID_openconfig_ethernet_segments__interface))
+        return openconfig_ethernet_segments__ethernet_segments__ethernet_segment__config()
+
+    mut def copy(self) -> openconfig_ethernet_segments__ethernet_segments__ethernet_segment__config:
+        """Create a deep copy of this adata object"""
+        return openconfig_ethernet_segments__ethernet_segments__ethernet_segment__config.from_gdata(self.to_gdata())
+
+
+_breaker157: None = None
+class openconfig_ethernet_segments__ethernet_segments__ethernet_segment_entry(yadata.MNode):
+    name: str
+    config: openconfig_ethernet_segments__ethernet_segments__ethernet_segment__config
+
+    mut def __init__(self, name: str, config: ?openconfig_ethernet_segments__ethernet_segments__ethernet_segment__config=None) -> None:
+        self.name = name
+        self.config = config if config is not None else openconfig_ethernet_segments__ethernet_segments__ethernet_segment__config()
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['openconfig-ethernet-segments:ethernet-segments', 'ethernet-segment'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ygdata.Node) -> openconfig_ethernet_segments__ethernet_segments__ethernet_segment_entry:
+        return openconfig_ethernet_segments__ethernet_segments__ethernet_segment_entry(name=n.get_str(_ID_openconfig_ethernet_segments__name), config=openconfig_ethernet_segments__ethernet_segments__ethernet_segment__config.from_gdata(n.get_opt_cnt(_ID_openconfig_ethernet_segments__config)))
+
+    mut def copy(self) -> openconfig_ethernet_segments__ethernet_segments__ethernet_segment_entry:
+        """Create a deep copy of this adata object"""
+        return openconfig_ethernet_segments__ethernet_segments__ethernet_segment_entry.from_gdata(self.to_gdata())
+
+_breaker158: None = None
+class openconfig_ethernet_segments__ethernet_segments__ethernet_segment(yadata.MKeyedList[str, openconfig_ethernet_segments__ethernet_segments__ethernet_segment_entry]):
+    mut def __init__(self, elements: list[openconfig_ethernet_segments__ethernet_segments__ethernet_segment_entry]=[]) -> None:
+        yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
+
+    mut def create(self, key: str) -> openconfig_ethernet_segments__ethernet_segments__ethernet_segment_entry:
+        e = self.get(key)
+        if e is not None:
+            return e
+        name = key
+        res = openconfig_ethernet_segments__ethernet_segments__ethernet_segment_entry(name=name)
+        self._append(res)
+        return res
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.List) -> list[openconfig_ethernet_segments__ethernet_segments__ethernet_segment_entry]:
+        if n is not None:
+            return [openconfig_ethernet_segments__ethernet_segments__ethernet_segment_entry.from_gdata(e) for e in n.entries()]
+        return []
+
+    mut def copy(self) -> openconfig_ethernet_segments__ethernet_segments__ethernet_segment:
+        """Create a deep copy of this list object"""
+        # Copy each element in the list
+        copied_elements = []
+        for e in self:
+            ce = e.copy()
+            if ce is not None:
+                copied_elements.append(ce)
+        return openconfig_ethernet_segments__ethernet_segments__ethernet_segment(elements=copied_elements)
+
+
+_breaker159: None = None
+class openconfig_ethernet_segments__ethernet_segments(yadata.MNode):
+    ethernet_segment: openconfig_ethernet_segments__ethernet_segments__ethernet_segment
+
+    mut def __init__(self, ethernet_segment: list[openconfig_ethernet_segments__ethernet_segments__ethernet_segment_entry]=[]) -> None:
+        self.ethernet_segment = openconfig_ethernet_segments__ethernet_segments__ethernet_segment(elements=ethernet_segment)
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['openconfig-ethernet-segments:ethernet-segments'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> openconfig_ethernet_segments__ethernet_segments:
+        if n is not None:
+            return openconfig_ethernet_segments__ethernet_segments(ethernet_segment=openconfig_ethernet_segments__ethernet_segments__ethernet_segment.from_gdata(n.get_opt_list(_ID_openconfig_ethernet_segments__ethernet_segment)))
+        return openconfig_ethernet_segments__ethernet_segments()
+
+    mut def copy(self) -> openconfig_ethernet_segments__ethernet_segments:
+        """Create a deep copy of this adata object"""
+        return openconfig_ethernet_segments__ethernet_segments.from_gdata(self.to_gdata())
+
+
+_breaker160: None = None
 class arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__config(yadata.MNode):
     name: ?str
     route_distinguisher: ?str
@@ -5347,7 +5460,7 @@ class arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__config(y
         return arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__config.from_gdata(self.to_gdata())
 
 
-_breaker157: None = None
+_breaker161: None = None
 class arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__route_target__config(yadata.MNode):
     import: list[str]
     export: list[str]
@@ -5370,7 +5483,7 @@ class arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__route_ta
         return arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__route_target__config.from_gdata(self.to_gdata())
 
 
-_breaker158: None = None
+_breaker162: None = None
 class arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__route_target(yadata.MNode):
     config: arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__route_target__config
 
@@ -5391,7 +5504,7 @@ class arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__route_ta
         return arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__route_target.from_gdata(self.to_gdata())
 
 
-_breaker159: None = None
+_breaker163: None = None
 class arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__vlans__vlan__config(yadata.MNode):
     vlan_id: ?u64
 
@@ -5412,7 +5525,7 @@ class arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__vlans__v
         return arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__vlans__vlan__config.from_gdata(self.to_gdata())
 
 
-_breaker160: None = None
+_breaker164: None = None
 class arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__vlans__vlan_entry(yadata.MNode):
     vlan_id: u64
     config: arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__vlans__vlan__config
@@ -5432,7 +5545,7 @@ class arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__vlans__v
         """Create a deep copy of this adata object"""
         return arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__vlans__vlan_entry.from_gdata(self.to_gdata())
 
-_breaker161: None = None
+_breaker165: None = None
 class arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__vlans__vlan(yadata.MKeyedList[u64, arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__vlans__vlan_entry]):
     mut def __init__(self, elements: list[arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__vlans__vlan_entry]=[]) -> None:
         yadata.MKeyedList.__init__(self, lambda e: e.vlan_id, elements)
@@ -5463,7 +5576,7 @@ class arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__vlans__v
         return arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__vlans__vlan(elements=copied_elements)
 
 
-_breaker162: None = None
+_breaker166: None = None
 class arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__vlans(yadata.MNode):
     vlan: arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__vlans__vlan
 
@@ -5484,7 +5597,7 @@ class arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__vlans(ya
         return arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__vlans.from_gdata(self.to_gdata())
 
 
-_breaker163: None = None
+_breaker167: None = None
 class arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance_entry(yadata.MNode):
     name: str
     config: arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance__config
@@ -5508,7 +5621,7 @@ class arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance_entry(yad
         """Create a deep copy of this adata object"""
         return arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance_entry.from_gdata(self.to_gdata())
 
-_breaker164: None = None
+_breaker168: None = None
 class arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance(yadata.MKeyedList[str, arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance_entry]):
     mut def __init__(self, elements: list[arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance_entry]=[]) -> None:
         yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
@@ -5539,7 +5652,7 @@ class arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance(yadata.MK
         return arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance(elements=copied_elements)
 
 
-_breaker165: None = None
+_breaker169: None = None
 class arista_exp_eos__arista__eos__evpn__evpn_instances(yadata.MNode):
     evpn_instance: arista_exp_eos__arista__eos__evpn__evpn_instances__evpn_instance
 
@@ -5560,7 +5673,7 @@ class arista_exp_eos__arista__eos__evpn__evpn_instances(yadata.MNode):
         return arista_exp_eos__arista__eos__evpn__evpn_instances.from_gdata(self.to_gdata())
 
 
-_breaker166: None = None
+_breaker170: None = None
 class arista_exp_eos__arista__eos__evpn(yadata.MNode):
     evpn_instances: arista_exp_eos__arista__eos__evpn__evpn_instances
 
@@ -5581,7 +5694,7 @@ class arista_exp_eos__arista__eos__evpn(yadata.MNode):
         return arista_exp_eos__arista__eos__evpn.from_gdata(self.to_gdata())
 
 
-_breaker167: None = None
+_breaker171: None = None
 class arista_exp_eos__arista__eos(yadata.MNode):
     evpn: arista_exp_eos__arista__eos__evpn
 
@@ -5602,7 +5715,7 @@ class arista_exp_eos__arista__eos(yadata.MNode):
         return arista_exp_eos__arista__eos.from_gdata(self.to_gdata())
 
 
-_breaker168: None = None
+_breaker172: None = None
 class arista_exp_eos__arista(yadata.MNode):
     eos: arista_exp_eos__arista__eos
 
@@ -5623,7 +5736,7 @@ class arista_exp_eos__arista(yadata.MNode):
         return arista_exp_eos__arista.from_gdata(self.to_gdata())
 
 
-_breaker169: None = None
+_breaker173: None = None
 class root(yadata.MNode):
     interfaces: openconfig_interfaces__interfaces
     routing_policy: openconfig_routing_policy__routing_policy
@@ -5631,15 +5744,17 @@ class root(yadata.MNode):
     system: openconfig_system__system
     lldp: openconfig_lldp__lldp
     lacp: openconfig_lacp__lacp
+    ethernet_segments: openconfig_ethernet_segments__ethernet_segments
     arista: arista_exp_eos__arista
 
-    mut def __init__(self, interfaces: ?openconfig_interfaces__interfaces=None, routing_policy: ?openconfig_routing_policy__routing_policy=None, network_instances: ?openconfig_network_instance__network_instances=None, system: ?openconfig_system__system=None, lldp: ?openconfig_lldp__lldp=None, lacp: ?openconfig_lacp__lacp=None, arista: ?arista_exp_eos__arista=None) -> None:
+    mut def __init__(self, interfaces: ?openconfig_interfaces__interfaces=None, routing_policy: ?openconfig_routing_policy__routing_policy=None, network_instances: ?openconfig_network_instance__network_instances=None, system: ?openconfig_system__system=None, lldp: ?openconfig_lldp__lldp=None, lacp: ?openconfig_lacp__lacp=None, ethernet_segments: ?openconfig_ethernet_segments__ethernet_segments=None, arista: ?arista_exp_eos__arista=None) -> None:
         self.interfaces = interfaces if interfaces is not None else openconfig_interfaces__interfaces()
         self.routing_policy = routing_policy if routing_policy is not None else openconfig_routing_policy__routing_policy()
         self.network_instances = network_instances if network_instances is not None else openconfig_network_instance__network_instances()
         self.system = system if system is not None else openconfig_system__system()
         self.lldp = lldp if lldp is not None else openconfig_lldp__lldp()
         self.lacp = lacp if lacp is not None else openconfig_lacp__lacp()
+        self.ethernet_segments = ethernet_segments if ethernet_segments is not None else openconfig_ethernet_segments__ethernet_segments()
         self.arista = arista if arista is not None else arista_exp_eos__arista()
 
     mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
@@ -5648,7 +5763,7 @@ class root(yadata.MNode):
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> root:
         if n is not None:
-            return root(interfaces=openconfig_interfaces__interfaces.from_gdata(n.get_opt_cnt(_ID_openconfig_interfaces__interfaces)), routing_policy=openconfig_routing_policy__routing_policy.from_gdata(n.get_opt_cnt(_ID_openconfig_routing_policy__routing_policy)), network_instances=openconfig_network_instance__network_instances.from_gdata(n.get_opt_cnt(_ID_openconfig_network_instance__network_instances)), system=openconfig_system__system.from_gdata(n.get_opt_cnt(_ID_openconfig_system__system)), lldp=openconfig_lldp__lldp.from_gdata(n.get_opt_cnt(_ID_openconfig_lldp__lldp)), lacp=openconfig_lacp__lacp.from_gdata(n.get_opt_cnt(_ID_openconfig_lacp__lacp)), arista=arista_exp_eos__arista.from_gdata(n.get_opt_cnt(_ID_arista_exp_eos__arista)))
+            return root(interfaces=openconfig_interfaces__interfaces.from_gdata(n.get_opt_cnt(_ID_openconfig_interfaces__interfaces)), routing_policy=openconfig_routing_policy__routing_policy.from_gdata(n.get_opt_cnt(_ID_openconfig_routing_policy__routing_policy)), network_instances=openconfig_network_instance__network_instances.from_gdata(n.get_opt_cnt(_ID_openconfig_network_instance__network_instances)), system=openconfig_system__system.from_gdata(n.get_opt_cnt(_ID_openconfig_system__system)), lldp=openconfig_lldp__lldp.from_gdata(n.get_opt_cnt(_ID_openconfig_lldp__lldp)), lacp=openconfig_lacp__lacp.from_gdata(n.get_opt_cnt(_ID_openconfig_lacp__lacp)), ethernet_segments=openconfig_ethernet_segments__ethernet_segments.from_gdata(n.get_opt_cnt(_ID_openconfig_ethernet_segments__ethernet_segments)), arista=arista_exp_eos__arista.from_gdata(n.get_opt_cnt(_ID_arista_exp_eos__arista)))
         return root()
 
     mut def copy(self) -> root:

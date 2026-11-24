@@ -212,11 +212,11 @@ def _test_overlay_address_outside_subnet():
 def _test_valid_three_stage_mixed_overlay():
     testing.assertEqual(cfs.validate_fabric(_fabric(fabrics.three_stage_mixed_overlay())), [])
 
-def _test_overlay_dual_homed_on_eos_rejected():
+def _test_overlay_dual_homed_on_eos():
     f = _fabric(fabrics.three_stage_mixed())
     f.tenant.create("t1").network.create("web")
     f.server.get("server2")!.attachment.create(("t1", "web"), vlan=10)
-    _single_error(f, "server server2: a dual-homed server is an ethernet segment, which dorsi cannot configure on leaf3")
+    testing.assertEqual(cfs.validate_fabric(f), [])
 
 def _test_overlay_server_tag_is_an_internal_vlan():
     f = _fabric(fabrics.three_stage_mixed_overlay())
@@ -257,14 +257,14 @@ def _test_overlay_internal_vlan_clash_on_eos():
     f.server.get("server3")!.attachment.create(("t1", "db"), vlan=40)
     _single_error(f, "network t1/db: its internal VLAN {cfs.overlay_vlan(web_vni)} on leaf3")
 
-def _test_overlay_routed_network_on_eos_rejected():
+def _test_overlay_routed_network_on_eos():
     f = _fabric(fabrics.three_stage_mixed_overlay())
     tenant = f.tenant.get("t1")!
     tenant.vrf.create("main")
     web = tenant.network.get("web")!
     web.vrf = "main"
     web.gateway = "10.10.10.1/24"
-    _single_error(f, "network t1/web: a routed network cannot be placed on leaf3")
+    testing.assertEqual(cfs.validate_fabric(f), [])
 
 def _test_valid_three_stage_mixed_crpd_overlay():
     testing.assertEqual(cfs.validate_fabric(_fabric(fabrics.three_stage_mixed_crpd_overlay())), [])
