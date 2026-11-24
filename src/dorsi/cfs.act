@@ -72,8 +72,10 @@ def fabric_link_addresses(lower_id: int, lower_port: str) -> (str, str):
 #   LAG             lag<lowest port number of the server on the leaf>, on
 #                   Arista EOS Port-Channel<the same>
 #   internal VLAN   200 + fnv1a32(vlan/<VNI>) % 800, on switches that bridge
-#                   in VLANs (EOS), below the VLANs EOS keeps for routed
-#                   ports from 1006 up
+#                   in VLANs (EOS, cRPD), below the VLANs EOS keeps for
+#                   routed ports from 1006 up. Unique per switch, as is the
+#                   IRB: only 800 values, a clash anywhere in the fabric
+#                   would be likely with a few dozen networks
 
 def _fnv1a(s: str) -> int:
     """32-bit FNV-1a hash of the UTF-8 bytes of s."""
@@ -137,6 +139,8 @@ _EOS = "AristaEOS_4_36_3_2M"
 _CRPD = "JuniperCRPD_24_4R1_9"
 # Device types that take the EVPN-VXLAN overlay
 _OVERLAY_TYPES = {"NokiaSRLinux_25_3_2", _EOS, _CRPD}
+# Device types that bridge a network in an internal VLAN of the switch
+_VLAN_BRIDGING_TYPES = {_EOS, _CRPD}
 
 
 def server_lag_name(ports: list[str], switch_type: str) -> str:
@@ -419,8 +423,10 @@ def validate_overlay(f: y_0.ip_fabric__ip_fabric__fabric_entry, switches: dict[s
     vnis: dict[int, str] = {}
     evis: dict[int, str] = {}
     vrf_names: dict[str, str] = {}
-    irbs: dict[int, str] = {}
-    internal_vlans: dict[int, str] = {}
+    # The internal VLANs and IRB subinterfaces are local to a switch, so they
+    # need only be unique on each leaf, by leaf
+    leaf_irbs: dict[str, dict[int, str]] = {}
+    leaf_vlans: dict[str, dict[int, str]] = {}
 
     def identify(what: str, vni: int, name: str, kind: str):
         if vni in vnis:
@@ -448,11 +454,18 @@ def validate_overlay(f: y_0.ip_fabric__ip_fabric__fabric_entry, switches: dict[s
             what = "network {tenant.name}/{network.name}"
             vni = network_vni(f.name, tenant.name, network)
             identify(what, vni, mac_vrf_name(tenant.name, network.name), "MAC-VRF")
+            # Only switches that bridge in VLANs use the internal VLAN
             vlan = overlay_vlan(vni)
-            if vlan in internal_vlans:
-                errors.append("{what}: its internal VLAN {vlan}, derived from VNI {vni}, is also that of {internal_vlans[vlan]}, set another vni on one of them")
-            else:
-                internal_vlans[vlan] = what
+            leaves = network_leaves(f, tenant.name, network.name)
+            for leaf in leaves:
+                sw = switches.get(leaf)
+                if sw is not None and sw.type in _VLAN_BRIDGING_TYPES:
+                    if leaf not in leaf_vlans:
+                        leaf_vlans[leaf] = {}
+                    if vlan in leaf_vlans[leaf]:
+                        errors.append("{what}: its internal VLAN {vlan} on {leaf}, derived from VNI {vni}, is also that of {leaf_vlans[leaf][vlan]}, set another vni on one of them")
+                    else:
+                        leaf_vlans[leaf][vlan] = what
             vrf = network.vrf
             gateway = network.gateway
             if vrf is not None:
@@ -460,19 +473,22 @@ def validate_overlay(f: y_0.ip_fabric__ip_fabric__fabric_entry, switches: dict[s
                     errors.append("{what}: VRF {vrf} does not exist in tenant {tenant.name}")
                 if gateway is None:
                     errors.append("{what}: a network in a VRF needs a gateway")
-                for leaf in network_leaves(f, tenant.name, network.name):
+                irb = irb_index(overlay_evi(vni))
+                for leaf in leaves:
                     sw = switches.get(leaf)
                     if sw is not None and sw.type == _EOS:
                         # EOS creates a VLAN interface of its own for the layer
                         # 3 VNI of a VRF, which dorsi would try to remove
                         errors.append("{what}: a routed network cannot be placed on {leaf} ({_EOS}) yet")
-                    if sw is not None and sw.type == _CRPD:
+                    elif sw is not None and sw.type == _CRPD:
                         errors.append("{what}: a routed network cannot be placed on {leaf} ({_CRPD}) yet")
-                irb = irb_index(overlay_evi(vni))
-                if irb in irbs:
-                    errors.append("{what}: its IRB subinterface irb0.{irb}, derived from VNI {vni}, is also that of {irbs[irb]}, set another vni on one of them")
-                else:
-                    irbs[irb] = what
+                    else:
+                        if leaf not in leaf_irbs:
+                            leaf_irbs[leaf] = {}
+                        if irb in leaf_irbs[leaf]:
+                            errors.append("{what}: its IRB subinterface irb0.{irb} on {leaf}, derived from VNI {vni}, is also that of {leaf_irbs[leaf][irb]}, set another vni on one of them")
+                        else:
+                            leaf_irbs[leaf][irb] = what
             if gateway is not None and vrf is None:
                 errors.append("{what}: a gateway needs a vrf")
             if gateway is not None and vrf is not None:
@@ -553,8 +569,12 @@ def validate_overlay(f: y_0.ip_fabric__ip_fabric__fabric_entry, switches: dict[s
                         errors.append("{what}: a dual-homed server is an ethernet segment, which dorsi cannot configure on {leaf} ({_EOS}) yet")
                     for att in server.attachment:
                         tag = att.vlan
-                        if tag is not None and int(tag) in internal_vlans:
-                            errors.append("{what}: its VLAN {tag} on {leaf} is the internal VLAN of {internal_vlans[int(tag)]}, the switch would bridge it there")
+                        if tag is not None and leaf in leaf_vlans and int(tag) in leaf_vlans[leaf]:
+                            other = leaf_vlans[leaf][int(tag)]
+                            # The tag of a network that is its own internal
+                            # VLAN needs no translation
+                            if other != "network {att.tenant}/{att.network}":
+                                errors.append("{what}: its VLAN {tag} on {leaf} is the internal VLAN of {other}, the switch would bridge it there")
                 if sw is not None and sw.type == _CRPD:
                     # cRPD bridges a server port as a VLAN subinterface; an
                     # untagged port and a LAG did not come up in the lab

@@ -221,10 +221,41 @@ def _test_overlay_dual_homed_on_eos_rejected():
 def _test_overlay_server_tag_is_an_internal_vlan():
     f = _fabric(fabrics.three_stage_mixed_overlay())
     f.tenant.get("t1")!.network.create("db")
+    f.server.get("server3")!.attachment.create(("t1", "db"), vlan=40)
     vlan = cfs.overlay_vlan(cfs.overlay_vni("dc1", "t1", "db"))
     att = f.server.get("server3")!.attachment.get(("t1", "web"))!
     att.vlan = u64(vlan)
     _single_error(f, "server server3: its VLAN {vlan} on leaf3 is the internal VLAN of network t1/db")
+
+def _test_overlay_server_tag_of_a_network_elsewhere():
+    # The internal VLAN of a network on other leaves only is no VLAN of leaf3
+    f = _fabric(fabrics.three_stage_mixed_overlay())
+    f.tenant.get("t1")!.network.create("db")
+    vlan = cfs.overlay_vlan(cfs.overlay_vni("dc1", "t1", "db"))
+    att = f.server.get("server3")!.attachment.get(("t1", "web"))!
+    att.vlan = u64(vlan)
+    testing.assertEqual(cfs.validate_fabric(f), [])
+
+def _vni_with_the_vlan_of(vni: int) -> int:
+    """Another VNI with the internal VLAN of vni and another IRB."""
+    n = 20
+    while n == vni or cfs.overlay_vlan(n) != cfs.overlay_vlan(vni) or cfs.irb_index(cfs.overlay_evi(n)) == cfs.irb_index(cfs.overlay_evi(vni)):
+        n += 1
+    return n
+
+def _test_overlay_internal_vlan_clash_on_srl_only():
+    # SR Linux bridges in no internal VLAN, so its clash is no problem
+    f = _fabric(fabrics.three_stage_overlay())
+    db = f.tenant.get("t1")!.network.get("db")!
+    db.vni = u64(_vni_with_the_vlan_of(cfs.overlay_vni("dc1", "t1", "web")))
+    testing.assertEqual(cfs.validate_fabric(f), [])
+
+def _test_overlay_internal_vlan_clash_on_eos():
+    f = _fabric(fabrics.three_stage_mixed_overlay())
+    web_vni = cfs.overlay_vni("dc1", "t1", "web")
+    f.tenant.get("t1")!.network.create("db", vni=u64(_vni_with_the_vlan_of(web_vni)))
+    f.server.get("server3")!.attachment.create(("t1", "db"), vlan=40)
+    _single_error(f, "network t1/db: its internal VLAN {cfs.overlay_vlan(web_vni)} on leaf3")
 
 def _test_overlay_routed_network_on_eos_rejected():
     f = _fabric(fabrics.three_stage_mixed_overlay())
