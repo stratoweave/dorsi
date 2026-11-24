@@ -181,10 +181,14 @@ instances and the anycast gateway exist on EOS only in Arista's experimental
 YANG models, which dorsi uses besides OpenConfig. The export policy of the
 fabric applies to every address family on EOS, so it also lets the EVPN routes
 out, and EOS is told to send extended communities, which carry the route
-targets. Two things dorsi cannot do on EOS yet, and rejects: an ethernet
-segment (EOS takes it only on a LAG that already exists, not in the
-transaction that creates it) and a routed network (for the layer 3 VNI of a
-VRF, EOS adds a VLAN interface of its own, which dorsi would try to remove).
+targets. EOS takes an ethernet segment only on a LAG that already exists, not
+in the transaction that creates it: the RFS transform of a server LAG first
+configures the LAG alone, and adds the segment once its transform actor sees
+the LAG on the device. For the layer 3 VNI of a VRF, EOS adds a VLAN
+interface of its own (`Vlan4097` and up) to its configuration, and refuses
+to have it created or removed: the transform actor of the base configuration
+follows these interfaces on the device, and its transform keeps them in the
+configuration as EOS has them, so that dorsi never tries to remove them.
 
 A tenant can also have `vrf`s, and a network in a VRF has a `gateway`. The
 VRF routes between its networks with symmetric IRB: every leaf of a network
@@ -192,7 +196,9 @@ answers on the gateway with the same anycast address and MAC (on `irb0`),
 learns the hosts from ARP and advertises them, and an IP-VRF with a layer 3
 VNI on the leaves of the VRF exchanges the subnets and host routes as EVPN IP
 prefix routes (type 5). The layer 3 VNI comes from a range of its own, apart
-from those of the networks.
+from those of the networks. On Arista EOS the gateway is a virtual address
+(VARP) on the VLAN interface of the network; DORSI reads no state of a VRF on
+EOS yet.
 
 Known limits of the overlay on SR Linux 25.3, seen in the labs:
 
@@ -219,7 +225,7 @@ On Arista EOS a network is a VLAN, and EOS has no state of its own for an
 EVPN instance or for `Vxlan1`. DORSI reads the network as up while its VLAN is
 there, and its EVPN instance as up while `Vxlan1` forwards in the VLAN: EOS
 takes `Vxlan1` out of the VLAN when it goes down. A server LAG on EOS has its
-LAG state only, as EOS has no ethernet segment from DORSI yet.
+LAG state only: EOS has no OpenConfig state for an ethernet segment.
 
 #### IP fabric: what is verified
 

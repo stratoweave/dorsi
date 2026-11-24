@@ -445,6 +445,14 @@ actor main(env):
     "/oc-lacp:lacp/interfaces/interface/config/interval",
     "/oc-lacp:lacp/interfaces/interface/config/lacp-mode",
     "/oc-lacp:lacp/interfaces/interface/config/system-id-mac",
+    # The ethernet segment of a dual-homed server
+    "/oc-es:ethernet-segments/ethernet-segment/name",
+    "/oc-es:ethernet-segments/ethernet-segment/config/name",
+    "/oc-es:ethernet-segments/ethernet-segment/config/esi-type",
+    "/oc-es:ethernet-segments/ethernet-segment/config/esi",
+    "/oc-es:ethernet-segments/ethernet-segment/config/redundancy-mode",
+    "/oc-es:ethernet-segments/ethernet-segment/config/es-import-route-target",
+    "/oc-es:ethernet-segments/ethernet-segment/config/interface",
     ]
 
     # The paths referenced by these leafrefs are invalid - missing module

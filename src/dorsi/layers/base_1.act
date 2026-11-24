@@ -10,9 +10,11 @@ import yang.gdata as ygdata
 import yang.xml as yxml
 
 from dorsi.layers.y_1 import stratoweave_rfs__rfs__fabric_base_config_entry
+from dorsi.layers.y_1 import stratoweave_rfs__rfs__fabric_base_config__dynstate
 from dorsi.layers.y_1 import stratoweave_rfs__rfs__mac_vrf_entry
 from dorsi.layers.y_1 import stratoweave_rfs__rfs__ip_vrf_entry
 from dorsi.layers.y_1 import stratoweave_rfs__rfs__server_lag_entry
+from dorsi.layers.y_1 import stratoweave_rfs__rfs__server_lag__dynstate
 from dorsi.layers.y_1 import stratoweave_rfs__rfs__fabric_interface_entry
 from dorsi.layers.y_1 import stratoweave_rfs__rfs__server_port_entry
 from dorsi.layers.y_1_oper import stratoweave_rfs__rfs__mac_vrf_entry as stratoweave_rfs__rfs__mac_vrf_entry__oper
@@ -28,20 +30,26 @@ def o_root():
 
 
 class FabricBaseConfig(ttt.RFSFunction):
-    transform: mut(stratoweave_rfs__rfs__fabric_base_config_entry, ttt.DeviceInfo) -> yadata.MNode
+    transform: mut(stratoweave_rfs__rfs__fabric_base_config_entry, ttt.DeviceInfo, dynstate: ?stratoweave_rfs__rfs__fabric_base_config__dynstate) -> yadata.MNode
 
     @staticmethod
     def input_type():
         """Return the modeled input type for this transform"""
         return stratoweave_rfs__rfs__fabric_base_config_entry
 
+    @staticmethod
+    def dynstate_type():
+        """Return the modeled dynstate type for this transform"""
+        return stratoweave_rfs__rfs__fabric_base_config__dynstate
+
     mut def transform_wrapper(self, i: ygdata.Node, device_info: ttt.DeviceInfo, memory: ?ygdata.Node=None, dynstate: ?ygdata.Node=None, prev_output: ?ygdata.Node=None) -> (ygdata.Node, ?ygdata.Node):
         """Wrap the user provided transform method to convert from gdata to
         modeled input and back to gdata
         """
         modeled_input = stratoweave_rfs__rfs__fabric_base_config_entry.from_gdata(i)
+        modeled_dynstate = stratoweave_rfs__rfs__fabric_base_config__dynstate.from_gdata(dynstate) if dynstate is not None else None
 
-        return self.transform(modeled_input, device_info).to_gdata(prev_output if isinstance(prev_output, ygdata.Container) else None), None
+        return self.transform(modeled_input, device_info, modeled_dynstate).to_gdata(prev_output if isinstance(prev_output, ygdata.Container) else None), None
 
     mut def transform_xml(self, i: xml.Node, device_info: ttt.DeviceInfo, memory: ?ygdata.Node=None, dynstate: ?ygdata.Node=None, prev_output: ?ygdata.Node=None) -> (ygdata.Node, ?ygdata.Node):
         """Wrap the user provided transform method to convert from XML to
@@ -49,8 +57,9 @@ class FabricBaseConfig(ttt.RFSFunction):
         """
         gdata_input = yxml.from_xml(SRC_DNODE, i, loose=True, root_path=['stratoweave-rfs:rfs', 'dorsi-rfs:fabric-base-config'])
         modeled_input = stratoweave_rfs__rfs__fabric_base_config_entry.from_gdata(gdata_input)
+        modeled_dynstate = stratoweave_rfs__rfs__fabric_base_config__dynstate.from_gdata(dynstate) if dynstate is not None else None
 
-        return self.transform(modeled_input, device_info).to_gdata(prev_output if isinstance(prev_output, ygdata.Container) else None), None
+        return self.transform(modeled_input, device_info, modeled_dynstate).to_gdata(prev_output if isinstance(prev_output, ygdata.Container) else None), None
 
 class MacVrf(ttt.RFSFunction):
     transform: mut(stratoweave_rfs__rfs__mac_vrf_entry, ttt.DeviceInfo) -> yadata.MNode
@@ -123,7 +132,7 @@ class IpVrf(ttt.RFSFunction):
         return self.transform(modeled_input, device_info).to_gdata(prev_output if isinstance(prev_output, ygdata.Container) else None), None
 
 class ServerLag(ttt.RFSFunction):
-    transform: mut(stratoweave_rfs__rfs__server_lag_entry, ttt.DeviceInfo) -> yadata.MNode
+    transform: mut(stratoweave_rfs__rfs__server_lag_entry, ttt.DeviceInfo, dynstate: ?stratoweave_rfs__rfs__server_lag__dynstate) -> yadata.MNode
 
     @staticmethod
     def input_type():
@@ -140,13 +149,19 @@ class ServerLag(ttt.RFSFunction):
         """Create modeled operational state for this transform path"""
         return stratoweave_rfs__rfs__server_lag_entry__oper.from_gdata(ttt.path_key_data(path))
 
+    @staticmethod
+    def dynstate_type():
+        """Return the modeled dynstate type for this transform"""
+        return stratoweave_rfs__rfs__server_lag__dynstate
+
     mut def transform_wrapper(self, i: ygdata.Node, device_info: ttt.DeviceInfo, memory: ?ygdata.Node=None, dynstate: ?ygdata.Node=None, prev_output: ?ygdata.Node=None) -> (ygdata.Node, ?ygdata.Node):
         """Wrap the user provided transform method to convert from gdata to
         modeled input and back to gdata
         """
         modeled_input = stratoweave_rfs__rfs__server_lag_entry.from_gdata(i)
+        modeled_dynstate = stratoweave_rfs__rfs__server_lag__dynstate.from_gdata(dynstate) if dynstate is not None else None
 
-        return self.transform(modeled_input, device_info).to_gdata(prev_output if isinstance(prev_output, ygdata.Container) else None), None
+        return self.transform(modeled_input, device_info, modeled_dynstate).to_gdata(prev_output if isinstance(prev_output, ygdata.Container) else None), None
 
     mut def transform_xml(self, i: xml.Node, device_info: ttt.DeviceInfo, memory: ?ygdata.Node=None, dynstate: ?ygdata.Node=None, prev_output: ?ygdata.Node=None) -> (ygdata.Node, ?ygdata.Node):
         """Wrap the user provided transform method to convert from XML to
@@ -154,8 +169,9 @@ class ServerLag(ttt.RFSFunction):
         """
         gdata_input = yxml.from_xml(SRC_DNODE, i, loose=True, root_path=['stratoweave-rfs:rfs', 'dorsi-rfs:server-lag'])
         modeled_input = stratoweave_rfs__rfs__server_lag_entry.from_gdata(gdata_input)
+        modeled_dynstate = stratoweave_rfs__rfs__server_lag__dynstate.from_gdata(dynstate) if dynstate is not None else None
 
-        return self.transform(modeled_input, device_info).to_gdata(prev_output if isinstance(prev_output, ygdata.Container) else None), None
+        return self.transform(modeled_input, device_info, modeled_dynstate).to_gdata(prev_output if isinstance(prev_output, ygdata.Container) else None), None
 
 class FabricInterface(ttt.RFSFunction):
     transform: mut(stratoweave_rfs__rfs__fabric_interface_entry, ttt.DeviceInfo) -> yadata.MNode

@@ -1,0 +1,25 @@
+import testing
+
+import dorsi.cfs as cfs
+import dorsi.rfs as rfs
+
+# Arista EOS: the ethernet segment of a dual-homed server, from the ESI the
+# CFS derives
+
+def _test_esi_without_colons():
+    testing.assertEqual(rfs.eos_esi("00:ec:b6:15:bf:3e:a4:04:94:01"), "00ecb615bf3ea4049401")
+
+def _test_es_import_route_target():
+    # RFC 7432 section 7.6: the 6 bytes of the ESI after its type
+    testing.assertEqual(rfs.es_import_route_target("00:ec:b6:15:bf:3e:a4:04:94:01"), "ec:b6:15:bf:3e:a4")
+
+def _test_esi_of_the_cfs_fits():
+    esi = cfs.server_esi("dc1", "server2")
+    testing.assertEqual(len(rfs.eos_esi(esi)), 20)
+    testing.assertEqual(len(rfs.es_import_route_target(esi).split(":")), 6)
+
+# The VLAN interfaces EOS makes of its own for the layer 3 VNIs of VRFs
+
+def _test_dynamic_vlan_interfaces():
+    names = ["Ethernet1", "Vlan268", "Vlan4099", "Vxlan1", "Vlan4097", "Vlan4094", "Vlanx"]
+    testing.assertEqual(rfs.eos_dynamic_vlan_interfaces(names), ["Vlan4097", "Vlan4099"])

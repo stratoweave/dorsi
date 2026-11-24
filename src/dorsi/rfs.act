@@ -7,6 +7,8 @@ import stratoweave.device as swdev
 import dorsi.layers.base_1 as base
 import dorsi.layers.y_1 as y_1
 import dorsi.layers.y_1_oper as y_1_oper
+from dorsi.layers.y_1 import stratoweave_rfs__rfs__server_lag__dynstate as ServerLagDynstate
+from dorsi.layers.y_1 import stratoweave_rfs__rfs__fabric_base_config__dynstate as FabricBaseConfigDynstate
 
 from stratoweave.exception import UnsupportedDevice
 from stratoweave.adapters.adapter import NotConnectedError
@@ -143,8 +145,20 @@ def _eos_policy(dev: eos436.root, name: str):
     statement.actions.config.policy_result = "ACCEPT_ROUTE"
     return statement
 
+def eos_dynamic_vlan_interfaces(names: list[str]) -> list[str]:
+    """The VLAN interfaces among names that only EOS makes: those of a VLAN
+    above 4094, which EOS takes for the layer 3 VNI of a VRF."""
+    found: list[str] = []
+    for name in names:
+        if name.startswith("Vlan"):
+            number = name[len("Vlan"):]
+            if number.isdecimal() and int(number) > 4094:
+                found.append(name)
+    return sorted(found)
+
+
 class FabricBaseConfig(base.FabricBaseConfig):
-    def transform(self, i, di):
+    def transform(self, i, di, dynstate: ?FabricBaseConfigDynstate):
         print("RFS /rfs{{{di.name}}}/fabric-base-config transform running {i.role}", err=True)
 
         if "srl_nokia-system" in di.modules:
@@ -351,6 +365,16 @@ class FabricBaseConfig(base.FabricBaseConfig):
                     neighbor.config.peer_as = peer.asn
                     neighbor.config.enabled = True
                     neighbor.config.description = _overlay_description(peer.device)
+
+            # The VLAN interfaces EOS has made for the layer 3 VNIs of its
+            # VRFs (Vlan4097 and up). EOS refuses to create or remove them,
+            # and would refuse a commit that removes them, so they are
+            # rendered as EOS has them, a name and a type and nothing else
+            if dynstate is not None:
+                for name in dynstate.eos_dynamic_vlan_interface:
+                    vlan_if = dev.interfaces.interface.create(name)
+                    vlan_if.config.name = name
+                    vlan_if.config.type = eos436.iana_if_type_l3ipvlan
 
             return dev
 
@@ -1180,9 +1204,8 @@ class IpVrf(base.IpVrf):
             return dev
 
         if _EOS_MODULE in di.modules:
-            # Not used yet, the CFS places no VRF on EOS: for the layer 3 VNI
-            # EOS adds a VLAN interface of its own (Vlan4097 and up), which
-            # dorsi would try to remove, and EOS refuses that
+            # For the layer 3 VNI EOS adds a VLAN interface of its own
+            # (Vlan4097 and up), which the base configuration keeps
             dev = eos436.root()
             ni = dev.network_instances.network_instance.create(i.name)
             ni.config.name = i.name
@@ -1215,8 +1238,19 @@ class IpVrf(base.IpVrf):
         raise UnsupportedDevice()
 
 
+def eos_esi(esi: str) -> str:
+    """An ESI as EOS takes it in OpenConfig: 20 hex digits, no colons."""
+    return esi.replace(":", "")
+
+
+def es_import_route_target(esi: str) -> str:
+    """The ES-import route target of a type 0 ESI, as RFC 7432 section 7.6
+    derives it: the 6 bytes after the type. EOS does not derive it itself."""
+    return ":".join(esi.split(":")[1:7])
+
+
 class ServerLag(base.ServerLag):
-    def transform(self, i, di):
+    def transform(self, i, di, dynstate: ?ServerLagDynstate):
         print("RFS /rfs{{{di.name}}}/server-lag transform running {i.name} {i.server}", err=True)
 
         if "srl_nokia-system" in di.modules:
@@ -1242,10 +1276,6 @@ class ServerLag(base.ServerLag):
             return dev
 
         if _EOS_MODULE in di.modules:
-            if i.esi is not None:
-                # EOS takes an ethernet segment only on a LAG that is already
-                # there, not in the transaction that creates it
-                raise ValueError("server-lag {i.name}: dorsi cannot configure an ethernet segment on Arista EOS yet")
             dev = eos436.root()
             intf = _eos_interface(dev, i.name, eos436.iana_if_type_ieee8023adLag, "Server {i.server}")
             intf.aggregation.config.lag_type = "LACP"
@@ -1254,6 +1284,23 @@ class ServerLag(base.ServerLag):
             lacp.config.interval = "FAST"
             lacp.config.lacp_mode = "ACTIVE"
             lacp.config.system_id_mac = i.lacp_system_id
+
+            esi = i.esi
+            if esi is not None and dynstate is not None and dynstate.lag_present == True:
+                # EOS takes an ethernet segment only on a LAG that is already
+                # there, not in the transaction that creates it: the segment
+                # comes in a second transaction, once the transform actor
+                # sees the LAG on the device
+                es = dev.ethernet_segments.ethernet_segment.create("es-{i.server}")
+                es.config.name = "es-{i.server}"
+                es.config.esi_type = "TYPE_0_OPERATOR_CONFIGURED"
+                es.config.esi = eos_esi(esi)
+                # A string in the patched model, as EOS reports it: see
+                # openconfig-ethernet-segments. Without it EOS makes the
+                # segment single-active
+                es.config.redundancy_mode = "openconfig-evpn-types:ALL_ACTIVE"
+                es.config.es_import_route_target = es_import_route_target(esi)
+                es.config.interface = i.name
             return dev
 
         raise UnsupportedDevice()
@@ -1367,6 +1414,43 @@ def _srl_status(raw: ?str) -> ?str:
     if raw is not None:
         return "unknown"
     return None
+
+
+proc def FabricBaseConfigTransform(path, update_dynstate: proc(?FabricBaseConfigDynstate)->None, dev: swdev.DeviceMgr):
+    provider = await async dev.tree_provider()
+    dynstate = base.FabricBaseConfig.dynstate_type()()
+    return FabricBaseConfigTransformActor(path, update_dynstate, dev, provider, dynstate)
+
+
+actor FabricBaseConfigTransformActor(path, update_dynstate: proc(?FabricBaseConfigDynstate)->None, dev: swdev.DeviceMgr, provider: gdata.TreeProvider, dynstate: FabricBaseConfigDynstate):
+    """Follows the VLAN interfaces an EOS switch makes of its own, for the
+    transform to keep them in the configuration."""
+    _subs = gdata.SubscriptionManager(provider, str(path))
+    _dynstate = dynstate
+
+    def on_eos(root: ?eos436_oper_root, err: ?Exception):
+        # A failed poll leaves the interfaces as they were last seen
+        if err is not None:
+            print("FabricBaseConfigTransform {path}: subscription error: {err}", err=True)
+        elif root is not None:
+            names: list[str] = []
+            for interface in root.interfaces.interface:
+                names.append(interface.name)
+            found = eos_dynamic_vlan_interfaces(names)
+            if found != _dynstate.eos_dynamic_vlan_interface:
+                print("FabricBaseConfigTransform {path}: EOS VLAN interfaces of its own: {found}", err=True)
+                _dynstate.eos_dynamic_vlan_interface = found
+                update_dynstate(_dynstate)
+
+    def on_conf(conf: y_1.stratoweave_rfs__rfs__fabric_base_config_entry):
+        want: set[gdata.Delivery] = set()
+        if _EOS_MODULE in dev.get_modules().0:
+            eos_dst = eos436_oper.dst(on_eos)
+            want.add(eos_dst.deliver({eos436_oper.subs.interfaces.interface.name.subscribe(period=_POLL_PERIOD)}))
+        _subs.declare(want)
+
+    def shutdown():
+        pass
 
 
 actor _OverlayPoll(path, dev: swdev.DeviceMgr, provider: gdata.TreeProvider, on_srl: proc(?srl25_oper_root)->None, on_eos: proc(?eos436_oper_root, ?Exception)->None):
@@ -1621,7 +1705,7 @@ actor IpVrfTransformActor(path, update_oper: proc(?y_1_oper.stratoweave_rfs__rfs
         update_oper(_oper)
 
     def on_eos(root: ?eos436_oper_root, err: ?Exception):
-        # The CFS places no VRF on EOS yet, so nothing is polled
+        # EOS has no OpenConfig state of a VRF that dorsi reads yet
         pass
 
     _poll = _OverlayPoll(path, dev, provider, on_srl, on_eos)
@@ -1633,13 +1717,15 @@ actor IpVrfTransformActor(path, update_oper: proc(?y_1_oper.stratoweave_rfs__rfs
         _poll.shutdown()
 
 
-proc def ServerLagTransform(path, update_oper: proc(?y_1_oper.stratoweave_rfs__rfs__server_lag_entry)->None, dev: swdev.DeviceMgr):
+proc def ServerLagTransform(path, update_dynstate: proc(?ServerLagDynstate)->None, update_oper: proc(?y_1_oper.stratoweave_rfs__rfs__server_lag_entry)->None, dev: swdev.DeviceMgr):
     provider = await async dev.tree_provider()
-    return ServerLagTransformActor(path, update_oper, dev, provider)
+    dynstate = base.ServerLag.dynstate_type()()
+    return ServerLagTransformActor(path, update_dynstate, update_oper, dev, provider, dynstate)
 
 
-actor ServerLagTransformActor(path, update_oper: proc(?y_1_oper.stratoweave_rfs__rfs__server_lag_entry)->None, dev: swdev.DeviceMgr, provider: gdata.TreeProvider):
+actor ServerLagTransformActor(path, update_dynstate: proc(?ServerLagDynstate)->None, update_oper: proc(?y_1_oper.stratoweave_rfs__rfs__server_lag_entry)->None, dev: swdev.DeviceMgr, provider: gdata.TreeProvider, dynstate: ServerLagDynstate):
     _oper = base.ServerLag.new_state(path)
+    _dynstate = dynstate
 
     def publish(oper_status: ?str, es_status: ?str):
         _oper.state.oper_status = oper_status
@@ -1663,10 +1749,16 @@ actor ServerLagTransformActor(path, update_oper: proc(?y_1_oper.stratoweave_rfs_
         publish(oper_status, es_status)
 
     def on_eos(root: ?eos436_oper_root, err: ?Exception):
-        # No ethernet segment on EOS yet, only the LAG
         if err is not None:
             print("ServerLagTransform {path}: subscription error: {err}", err=True)
-        publish(_eos_oper_status(root) if root is not None else None, None)
+        oper_status = _eos_oper_status(root) if root is not None else None
+        # The LAG is on the device once it has an oper-status: the transform
+        # can then add its ethernet segment. It is never taken back, so that
+        # a poll that fails does not remove the segment
+        if oper_status is not None and _dynstate.lag_present != True:
+            _dynstate.lag_present = True
+            update_dynstate(_dynstate)
+        publish(oper_status, None)
 
     _poll = _OverlayPoll(path, dev, provider, on_srl, on_eos)
 
