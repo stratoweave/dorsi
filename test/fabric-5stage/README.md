@@ -69,3 +69,10 @@ reply. The pod 2 leg (leaf3), pinged from server3 on leaf3 itself, lost 0 to
 4 replies (at most about 0.8 s) on a change, in either direction: leaf3 then
 has to reach server2 through the other pod. This is the parked SR Linux
 ESI-LAG loss, larger across pods.
+
+A hung super-spine (`docker pause` of superspine1 for 120 s, 2026-11-25)
+black-holed the overlay flow server1 → server3, which hashed onto its plane,
+for 57 s; an underlay flow leaf1 → leaf4 on the other plane lost nothing.
+The fabric sessions only notice a hung peer when the BGP hold time (SR Linux
+default 90 s) runs out: dorsi configures no BFD. Nothing was lost when it
+came back.
