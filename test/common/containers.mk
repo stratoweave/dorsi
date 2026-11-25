@@ -21,7 +21,7 @@ $(addprefix platform-cli-,$(ROUTERS_VJUNOS)):
 	docker exec -it $(TESTENV)-sweave sshpass -p clab@123 ssh -o StrictHostKeyChecking=no clab@$(subst platform-cli-,,$@)
 
 # $(call vjunos_cli,<switch>,<command>): run a Junos CLI command on a vJunos-switch
-vjunos_cli = docker exec $(TESTENV)-sweave sshpass -p clab@123 ssh -o StrictHostKeyChecking=no -o LogLevel=ERROR clab@$(1) '$(2)'
+vjunos_cli = docker exec $(TESTENV)-sweave sshpass -p clab@123 ssh -o StrictHostKeyChecking=no -o LogLevel=ERROR clab@$(1) "$(2)"
 
 .PHONY: cli $(addprefix platform-cli-,$(ROUTERS_XR) $(ROUTERS_CRPD) $(ROUTERS_VJUNOS))
 
