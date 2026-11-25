@@ -1,0 +1,1372 @@
+import std.base64
+import std.json
+import std.xml as xml
+import yang.adata as yadata
+import yang.gdata as ygdata
+import yang.xml as yxml
+import yang.xpath as yxpath
+from yang.identityref import Identityref, PartialIdentityref
+from yang.pattern import YangPattern
+from yang.schema import *
+from yang.type import Decimal, Ranges
+import dorsi.devices.JuniperVJunosSwitch_24_4R2_23_schema
+
+# == This file is generated ==
+
+
+
+
+SRC_DNODE: DRoot = dorsi.devices.JuniperVJunosSwitch_24_4R2_23_schema.SRC_DNODE
+
+pure def src_yang() -> list[YangSource]:
+    return dorsi.devices.JuniperVJunosSwitch_24_4R2_23_schema.src_yang()
+
+
+NS_junos_common_types: str = 'http://yang.juniper.net/junos/common/types'
+NS_junos_conf_interfaces: str = 'http://yang.juniper.net/junos/conf/interfaces'
+NS_junos_conf_policy_options: str = 'http://yang.juniper.net/junos/conf/policy-options'
+NS_junos_conf_protocols: str = 'http://yang.juniper.net/junos/conf/protocols'
+NS_junos_conf_root: str = 'http://yang.juniper.net/junos/conf/root'
+NS_junos_conf_routing_instances: str = 'http://yang.juniper.net/junos/conf/routing-instances'
+NS_junos_conf_routing_options: str = 'http://yang.juniper.net/junos/conf/routing-options'
+NS_junos_conf_system: str = 'http://yang.juniper.net/junos/conf/system'
+
+_ID_junos_conf_interfaces__address: ygdata.Id = ygdata.Id(NS_junos_conf_interfaces, 'address')
+_ID_junos_conf_interfaces__description: ygdata.Id = ygdata.Id(NS_junos_conf_interfaces, 'description')
+_ID_junos_conf_interfaces__encapsulation: ygdata.Id = ygdata.Id(NS_junos_conf_interfaces, 'encapsulation')
+_ID_junos_conf_interfaces__family: ygdata.Id = ygdata.Id(NS_junos_conf_interfaces, 'family')
+_ID_junos_conf_interfaces__inet: ygdata.Id = ygdata.Id(NS_junos_conf_interfaces, 'inet')
+_ID_junos_conf_interfaces__interface: ygdata.Id = ygdata.Id(NS_junos_conf_interfaces, 'interface')
+_ID_junos_conf_interfaces__interfaces: ygdata.Id = ygdata.Id(NS_junos_conf_interfaces, 'interfaces')
+_ID_junos_conf_interfaces__mtu: ygdata.Id = ygdata.Id(NS_junos_conf_interfaces, 'mtu')
+_ID_junos_conf_interfaces__name: ygdata.Id = ygdata.Id(NS_junos_conf_interfaces, 'name')
+_ID_junos_conf_interfaces__unit: ygdata.Id = ygdata.Id(NS_junos_conf_interfaces, 'unit')
+_ID_junos_conf_interfaces__vlan_id: ygdata.Id = ygdata.Id(NS_junos_conf_interfaces, 'vlan-id')
+_ID_junos_conf_policy_options__accept: ygdata.Id = ygdata.Id(NS_junos_conf_policy_options, 'accept')
+_ID_junos_conf_policy_options__address: ygdata.Id = ygdata.Id(NS_junos_conf_policy_options, 'address')
+_ID_junos_conf_policy_options__choice_ident: ygdata.Id = ygdata.Id(NS_junos_conf_policy_options, 'choice-ident')
+_ID_junos_conf_policy_options__choice_value: ygdata.Id = ygdata.Id(NS_junos_conf_policy_options, 'choice-value')
+_ID_junos_conf_policy_options__family: ygdata.Id = ygdata.Id(NS_junos_conf_policy_options, 'family')
+_ID_junos_conf_policy_options__from: ygdata.Id = ygdata.Id(NS_junos_conf_policy_options, 'from')
+_ID_junos_conf_policy_options__load_balance: ygdata.Id = ygdata.Id(NS_junos_conf_policy_options, 'load-balance')
+_ID_junos_conf_policy_options__name: ygdata.Id = ygdata.Id(NS_junos_conf_policy_options, 'name')
+_ID_junos_conf_policy_options__next_hop: ygdata.Id = ygdata.Id(NS_junos_conf_policy_options, 'next-hop')
+_ID_junos_conf_policy_options__per_packet: ygdata.Id = ygdata.Id(NS_junos_conf_policy_options, 'per-packet')
+_ID_junos_conf_policy_options__policy_options: ygdata.Id = ygdata.Id(NS_junos_conf_policy_options, 'policy-options')
+_ID_junos_conf_policy_options__policy_statement: ygdata.Id = ygdata.Id(NS_junos_conf_policy_options, 'policy-statement')
+_ID_junos_conf_policy_options__reject: ygdata.Id = ygdata.Id(NS_junos_conf_policy_options, 'reject')
+_ID_junos_conf_policy_options__route_filter: ygdata.Id = ygdata.Id(NS_junos_conf_policy_options, 'route-filter')
+_ID_junos_conf_policy_options__self: ygdata.Id = ygdata.Id(NS_junos_conf_policy_options, 'self')
+_ID_junos_conf_policy_options__term: ygdata.Id = ygdata.Id(NS_junos_conf_policy_options, 'term')
+_ID_junos_conf_policy_options__then: ygdata.Id = ygdata.Id(NS_junos_conf_policy_options, 'then')
+_ID_junos_conf_protocols__accept_remote_nexthop: ygdata.Id = ygdata.Id(NS_junos_conf_protocols, 'accept-remote-nexthop')
+_ID_junos_conf_protocols__bgp: ygdata.Id = ygdata.Id(NS_junos_conf_protocols, 'bgp')
+_ID_junos_conf_protocols__description: ygdata.Id = ygdata.Id(NS_junos_conf_protocols, 'description')
+_ID_junos_conf_protocols__evpn: ygdata.Id = ygdata.Id(NS_junos_conf_protocols, 'evpn')
+_ID_junos_conf_protocols__export: ygdata.Id = ygdata.Id(NS_junos_conf_protocols, 'export')
+_ID_junos_conf_protocols__family: ygdata.Id = ygdata.Id(NS_junos_conf_protocols, 'family')
+_ID_junos_conf_protocols__group: ygdata.Id = ygdata.Id(NS_junos_conf_protocols, 'group')
+_ID_junos_conf_protocols__import: ygdata.Id = ygdata.Id(NS_junos_conf_protocols, 'import')
+_ID_junos_conf_protocols__inet: ygdata.Id = ygdata.Id(NS_junos_conf_protocols, 'inet')
+_ID_junos_conf_protocols__interface: ygdata.Id = ygdata.Id(NS_junos_conf_protocols, 'interface')
+_ID_junos_conf_protocols__lldp: ygdata.Id = ygdata.Id(NS_junos_conf_protocols, 'lldp')
+_ID_junos_conf_protocols__local_address: ygdata.Id = ygdata.Id(NS_junos_conf_protocols, 'local-address')
+_ID_junos_conf_protocols__multihop: ygdata.Id = ygdata.Id(NS_junos_conf_protocols, 'multihop')
+_ID_junos_conf_protocols__multipath: ygdata.Id = ygdata.Id(NS_junos_conf_protocols, 'multipath')
+_ID_junos_conf_protocols__multiple_as: ygdata.Id = ygdata.Id(NS_junos_conf_protocols, 'multiple-as')
+_ID_junos_conf_protocols__name: ygdata.Id = ygdata.Id(NS_junos_conf_protocols, 'name')
+_ID_junos_conf_protocols__neighbor: ygdata.Id = ygdata.Id(NS_junos_conf_protocols, 'neighbor')
+_ID_junos_conf_protocols__no_nexthop_change: ygdata.Id = ygdata.Id(NS_junos_conf_protocols, 'no-nexthop-change')
+_ID_junos_conf_protocols__peer_as: ygdata.Id = ygdata.Id(NS_junos_conf_protocols, 'peer-as')
+_ID_junos_conf_protocols__port_id_subtype: ygdata.Id = ygdata.Id(NS_junos_conf_protocols, 'port-id-subtype')
+_ID_junos_conf_protocols__protocols: ygdata.Id = ygdata.Id(NS_junos_conf_protocols, 'protocols')
+_ID_junos_conf_protocols__signaling: ygdata.Id = ygdata.Id(NS_junos_conf_protocols, 'signaling')
+_ID_junos_conf_protocols__ttl: ygdata.Id = ygdata.Id(NS_junos_conf_protocols, 'ttl')
+_ID_junos_conf_protocols__type: ygdata.Id = ygdata.Id(NS_junos_conf_protocols, 'type')
+_ID_junos_conf_protocols__unicast: ygdata.Id = ygdata.Id(NS_junos_conf_protocols, 'unicast')
+_ID_junos_conf_root__configuration: ygdata.Id = ygdata.Id(NS_junos_conf_root, 'configuration')
+_ID_junos_conf_routing_instances__instance: ygdata.Id = ygdata.Id(NS_junos_conf_routing_instances, 'instance')
+_ID_junos_conf_routing_instances__name: ygdata.Id = ygdata.Id(NS_junos_conf_routing_instances, 'name')
+_ID_junos_conf_routing_instances__next_hop: ygdata.Id = ygdata.Id(NS_junos_conf_routing_instances, 'next-hop')
+_ID_junos_conf_routing_instances__route: ygdata.Id = ygdata.Id(NS_junos_conf_routing_instances, 'route')
+_ID_junos_conf_routing_instances__routing_instances: ygdata.Id = ygdata.Id(NS_junos_conf_routing_instances, 'routing-instances')
+_ID_junos_conf_routing_instances__routing_options: ygdata.Id = ygdata.Id(NS_junos_conf_routing_instances, 'routing-options')
+_ID_junos_conf_routing_instances__static: ygdata.Id = ygdata.Id(NS_junos_conf_routing_instances, 'static')
+_ID_junos_conf_routing_options__as_number: ygdata.Id = ygdata.Id(NS_junos_conf_routing_options, 'as-number')
+_ID_junos_conf_routing_options__autonomous_system: ygdata.Id = ygdata.Id(NS_junos_conf_routing_options, 'autonomous-system')
+_ID_junos_conf_routing_options__export: ygdata.Id = ygdata.Id(NS_junos_conf_routing_options, 'export')
+_ID_junos_conf_routing_options__forwarding_table: ygdata.Id = ygdata.Id(NS_junos_conf_routing_options, 'forwarding-table')
+_ID_junos_conf_routing_options__router_id: ygdata.Id = ygdata.Id(NS_junos_conf_routing_options, 'router-id')
+_ID_junos_conf_routing_options__routing_options: ygdata.Id = ygdata.Id(NS_junos_conf_routing_options, 'routing-options')
+_ID_junos_conf_system__host_name: ygdata.Id = ygdata.Id(NS_junos_conf_system, 'host-name')
+_ID_junos_conf_system__system: ygdata.Id = ygdata.Id(NS_junos_conf_system, 'system')
+
+
+_breaker1: None = None
+class junos_conf_root__configuration__system(yadata.MNode):
+    host_name: ?str
+
+    mut def __init__(self, host_name: ?str=None) -> None:
+        self.host_name = host_name
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['junos-conf-root:configuration', 'junos-conf-system:system'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> junos_conf_root__configuration__system:
+        if n is not None:
+            return junos_conf_root__configuration__system(host_name=n.get_opt_str(_ID_junos_conf_system__host_name))
+        return junos_conf_root__configuration__system()
+
+    mut def copy(self) -> junos_conf_root__configuration__system:
+        """Create a deep copy of this adata object"""
+        return junos_conf_root__configuration__system.from_gdata(self.to_gdata())
+
+
+_breaker2: None = None
+class junos_conf_root__configuration__routing_options__autonomous_system(yadata.MNode):
+    as_number: ?str
+
+    mut def __init__(self, as_number: ?str=None) -> None:
+        self.as_number = as_number
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['junos-conf-root:configuration', 'junos-conf-routing-options:routing-options', 'autonomous-system'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> junos_conf_root__configuration__routing_options__autonomous_system:
+        if n is not None:
+            return junos_conf_root__configuration__routing_options__autonomous_system(as_number=n.get_opt_str(_ID_junos_conf_routing_options__as_number))
+        return junos_conf_root__configuration__routing_options__autonomous_system()
+
+    mut def copy(self) -> junos_conf_root__configuration__routing_options__autonomous_system:
+        """Create a deep copy of this adata object"""
+        return junos_conf_root__configuration__routing_options__autonomous_system.from_gdata(self.to_gdata())
+
+
+_breaker3: None = None
+class junos_conf_root__configuration__routing_options__forwarding_table(yadata.MNode):
+    export: list[str]
+
+    mut def __init__(self, export: ?list[str]=None) -> None:
+        self.export = export if export is not None else []
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['junos-conf-root:configuration', 'junos-conf-routing-options:routing-options', 'forwarding-table'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> junos_conf_root__configuration__routing_options__forwarding_table:
+        if n is not None:
+            return junos_conf_root__configuration__routing_options__forwarding_table(export=n.get_opt_strs(_ID_junos_conf_routing_options__export))
+        return junos_conf_root__configuration__routing_options__forwarding_table()
+
+    mut def copy(self) -> junos_conf_root__configuration__routing_options__forwarding_table:
+        """Create a deep copy of this adata object"""
+        return junos_conf_root__configuration__routing_options__forwarding_table.from_gdata(self.to_gdata())
+
+
+_breaker4: None = None
+class junos_conf_root__configuration__routing_options(yadata.MNode):
+    router_id: ?str
+    autonomous_system: junos_conf_root__configuration__routing_options__autonomous_system
+    forwarding_table: junos_conf_root__configuration__routing_options__forwarding_table
+
+    mut def __init__(self, router_id: ?str=None, autonomous_system: ?junos_conf_root__configuration__routing_options__autonomous_system=None, forwarding_table: ?junos_conf_root__configuration__routing_options__forwarding_table=None) -> None:
+        self.router_id = router_id
+        self.autonomous_system = autonomous_system if autonomous_system is not None else junos_conf_root__configuration__routing_options__autonomous_system()
+        self.forwarding_table = forwarding_table if forwarding_table is not None else junos_conf_root__configuration__routing_options__forwarding_table()
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['junos-conf-root:configuration', 'junos-conf-routing-options:routing-options'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> junos_conf_root__configuration__routing_options:
+        if n is not None:
+            return junos_conf_root__configuration__routing_options(router_id=n.get_opt_str(_ID_junos_conf_routing_options__router_id), autonomous_system=junos_conf_root__configuration__routing_options__autonomous_system.from_gdata(n.get_opt_cnt(_ID_junos_conf_routing_options__autonomous_system)), forwarding_table=junos_conf_root__configuration__routing_options__forwarding_table.from_gdata(n.get_opt_cnt(_ID_junos_conf_routing_options__forwarding_table)))
+        return junos_conf_root__configuration__routing_options()
+
+    mut def copy(self) -> junos_conf_root__configuration__routing_options:
+        """Create a deep copy of this adata object"""
+        return junos_conf_root__configuration__routing_options.from_gdata(self.to_gdata())
+
+
+_breaker5: None = None
+class junos_conf_root__configuration__routing_instances__instance__routing_options__static__route_entry(yadata.MNode):
+    name: str
+    next_hop: list[str]
+
+    mut def __init__(self, name: str, next_hop: ?list[str]=None) -> None:
+        self.name = name
+        self.next_hop = next_hop if next_hop is not None else []
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['junos-conf-root:configuration', 'junos-conf-routing-instances:routing-instances', 'instance', 'routing-options', 'static', 'route'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ygdata.Node) -> junos_conf_root__configuration__routing_instances__instance__routing_options__static__route_entry:
+        return junos_conf_root__configuration__routing_instances__instance__routing_options__static__route_entry(name=n.get_str(_ID_junos_conf_routing_instances__name), next_hop=n.get_opt_strs(_ID_junos_conf_routing_instances__next_hop))
+
+    mut def copy(self) -> junos_conf_root__configuration__routing_instances__instance__routing_options__static__route_entry:
+        """Create a deep copy of this adata object"""
+        return junos_conf_root__configuration__routing_instances__instance__routing_options__static__route_entry.from_gdata(self.to_gdata())
+
+_breaker6: None = None
+class junos_conf_root__configuration__routing_instances__instance__routing_options__static__route(yadata.MKeyedList[str, junos_conf_root__configuration__routing_instances__instance__routing_options__static__route_entry]):
+    mut def __init__(self, elements: list[junos_conf_root__configuration__routing_instances__instance__routing_options__static__route_entry]=[]) -> None:
+        yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
+
+    mut def create(self, key: str) -> junos_conf_root__configuration__routing_instances__instance__routing_options__static__route_entry:
+        e = self.get(key)
+        if e is not None:
+            return e
+        name = key
+        res = junos_conf_root__configuration__routing_instances__instance__routing_options__static__route_entry(name=name)
+        self._append(res)
+        return res
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.List) -> list[junos_conf_root__configuration__routing_instances__instance__routing_options__static__route_entry]:
+        if n is not None:
+            return [junos_conf_root__configuration__routing_instances__instance__routing_options__static__route_entry.from_gdata(e) for e in n.entries()]
+        return []
+
+    mut def copy(self) -> junos_conf_root__configuration__routing_instances__instance__routing_options__static__route:
+        """Create a deep copy of this list object"""
+        # Copy each element in the list
+        copied_elements = []
+        for e in self:
+            ce = e.copy()
+            if ce is not None:
+                copied_elements.append(ce)
+        return junos_conf_root__configuration__routing_instances__instance__routing_options__static__route(elements=copied_elements)
+
+
+_breaker7: None = None
+class junos_conf_root__configuration__routing_instances__instance__routing_options__static(yadata.MNode):
+    route: junos_conf_root__configuration__routing_instances__instance__routing_options__static__route
+
+    mut def __init__(self, route: list[junos_conf_root__configuration__routing_instances__instance__routing_options__static__route_entry]=[]) -> None:
+        self.route = junos_conf_root__configuration__routing_instances__instance__routing_options__static__route(elements=route)
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['junos-conf-root:configuration', 'junos-conf-routing-instances:routing-instances', 'instance', 'routing-options', 'static'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> junos_conf_root__configuration__routing_instances__instance__routing_options__static:
+        if n is not None:
+            return junos_conf_root__configuration__routing_instances__instance__routing_options__static(route=junos_conf_root__configuration__routing_instances__instance__routing_options__static__route.from_gdata(n.get_opt_list(_ID_junos_conf_routing_instances__route)))
+        return junos_conf_root__configuration__routing_instances__instance__routing_options__static()
+
+    mut def copy(self) -> junos_conf_root__configuration__routing_instances__instance__routing_options__static:
+        """Create a deep copy of this adata object"""
+        return junos_conf_root__configuration__routing_instances__instance__routing_options__static.from_gdata(self.to_gdata())
+
+
+_breaker8: None = None
+class junos_conf_root__configuration__routing_instances__instance__routing_options(yadata.MNode):
+    static: junos_conf_root__configuration__routing_instances__instance__routing_options__static
+
+    mut def __init__(self, static: ?junos_conf_root__configuration__routing_instances__instance__routing_options__static=None) -> None:
+        self.static = static if static is not None else junos_conf_root__configuration__routing_instances__instance__routing_options__static()
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['junos-conf-root:configuration', 'junos-conf-routing-instances:routing-instances', 'instance', 'routing-options'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> junos_conf_root__configuration__routing_instances__instance__routing_options:
+        if n is not None:
+            return junos_conf_root__configuration__routing_instances__instance__routing_options(static=junos_conf_root__configuration__routing_instances__instance__routing_options__static.from_gdata(n.get_opt_cnt(_ID_junos_conf_routing_instances__static)))
+        return junos_conf_root__configuration__routing_instances__instance__routing_options()
+
+    mut def copy(self) -> junos_conf_root__configuration__routing_instances__instance__routing_options:
+        """Create a deep copy of this adata object"""
+        return junos_conf_root__configuration__routing_instances__instance__routing_options.from_gdata(self.to_gdata())
+
+
+_breaker9: None = None
+class junos_conf_root__configuration__routing_instances__instance_entry(yadata.MNode):
+    name: str
+    routing_options: junos_conf_root__configuration__routing_instances__instance__routing_options
+
+    mut def __init__(self, name: str, routing_options: ?junos_conf_root__configuration__routing_instances__instance__routing_options=None) -> None:
+        self.name = name
+        self.routing_options = routing_options if routing_options is not None else junos_conf_root__configuration__routing_instances__instance__routing_options()
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['junos-conf-root:configuration', 'junos-conf-routing-instances:routing-instances', 'instance'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ygdata.Node) -> junos_conf_root__configuration__routing_instances__instance_entry:
+        return junos_conf_root__configuration__routing_instances__instance_entry(name=n.get_str(_ID_junos_conf_routing_instances__name), routing_options=junos_conf_root__configuration__routing_instances__instance__routing_options.from_gdata(n.get_opt_cnt(_ID_junos_conf_routing_instances__routing_options)))
+
+    mut def copy(self) -> junos_conf_root__configuration__routing_instances__instance_entry:
+        """Create a deep copy of this adata object"""
+        return junos_conf_root__configuration__routing_instances__instance_entry.from_gdata(self.to_gdata())
+
+_breaker10: None = None
+class junos_conf_root__configuration__routing_instances__instance(yadata.MKeyedList[str, junos_conf_root__configuration__routing_instances__instance_entry]):
+    mut def __init__(self, elements: list[junos_conf_root__configuration__routing_instances__instance_entry]=[]) -> None:
+        yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
+
+    mut def create(self, key: str) -> junos_conf_root__configuration__routing_instances__instance_entry:
+        e = self.get(key)
+        if e is not None:
+            return e
+        name = key
+        res = junos_conf_root__configuration__routing_instances__instance_entry(name=name)
+        self._append(res)
+        return res
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.List) -> list[junos_conf_root__configuration__routing_instances__instance_entry]:
+        if n is not None:
+            return [junos_conf_root__configuration__routing_instances__instance_entry.from_gdata(e) for e in n.entries()]
+        return []
+
+    mut def copy(self) -> junos_conf_root__configuration__routing_instances__instance:
+        """Create a deep copy of this list object"""
+        # Copy each element in the list
+        copied_elements = []
+        for e in self:
+            ce = e.copy()
+            if ce is not None:
+                copied_elements.append(ce)
+        return junos_conf_root__configuration__routing_instances__instance(elements=copied_elements)
+
+
+_breaker11: None = None
+class junos_conf_root__configuration__routing_instances(yadata.MNode):
+    instance: junos_conf_root__configuration__routing_instances__instance
+
+    mut def __init__(self, instance: list[junos_conf_root__configuration__routing_instances__instance_entry]=[]) -> None:
+        self.instance = junos_conf_root__configuration__routing_instances__instance(elements=instance)
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['junos-conf-root:configuration', 'junos-conf-routing-instances:routing-instances'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> junos_conf_root__configuration__routing_instances:
+        if n is not None:
+            return junos_conf_root__configuration__routing_instances(instance=junos_conf_root__configuration__routing_instances__instance.from_gdata(n.get_opt_list(_ID_junos_conf_routing_instances__instance)))
+        return junos_conf_root__configuration__routing_instances()
+
+    mut def copy(self) -> junos_conf_root__configuration__routing_instances:
+        """Create a deep copy of this adata object"""
+        return junos_conf_root__configuration__routing_instances.from_gdata(self.to_gdata())
+
+
+_breaker12: None = None
+class junos_conf_root__configuration__protocols__bgp__group__multihop(yadata.MNode):
+    ttl: ?atom
+    no_nexthop_change: ?bool
+
+    mut def __init__(self, ttl: ?atom=None, no_nexthop_change: ?bool=None) -> None:
+        self.ttl = ttl
+        self.no_nexthop_change = no_nexthop_change
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['junos-conf-root:configuration', 'junos-conf-protocols:protocols', 'bgp', 'group', 'multihop'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> ?junos_conf_root__configuration__protocols__bgp__group__multihop:
+        if n is not None:
+            return junos_conf_root__configuration__protocols__bgp__group__multihop(ttl=n.get_opt_atom(_ID_junos_conf_protocols__ttl), no_nexthop_change=n.get_opt_empty(_ID_junos_conf_protocols__no_nexthop_change))
+        return None
+
+    mut def copy(self) -> junos_conf_root__configuration__protocols__bgp__group__multihop:
+        """Create a deep copy of this adata object"""
+        ad = junos_conf_root__configuration__protocols__bgp__group__multihop.from_gdata(self.to_gdata())
+        if ad is not None:
+            return ad
+        raise Exception('Unreachable in junos_conf_root__configuration__protocols__bgp__group__multihop.copy()')
+
+
+_breaker13: None = None
+class junos_conf_root__configuration__protocols__bgp__group__family__inet__unicast(yadata.MNode):
+
+    mut def __init__(self) -> None:
+        pass
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['junos-conf-root:configuration', 'junos-conf-protocols:protocols', 'bgp', 'group', 'family', 'inet', 'unicast'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> ?junos_conf_root__configuration__protocols__bgp__group__family__inet__unicast:
+        if n is not None:
+            return junos_conf_root__configuration__protocols__bgp__group__family__inet__unicast()
+        return None
+
+    mut def copy(self) -> junos_conf_root__configuration__protocols__bgp__group__family__inet__unicast:
+        """Create a deep copy of this adata object"""
+        ad = junos_conf_root__configuration__protocols__bgp__group__family__inet__unicast.from_gdata(self.to_gdata())
+        if ad is not None:
+            return ad
+        raise Exception('Unreachable in junos_conf_root__configuration__protocols__bgp__group__family__inet__unicast.copy()')
+
+
+_breaker14: None = None
+class junos_conf_root__configuration__protocols__bgp__group__family__inet(yadata.MNode):
+    unicast: ?junos_conf_root__configuration__protocols__bgp__group__family__inet__unicast
+
+    mut def __init__(self, unicast: ?junos_conf_root__configuration__protocols__bgp__group__family__inet__unicast=None) -> None:
+        self.unicast = unicast
+
+    mut def create_unicast(self) -> junos_conf_root__configuration__protocols__bgp__group__family__inet__unicast:
+        existing = self.unicast
+        if existing is not None:
+            return existing
+        res = junos_conf_root__configuration__protocols__bgp__group__family__inet__unicast()
+        self.unicast = res
+        return res
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['junos-conf-root:configuration', 'junos-conf-protocols:protocols', 'bgp', 'group', 'family', 'inet'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> junos_conf_root__configuration__protocols__bgp__group__family__inet:
+        if n is not None:
+            return junos_conf_root__configuration__protocols__bgp__group__family__inet(unicast=junos_conf_root__configuration__protocols__bgp__group__family__inet__unicast.from_gdata(n.get_opt_cnt(_ID_junos_conf_protocols__unicast)))
+        return junos_conf_root__configuration__protocols__bgp__group__family__inet()
+
+    mut def copy(self) -> junos_conf_root__configuration__protocols__bgp__group__family__inet:
+        """Create a deep copy of this adata object"""
+        return junos_conf_root__configuration__protocols__bgp__group__family__inet.from_gdata(self.to_gdata())
+
+
+_breaker15: None = None
+class junos_conf_root__configuration__protocols__bgp__group__family__evpn__signaling(yadata.MNode):
+
+    mut def __init__(self) -> None:
+        pass
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['junos-conf-root:configuration', 'junos-conf-protocols:protocols', 'bgp', 'group', 'family', 'evpn', 'signaling'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> ?junos_conf_root__configuration__protocols__bgp__group__family__evpn__signaling:
+        if n is not None:
+            return junos_conf_root__configuration__protocols__bgp__group__family__evpn__signaling()
+        return None
+
+    mut def copy(self) -> junos_conf_root__configuration__protocols__bgp__group__family__evpn__signaling:
+        """Create a deep copy of this adata object"""
+        ad = junos_conf_root__configuration__protocols__bgp__group__family__evpn__signaling.from_gdata(self.to_gdata())
+        if ad is not None:
+            return ad
+        raise Exception('Unreachable in junos_conf_root__configuration__protocols__bgp__group__family__evpn__signaling.copy()')
+
+
+_breaker16: None = None
+class junos_conf_root__configuration__protocols__bgp__group__family__evpn(yadata.MNode):
+    signaling: ?junos_conf_root__configuration__protocols__bgp__group__family__evpn__signaling
+
+    mut def __init__(self, signaling: ?junos_conf_root__configuration__protocols__bgp__group__family__evpn__signaling=None) -> None:
+        self.signaling = signaling
+
+    mut def create_signaling(self) -> junos_conf_root__configuration__protocols__bgp__group__family__evpn__signaling:
+        existing = self.signaling
+        if existing is not None:
+            return existing
+        res = junos_conf_root__configuration__protocols__bgp__group__family__evpn__signaling()
+        self.signaling = res
+        return res
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['junos-conf-root:configuration', 'junos-conf-protocols:protocols', 'bgp', 'group', 'family', 'evpn'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> junos_conf_root__configuration__protocols__bgp__group__family__evpn:
+        if n is not None:
+            return junos_conf_root__configuration__protocols__bgp__group__family__evpn(signaling=junos_conf_root__configuration__protocols__bgp__group__family__evpn__signaling.from_gdata(n.get_opt_cnt(_ID_junos_conf_protocols__signaling)))
+        return junos_conf_root__configuration__protocols__bgp__group__family__evpn()
+
+    mut def copy(self) -> junos_conf_root__configuration__protocols__bgp__group__family__evpn:
+        """Create a deep copy of this adata object"""
+        return junos_conf_root__configuration__protocols__bgp__group__family__evpn.from_gdata(self.to_gdata())
+
+
+_breaker17: None = None
+class junos_conf_root__configuration__protocols__bgp__group__family(yadata.MNode):
+    inet: junos_conf_root__configuration__protocols__bgp__group__family__inet
+    evpn: junos_conf_root__configuration__protocols__bgp__group__family__evpn
+
+    mut def __init__(self, inet: ?junos_conf_root__configuration__protocols__bgp__group__family__inet=None, evpn: ?junos_conf_root__configuration__protocols__bgp__group__family__evpn=None) -> None:
+        self.inet = inet if inet is not None else junos_conf_root__configuration__protocols__bgp__group__family__inet()
+        self.evpn = evpn if evpn is not None else junos_conf_root__configuration__protocols__bgp__group__family__evpn()
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['junos-conf-root:configuration', 'junos-conf-protocols:protocols', 'bgp', 'group', 'family'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> junos_conf_root__configuration__protocols__bgp__group__family:
+        if n is not None:
+            return junos_conf_root__configuration__protocols__bgp__group__family(inet=junos_conf_root__configuration__protocols__bgp__group__family__inet.from_gdata(n.get_opt_cnt(_ID_junos_conf_protocols__inet)), evpn=junos_conf_root__configuration__protocols__bgp__group__family__evpn.from_gdata(n.get_opt_cnt(_ID_junos_conf_protocols__evpn)))
+        return junos_conf_root__configuration__protocols__bgp__group__family()
+
+    mut def copy(self) -> junos_conf_root__configuration__protocols__bgp__group__family:
+        """Create a deep copy of this adata object"""
+        return junos_conf_root__configuration__protocols__bgp__group__family.from_gdata(self.to_gdata())
+
+
+_breaker18: None = None
+class junos_conf_root__configuration__protocols__bgp__group__multipath(yadata.MNode):
+    multiple_as: ?bool
+
+    mut def __init__(self, multiple_as: ?bool=None) -> None:
+        self.multiple_as = multiple_as
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['junos-conf-root:configuration', 'junos-conf-protocols:protocols', 'bgp', 'group', 'multipath'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> ?junos_conf_root__configuration__protocols__bgp__group__multipath:
+        if n is not None:
+            return junos_conf_root__configuration__protocols__bgp__group__multipath(multiple_as=n.get_opt_empty(_ID_junos_conf_protocols__multiple_as))
+        return None
+
+    mut def copy(self) -> junos_conf_root__configuration__protocols__bgp__group__multipath:
+        """Create a deep copy of this adata object"""
+        ad = junos_conf_root__configuration__protocols__bgp__group__multipath.from_gdata(self.to_gdata())
+        if ad is not None:
+            return ad
+        raise Exception('Unreachable in junos_conf_root__configuration__protocols__bgp__group__multipath.copy()')
+
+
+_breaker19: None = None
+class junos_conf_root__configuration__protocols__bgp__group__neighbor_entry(yadata.MNode):
+    name: str
+    description: ?str
+    peer_as: ?str
+
+    mut def __init__(self, name: str, description: ?str=None, peer_as: ?str=None) -> None:
+        self.name = name
+        self.description = description
+        self.peer_as = peer_as
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['junos-conf-root:configuration', 'junos-conf-protocols:protocols', 'bgp', 'group', 'neighbor'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ygdata.Node) -> junos_conf_root__configuration__protocols__bgp__group__neighbor_entry:
+        return junos_conf_root__configuration__protocols__bgp__group__neighbor_entry(name=n.get_str(_ID_junos_conf_protocols__name), description=n.get_opt_str(_ID_junos_conf_protocols__description), peer_as=n.get_opt_str(_ID_junos_conf_protocols__peer_as))
+
+    mut def copy(self) -> junos_conf_root__configuration__protocols__bgp__group__neighbor_entry:
+        """Create a deep copy of this adata object"""
+        return junos_conf_root__configuration__protocols__bgp__group__neighbor_entry.from_gdata(self.to_gdata())
+
+_breaker20: None = None
+class junos_conf_root__configuration__protocols__bgp__group__neighbor(yadata.MKeyedList[str, junos_conf_root__configuration__protocols__bgp__group__neighbor_entry]):
+    mut def __init__(self, elements: list[junos_conf_root__configuration__protocols__bgp__group__neighbor_entry]=[]) -> None:
+        yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
+
+    mut def create(self, key: str, description: ?str=None, peer_as: ?str=None) -> junos_conf_root__configuration__protocols__bgp__group__neighbor_entry:
+        e = self.get(key)
+        if e is not None:
+            if description is not None:
+                e.description = description
+            if peer_as is not None:
+                e.peer_as = peer_as
+            return e
+        name = key
+        res = junos_conf_root__configuration__protocols__bgp__group__neighbor_entry(name=name, description=description, peer_as=peer_as)
+        self._append(res)
+        return res
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.List) -> list[junos_conf_root__configuration__protocols__bgp__group__neighbor_entry]:
+        if n is not None:
+            return [junos_conf_root__configuration__protocols__bgp__group__neighbor_entry.from_gdata(e) for e in n.entries()]
+        return []
+
+    mut def copy(self) -> junos_conf_root__configuration__protocols__bgp__group__neighbor:
+        """Create a deep copy of this list object"""
+        # Copy each element in the list
+        copied_elements = []
+        for e in self:
+            ce = e.copy()
+            if ce is not None:
+                copied_elements.append(ce)
+        return junos_conf_root__configuration__protocols__bgp__group__neighbor(elements=copied_elements)
+
+
+_breaker21: None = None
+class junos_conf_root__configuration__protocols__bgp__group_entry(yadata.MNode):
+    name: str
+    type: ?str
+    multihop: ?junos_conf_root__configuration__protocols__bgp__group__multihop
+    accept_remote_nexthop: ?bool
+    local_address: ?str
+    import: list[str]
+    family: junos_conf_root__configuration__protocols__bgp__group__family
+    export: list[str]
+    multipath: ?junos_conf_root__configuration__protocols__bgp__group__multipath
+    neighbor: junos_conf_root__configuration__protocols__bgp__group__neighbor
+
+    mut def __init__(self, name: str, type: ?str=None, multihop: ?junos_conf_root__configuration__protocols__bgp__group__multihop=None, accept_remote_nexthop: ?bool=None, local_address: ?str=None, import: ?list[str]=None, family: ?junos_conf_root__configuration__protocols__bgp__group__family=None, export: ?list[str]=None, multipath: ?junos_conf_root__configuration__protocols__bgp__group__multipath=None, neighbor: list[junos_conf_root__configuration__protocols__bgp__group__neighbor_entry]=[]) -> None:
+        self.name = name
+        self.type = type
+        self.multihop = multihop
+        self.accept_remote_nexthop = accept_remote_nexthop
+        self.local_address = local_address
+        self.import = import if import is not None else []
+        self.family = family if family is not None else junos_conf_root__configuration__protocols__bgp__group__family()
+        self.export = export if export is not None else []
+        self.multipath = multipath
+        self.neighbor = junos_conf_root__configuration__protocols__bgp__group__neighbor(elements=neighbor)
+
+    mut def create_multihop(self, ttl: ?atom=None, no_nexthop_change: ?bool=None) -> junos_conf_root__configuration__protocols__bgp__group__multihop:
+        existing = self.multihop
+        if existing is not None:
+            if ttl is not None:
+                existing.ttl = ttl
+            if no_nexthop_change is not None:
+                existing.no_nexthop_change = no_nexthop_change
+            return existing
+        res = junos_conf_root__configuration__protocols__bgp__group__multihop(ttl=ttl, no_nexthop_change=no_nexthop_change)
+        self.multihop = res
+        return res
+
+    mut def create_multipath(self, multiple_as: ?bool=None) -> junos_conf_root__configuration__protocols__bgp__group__multipath:
+        existing = self.multipath
+        if existing is not None:
+            if multiple_as is not None:
+                existing.multiple_as = multiple_as
+            return existing
+        res = junos_conf_root__configuration__protocols__bgp__group__multipath(multiple_as=multiple_as)
+        self.multipath = res
+        return res
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['junos-conf-root:configuration', 'junos-conf-protocols:protocols', 'bgp', 'group'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ygdata.Node) -> junos_conf_root__configuration__protocols__bgp__group_entry:
+        return junos_conf_root__configuration__protocols__bgp__group_entry(name=n.get_str(_ID_junos_conf_protocols__name), type=n.get_opt_str(_ID_junos_conf_protocols__type), multihop=junos_conf_root__configuration__protocols__bgp__group__multihop.from_gdata(n.get_opt_cnt(_ID_junos_conf_protocols__multihop)), accept_remote_nexthop=n.get_opt_empty(_ID_junos_conf_protocols__accept_remote_nexthop), local_address=n.get_opt_str(_ID_junos_conf_protocols__local_address), import=n.get_opt_strs(_ID_junos_conf_protocols__import), family=junos_conf_root__configuration__protocols__bgp__group__family.from_gdata(n.get_opt_cnt(_ID_junos_conf_protocols__family)), export=n.get_opt_strs(_ID_junos_conf_protocols__export), multipath=junos_conf_root__configuration__protocols__bgp__group__multipath.from_gdata(n.get_opt_cnt(_ID_junos_conf_protocols__multipath)), neighbor=junos_conf_root__configuration__protocols__bgp__group__neighbor.from_gdata(n.get_opt_list(_ID_junos_conf_protocols__neighbor)))
+
+    mut def copy(self) -> junos_conf_root__configuration__protocols__bgp__group_entry:
+        """Create a deep copy of this adata object"""
+        return junos_conf_root__configuration__protocols__bgp__group_entry.from_gdata(self.to_gdata())
+
+_breaker22: None = None
+class junos_conf_root__configuration__protocols__bgp__group(yadata.MKeyedList[str, junos_conf_root__configuration__protocols__bgp__group_entry]):
+    mut def __init__(self, elements: list[junos_conf_root__configuration__protocols__bgp__group_entry]=[]) -> None:
+        yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
+
+    mut def create(self, key: str, type: ?str=None, accept_remote_nexthop: ?bool=None, local_address: ?str=None) -> junos_conf_root__configuration__protocols__bgp__group_entry:
+        e = self.get(key)
+        if e is not None:
+            if type is not None:
+                e.type = type
+            if accept_remote_nexthop is not None:
+                e.accept_remote_nexthop = accept_remote_nexthop
+            if local_address is not None:
+                e.local_address = local_address
+            return e
+        name = key
+        res = junos_conf_root__configuration__protocols__bgp__group_entry(name=name, type=type, accept_remote_nexthop=accept_remote_nexthop, local_address=local_address)
+        self._append(res)
+        return res
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.List) -> list[junos_conf_root__configuration__protocols__bgp__group_entry]:
+        if n is not None:
+            return [junos_conf_root__configuration__protocols__bgp__group_entry.from_gdata(e) for e in n.entries()]
+        return []
+
+    mut def copy(self) -> junos_conf_root__configuration__protocols__bgp__group:
+        """Create a deep copy of this list object"""
+        # Copy each element in the list
+        copied_elements = []
+        for e in self:
+            ce = e.copy()
+            if ce is not None:
+                copied_elements.append(ce)
+        return junos_conf_root__configuration__protocols__bgp__group(elements=copied_elements)
+
+
+_breaker23: None = None
+class junos_conf_root__configuration__protocols__bgp(yadata.MNode):
+    group: junos_conf_root__configuration__protocols__bgp__group
+
+    mut def __init__(self, group: list[junos_conf_root__configuration__protocols__bgp__group_entry]=[]) -> None:
+        self.group = junos_conf_root__configuration__protocols__bgp__group(elements=group)
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['junos-conf-root:configuration', 'junos-conf-protocols:protocols', 'bgp'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> junos_conf_root__configuration__protocols__bgp:
+        if n is not None:
+            return junos_conf_root__configuration__protocols__bgp(group=junos_conf_root__configuration__protocols__bgp__group.from_gdata(n.get_opt_list(_ID_junos_conf_protocols__group)))
+        return junos_conf_root__configuration__protocols__bgp()
+
+    mut def copy(self) -> junos_conf_root__configuration__protocols__bgp:
+        """Create a deep copy of this adata object"""
+        return junos_conf_root__configuration__protocols__bgp.from_gdata(self.to_gdata())
+
+
+_breaker24: None = None
+class junos_conf_root__configuration__protocols__lldp__interface_entry(yadata.MNode):
+    name: str
+
+    mut def __init__(self, name: str) -> None:
+        self.name = name
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['junos-conf-root:configuration', 'junos-conf-protocols:protocols', 'lldp', 'interface'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ygdata.Node) -> junos_conf_root__configuration__protocols__lldp__interface_entry:
+        return junos_conf_root__configuration__protocols__lldp__interface_entry(name=n.get_str(_ID_junos_conf_protocols__name))
+
+    mut def copy(self) -> junos_conf_root__configuration__protocols__lldp__interface_entry:
+        """Create a deep copy of this adata object"""
+        return junos_conf_root__configuration__protocols__lldp__interface_entry.from_gdata(self.to_gdata())
+
+_breaker25: None = None
+class junos_conf_root__configuration__protocols__lldp__interface(yadata.MKeyedList[str, junos_conf_root__configuration__protocols__lldp__interface_entry]):
+    mut def __init__(self, elements: list[junos_conf_root__configuration__protocols__lldp__interface_entry]=[]) -> None:
+        yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
+
+    mut def create(self, key: str) -> junos_conf_root__configuration__protocols__lldp__interface_entry:
+        e = self.get(key)
+        if e is not None:
+            return e
+        name = key
+        res = junos_conf_root__configuration__protocols__lldp__interface_entry(name=name)
+        self._append(res)
+        return res
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.List) -> list[junos_conf_root__configuration__protocols__lldp__interface_entry]:
+        if n is not None:
+            return [junos_conf_root__configuration__protocols__lldp__interface_entry.from_gdata(e) for e in n.entries()]
+        return []
+
+    mut def copy(self) -> junos_conf_root__configuration__protocols__lldp__interface:
+        """Create a deep copy of this list object"""
+        # Copy each element in the list
+        copied_elements = []
+        for e in self:
+            ce = e.copy()
+            if ce is not None:
+                copied_elements.append(ce)
+        return junos_conf_root__configuration__protocols__lldp__interface(elements=copied_elements)
+
+
+_breaker26: None = None
+class junos_conf_root__configuration__protocols__lldp(yadata.MNode):
+    port_id_subtype: ?str
+    interface: junos_conf_root__configuration__protocols__lldp__interface
+
+    mut def __init__(self, port_id_subtype: ?str=None, interface: list[junos_conf_root__configuration__protocols__lldp__interface_entry]=[]) -> None:
+        self.port_id_subtype = port_id_subtype
+        self.interface = junos_conf_root__configuration__protocols__lldp__interface(elements=interface)
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['junos-conf-root:configuration', 'junos-conf-protocols:protocols', 'lldp'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> junos_conf_root__configuration__protocols__lldp:
+        if n is not None:
+            return junos_conf_root__configuration__protocols__lldp(port_id_subtype=n.get_opt_str(_ID_junos_conf_protocols__port_id_subtype), interface=junos_conf_root__configuration__protocols__lldp__interface.from_gdata(n.get_opt_list(_ID_junos_conf_protocols__interface)))
+        return junos_conf_root__configuration__protocols__lldp()
+
+    mut def copy(self) -> junos_conf_root__configuration__protocols__lldp:
+        """Create a deep copy of this adata object"""
+        return junos_conf_root__configuration__protocols__lldp.from_gdata(self.to_gdata())
+
+
+_breaker27: None = None
+class junos_conf_root__configuration__protocols(yadata.MNode):
+    bgp: junos_conf_root__configuration__protocols__bgp
+    lldp: junos_conf_root__configuration__protocols__lldp
+
+    mut def __init__(self, bgp: ?junos_conf_root__configuration__protocols__bgp=None, lldp: ?junos_conf_root__configuration__protocols__lldp=None) -> None:
+        self.bgp = bgp if bgp is not None else junos_conf_root__configuration__protocols__bgp()
+        self.lldp = lldp if lldp is not None else junos_conf_root__configuration__protocols__lldp()
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['junos-conf-root:configuration', 'junos-conf-protocols:protocols'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> junos_conf_root__configuration__protocols:
+        if n is not None:
+            return junos_conf_root__configuration__protocols(bgp=junos_conf_root__configuration__protocols__bgp.from_gdata(n.get_opt_cnt(_ID_junos_conf_protocols__bgp)), lldp=junos_conf_root__configuration__protocols__lldp.from_gdata(n.get_opt_cnt(_ID_junos_conf_protocols__lldp)))
+        return junos_conf_root__configuration__protocols()
+
+    mut def copy(self) -> junos_conf_root__configuration__protocols:
+        """Create a deep copy of this adata object"""
+        return junos_conf_root__configuration__protocols.from_gdata(self.to_gdata())
+
+
+_breaker28: None = None
+class junos_conf_root__configuration__policy_options__policy_statement__term__from__route_filter_entry(yadata.MNode):
+    address: str
+    choice_ident: str
+    choice_value: str
+
+    mut def __init__(self, address: str, choice_ident: str, choice_value: str) -> None:
+        self.address = address
+        self.choice_ident = choice_ident
+        self.choice_value = choice_value
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['junos-conf-root:configuration', 'junos-conf-policy-options:policy-options', 'policy-statement', 'term', 'from', 'route-filter'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ygdata.Node) -> junos_conf_root__configuration__policy_options__policy_statement__term__from__route_filter_entry:
+        return junos_conf_root__configuration__policy_options__policy_statement__term__from__route_filter_entry(address=n.get_str(_ID_junos_conf_policy_options__address), choice_ident=n.get_str(_ID_junos_conf_policy_options__choice_ident), choice_value=n.get_str(_ID_junos_conf_policy_options__choice_value))
+
+    mut def copy(self) -> junos_conf_root__configuration__policy_options__policy_statement__term__from__route_filter_entry:
+        """Create a deep copy of this adata object"""
+        return junos_conf_root__configuration__policy_options__policy_statement__term__from__route_filter_entry.from_gdata(self.to_gdata())
+
+_breaker29: None = None
+class junos_conf_root__configuration__policy_options__policy_statement__term__from__route_filter(yadata.MKeyedList[(address: str, choice_ident: str, choice_value: str), junos_conf_root__configuration__policy_options__policy_statement__term__from__route_filter_entry]):
+    mut def __init__(self, elements: list[junos_conf_root__configuration__policy_options__policy_statement__term__from__route_filter_entry]=[]) -> None:
+        yadata.MKeyedList.__init__(self, lambda e: (address=e.address, choice_ident=e.choice_ident, choice_value=e.choice_value), elements)
+
+    mut def create(self, key: (address: str, choice_ident: str, choice_value: str)) -> junos_conf_root__configuration__policy_options__policy_statement__term__from__route_filter_entry:
+        e = self.get(key)
+        if e is not None:
+            return e
+        (address=address, choice_ident=choice_ident, choice_value=choice_value) = key
+        res = junos_conf_root__configuration__policy_options__policy_statement__term__from__route_filter_entry(address=address, choice_ident=choice_ident, choice_value=choice_value)
+        self._append(res)
+        return res
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.List) -> list[junos_conf_root__configuration__policy_options__policy_statement__term__from__route_filter_entry]:
+        if n is not None:
+            return [junos_conf_root__configuration__policy_options__policy_statement__term__from__route_filter_entry.from_gdata(e) for e in n.entries()]
+        return []
+
+    mut def copy(self) -> junos_conf_root__configuration__policy_options__policy_statement__term__from__route_filter:
+        """Create a deep copy of this list object"""
+        # Copy each element in the list
+        copied_elements = []
+        for e in self:
+            ce = e.copy()
+            if ce is not None:
+                copied_elements.append(ce)
+        return junos_conf_root__configuration__policy_options__policy_statement__term__from__route_filter(elements=copied_elements)
+
+
+_breaker30: None = None
+class junos_conf_root__configuration__policy_options__policy_statement__term__from(yadata.MNode):
+    family: ?str
+    route_filter: junos_conf_root__configuration__policy_options__policy_statement__term__from__route_filter
+
+    mut def __init__(self, family: ?str=None, route_filter: list[junos_conf_root__configuration__policy_options__policy_statement__term__from__route_filter_entry]=[]) -> None:
+        self.family = family
+        self.route_filter = junos_conf_root__configuration__policy_options__policy_statement__term__from__route_filter(elements=route_filter)
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['junos-conf-root:configuration', 'junos-conf-policy-options:policy-options', 'policy-statement', 'term', 'from'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> junos_conf_root__configuration__policy_options__policy_statement__term__from:
+        if n is not None:
+            return junos_conf_root__configuration__policy_options__policy_statement__term__from(family=n.get_opt_str(_ID_junos_conf_policy_options__family), route_filter=junos_conf_root__configuration__policy_options__policy_statement__term__from__route_filter.from_gdata(n.get_opt_list(_ID_junos_conf_policy_options__route_filter)))
+        return junos_conf_root__configuration__policy_options__policy_statement__term__from()
+
+    mut def copy(self) -> junos_conf_root__configuration__policy_options__policy_statement__term__from:
+        """Create a deep copy of this adata object"""
+        return junos_conf_root__configuration__policy_options__policy_statement__term__from.from_gdata(self.to_gdata())
+
+
+_breaker31: None = None
+class junos_conf_root__configuration__policy_options__policy_statement__term__then__next_hop(yadata.MNode):
+    self_: ?bool
+
+    mut def __init__(self, self_: ?bool=None) -> None:
+        self.self_ = self_
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['junos-conf-root:configuration', 'junos-conf-policy-options:policy-options', 'policy-statement', 'term', 'then', 'next-hop'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> junos_conf_root__configuration__policy_options__policy_statement__term__then__next_hop:
+        if n is not None:
+            return junos_conf_root__configuration__policy_options__policy_statement__term__then__next_hop(self_=n.get_opt_empty(_ID_junos_conf_policy_options__self))
+        return junos_conf_root__configuration__policy_options__policy_statement__term__then__next_hop()
+
+    mut def copy(self) -> junos_conf_root__configuration__policy_options__policy_statement__term__then__next_hop:
+        """Create a deep copy of this adata object"""
+        return junos_conf_root__configuration__policy_options__policy_statement__term__then__next_hop.from_gdata(self.to_gdata())
+
+
+_breaker32: None = None
+class junos_conf_root__configuration__policy_options__policy_statement__term__then__load_balance(yadata.MNode):
+    per_packet: ?bool
+
+    mut def __init__(self, per_packet: ?bool=None) -> None:
+        self.per_packet = per_packet
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['junos-conf-root:configuration', 'junos-conf-policy-options:policy-options', 'policy-statement', 'term', 'then', 'load-balance'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> junos_conf_root__configuration__policy_options__policy_statement__term__then__load_balance:
+        if n is not None:
+            return junos_conf_root__configuration__policy_options__policy_statement__term__then__load_balance(per_packet=n.get_opt_empty(_ID_junos_conf_policy_options__per_packet))
+        return junos_conf_root__configuration__policy_options__policy_statement__term__then__load_balance()
+
+    mut def copy(self) -> junos_conf_root__configuration__policy_options__policy_statement__term__then__load_balance:
+        """Create a deep copy of this adata object"""
+        return junos_conf_root__configuration__policy_options__policy_statement__term__then__load_balance.from_gdata(self.to_gdata())
+
+
+_breaker33: None = None
+class junos_conf_root__configuration__policy_options__policy_statement__term__then(yadata.MNode):
+    next_hop: junos_conf_root__configuration__policy_options__policy_statement__term__then__next_hop
+    load_balance: junos_conf_root__configuration__policy_options__policy_statement__term__then__load_balance
+    accept: ?bool
+    reject: ?bool
+
+    mut def __init__(self, next_hop: ?junos_conf_root__configuration__policy_options__policy_statement__term__then__next_hop=None, load_balance: ?junos_conf_root__configuration__policy_options__policy_statement__term__then__load_balance=None, accept: ?bool=None, reject: ?bool=None) -> None:
+        self.next_hop = next_hop if next_hop is not None else junos_conf_root__configuration__policy_options__policy_statement__term__then__next_hop()
+        self.load_balance = load_balance if load_balance is not None else junos_conf_root__configuration__policy_options__policy_statement__term__then__load_balance()
+        self.accept = accept
+        self.reject = reject
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['junos-conf-root:configuration', 'junos-conf-policy-options:policy-options', 'policy-statement', 'term', 'then'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> junos_conf_root__configuration__policy_options__policy_statement__term__then:
+        if n is not None:
+            return junos_conf_root__configuration__policy_options__policy_statement__term__then(next_hop=junos_conf_root__configuration__policy_options__policy_statement__term__then__next_hop.from_gdata(n.get_opt_cnt(_ID_junos_conf_policy_options__next_hop)), load_balance=junos_conf_root__configuration__policy_options__policy_statement__term__then__load_balance.from_gdata(n.get_opt_cnt(_ID_junos_conf_policy_options__load_balance)), accept=n.get_opt_empty(_ID_junos_conf_policy_options__accept), reject=n.get_opt_empty(_ID_junos_conf_policy_options__reject))
+        return junos_conf_root__configuration__policy_options__policy_statement__term__then()
+
+    mut def copy(self) -> junos_conf_root__configuration__policy_options__policy_statement__term__then:
+        """Create a deep copy of this adata object"""
+        return junos_conf_root__configuration__policy_options__policy_statement__term__then.from_gdata(self.to_gdata())
+
+
+_breaker34: None = None
+class junos_conf_root__configuration__policy_options__policy_statement__term_entry(yadata.MNode):
+    name: str
+    from: junos_conf_root__configuration__policy_options__policy_statement__term__from
+    then: junos_conf_root__configuration__policy_options__policy_statement__term__then
+
+    mut def __init__(self, name: str, from: ?junos_conf_root__configuration__policy_options__policy_statement__term__from=None, then: ?junos_conf_root__configuration__policy_options__policy_statement__term__then=None) -> None:
+        self.name = name
+        self.from = from if from is not None else junos_conf_root__configuration__policy_options__policy_statement__term__from()
+        self.then = then if then is not None else junos_conf_root__configuration__policy_options__policy_statement__term__then()
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['junos-conf-root:configuration', 'junos-conf-policy-options:policy-options', 'policy-statement', 'term'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ygdata.Node) -> junos_conf_root__configuration__policy_options__policy_statement__term_entry:
+        return junos_conf_root__configuration__policy_options__policy_statement__term_entry(name=n.get_str(_ID_junos_conf_policy_options__name), from=junos_conf_root__configuration__policy_options__policy_statement__term__from.from_gdata(n.get_opt_cnt(_ID_junos_conf_policy_options__from)), then=junos_conf_root__configuration__policy_options__policy_statement__term__then.from_gdata(n.get_opt_cnt(_ID_junos_conf_policy_options__then)))
+
+    mut def copy(self) -> junos_conf_root__configuration__policy_options__policy_statement__term_entry:
+        """Create a deep copy of this adata object"""
+        return junos_conf_root__configuration__policy_options__policy_statement__term_entry.from_gdata(self.to_gdata())
+
+_breaker35: None = None
+class junos_conf_root__configuration__policy_options__policy_statement__term(yadata.MKeyedList[str, junos_conf_root__configuration__policy_options__policy_statement__term_entry]):
+    mut def __init__(self, elements: list[junos_conf_root__configuration__policy_options__policy_statement__term_entry]=[]) -> None:
+        yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
+
+    mut def create(self, key: str) -> junos_conf_root__configuration__policy_options__policy_statement__term_entry:
+        e = self.get(key)
+        if e is not None:
+            return e
+        name = key
+        res = junos_conf_root__configuration__policy_options__policy_statement__term_entry(name=name)
+        self._append(res)
+        return res
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.List) -> list[junos_conf_root__configuration__policy_options__policy_statement__term_entry]:
+        if n is not None:
+            return [junos_conf_root__configuration__policy_options__policy_statement__term_entry.from_gdata(e) for e in n.entries()]
+        return []
+
+    mut def copy(self) -> junos_conf_root__configuration__policy_options__policy_statement__term:
+        """Create a deep copy of this list object"""
+        # Copy each element in the list
+        copied_elements = []
+        for e in self:
+            ce = e.copy()
+            if ce is not None:
+                copied_elements.append(ce)
+        return junos_conf_root__configuration__policy_options__policy_statement__term(elements=copied_elements)
+
+
+_breaker36: None = None
+class junos_conf_root__configuration__policy_options__policy_statement_entry(yadata.MNode):
+    name: str
+    term: junos_conf_root__configuration__policy_options__policy_statement__term
+
+    mut def __init__(self, name: str, term: list[junos_conf_root__configuration__policy_options__policy_statement__term_entry]=[]) -> None:
+        self.name = name
+        self.term = junos_conf_root__configuration__policy_options__policy_statement__term(elements=term)
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['junos-conf-root:configuration', 'junos-conf-policy-options:policy-options', 'policy-statement'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ygdata.Node) -> junos_conf_root__configuration__policy_options__policy_statement_entry:
+        return junos_conf_root__configuration__policy_options__policy_statement_entry(name=n.get_str(_ID_junos_conf_policy_options__name), term=junos_conf_root__configuration__policy_options__policy_statement__term.from_gdata(n.get_opt_list(_ID_junos_conf_policy_options__term)))
+
+    mut def copy(self) -> junos_conf_root__configuration__policy_options__policy_statement_entry:
+        """Create a deep copy of this adata object"""
+        return junos_conf_root__configuration__policy_options__policy_statement_entry.from_gdata(self.to_gdata())
+
+_breaker37: None = None
+class junos_conf_root__configuration__policy_options__policy_statement(yadata.MKeyedList[str, junos_conf_root__configuration__policy_options__policy_statement_entry]):
+    mut def __init__(self, elements: list[junos_conf_root__configuration__policy_options__policy_statement_entry]=[]) -> None:
+        yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
+
+    mut def create(self, key: str) -> junos_conf_root__configuration__policy_options__policy_statement_entry:
+        e = self.get(key)
+        if e is not None:
+            return e
+        name = key
+        res = junos_conf_root__configuration__policy_options__policy_statement_entry(name=name)
+        self._append(res)
+        return res
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.List) -> list[junos_conf_root__configuration__policy_options__policy_statement_entry]:
+        if n is not None:
+            return [junos_conf_root__configuration__policy_options__policy_statement_entry.from_gdata(e) for e in n.entries()]
+        return []
+
+    mut def copy(self) -> junos_conf_root__configuration__policy_options__policy_statement:
+        """Create a deep copy of this list object"""
+        # Copy each element in the list
+        copied_elements = []
+        for e in self:
+            ce = e.copy()
+            if ce is not None:
+                copied_elements.append(ce)
+        return junos_conf_root__configuration__policy_options__policy_statement(elements=copied_elements)
+
+
+_breaker38: None = None
+class junos_conf_root__configuration__policy_options(yadata.MNode):
+    policy_statement: junos_conf_root__configuration__policy_options__policy_statement
+
+    mut def __init__(self, policy_statement: list[junos_conf_root__configuration__policy_options__policy_statement_entry]=[]) -> None:
+        self.policy_statement = junos_conf_root__configuration__policy_options__policy_statement(elements=policy_statement)
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['junos-conf-root:configuration', 'junos-conf-policy-options:policy-options'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> junos_conf_root__configuration__policy_options:
+        if n is not None:
+            return junos_conf_root__configuration__policy_options(policy_statement=junos_conf_root__configuration__policy_options__policy_statement.from_gdata(n.get_opt_list(_ID_junos_conf_policy_options__policy_statement)))
+        return junos_conf_root__configuration__policy_options()
+
+    mut def copy(self) -> junos_conf_root__configuration__policy_options:
+        """Create a deep copy of this adata object"""
+        return junos_conf_root__configuration__policy_options.from_gdata(self.to_gdata())
+
+
+_breaker39: None = None
+class junos_conf_root__configuration__interfaces__interface__unit__family__inet__address_entry(yadata.MNode):
+    name: str
+
+    mut def __init__(self, name: str) -> None:
+        self.name = name
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['junos-conf-root:configuration', 'junos-conf-interfaces:interfaces', 'interface', 'unit', 'family', 'inet', 'address'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ygdata.Node) -> junos_conf_root__configuration__interfaces__interface__unit__family__inet__address_entry:
+        return junos_conf_root__configuration__interfaces__interface__unit__family__inet__address_entry(name=n.get_str(_ID_junos_conf_interfaces__name))
+
+    mut def copy(self) -> junos_conf_root__configuration__interfaces__interface__unit__family__inet__address_entry:
+        """Create a deep copy of this adata object"""
+        return junos_conf_root__configuration__interfaces__interface__unit__family__inet__address_entry.from_gdata(self.to_gdata())
+
+_breaker40: None = None
+class junos_conf_root__configuration__interfaces__interface__unit__family__inet__address(yadata.MKeyedList[str, junos_conf_root__configuration__interfaces__interface__unit__family__inet__address_entry]):
+    mut def __init__(self, elements: list[junos_conf_root__configuration__interfaces__interface__unit__family__inet__address_entry]=[]) -> None:
+        yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
+
+    mut def create(self, key: str) -> junos_conf_root__configuration__interfaces__interface__unit__family__inet__address_entry:
+        e = self.get(key)
+        if e is not None:
+            return e
+        name = key
+        res = junos_conf_root__configuration__interfaces__interface__unit__family__inet__address_entry(name=name)
+        self._append(res)
+        return res
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.List) -> list[junos_conf_root__configuration__interfaces__interface__unit__family__inet__address_entry]:
+        if n is not None:
+            return [junos_conf_root__configuration__interfaces__interface__unit__family__inet__address_entry.from_gdata(e) for e in n.entries()]
+        return []
+
+    mut def copy(self) -> junos_conf_root__configuration__interfaces__interface__unit__family__inet__address:
+        """Create a deep copy of this list object"""
+        # Copy each element in the list
+        copied_elements = []
+        for e in self:
+            ce = e.copy()
+            if ce is not None:
+                copied_elements.append(ce)
+        return junos_conf_root__configuration__interfaces__interface__unit__family__inet__address(elements=copied_elements)
+
+
+_breaker41: None = None
+class junos_conf_root__configuration__interfaces__interface__unit__family__inet(yadata.MNode):
+    address: junos_conf_root__configuration__interfaces__interface__unit__family__inet__address
+
+    mut def __init__(self, address: list[junos_conf_root__configuration__interfaces__interface__unit__family__inet__address_entry]=[]) -> None:
+        self.address = junos_conf_root__configuration__interfaces__interface__unit__family__inet__address(elements=address)
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['junos-conf-root:configuration', 'junos-conf-interfaces:interfaces', 'interface', 'unit', 'family', 'inet'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> ?junos_conf_root__configuration__interfaces__interface__unit__family__inet:
+        if n is not None:
+            return junos_conf_root__configuration__interfaces__interface__unit__family__inet(address=junos_conf_root__configuration__interfaces__interface__unit__family__inet__address.from_gdata(n.get_opt_list(_ID_junos_conf_interfaces__address)))
+        return None
+
+    mut def copy(self) -> junos_conf_root__configuration__interfaces__interface__unit__family__inet:
+        """Create a deep copy of this adata object"""
+        ad = junos_conf_root__configuration__interfaces__interface__unit__family__inet.from_gdata(self.to_gdata())
+        if ad is not None:
+            return ad
+        raise Exception('Unreachable in junos_conf_root__configuration__interfaces__interface__unit__family__inet.copy()')
+
+
+_breaker42: None = None
+class junos_conf_root__configuration__interfaces__interface__unit__family(yadata.MNode):
+    inet: ?junos_conf_root__configuration__interfaces__interface__unit__family__inet
+
+    mut def __init__(self, inet: ?junos_conf_root__configuration__interfaces__interface__unit__family__inet=None) -> None:
+        self.inet = inet
+
+    mut def create_inet(self) -> junos_conf_root__configuration__interfaces__interface__unit__family__inet:
+        existing = self.inet
+        if existing is not None:
+            return existing
+        res = junos_conf_root__configuration__interfaces__interface__unit__family__inet()
+        self.inet = res
+        return res
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['junos-conf-root:configuration', 'junos-conf-interfaces:interfaces', 'interface', 'unit', 'family'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> junos_conf_root__configuration__interfaces__interface__unit__family:
+        if n is not None:
+            return junos_conf_root__configuration__interfaces__interface__unit__family(inet=junos_conf_root__configuration__interfaces__interface__unit__family__inet.from_gdata(n.get_opt_cnt(_ID_junos_conf_interfaces__inet)))
+        return junos_conf_root__configuration__interfaces__interface__unit__family()
+
+    mut def copy(self) -> junos_conf_root__configuration__interfaces__interface__unit__family:
+        """Create a deep copy of this adata object"""
+        return junos_conf_root__configuration__interfaces__interface__unit__family.from_gdata(self.to_gdata())
+
+
+_breaker43: None = None
+class junos_conf_root__configuration__interfaces__interface__unit_entry(yadata.MNode):
+    name: str
+    description: ?str
+    encapsulation: ?str
+    vlan_id: ?str
+    family: junos_conf_root__configuration__interfaces__interface__unit__family
+
+    mut def __init__(self, name: str, description: ?str=None, encapsulation: ?str=None, vlan_id: ?str=None, family: ?junos_conf_root__configuration__interfaces__interface__unit__family=None) -> None:
+        self.name = name
+        self.description = description
+        self.encapsulation = encapsulation
+        self.vlan_id = vlan_id
+        self.family = family if family is not None else junos_conf_root__configuration__interfaces__interface__unit__family()
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['junos-conf-root:configuration', 'junos-conf-interfaces:interfaces', 'interface', 'unit'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ygdata.Node) -> junos_conf_root__configuration__interfaces__interface__unit_entry:
+        return junos_conf_root__configuration__interfaces__interface__unit_entry(name=n.get_str(_ID_junos_conf_interfaces__name), description=n.get_opt_str(_ID_junos_conf_interfaces__description), encapsulation=n.get_opt_str(_ID_junos_conf_interfaces__encapsulation), vlan_id=n.get_opt_str(_ID_junos_conf_interfaces__vlan_id), family=junos_conf_root__configuration__interfaces__interface__unit__family.from_gdata(n.get_opt_cnt(_ID_junos_conf_interfaces__family)))
+
+    mut def copy(self) -> junos_conf_root__configuration__interfaces__interface__unit_entry:
+        """Create a deep copy of this adata object"""
+        return junos_conf_root__configuration__interfaces__interface__unit_entry.from_gdata(self.to_gdata())
+
+_breaker44: None = None
+class junos_conf_root__configuration__interfaces__interface__unit(yadata.MKeyedList[str, junos_conf_root__configuration__interfaces__interface__unit_entry]):
+    mut def __init__(self, elements: list[junos_conf_root__configuration__interfaces__interface__unit_entry]=[]) -> None:
+        yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
+
+    mut def create(self, key: str, description: ?str=None, encapsulation: ?str=None, vlan_id: ?str=None) -> junos_conf_root__configuration__interfaces__interface__unit_entry:
+        e = self.get(key)
+        if e is not None:
+            if description is not None:
+                e.description = description
+            if encapsulation is not None:
+                e.encapsulation = encapsulation
+            if vlan_id is not None:
+                e.vlan_id = vlan_id
+            return e
+        name = key
+        res = junos_conf_root__configuration__interfaces__interface__unit_entry(name=name, description=description, encapsulation=encapsulation, vlan_id=vlan_id)
+        self._append(res)
+        return res
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.List) -> list[junos_conf_root__configuration__interfaces__interface__unit_entry]:
+        if n is not None:
+            return [junos_conf_root__configuration__interfaces__interface__unit_entry.from_gdata(e) for e in n.entries()]
+        return []
+
+    mut def copy(self) -> junos_conf_root__configuration__interfaces__interface__unit:
+        """Create a deep copy of this list object"""
+        # Copy each element in the list
+        copied_elements = []
+        for e in self:
+            ce = e.copy()
+            if ce is not None:
+                copied_elements.append(ce)
+        return junos_conf_root__configuration__interfaces__interface__unit(elements=copied_elements)
+
+
+_breaker45: None = None
+class junos_conf_root__configuration__interfaces__interface_entry(yadata.MNode):
+    name: str
+    description: ?str
+    mtu: ?atom
+    unit: junos_conf_root__configuration__interfaces__interface__unit
+
+    mut def __init__(self, name: str, description: ?str=None, mtu: ?atom=None, unit: list[junos_conf_root__configuration__interfaces__interface__unit_entry]=[]) -> None:
+        self.name = name
+        self.description = description
+        self.mtu = mtu
+        self.unit = junos_conf_root__configuration__interfaces__interface__unit(elements=unit)
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['junos-conf-root:configuration', 'junos-conf-interfaces:interfaces', 'interface'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ygdata.Node) -> junos_conf_root__configuration__interfaces__interface_entry:
+        return junos_conf_root__configuration__interfaces__interface_entry(name=n.get_str(_ID_junos_conf_interfaces__name), description=n.get_opt_str(_ID_junos_conf_interfaces__description), mtu=n.get_opt_atom(_ID_junos_conf_interfaces__mtu), unit=junos_conf_root__configuration__interfaces__interface__unit.from_gdata(n.get_opt_list(_ID_junos_conf_interfaces__unit)))
+
+    mut def copy(self) -> junos_conf_root__configuration__interfaces__interface_entry:
+        """Create a deep copy of this adata object"""
+        return junos_conf_root__configuration__interfaces__interface_entry.from_gdata(self.to_gdata())
+
+_breaker46: None = None
+class junos_conf_root__configuration__interfaces__interface(yadata.MKeyedList[str, junos_conf_root__configuration__interfaces__interface_entry]):
+    mut def __init__(self, elements: list[junos_conf_root__configuration__interfaces__interface_entry]=[]) -> None:
+        yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
+
+    mut def create(self, key: str, description: ?str=None, mtu: ?atom=None) -> junos_conf_root__configuration__interfaces__interface_entry:
+        e = self.get(key)
+        if e is not None:
+            if description is not None:
+                e.description = description
+            if mtu is not None:
+                e.mtu = mtu
+            return e
+        name = key
+        res = junos_conf_root__configuration__interfaces__interface_entry(name=name, description=description, mtu=mtu)
+        self._append(res)
+        return res
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.List) -> list[junos_conf_root__configuration__interfaces__interface_entry]:
+        if n is not None:
+            return [junos_conf_root__configuration__interfaces__interface_entry.from_gdata(e) for e in n.entries()]
+        return []
+
+    mut def copy(self) -> junos_conf_root__configuration__interfaces__interface:
+        """Create a deep copy of this list object"""
+        # Copy each element in the list
+        copied_elements = []
+        for e in self:
+            ce = e.copy()
+            if ce is not None:
+                copied_elements.append(ce)
+        return junos_conf_root__configuration__interfaces__interface(elements=copied_elements)
+
+
+_breaker47: None = None
+class junos_conf_root__configuration__interfaces(yadata.MNode):
+    interface: junos_conf_root__configuration__interfaces__interface
+
+    mut def __init__(self, interface: list[junos_conf_root__configuration__interfaces__interface_entry]=[]) -> None:
+        self.interface = junos_conf_root__configuration__interfaces__interface(elements=interface)
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['junos-conf-root:configuration', 'junos-conf-interfaces:interfaces'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> junos_conf_root__configuration__interfaces:
+        if n is not None:
+            return junos_conf_root__configuration__interfaces(interface=junos_conf_root__configuration__interfaces__interface.from_gdata(n.get_opt_list(_ID_junos_conf_interfaces__interface)))
+        return junos_conf_root__configuration__interfaces()
+
+    mut def copy(self) -> junos_conf_root__configuration__interfaces:
+        """Create a deep copy of this adata object"""
+        return junos_conf_root__configuration__interfaces.from_gdata(self.to_gdata())
+
+
+_breaker48: None = None
+class junos_conf_root__configuration(yadata.MNode):
+    system: junos_conf_root__configuration__system
+    routing_options: junos_conf_root__configuration__routing_options
+    routing_instances: junos_conf_root__configuration__routing_instances
+    protocols: junos_conf_root__configuration__protocols
+    policy_options: junos_conf_root__configuration__policy_options
+    interfaces: junos_conf_root__configuration__interfaces
+
+    mut def __init__(self, system: ?junos_conf_root__configuration__system=None, routing_options: ?junos_conf_root__configuration__routing_options=None, routing_instances: ?junos_conf_root__configuration__routing_instances=None, protocols: ?junos_conf_root__configuration__protocols=None, policy_options: ?junos_conf_root__configuration__policy_options=None, interfaces: ?junos_conf_root__configuration__interfaces=None) -> None:
+        self.system = system if system is not None else junos_conf_root__configuration__system()
+        self.routing_options = routing_options if routing_options is not None else junos_conf_root__configuration__routing_options()
+        self.routing_instances = routing_instances if routing_instances is not None else junos_conf_root__configuration__routing_instances()
+        self.protocols = protocols if protocols is not None else junos_conf_root__configuration__protocols()
+        self.policy_options = policy_options if policy_options is not None else junos_conf_root__configuration__policy_options()
+        self.interfaces = interfaces if interfaces is not None else junos_conf_root__configuration__interfaces()
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['junos-conf-root:configuration'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> junos_conf_root__configuration:
+        if n is not None:
+            return junos_conf_root__configuration(system=junos_conf_root__configuration__system.from_gdata(n.get_opt_cnt(_ID_junos_conf_system__system)), routing_options=junos_conf_root__configuration__routing_options.from_gdata(n.get_opt_cnt(_ID_junos_conf_routing_options__routing_options)), routing_instances=junos_conf_root__configuration__routing_instances.from_gdata(n.get_opt_cnt(_ID_junos_conf_routing_instances__routing_instances)), protocols=junos_conf_root__configuration__protocols.from_gdata(n.get_opt_cnt(_ID_junos_conf_protocols__protocols)), policy_options=junos_conf_root__configuration__policy_options.from_gdata(n.get_opt_cnt(_ID_junos_conf_policy_options__policy_options)), interfaces=junos_conf_root__configuration__interfaces.from_gdata(n.get_opt_cnt(_ID_junos_conf_interfaces__interfaces)))
+        return junos_conf_root__configuration()
+
+    mut def copy(self) -> junos_conf_root__configuration:
+        """Create a deep copy of this adata object"""
+        return junos_conf_root__configuration.from_gdata(self.to_gdata())
+
+
+_breaker49: None = None
+class root(yadata.MNode):
+    configuration: junos_conf_root__configuration
+
+    mut def __init__(self, configuration: ?junos_conf_root__configuration=None) -> None:
+        self.configuration = configuration if configuration is not None else junos_conf_root__configuration()
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> root:
+        if n is not None:
+            return root(configuration=junos_conf_root__configuration.from_gdata(n.get_opt_cnt(_ID_junos_conf_root__configuration)))
+        return root()
+
+    mut def copy(self) -> root:
+        """Create a deep copy of this adata object"""
+        return root.from_gdata(self.to_gdata())
+
+
+actor rpc_root(tp: ygdata.TreeProvider):
+    pass
+

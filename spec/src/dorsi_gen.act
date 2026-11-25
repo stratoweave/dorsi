@@ -163,6 +163,62 @@ actor main(env):
     "/jc:configuration/routing-instances/instance/bridge-domains/domain/vxlan/vni",
     ]
 
+    # Keep only the vJunos-switch configuration nodes that dorsi's RFS
+    # transforms actively write to. Junos splits its configuration into one
+    # module per hierarchy, each augmenting /configuration. The management
+    # interface fxp0 and the routing instance mgmt_junos are in nodes dorsi
+    # owns, so dorsi renders them from the management-address.
+    vjunos_paths = [
+    "/jc:configuration/jc-system:system/host-name",
+    "/jc:configuration/jc-interfaces:interfaces/interface/name",
+    "/jc:configuration/jc-interfaces:interfaces/interface/description",
+    "/jc:configuration/jc-interfaces:interfaces/interface/mtu",
+    "/jc:configuration/jc-interfaces:interfaces/interface/unit/name",
+    "/jc:configuration/jc-interfaces:interfaces/interface/unit/description",
+    "/jc:configuration/jc-interfaces:interfaces/interface/unit/vlan-id",
+    "/jc:configuration/jc-interfaces:interfaces/interface/unit/encapsulation",
+    "/jc:configuration/jc-interfaces:interfaces/interface/unit/family/inet/address/name",
+    "/jc:configuration/jc-routing-options:routing-options/router-id",
+    "/jc:configuration/jc-routing-options:routing-options/autonomous-system/as-number",
+    "/jc:configuration/jc-routing-options:routing-options/forwarding-table/export",
+    "/jc:configuration/jc-policy-options:policy-options/policy-statement/name",
+    "/jc:configuration/jc-policy-options:policy-options/policy-statement/term/name",
+    "/jc:configuration/jc-policy-options:policy-options/policy-statement/term/from/route-filter/address",
+    "/jc:configuration/jc-policy-options:policy-options/policy-statement/term/from/route-filter/choice-ident",
+    "/jc:configuration/jc-policy-options:policy-options/policy-statement/term/from/route-filter/choice-value",
+    "/jc:configuration/jc-policy-options:policy-options/policy-statement/term/from/family",
+    "/jc:configuration/jc-policy-options:policy-options/policy-statement/term/then/accept",
+    "/jc:configuration/jc-policy-options:policy-options/policy-statement/term/then/reject",
+    "/jc:configuration/jc-policy-options:policy-options/policy-statement/term/then/next-hop/self",
+    "/jc:configuration/jc-policy-options:policy-options/policy-statement/term/then/load-balance/per-packet",
+    "/jc:configuration/jc-protocols:protocols/bgp/group/name",
+    "/jc:configuration/jc-protocols:protocols/bgp/group/type",
+    "/jc:configuration/jc-protocols:protocols/bgp/group/import",
+    "/jc:configuration/jc-protocols:protocols/bgp/group/export",
+    "/jc:configuration/jc-protocols:protocols/bgp/group/multipath/multiple-as",
+    "/jc:configuration/jc-protocols:protocols/bgp/group/local-address",
+    "/jc:configuration/jc-protocols:protocols/bgp/group/accept-remote-nexthop",
+    "/jc:configuration/jc-protocols:protocols/bgp/group/multihop/ttl",
+    "/jc:configuration/jc-protocols:protocols/bgp/group/multihop/no-nexthop-change",
+    "/jc:configuration/jc-protocols:protocols/bgp/group/family/inet/unicast",
+    "/jc:configuration/jc-protocols:protocols/bgp/group/family/evpn/signaling",
+    "/jc:configuration/jc-protocols:protocols/bgp/group/neighbor/name",
+    "/jc:configuration/jc-protocols:protocols/bgp/group/neighbor/description",
+    "/jc:configuration/jc-protocols:protocols/bgp/group/neighbor/peer-as",
+    "/jc:configuration/jc-protocols:protocols/lldp/port-id-subtype",
+    "/jc:configuration/jc-protocols:protocols/lldp/interface/name",
+    "/jc:configuration/jc-routing-instances:routing-instances/instance/name",
+    "/jc:configuration/jc-routing-instances:routing-instances/instance/routing-options/static/route/name",
+    "/jc:configuration/jc-routing-instances:routing-instances/instance/routing-options/static/route/next-hop",
+    ]
+
+    vjunos_order_paths = [
+            "/jc:configuration/jc-protocols:protocols/bgp/group",
+            "/jc:configuration/jc-protocols:protocols/bgp/group/neighbor",
+            "/jc:configuration/jc-policy-options:policy-options/policy-statement/term",
+            "/jc:configuration/jc-protocols:protocols/lldp/interface",
+    ]
+
     # Keep only the SRL configuration nodes that dorsi's RFS transforms
     # actively write to.
     srl_paths = [
@@ -502,6 +558,11 @@ actor main(env):
                     transforms=[
                         swds.filter_schema(crpd_paths),
                         swds.remove_list_user_order(crpd_order_paths),
+                    ]),
+                stratoweave.build.DeviceType.from_dir(fc, "JuniperVJunosSwitch_24_4R2_23", "yang/JuniperVJunosSwitch_24_4R2_23",
+                    transforms=[
+                        swds.filter_schema(vjunos_paths),
+                        swds.remove_list_user_order(vjunos_order_paths),
                     ]),
                 stratoweave.build.DeviceType.from_dir(fc, "NokiaSRLinux_25_3_2", "yang/NokiaSRLinux_25_3_2",
                     transforms=[

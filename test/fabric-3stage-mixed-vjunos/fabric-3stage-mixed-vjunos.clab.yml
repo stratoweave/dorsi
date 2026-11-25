@@ -1,0 +1,60 @@
+name: dorsi-fabric-3stage-mixed-vjunos
+prefix: __lab-name
+
+# Fixed management addresses: ip-fabric.xml gives the vJunos-switch switches
+# theirs as management-address, which dorsi keeps on fxp0 and connects to.
+mgmt:
+  network: dorsi-fabric-3stage-mixed-vjunos
+  ipv4-subnet: 172.31.41.0/24
+  ipv6-subnet: auto
+
+topology:
+  kinds:
+    nokia_srlinux:
+      image: ghcr.io/nokia/srlinux:25.3.2
+      image-pull-policy: if-not-present
+      startup-config: srl-startup.conf
+    # vJunos-switch is a VM (x86_64 with KVM and nested virtualization): build
+    # the image with vrnetlab from the qcow2 (see README.md).
+    juniper_vjunosswitch:
+      image: vrnetlab/juniper_vjunos-switch:24.4R2.23
+      image-pull-policy: never
+      startup-config: vjunos-startup.conf
+      env:
+        # fxp0 gets the management address of the container instead of one
+        # behind NAT in the container, so that dorsi connects to it
+        CLAB_MGMT_PASSTHROUGH: "true"
+  nodes:
+    leaf1:
+      mgmt-ipv4: 172.31.41.11
+      kind: nokia_srlinux
+    leaf2:
+      mgmt-ipv4: 172.31.41.12
+      kind: juniper_vjunosswitch
+    leaf3:
+      mgmt-ipv4: 172.31.41.13
+      kind: juniper_vjunosswitch
+    spine1:
+      mgmt-ipv4: 172.31.41.21
+      kind: juniper_vjunosswitch
+    spine2:
+      mgmt-ipv4: 172.31.41.22
+      kind: nokia_srlinux
+    sweave:
+      mgmt-ipv4: 172.31.41.10
+      kind: linux
+      image: dorsi-sweave-base
+      image-pull-policy: if-not-present
+      ports:
+        # The dorsi binary serves the APIs and the embedded Web UI on :80.
+        - "${WEBUI_PUBLISH}:80/tcp"
+        - "830/tcp"
+
+  # vJunos-switch maps the container interface ethN to ge-0/0/(N-1).
+  links:
+    - endpoints: ["leaf1:e1-49", "spine1:eth1"]
+    - endpoints: ["leaf1:e1-50", "spine2:e1-1"]
+    - endpoints: ["leaf2:eth49", "spine1:eth2"]
+    - endpoints: ["leaf2:eth50", "spine2:e1-2"]
+    - endpoints: ["leaf3:eth49", "spine1:eth3"]
+    - endpoints: ["leaf3:eth50", "spine2:e1-3"]

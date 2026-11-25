@@ -10,7 +10,20 @@ $(addprefix platform-wait-,$(ROUTERS_CRPD)):
 	timeout --foreground $(WAIT) bash -c "until docker logs $(TESTENV)-$(@:platform-wait-%=%) 2>&1 | grep -q 'Server listening on unix:/var/run/japi_na-grpcd'; do sleep 1; done"
 	docker run $(INTERACTIVE) --rm --network container:$(TESTENV)-sweave ghcr.io/stratoweave/ncurl --host $(@:platform-wait-%=%) --port 830 --username clab --password clab@123 hello
 
-.PHONY: cli $(addprefix platform-cli-,$(ROUTERS_XR) $(ROUTERS_CRPD))
+# vJunos-switch is a VM in its container: docker reports it healthy once Junos
+# has booted
+$(addprefix platform-wait-,$(ROUTERS_VJUNOS)): WAIT=600s
+$(addprefix platform-wait-,$(ROUTERS_VJUNOS)):
+	timeout --foreground $(WAIT) bash -c 'until [ "$$(docker inspect -f {{.State.Health.Status}} $(TESTENV)-$(@:platform-wait-%=%))" = healthy ]; do sleep 5; done'
+	docker run $(INTERACTIVE) --rm --network container:$(TESTENV)-sweave ghcr.io/stratoweave/ncurl --host $(@:platform-wait-%=%) --port 830 --username clab --password clab@123 hello
+
+$(addprefix platform-cli-,$(ROUTERS_VJUNOS)):
+	docker exec -it $(TESTENV)-sweave sshpass -p clab@123 ssh -o StrictHostKeyChecking=no clab@$(subst platform-cli-,,$@)
+
+# $(call vjunos_cli,<switch>,<command>): run a Junos CLI command on a vJunos-switch
+vjunos_cli = docker exec $(TESTENV)-sweave sshpass -p clab@123 ssh -o StrictHostKeyChecking=no -o LogLevel=ERROR clab@$(1) '$(2)'
+
+.PHONY: cli $(addprefix platform-cli-,$(ROUTERS_XR) $(ROUTERS_CRPD) $(ROUTERS_VJUNOS))
 
 $(addprefix platform-cli-,$(ROUTERS_XR)):
 	docker exec -it $(TESTENV)-$(subst platform-cli-,,$@) /pkg/bin/xr_cli.sh
