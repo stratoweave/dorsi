@@ -163,6 +163,15 @@ actor main(env):
     "/jc:configuration/routing-instances/instance/bridge-domains/domain/vxlan/vni",
     ]
 
+    # Keep only the Cisco NX-OS (Nexus 9300v) configuration nodes that dorsi's
+    # RFS transforms actively write to, from the native Cisco-NX-OS-device
+    # model (NX-OS has no openconfig-evpn).
+    nxos_paths = [
+    "/top:System/name",
+    "/top:System/intf-items/phys-items/PhysIf-list/id",
+    "/top:System/intf-items/phys-items/PhysIf-list/descr",
+    ]
+
     # Keep only the SRL configuration nodes that dorsi's RFS transforms
     # actively write to.
     srl_paths = [
@@ -502,6 +511,10 @@ actor main(env):
                     transforms=[
                         swds.filter_schema(crpd_paths),
                         swds.remove_list_user_order(crpd_order_paths),
+                    ]),
+                stratoweave.build.DeviceType.from_dir(fc, "CiscoNXOS_10_6_4M", "yang/CiscoNXOS_10_6_4M",
+                    transforms=[
+                        swds.filter_schema(nxos_paths),
                     ]),
                 stratoweave.build.DeviceType.from_dir(fc, "NokiaSRLinux_25_3_2", "yang/NokiaSRLinux_25_3_2",
                     transforms=[

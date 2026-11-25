@@ -14,6 +14,7 @@ from stratoweave.exception import UnsupportedDevice
 from stratoweave.adapters.adapter import NotConnectedError
 
 import dorsi.devices.AristaEOS_4_36_3_2M as eos436
+import dorsi.devices.CiscoNXOS_10_6_4M as nxos1064
 import dorsi.devices.AristaEOS_4_36_3_2M_oper as eos436_oper
 from dorsi.devices.AristaEOS_4_36_3_2M_oper import root as eos436_oper_root
 import dorsi.devices.JuniperCRPD_24_4R1_9 as crpd244
@@ -56,6 +57,9 @@ _OVERLAY_MAX_HOPS = 2
 # Arista EOS is configured through OpenConfig. SR Linux can serve OpenConfig
 # too, so EOS is told apart by a module only EOS has.
 _EOS_MODULE = "arista-netinst-augments"
+
+# Cisco NX-OS (Nexus 9300v) is configured through its native model
+_NXOS_MODULE = "Cisco-NX-OS-device"
 
 # The VRF of Management0 on EOS. In the default VRF the management default
 # route would carry fabric traffic whenever the fabric has no route for it.
@@ -234,6 +238,12 @@ class FabricBaseConfig(base.FabricBaseConfig):
                 for peer in i.overlay_peer:
                     bgp.neighbor.create(peer.address, peer_group=_OVERLAY_GROUP, peer_as=peer.asn, admin_state="enable", description=_overlay_description(peer.device))
 
+            return dev
+
+        if _NXOS_MODULE in di.modules:
+            print("RFS /rfs{{{di.name}}}/fabric-base-config transform running {i.role} for Cisco NX-OS", err=True)
+            dev = nxos1064.root()
+            dev.System.name = di.name
             return dev
 
         if _EOS_MODULE in di.modules:
@@ -475,6 +485,13 @@ class FabricInterface(base.FabricInterface):
             bgp = ni.protocols.create_bgp()
             bgp.neighbor.create(i.bgp.peer_address, peer_group=_FABRIC_GROUP, peer_as=i.bgp.peer_asn, admin_state="enable", description=if_description)
 
+            return dev
+
+        if _NXOS_MODULE in di.modules:
+            # Not rendered yet: the NX-OS device type is a stub
+            dev = nxos1064.root()
+            phys = dev.System.intf_items.phys_items.PhysIf_list.create(i.name)
+            phys.descr = _link_description(i.remote.device, i.remote.interface)
             return dev
 
         if _EOS_MODULE in di.modules:

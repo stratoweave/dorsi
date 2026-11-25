@@ -27,6 +27,8 @@ import dorsi.devices.CiscoIosXr_25_3_1 as dev_CiscoIosXr_25_3_1
 import dorsi.devices.CiscoIosXr_25_3_1_oper as dev_CiscoIosXr_25_3_1_oper
 import dorsi.devices.JuniperCRPD_24_4R1_9 as dev_JuniperCRPD_24_4R1_9
 import dorsi.devices.JuniperCRPD_24_4R1_9_oper as dev_JuniperCRPD_24_4R1_9_oper
+import dorsi.devices.CiscoNXOS_10_6_4M as dev_CiscoNXOS_10_6_4M
+import dorsi.devices.CiscoNXOS_10_6_4M_oper as dev_CiscoNXOS_10_6_4M_oper
 import dorsi.devices.NokiaSRLinux_25_3_2 as dev_NokiaSRLinux_25_3_2
 import dorsi.devices.NokiaSRLinux_25_3_2_oper as dev_NokiaSRLinux_25_3_2_oper
 
@@ -389,6 +391,18 @@ generated_device_types: dict[str, swdev.DeviceType] = {
                     '/jc:configuration/protocols/bgp/group/neighbor',
                     '/jc:configuration/policy-options/policy-statement/term',
                     '/jc:configuration/protocols/lldp/interface',
+                ]),
+            ],
+        ),
+    "CiscoNXOS_10_6_4M": swdev.DeviceType(name="CiscoNXOS_10_6_4M",
+            adapter_type=swna.NetconfAdapter,
+            src_dnode=dev_CiscoNXOS_10_6_4M.SRC_DNODE,
+            oper_src_dnode=dev_CiscoNXOS_10_6_4M_oper.SRC_DNODE,
+            schema_transforms=[
+                swds.filter_schema([
+                    '/top:System/name',
+                    '/top:System/intf-items/phys-items/PhysIf-list/id',
+                    '/top:System/intf-items/phys-items/PhysIf-list/descr',
                 ]),
             ],
         ),

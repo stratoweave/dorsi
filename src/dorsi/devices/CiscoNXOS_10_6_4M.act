@@ -1,0 +1,1198 @@
+import std.base64
+import std.json
+import std.xml as xml
+import yang.adata as yadata
+import yang.gdata as ygdata
+import yang.xml as yxml
+import yang.xpath as yxpath
+from yang.identityref import Identityref, PartialIdentityref
+from yang.pattern import YangPattern
+from yang.schema import *
+from yang.type import Decimal, Ranges
+import dorsi.devices.CiscoNXOS_10_6_4M_schema
+
+# == This file is generated ==
+
+
+
+
+# Identityref constants
+Cisco_NX_OS_device_inactive: Identityref = Identityref('inactive', ns='http://cisco.com/ns/yang/cisco-nx-os-device', mod='Cisco-NX-OS-device', pfx='top')
+
+
+SRC_DNODE: DRoot = dorsi.devices.CiscoNXOS_10_6_4M_schema.SRC_DNODE
+
+pure def src_yang() -> list[YangSource]:
+    return dorsi.devices.CiscoNXOS_10_6_4M_schema.src_yang()
+
+
+NS_Cisco_NX_OS_device: str = 'http://cisco.com/ns/yang/cisco-nx-os-device'
+
+_ID_Cisco_NX_OS_device__PhysIf_list: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'PhysIf-list')
+_ID_Cisco_NX_OS_device__System: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'System')
+_ID_Cisco_NX_OS_device__action: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'action')
+_ID_Cisco_NX_OS_device__activate: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'activate')
+_ID_Cisco_NX_OS_device__add: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'add')
+_ID_Cisco_NX_OS_device__bios: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'bios')
+_ID_Cisco_NX_OS_device__bios_force: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'bios-force')
+_ID_Cisco_NX_OS_device__boot_nxos: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'boot_nxos')
+_ID_Cisco_NX_OS_device__candidate: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'candidate')
+_ID_Cisco_NX_OS_device__checkpoint: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'checkpoint')
+_ID_Cisco_NX_OS_device__cli: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'cli')
+_ID_Cisco_NX_OS_device__cmdline: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'cmdline')
+_ID_Cisco_NX_OS_device__commit: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'commit')
+_ID_Cisco_NX_OS_device__copy: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'copy')
+_ID_Cisco_NX_OS_device__copy_licenses: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'copy_licenses')
+_ID_Cisco_NX_OS_device__copy_running_config_src: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'copy_running_config_src')
+_ID_Cisco_NX_OS_device__copy_src_core: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'copy_src_core')
+_ID_Cisco_NX_OS_device__copy_src_local: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'copy_src_local')
+_ID_Cisco_NX_OS_device__copy_src_remote: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'copy_src_remote')
+_ID_Cisco_NX_OS_device__copy_startup_config_src: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'copy_startup_config_src')
+_ID_Cisco_NX_OS_device__deactivate: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'deactivate')
+_ID_Cisco_NX_OS_device__delete: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'delete')
+_ID_Cisco_NX_OS_device__delete_ca_certificate: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'delete_ca_certificate')
+_ID_Cisco_NX_OS_device__delete_crl: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'delete_crl')
+_ID_Cisco_NX_OS_device__descr: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'descr')
+_ID_Cisco_NX_OS_device__description: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'description')
+_ID_Cisco_NX_OS_device__dest_local: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'dest_local')
+_ID_Cisco_NX_OS_device__dest_local_config: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'dest_local_config')
+_ID_Cisco_NX_OS_device__dest_local_core: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'dest_local_core')
+_ID_Cisco_NX_OS_device__dest_remote: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'dest_remote')
+_ID_Cisco_NX_OS_device__destination: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'destination')
+_ID_Cisco_NX_OS_device__dir: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'dir')
+_ID_Cisco_NX_OS_device__downgrade: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'downgrade')
+_ID_Cisco_NX_OS_device__echo_commands: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'echo-commands')
+_ID_Cisco_NX_OS_device__fabric: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'fabric')
+_ID_Cisco_NX_OS_device__file: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'file')
+_ID_Cisco_NX_OS_device__filemask: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'filemask')
+_ID_Cisco_NX_OS_device__forced: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'forced')
+_ID_Cisco_NX_OS_device__get_diff: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'get_diff')
+_ID_Cisco_NX_OS_device__id: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'id')
+_ID_Cisco_NX_OS_device__image: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'image')
+_ID_Cisco_NX_OS_device__import_ca_certificate: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'import_ca_certificate')
+_ID_Cisco_NX_OS_device__inactive: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'inactive')
+_ID_Cisco_NX_OS_device__initial: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'initial')
+_ID_Cisco_NX_OS_device__install_activate: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'install_activate')
+_ID_Cisco_NX_OS_device__install_add: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'install_add')
+_ID_Cisco_NX_OS_device__install_all_nxos: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'install_all_nxos')
+_ID_Cisco_NX_OS_device__install_commit: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'install_commit')
+_ID_Cisco_NX_OS_device__install_deactivate: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'install_deactivate')
+_ID_Cisco_NX_OS_device__install_force_all_nxos: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'install_force_all_nxos')
+_ID_Cisco_NX_OS_device__install_remove: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'install_remove')
+_ID_Cisco_NX_OS_device__intf_items: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'intf-items')
+_ID_Cisco_NX_OS_device__licenses: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'licenses')
+_ID_Cisco_NX_OS_device__message: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'message')
+_ID_Cisco_NX_OS_device__mode: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'mode')
+_ID_Cisco_NX_OS_device__module: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'module')
+_ID_Cisco_NX_OS_device__name: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'name')
+_ID_Cisco_NX_OS_device__no_reload: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'no-reload')
+_ID_Cisco_NX_OS_device__no_save: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'no-save')
+_ID_Cisco_NX_OS_device__non_interruptive: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'non-interruptive')
+_ID_Cisco_NX_OS_device__noswitchover: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'noswitchover')
+_ID_Cisco_NX_OS_device__nxos: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'nxos')
+_ID_Cisco_NX_OS_device__option: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'option')
+_ID_Cisco_NX_OS_device__passphrase: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'passphrase')
+_ID_Cisco_NX_OS_device__phys_items: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'phys-items')
+_ID_Cisco_NX_OS_device__pkcs12: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'pkcs12')
+_ID_Cisco_NX_OS_device__recursive: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'recursive')
+_ID_Cisco_NX_OS_device__reload: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'reload')
+_ID_Cisco_NX_OS_device__remove: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'remove')
+_ID_Cisco_NX_OS_device__rollback: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'rollback')
+_ID_Cisco_NX_OS_device__running: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'running')
+_ID_Cisco_NX_OS_device__running_config: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'running-config')
+_ID_Cisco_NX_OS_device__scheduled_config: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'scheduled-config')
+_ID_Cisco_NX_OS_device__source: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'source')
+_ID_Cisco_NX_OS_device__source_interface: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'source-interface')
+_ID_Cisco_NX_OS_device__src_core: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'src_core')
+_ID_Cisco_NX_OS_device__src_local: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'src_local')
+_ID_Cisco_NX_OS_device__src_remote: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'src_remote')
+_ID_Cisco_NX_OS_device__startup_config: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'startup-config')
+_ID_Cisco_NX_OS_device__stop_at_first_failure: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'stop-at-first-failure')
+_ID_Cisco_NX_OS_device__target: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'target')
+_ID_Cisco_NX_OS_device__trustpoint: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'trustpoint')
+_ID_Cisco_NX_OS_device__type: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'type')
+_ID_Cisco_NX_OS_device__upgrade: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'upgrade')
+_ID_Cisco_NX_OS_device__vdc_all: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'vdc-all')
+_ID_Cisco_NX_OS_device__vrf: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'vrf')
+
+
+_breaker1: None = None
+class Cisco_NX_OS_device__System__intf_items__phys_items__PhysIf_list_entry(yadata.MNode):
+    id: str
+    descr: ?str
+
+    mut def __init__(self, id: str, descr: ?str=None) -> None:
+        self.id = id
+        self.descr = descr
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['Cisco-NX-OS-device:System', 'intf-items', 'phys-items', 'PhysIf-list'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ygdata.Node) -> Cisco_NX_OS_device__System__intf_items__phys_items__PhysIf_list_entry:
+        return Cisco_NX_OS_device__System__intf_items__phys_items__PhysIf_list_entry(id=n.get_str(_ID_Cisco_NX_OS_device__id), descr=n.get_opt_str(_ID_Cisco_NX_OS_device__descr))
+
+    mut def copy(self) -> Cisco_NX_OS_device__System__intf_items__phys_items__PhysIf_list_entry:
+        """Create a deep copy of this adata object"""
+        return Cisco_NX_OS_device__System__intf_items__phys_items__PhysIf_list_entry.from_gdata(self.to_gdata())
+
+_breaker2: None = None
+class Cisco_NX_OS_device__System__intf_items__phys_items__PhysIf_list(yadata.MKeyedList[str, Cisco_NX_OS_device__System__intf_items__phys_items__PhysIf_list_entry]):
+    mut def __init__(self, elements: list[Cisco_NX_OS_device__System__intf_items__phys_items__PhysIf_list_entry]=[]) -> None:
+        yadata.MKeyedList.__init__(self, lambda e: e.id, elements)
+
+    mut def create(self, key: str, descr: ?str=None) -> Cisco_NX_OS_device__System__intf_items__phys_items__PhysIf_list_entry:
+        e = self.get(key)
+        if e is not None:
+            if descr is not None:
+                e.descr = descr
+            return e
+        id = key
+        res = Cisco_NX_OS_device__System__intf_items__phys_items__PhysIf_list_entry(id=id, descr=descr)
+        self._append(res)
+        return res
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.List) -> list[Cisco_NX_OS_device__System__intf_items__phys_items__PhysIf_list_entry]:
+        if n is not None:
+            return [Cisco_NX_OS_device__System__intf_items__phys_items__PhysIf_list_entry.from_gdata(e) for e in n.entries()]
+        return []
+
+    mut def copy(self) -> Cisco_NX_OS_device__System__intf_items__phys_items__PhysIf_list:
+        """Create a deep copy of this list object"""
+        # Copy each element in the list
+        copied_elements = []
+        for e in self:
+            ce = e.copy()
+            if ce is not None:
+                copied_elements.append(ce)
+        return Cisco_NX_OS_device__System__intf_items__phys_items__PhysIf_list(elements=copied_elements)
+
+
+_breaker3: None = None
+class Cisco_NX_OS_device__System__intf_items__phys_items(yadata.MNode):
+    PhysIf_list: Cisco_NX_OS_device__System__intf_items__phys_items__PhysIf_list
+
+    mut def __init__(self, PhysIf_list: list[Cisco_NX_OS_device__System__intf_items__phys_items__PhysIf_list_entry]=[]) -> None:
+        self.PhysIf_list = Cisco_NX_OS_device__System__intf_items__phys_items__PhysIf_list(elements=PhysIf_list)
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['Cisco-NX-OS-device:System', 'intf-items', 'phys-items'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> Cisco_NX_OS_device__System__intf_items__phys_items:
+        if n is not None:
+            return Cisco_NX_OS_device__System__intf_items__phys_items(PhysIf_list=Cisco_NX_OS_device__System__intf_items__phys_items__PhysIf_list.from_gdata(n.get_opt_list(_ID_Cisco_NX_OS_device__PhysIf_list)))
+        return Cisco_NX_OS_device__System__intf_items__phys_items()
+
+    mut def copy(self) -> Cisco_NX_OS_device__System__intf_items__phys_items:
+        """Create a deep copy of this adata object"""
+        return Cisco_NX_OS_device__System__intf_items__phys_items.from_gdata(self.to_gdata())
+
+
+_breaker4: None = None
+class Cisco_NX_OS_device__System__intf_items(yadata.MNode):
+    phys_items: Cisco_NX_OS_device__System__intf_items__phys_items
+
+    mut def __init__(self, phys_items: ?Cisco_NX_OS_device__System__intf_items__phys_items=None) -> None:
+        self.phys_items = phys_items if phys_items is not None else Cisco_NX_OS_device__System__intf_items__phys_items()
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['Cisco-NX-OS-device:System', 'intf-items'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> Cisco_NX_OS_device__System__intf_items:
+        if n is not None:
+            return Cisco_NX_OS_device__System__intf_items(phys_items=Cisco_NX_OS_device__System__intf_items__phys_items.from_gdata(n.get_opt_cnt(_ID_Cisco_NX_OS_device__phys_items)))
+        return Cisco_NX_OS_device__System__intf_items()
+
+    mut def copy(self) -> Cisco_NX_OS_device__System__intf_items:
+        """Create a deep copy of this adata object"""
+        return Cisco_NX_OS_device__System__intf_items.from_gdata(self.to_gdata())
+
+
+_breaker5: None = None
+class Cisco_NX_OS_device__System(yadata.MNode):
+    name: ?str
+    intf_items: Cisco_NX_OS_device__System__intf_items
+
+    mut def __init__(self, name: ?str=None, intf_items: ?Cisco_NX_OS_device__System__intf_items=None) -> None:
+        self.name = name
+        self.intf_items = intf_items if intf_items is not None else Cisco_NX_OS_device__System__intf_items()
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['Cisco-NX-OS-device:System'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> Cisco_NX_OS_device__System:
+        if n is not None:
+            return Cisco_NX_OS_device__System(name=n.get_opt_str(_ID_Cisco_NX_OS_device__name), intf_items=Cisco_NX_OS_device__System__intf_items.from_gdata(n.get_opt_cnt(_ID_Cisco_NX_OS_device__intf_items)))
+        return Cisco_NX_OS_device__System()
+
+    mut def copy(self) -> Cisco_NX_OS_device__System:
+        """Create a deep copy of this adata object"""
+        return Cisco_NX_OS_device__System.from_gdata(self.to_gdata())
+
+
+_breaker6: None = None
+class root(yadata.MNode):
+    System: Cisco_NX_OS_device__System
+
+    mut def __init__(self, System: ?Cisco_NX_OS_device__System=None) -> None:
+        self.System = System if System is not None else Cisco_NX_OS_device__System()
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> root:
+        if n is not None:
+            return root(System=Cisco_NX_OS_device__System.from_gdata(n.get_opt_cnt(_ID_Cisco_NX_OS_device__System)))
+        return root()
+
+    mut def copy(self) -> root:
+        """Create a deep copy of this adata object"""
+        return root.from_gdata(self.to_gdata())
+
+
+_breaker7: None = None
+class Cisco_NX_OS_device__cli__input(yadata.MNode):
+    mode: ?str
+    cmdline: ?str
+
+    mut def __init__(self, mode: ?str=None, cmdline: ?str=None) -> None:
+        self.mode = mode
+        self.cmdline = cmdline
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['Cisco-NX-OS-device:cli', 'input'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> Cisco_NX_OS_device__cli__input:
+        if n is not None:
+            return Cisco_NX_OS_device__cli__input(mode=n.get_opt_str(_ID_Cisco_NX_OS_device__mode), cmdline=n.get_opt_str(_ID_Cisco_NX_OS_device__cmdline))
+        return Cisco_NX_OS_device__cli__input()
+
+    mut def copy(self) -> Cisco_NX_OS_device__cli__input:
+        """Create a deep copy of this adata object"""
+        return Cisco_NX_OS_device__cli__input.from_gdata(self.to_gdata())
+
+
+_breaker8: None = None
+class Cisco_NX_OS_device__cli__output(yadata.MNode):
+    message: ?str
+
+    mut def __init__(self, message: ?str=None) -> None:
+        self.message = message
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['Cisco-NX-OS-device:cli', 'output'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> Cisco_NX_OS_device__cli__output:
+        if n is not None:
+            return Cisco_NX_OS_device__cli__output(message=n.get_opt_str(_ID_Cisco_NX_OS_device__message))
+        return Cisco_NX_OS_device__cli__output()
+
+    mut def copy(self) -> Cisco_NX_OS_device__cli__output:
+        """Create a deep copy of this adata object"""
+        return Cisco_NX_OS_device__cli__output.from_gdata(self.to_gdata())
+
+
+_breaker9: None = None
+class Cisco_NX_OS_device__install_all_nxos__input(yadata.MNode):
+    nxos: ?str
+    no_reload: ?bool
+    noswitchover: ?bool
+    bios: ?bool
+    no_save: ?bool
+    bios_force: ?bool
+    non_interruptive: ?bool
+
+    mut def __init__(self, nxos: ?str=None, no_reload: ?bool=None, noswitchover: ?bool=None, bios: ?bool=None, no_save: ?bool=None, bios_force: ?bool=None, non_interruptive: ?bool=None) -> None:
+        self.nxos = nxos
+        self.no_reload = no_reload
+        self.noswitchover = noswitchover
+        self.bios = bios
+        self.no_save = no_save
+        self.bios_force = bios_force
+        self.non_interruptive = non_interruptive
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['Cisco-NX-OS-device:install_all_nxos', 'input'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> Cisco_NX_OS_device__install_all_nxos__input:
+        if n is not None:
+            return Cisco_NX_OS_device__install_all_nxos__input(nxos=n.get_opt_str(_ID_Cisco_NX_OS_device__nxos), no_reload=n.get_opt_empty(_ID_Cisco_NX_OS_device__no_reload), noswitchover=n.get_opt_empty(_ID_Cisco_NX_OS_device__noswitchover), bios=n.get_opt_empty(_ID_Cisco_NX_OS_device__bios), no_save=n.get_opt_empty(_ID_Cisco_NX_OS_device__no_save), bios_force=n.get_opt_empty(_ID_Cisco_NX_OS_device__bios_force), non_interruptive=n.get_opt_empty(_ID_Cisco_NX_OS_device__non_interruptive))
+        return Cisco_NX_OS_device__install_all_nxos__input()
+
+    mut def copy(self) -> Cisco_NX_OS_device__install_all_nxos__input:
+        """Create a deep copy of this adata object"""
+        return Cisco_NX_OS_device__install_all_nxos__input.from_gdata(self.to_gdata())
+
+
+_breaker10: None = None
+class Cisco_NX_OS_device__install_force_all_nxos__input(yadata.MNode):
+    nxos: ?str
+    no_reload: ?bool
+    noswitchover: ?bool
+    bios: ?bool
+    no_save: ?bool
+    bios_force: ?bool
+    non_interruptive: ?bool
+
+    mut def __init__(self, nxos: ?str=None, no_reload: ?bool=None, noswitchover: ?bool=None, bios: ?bool=None, no_save: ?bool=None, bios_force: ?bool=None, non_interruptive: ?bool=None) -> None:
+        self.nxos = nxos
+        self.no_reload = no_reload
+        self.noswitchover = noswitchover
+        self.bios = bios
+        self.no_save = no_save
+        self.bios_force = bios_force
+        self.non_interruptive = non_interruptive
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['Cisco-NX-OS-device:install_force_all_nxos', 'input'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> Cisco_NX_OS_device__install_force_all_nxos__input:
+        if n is not None:
+            return Cisco_NX_OS_device__install_force_all_nxos__input(nxos=n.get_opt_str(_ID_Cisco_NX_OS_device__nxos), no_reload=n.get_opt_empty(_ID_Cisco_NX_OS_device__no_reload), noswitchover=n.get_opt_empty(_ID_Cisco_NX_OS_device__noswitchover), bios=n.get_opt_empty(_ID_Cisco_NX_OS_device__bios), no_save=n.get_opt_empty(_ID_Cisco_NX_OS_device__no_save), bios_force=n.get_opt_empty(_ID_Cisco_NX_OS_device__bios_force), non_interruptive=n.get_opt_empty(_ID_Cisco_NX_OS_device__non_interruptive))
+        return Cisco_NX_OS_device__install_force_all_nxos__input()
+
+    mut def copy(self) -> Cisco_NX_OS_device__install_force_all_nxos__input:
+        """Create a deep copy of this adata object"""
+        return Cisco_NX_OS_device__install_force_all_nxos__input.from_gdata(self.to_gdata())
+
+
+_breaker11: None = None
+class Cisco_NX_OS_device__install_add__input(yadata.MNode):
+    add: ?str
+    vrf: ?str
+    upgrade: ?bool
+    downgrade: ?bool
+    initial: ?bool
+    forced: ?bool
+
+    mut def __init__(self, add: ?str=None, vrf: ?str=None, upgrade: ?bool=None, downgrade: ?bool=None, initial: ?bool=None, forced: ?bool=None) -> None:
+        self.add = add
+        self.vrf = vrf
+        self.upgrade = upgrade
+        self.downgrade = downgrade
+        self.initial = initial
+        self.forced = forced
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['Cisco-NX-OS-device:install_add', 'input'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> Cisco_NX_OS_device__install_add__input:
+        if n is not None:
+            return Cisco_NX_OS_device__install_add__input(add=n.get_opt_str(_ID_Cisco_NX_OS_device__add), vrf=n.get_opt_str(_ID_Cisco_NX_OS_device__vrf), upgrade=n.get_opt_empty(_ID_Cisco_NX_OS_device__upgrade), downgrade=n.get_opt_empty(_ID_Cisco_NX_OS_device__downgrade), initial=n.get_opt_empty(_ID_Cisco_NX_OS_device__initial), forced=n.get_opt_empty(_ID_Cisco_NX_OS_device__forced))
+        return Cisco_NX_OS_device__install_add__input()
+
+    mut def copy(self) -> Cisco_NX_OS_device__install_add__input:
+        """Create a deep copy of this adata object"""
+        return Cisco_NX_OS_device__install_add__input.from_gdata(self.to_gdata())
+
+
+_breaker12: None = None
+class Cisco_NX_OS_device__install_activate__input(yadata.MNode):
+    activate: ?str
+    forced: ?bool
+
+    mut def __init__(self, activate: ?str=None, forced: ?bool=None) -> None:
+        self.activate = activate
+        self.forced = forced
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['Cisco-NX-OS-device:install_activate', 'input'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> Cisco_NX_OS_device__install_activate__input:
+        if n is not None:
+            return Cisco_NX_OS_device__install_activate__input(activate=n.get_opt_str(_ID_Cisco_NX_OS_device__activate), forced=n.get_opt_empty(_ID_Cisco_NX_OS_device__forced))
+        return Cisco_NX_OS_device__install_activate__input()
+
+    mut def copy(self) -> Cisco_NX_OS_device__install_activate__input:
+        """Create a deep copy of this adata object"""
+        return Cisco_NX_OS_device__install_activate__input.from_gdata(self.to_gdata())
+
+
+_breaker13: None = None
+class Cisco_NX_OS_device__install_deactivate__input(yadata.MNode):
+    deactivate: ?str
+    forced: ?bool
+
+    mut def __init__(self, deactivate: ?str=None, forced: ?bool=None) -> None:
+        self.deactivate = deactivate
+        self.forced = forced
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['Cisco-NX-OS-device:install_deactivate', 'input'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> Cisco_NX_OS_device__install_deactivate__input:
+        if n is not None:
+            return Cisco_NX_OS_device__install_deactivate__input(deactivate=n.get_opt_str(_ID_Cisco_NX_OS_device__deactivate), forced=n.get_opt_empty(_ID_Cisco_NX_OS_device__forced))
+        return Cisco_NX_OS_device__install_deactivate__input()
+
+    mut def copy(self) -> Cisco_NX_OS_device__install_deactivate__input:
+        """Create a deep copy of this adata object"""
+        return Cisco_NX_OS_device__install_deactivate__input.from_gdata(self.to_gdata())
+
+
+_breaker14: None = None
+class Cisco_NX_OS_device__install_commit__input(yadata.MNode):
+    commit: ?str
+
+    mut def __init__(self, commit: ?str=None) -> None:
+        self.commit = commit
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['Cisco-NX-OS-device:install_commit', 'input'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> Cisco_NX_OS_device__install_commit__input:
+        if n is not None:
+            return Cisco_NX_OS_device__install_commit__input(commit=n.get_opt_str(_ID_Cisco_NX_OS_device__commit))
+        return Cisco_NX_OS_device__install_commit__input()
+
+    mut def copy(self) -> Cisco_NX_OS_device__install_commit__input:
+        """Create a deep copy of this adata object"""
+        return Cisco_NX_OS_device__install_commit__input.from_gdata(self.to_gdata())
+
+
+_breaker15: None = None
+class Cisco_NX_OS_device__install_remove__input(yadata.MNode):
+    remove: ?atom
+    inactive: ?bool
+    forced: ?bool
+
+    mut def __init__(self, remove: ?atom=None, inactive: ?bool=None, forced: ?bool=None) -> None:
+        self.remove = remove
+        self.inactive = inactive
+        self.forced = forced
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['Cisco-NX-OS-device:install_remove', 'input'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> Cisco_NX_OS_device__install_remove__input:
+        if n is not None:
+            return Cisco_NX_OS_device__install_remove__input(remove=n.get_opt_atom(_ID_Cisco_NX_OS_device__remove), inactive=n.get_opt_empty(_ID_Cisco_NX_OS_device__inactive), forced=n.get_opt_empty(_ID_Cisco_NX_OS_device__forced))
+        return Cisco_NX_OS_device__install_remove__input()
+
+    mut def copy(self) -> Cisco_NX_OS_device__install_remove__input:
+        """Create a deep copy of this adata object"""
+        return Cisco_NX_OS_device__install_remove__input.from_gdata(self.to_gdata())
+
+
+_breaker16: None = None
+class Cisco_NX_OS_device__copy__input(yadata.MNode):
+    source: ?str
+    destination: ?str
+    recursive: ?bool
+    vrf: ?str
+
+    mut def __init__(self, source: ?str=None, destination: ?str=None, recursive: ?bool=None, vrf: ?str=None) -> None:
+        self.source = source
+        self.destination = destination
+        self.recursive = recursive
+        self.vrf = vrf
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['Cisco-NX-OS-device:copy', 'input'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> Cisco_NX_OS_device__copy__input:
+        if n is not None:
+            return Cisco_NX_OS_device__copy__input(source=n.get_opt_str(_ID_Cisco_NX_OS_device__source), destination=n.get_opt_str(_ID_Cisco_NX_OS_device__destination), recursive=n.get_opt_empty(_ID_Cisco_NX_OS_device__recursive), vrf=n.get_opt_str(_ID_Cisco_NX_OS_device__vrf))
+        return Cisco_NX_OS_device__copy__input()
+
+    mut def copy(self) -> Cisco_NX_OS_device__copy__input:
+        """Create a deep copy of this adata object"""
+        return Cisco_NX_OS_device__copy__input.from_gdata(self.to_gdata())
+
+
+_breaker17: None = None
+class Cisco_NX_OS_device__copy_src_local__input(yadata.MNode):
+    src_local: ?str
+    dest_remote: ?str
+    source_interface: ?str
+    vrf: ?str
+    dest_local: ?str
+    running_config: ?bool
+    echo_commands: ?bool
+    stop_at_first_failure: ?bool
+    startup_config: ?bool
+    scheduled_config: ?bool
+
+    mut def __init__(self, src_local: ?str=None, dest_remote: ?str=None, source_interface: ?str=None, vrf: ?str=None, dest_local: ?str=None, running_config: ?bool=None, echo_commands: ?bool=None, stop_at_first_failure: ?bool=None, startup_config: ?bool=None, scheduled_config: ?bool=None) -> None:
+        self.src_local = src_local
+        self.dest_remote = dest_remote
+        self.source_interface = source_interface
+        self.vrf = vrf
+        self.dest_local = dest_local
+        self.running_config = running_config
+        self.echo_commands = echo_commands
+        self.stop_at_first_failure = stop_at_first_failure
+        self.startup_config = startup_config
+        self.scheduled_config = scheduled_config
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['Cisco-NX-OS-device:copy_src_local', 'input'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> Cisco_NX_OS_device__copy_src_local__input:
+        if n is not None:
+            return Cisco_NX_OS_device__copy_src_local__input(src_local=n.get_opt_str(_ID_Cisco_NX_OS_device__src_local), dest_remote=n.get_opt_str(_ID_Cisco_NX_OS_device__dest_remote), source_interface=n.get_opt_str(_ID_Cisco_NX_OS_device__source_interface), vrf=n.get_opt_str(_ID_Cisco_NX_OS_device__vrf), dest_local=n.get_opt_str(_ID_Cisco_NX_OS_device__dest_local), running_config=n.get_opt_empty(_ID_Cisco_NX_OS_device__running_config), echo_commands=n.get_opt_empty(_ID_Cisco_NX_OS_device__echo_commands), stop_at_first_failure=n.get_opt_empty(_ID_Cisco_NX_OS_device__stop_at_first_failure), startup_config=n.get_opt_empty(_ID_Cisco_NX_OS_device__startup_config), scheduled_config=n.get_opt_empty(_ID_Cisco_NX_OS_device__scheduled_config))
+        return Cisco_NX_OS_device__copy_src_local__input()
+
+    mut def copy(self) -> Cisco_NX_OS_device__copy_src_local__input:
+        """Create a deep copy of this adata object"""
+        return Cisco_NX_OS_device__copy_src_local__input.from_gdata(self.to_gdata())
+
+
+_breaker18: None = None
+class Cisco_NX_OS_device__copy_src_remote__input(yadata.MNode):
+    src_remote: ?str
+    source_interface: ?str
+    vrf: ?str
+    dest_local: ?str
+    running_config: ?bool
+    echo_commands: ?bool
+    stop_at_first_failure: ?bool
+    startup_config: ?bool
+
+    mut def __init__(self, src_remote: ?str=None, source_interface: ?str=None, vrf: ?str=None, dest_local: ?str=None, running_config: ?bool=None, echo_commands: ?bool=None, stop_at_first_failure: ?bool=None, startup_config: ?bool=None) -> None:
+        self.src_remote = src_remote
+        self.source_interface = source_interface
+        self.vrf = vrf
+        self.dest_local = dest_local
+        self.running_config = running_config
+        self.echo_commands = echo_commands
+        self.stop_at_first_failure = stop_at_first_failure
+        self.startup_config = startup_config
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['Cisco-NX-OS-device:copy_src_remote', 'input'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> Cisco_NX_OS_device__copy_src_remote__input:
+        if n is not None:
+            return Cisco_NX_OS_device__copy_src_remote__input(src_remote=n.get_opt_str(_ID_Cisco_NX_OS_device__src_remote), source_interface=n.get_opt_str(_ID_Cisco_NX_OS_device__source_interface), vrf=n.get_opt_str(_ID_Cisco_NX_OS_device__vrf), dest_local=n.get_opt_str(_ID_Cisco_NX_OS_device__dest_local), running_config=n.get_opt_empty(_ID_Cisco_NX_OS_device__running_config), echo_commands=n.get_opt_empty(_ID_Cisco_NX_OS_device__echo_commands), stop_at_first_failure=n.get_opt_empty(_ID_Cisco_NX_OS_device__stop_at_first_failure), startup_config=n.get_opt_empty(_ID_Cisco_NX_OS_device__startup_config))
+        return Cisco_NX_OS_device__copy_src_remote__input()
+
+    mut def copy(self) -> Cisco_NX_OS_device__copy_src_remote__input:
+        """Create a deep copy of this adata object"""
+        return Cisco_NX_OS_device__copy_src_remote__input.from_gdata(self.to_gdata())
+
+
+_breaker19: None = None
+class Cisco_NX_OS_device__copy_src_core__input(yadata.MNode):
+    src_core: ?str
+    dest_remote: ?str
+    source_interface: ?str
+    vrf: ?str
+    dest_local_core: ?str
+
+    mut def __init__(self, src_core: ?str=None, dest_remote: ?str=None, source_interface: ?str=None, vrf: ?str=None, dest_local_core: ?str=None) -> None:
+        self.src_core = src_core
+        self.dest_remote = dest_remote
+        self.source_interface = source_interface
+        self.vrf = vrf
+        self.dest_local_core = dest_local_core
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['Cisco-NX-OS-device:copy_src_core', 'input'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> Cisco_NX_OS_device__copy_src_core__input:
+        if n is not None:
+            return Cisco_NX_OS_device__copy_src_core__input(src_core=n.get_opt_str(_ID_Cisco_NX_OS_device__src_core), dest_remote=n.get_opt_str(_ID_Cisco_NX_OS_device__dest_remote), source_interface=n.get_opt_str(_ID_Cisco_NX_OS_device__source_interface), vrf=n.get_opt_str(_ID_Cisco_NX_OS_device__vrf), dest_local_core=n.get_opt_str(_ID_Cisco_NX_OS_device__dest_local_core))
+        return Cisco_NX_OS_device__copy_src_core__input()
+
+    mut def copy(self) -> Cisco_NX_OS_device__copy_src_core__input:
+        """Create a deep copy of this adata object"""
+        return Cisco_NX_OS_device__copy_src_core__input.from_gdata(self.to_gdata())
+
+
+_breaker20: None = None
+class Cisco_NX_OS_device__copy_running_config_src__input(yadata.MNode):
+    vdc_all: ?bool
+    dest_remote: ?str
+    source_interface: ?str
+    vrf: ?str
+    startup_config: ?bool
+    fabric: ?bool
+    dest_local_config: ?bool
+
+    mut def __init__(self, vdc_all: ?bool=None, dest_remote: ?str=None, source_interface: ?str=None, vrf: ?str=None, startup_config: ?bool=None, fabric: ?bool=None, dest_local_config: ?bool=None) -> None:
+        self.vdc_all = vdc_all
+        self.dest_remote = dest_remote
+        self.source_interface = source_interface
+        self.vrf = vrf
+        self.startup_config = startup_config
+        self.fabric = fabric
+        self.dest_local_config = dest_local_config
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['Cisco-NX-OS-device:copy_running_config_src', 'input'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> Cisco_NX_OS_device__copy_running_config_src__input:
+        if n is not None:
+            return Cisco_NX_OS_device__copy_running_config_src__input(vdc_all=n.get_opt_empty(_ID_Cisco_NX_OS_device__vdc_all), dest_remote=n.get_opt_str(_ID_Cisco_NX_OS_device__dest_remote), source_interface=n.get_opt_str(_ID_Cisco_NX_OS_device__source_interface), vrf=n.get_opt_str(_ID_Cisco_NX_OS_device__vrf), startup_config=n.get_opt_empty(_ID_Cisco_NX_OS_device__startup_config), fabric=n.get_opt_empty(_ID_Cisco_NX_OS_device__fabric), dest_local_config=n.get_opt_empty(_ID_Cisco_NX_OS_device__dest_local_config))
+        return Cisco_NX_OS_device__copy_running_config_src__input()
+
+    mut def copy(self) -> Cisco_NX_OS_device__copy_running_config_src__input:
+        """Create a deep copy of this adata object"""
+        return Cisco_NX_OS_device__copy_running_config_src__input.from_gdata(self.to_gdata())
+
+
+_breaker21: None = None
+class Cisco_NX_OS_device__copy_startup_config_src__input(yadata.MNode):
+    dest_remote: ?str
+    source_interface: ?str
+    vrf: ?str
+    running_config: ?bool
+    echo_commands: ?bool
+    stop_at_first_failure: ?bool
+    dest_local_config: ?bool
+
+    mut def __init__(self, dest_remote: ?str=None, source_interface: ?str=None, vrf: ?str=None, running_config: ?bool=None, echo_commands: ?bool=None, stop_at_first_failure: ?bool=None, dest_local_config: ?bool=None) -> None:
+        self.dest_remote = dest_remote
+        self.source_interface = source_interface
+        self.vrf = vrf
+        self.running_config = running_config
+        self.echo_commands = echo_commands
+        self.stop_at_first_failure = stop_at_first_failure
+        self.dest_local_config = dest_local_config
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['Cisco-NX-OS-device:copy_startup_config_src', 'input'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> Cisco_NX_OS_device__copy_startup_config_src__input:
+        if n is not None:
+            return Cisco_NX_OS_device__copy_startup_config_src__input(dest_remote=n.get_opt_str(_ID_Cisco_NX_OS_device__dest_remote), source_interface=n.get_opt_str(_ID_Cisco_NX_OS_device__source_interface), vrf=n.get_opt_str(_ID_Cisco_NX_OS_device__vrf), running_config=n.get_opt_empty(_ID_Cisco_NX_OS_device__running_config), echo_commands=n.get_opt_empty(_ID_Cisco_NX_OS_device__echo_commands), stop_at_first_failure=n.get_opt_empty(_ID_Cisco_NX_OS_device__stop_at_first_failure), dest_local_config=n.get_opt_empty(_ID_Cisco_NX_OS_device__dest_local_config))
+        return Cisco_NX_OS_device__copy_startup_config_src__input()
+
+    mut def copy(self) -> Cisco_NX_OS_device__copy_startup_config_src__input:
+        """Create a deep copy of this adata object"""
+        return Cisco_NX_OS_device__copy_startup_config_src__input.from_gdata(self.to_gdata())
+
+
+_breaker22: None = None
+class Cisco_NX_OS_device__copy_licenses__input(yadata.MNode):
+    licenses: ?str
+
+    mut def __init__(self, licenses: ?str=None) -> None:
+        self.licenses = licenses
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['Cisco-NX-OS-device:copy_licenses', 'input'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> Cisco_NX_OS_device__copy_licenses__input:
+        if n is not None:
+            return Cisco_NX_OS_device__copy_licenses__input(licenses=n.get_opt_str(_ID_Cisco_NX_OS_device__licenses))
+        return Cisco_NX_OS_device__copy_licenses__input()
+
+    mut def copy(self) -> Cisco_NX_OS_device__copy_licenses__input:
+        """Create a deep copy of this adata object"""
+        return Cisco_NX_OS_device__copy_licenses__input.from_gdata(self.to_gdata())
+
+
+_breaker23: None = None
+class Cisco_NX_OS_device__delete__input(yadata.MNode):
+    target: ?str
+
+    mut def __init__(self, target: ?str=None) -> None:
+        self.target = target
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['Cisco-NX-OS-device:delete', 'input'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> Cisco_NX_OS_device__delete__input:
+        if n is not None:
+            return Cisco_NX_OS_device__delete__input(target=n.get_opt_str(_ID_Cisco_NX_OS_device__target))
+        return Cisco_NX_OS_device__delete__input()
+
+    mut def copy(self) -> Cisco_NX_OS_device__delete__input:
+        """Create a deep copy of this adata object"""
+        return Cisco_NX_OS_device__delete__input.from_gdata(self.to_gdata())
+
+
+_breaker24: None = None
+class Cisco_NX_OS_device__boot_nxos__input(yadata.MNode):
+    image: ?str
+
+    mut def __init__(self, image: ?str=None) -> None:
+        self.image = image
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['Cisco-NX-OS-device:boot_nxos', 'input'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> Cisco_NX_OS_device__boot_nxos__input:
+        if n is not None:
+            return Cisco_NX_OS_device__boot_nxos__input(image=n.get_opt_str(_ID_Cisco_NX_OS_device__image))
+        return Cisco_NX_OS_device__boot_nxos__input()
+
+    mut def copy(self) -> Cisco_NX_OS_device__boot_nxos__input:
+        """Create a deep copy of this adata object"""
+        return Cisco_NX_OS_device__boot_nxos__input.from_gdata(self.to_gdata())
+
+
+_breaker25: None = None
+class Cisco_NX_OS_device__reload__input(yadata.MNode):
+    module: ?int
+
+    mut def __init__(self, module: ?int=None) -> None:
+        self.module = module
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['Cisco-NX-OS-device:reload', 'input'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> Cisco_NX_OS_device__reload__input:
+        if n is not None:
+            return Cisco_NX_OS_device__reload__input(module=n.get_opt_int(_ID_Cisco_NX_OS_device__module))
+        return Cisco_NX_OS_device__reload__input()
+
+    mut def copy(self) -> Cisco_NX_OS_device__reload__input:
+        """Create a deep copy of this adata object"""
+        return Cisco_NX_OS_device__reload__input.from_gdata(self.to_gdata())
+
+
+_breaker26: None = None
+class Cisco_NX_OS_device__dir__input(yadata.MNode):
+    filemask: ?str
+
+    mut def __init__(self, filemask: ?str=None) -> None:
+        self.filemask = filemask
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['Cisco-NX-OS-device:dir', 'input'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> Cisco_NX_OS_device__dir__input:
+        if n is not None:
+            return Cisco_NX_OS_device__dir__input(filemask=n.get_opt_str(_ID_Cisco_NX_OS_device__filemask))
+        return Cisco_NX_OS_device__dir__input()
+
+    mut def copy(self) -> Cisco_NX_OS_device__dir__input:
+        """Create a deep copy of this adata object"""
+        return Cisco_NX_OS_device__dir__input.from_gdata(self.to_gdata())
+
+
+_breaker27: None = None
+class Cisco_NX_OS_device__dir__output(yadata.MNode):
+
+    mut def __init__(self) -> None:
+        pass
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['Cisco-NX-OS-device:dir', 'output'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> Cisco_NX_OS_device__dir__output:
+        if n is not None:
+            return Cisco_NX_OS_device__dir__output()
+        return Cisco_NX_OS_device__dir__output()
+
+    mut def copy(self) -> Cisco_NX_OS_device__dir__output:
+        """Create a deep copy of this adata object"""
+        return Cisco_NX_OS_device__dir__output.from_gdata(self.to_gdata())
+
+
+_breaker28: None = None
+class Cisco_NX_OS_device__get_diff__input__source(yadata.MNode):
+    running: ?bool
+    candidate: ?bool
+
+    mut def __init__(self, running: ?bool=None, candidate: ?bool=None) -> None:
+        self.running = running
+        self.candidate = candidate
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['Cisco-NX-OS-device:get_diff', 'input', 'source'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> Cisco_NX_OS_device__get_diff__input__source:
+        if n is not None:
+            return Cisco_NX_OS_device__get_diff__input__source(running=n.get_opt_empty(_ID_Cisco_NX_OS_device__running), candidate=n.get_opt_empty(_ID_Cisco_NX_OS_device__candidate))
+        return Cisco_NX_OS_device__get_diff__input__source()
+
+    mut def copy(self) -> Cisco_NX_OS_device__get_diff__input__source:
+        """Create a deep copy of this adata object"""
+        return Cisco_NX_OS_device__get_diff__input__source.from_gdata(self.to_gdata())
+
+
+_breaker29: None = None
+class Cisco_NX_OS_device__get_diff__input__target(yadata.MNode):
+    running: ?bool
+    candidate: ?bool
+
+    mut def __init__(self, running: ?bool=None, candidate: ?bool=None) -> None:
+        self.running = running
+        self.candidate = candidate
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['Cisco-NX-OS-device:get_diff', 'input', 'target'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> Cisco_NX_OS_device__get_diff__input__target:
+        if n is not None:
+            return Cisco_NX_OS_device__get_diff__input__target(running=n.get_opt_empty(_ID_Cisco_NX_OS_device__running), candidate=n.get_opt_empty(_ID_Cisco_NX_OS_device__candidate))
+        return Cisco_NX_OS_device__get_diff__input__target()
+
+    mut def copy(self) -> Cisco_NX_OS_device__get_diff__input__target:
+        """Create a deep copy of this adata object"""
+        return Cisco_NX_OS_device__get_diff__input__target.from_gdata(self.to_gdata())
+
+
+_breaker30: None = None
+class Cisco_NX_OS_device__get_diff__input(yadata.MNode):
+    source: Cisco_NX_OS_device__get_diff__input__source
+    target: Cisco_NX_OS_device__get_diff__input__target
+    type: ?str
+
+    mut def __init__(self, source: ?Cisco_NX_OS_device__get_diff__input__source=None, target: ?Cisco_NX_OS_device__get_diff__input__target=None, type: ?str=None) -> None:
+        self.source = source if source is not None else Cisco_NX_OS_device__get_diff__input__source()
+        self.target = target if target is not None else Cisco_NX_OS_device__get_diff__input__target()
+        self.type = type
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['Cisco-NX-OS-device:get_diff', 'input'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> Cisco_NX_OS_device__get_diff__input:
+        if n is not None:
+            return Cisco_NX_OS_device__get_diff__input(source=Cisco_NX_OS_device__get_diff__input__source.from_gdata(n.get_opt_cnt(_ID_Cisco_NX_OS_device__source)), target=Cisco_NX_OS_device__get_diff__input__target.from_gdata(n.get_opt_cnt(_ID_Cisco_NX_OS_device__target)), type=n.get_opt_str(_ID_Cisco_NX_OS_device__type))
+        return Cisco_NX_OS_device__get_diff__input()
+
+    mut def copy(self) -> Cisco_NX_OS_device__get_diff__input:
+        """Create a deep copy of this adata object"""
+        return Cisco_NX_OS_device__get_diff__input.from_gdata(self.to_gdata())
+
+
+_breaker31: None = None
+class Cisco_NX_OS_device__get_diff__output(yadata.MNode):
+
+    mut def __init__(self) -> None:
+        pass
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['Cisco-NX-OS-device:get_diff', 'output'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> Cisco_NX_OS_device__get_diff__output:
+        if n is not None:
+            return Cisco_NX_OS_device__get_diff__output()
+        return Cisco_NX_OS_device__get_diff__output()
+
+    mut def copy(self) -> Cisco_NX_OS_device__get_diff__output:
+        """Create a deep copy of this adata object"""
+        return Cisco_NX_OS_device__get_diff__output.from_gdata(self.to_gdata())
+
+
+_breaker32: None = None
+class Cisco_NX_OS_device__checkpoint__input(yadata.MNode):
+    action_: ?str
+    name: ?str
+    description: ?str
+    file: ?str
+
+    mut def __init__(self, action_: ?str=None, name: ?str=None, description: ?str=None, file: ?str=None) -> None:
+        self.action_ = action_
+        self.name = name
+        self.description = description
+        self.file = file
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['Cisco-NX-OS-device:checkpoint', 'input'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> Cisco_NX_OS_device__checkpoint__input:
+        if n is not None:
+            return Cisco_NX_OS_device__checkpoint__input(action_=n.get_opt_str(_ID_Cisco_NX_OS_device__action), name=n.get_opt_str(_ID_Cisco_NX_OS_device__name), description=n.get_opt_str(_ID_Cisco_NX_OS_device__description), file=n.get_opt_str(_ID_Cisco_NX_OS_device__file))
+        return Cisco_NX_OS_device__checkpoint__input()
+
+    mut def copy(self) -> Cisco_NX_OS_device__checkpoint__input:
+        """Create a deep copy of this adata object"""
+        return Cisco_NX_OS_device__checkpoint__input.from_gdata(self.to_gdata())
+
+
+_breaker33: None = None
+class Cisco_NX_OS_device__rollback__input(yadata.MNode):
+    name: ?str
+    file: ?str
+    option: ?str
+
+    mut def __init__(self, name: ?str=None, file: ?str=None, option: ?str=None) -> None:
+        self.name = name
+        self.file = file
+        self.option = option
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['Cisco-NX-OS-device:rollback', 'input'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> Cisco_NX_OS_device__rollback__input:
+        if n is not None:
+            return Cisco_NX_OS_device__rollback__input(name=n.get_opt_str(_ID_Cisco_NX_OS_device__name), file=n.get_opt_str(_ID_Cisco_NX_OS_device__file), option=n.get_opt_str(_ID_Cisco_NX_OS_device__option))
+        return Cisco_NX_OS_device__rollback__input()
+
+    mut def copy(self) -> Cisco_NX_OS_device__rollback__input:
+        """Create a deep copy of this adata object"""
+        return Cisco_NX_OS_device__rollback__input.from_gdata(self.to_gdata())
+
+
+_breaker34: None = None
+class Cisco_NX_OS_device__import_ca_certificate__input(yadata.MNode):
+    trustpoint: ?str
+    pkcs12: ?str
+    passphrase: ?str
+
+    mut def __init__(self, trustpoint: ?str=None, pkcs12: ?str=None, passphrase: ?str=None) -> None:
+        self.trustpoint = trustpoint
+        self.pkcs12 = pkcs12
+        self.passphrase = passphrase
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['Cisco-NX-OS-device:import_ca_certificate', 'input'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> Cisco_NX_OS_device__import_ca_certificate__input:
+        if n is not None:
+            return Cisco_NX_OS_device__import_ca_certificate__input(trustpoint=n.get_opt_str(_ID_Cisco_NX_OS_device__trustpoint), pkcs12=n.get_opt_str(_ID_Cisco_NX_OS_device__pkcs12), passphrase=n.get_opt_str(_ID_Cisco_NX_OS_device__passphrase))
+        return Cisco_NX_OS_device__import_ca_certificate__input()
+
+    mut def copy(self) -> Cisco_NX_OS_device__import_ca_certificate__input:
+        """Create a deep copy of this adata object"""
+        return Cisco_NX_OS_device__import_ca_certificate__input.from_gdata(self.to_gdata())
+
+
+actor rpc_root(tp: ygdata.TreeProvider):
+    cli: action(cb: action(?Cisco_NX_OS_device__cli__output, ?Exception) -> None, inp: ?Cisco_NX_OS_device__cli__input) -> None
+    def cli(cb, inp):
+        def cb_wrap(res: ?ygdata.Node, err: ?Exception):
+            if res is not None:
+                adata_res = Cisco_NX_OS_device__cli__output.from_gdata(res)
+                cb(adata_res, err)
+            else:
+                cb(None, err)
+
+        rpc_input = ygdata.Container()
+        if inp is not None:
+            rpc_input = yadata.from_adata(SRC_DNODE, inp, True, ["Cisco-NX-OS-device:cli", "input"])
+        rpc_gdata = ygdata.Container({_ID_Cisco_NX_OS_device__cli: rpc_input})
+        tp.rpc(cb_wrap, rpc_gdata)
+
+    install_all_nxos: action(cb: action(?Exception) -> None, inp: ?Cisco_NX_OS_device__install_all_nxos__input) -> None
+    def install_all_nxos(cb, inp):
+        rpc_input = ygdata.Container()
+        if inp is not None:
+            rpc_input = yadata.from_adata(SRC_DNODE, inp, True, ["Cisco-NX-OS-device:install_all_nxos", "input"])
+        rpc_gdata = ygdata.Container({_ID_Cisco_NX_OS_device__install_all_nxos: rpc_input})
+        tp.rpc(lambda _, err: cb(err), rpc_gdata)
+
+    install_force_all_nxos: action(cb: action(?Exception) -> None, inp: ?Cisco_NX_OS_device__install_force_all_nxos__input) -> None
+    def install_force_all_nxos(cb, inp):
+        rpc_input = ygdata.Container()
+        if inp is not None:
+            rpc_input = yadata.from_adata(SRC_DNODE, inp, True, ["Cisco-NX-OS-device:install_force_all_nxos", "input"])
+        rpc_gdata = ygdata.Container({_ID_Cisco_NX_OS_device__install_force_all_nxos: rpc_input})
+        tp.rpc(lambda _, err: cb(err), rpc_gdata)
+
+    install_add: action(cb: action(?Exception) -> None, inp: ?Cisco_NX_OS_device__install_add__input) -> None
+    def install_add(cb, inp):
+        rpc_input = ygdata.Container()
+        if inp is not None:
+            rpc_input = yadata.from_adata(SRC_DNODE, inp, True, ["Cisco-NX-OS-device:install_add", "input"])
+        rpc_gdata = ygdata.Container({_ID_Cisco_NX_OS_device__install_add: rpc_input})
+        tp.rpc(lambda _, err: cb(err), rpc_gdata)
+
+    install_activate: action(cb: action(?Exception) -> None, inp: ?Cisco_NX_OS_device__install_activate__input) -> None
+    def install_activate(cb, inp):
+        rpc_input = ygdata.Container()
+        if inp is not None:
+            rpc_input = yadata.from_adata(SRC_DNODE, inp, True, ["Cisco-NX-OS-device:install_activate", "input"])
+        rpc_gdata = ygdata.Container({_ID_Cisco_NX_OS_device__install_activate: rpc_input})
+        tp.rpc(lambda _, err: cb(err), rpc_gdata)
+
+    install_deactivate: action(cb: action(?Exception) -> None, inp: ?Cisco_NX_OS_device__install_deactivate__input) -> None
+    def install_deactivate(cb, inp):
+        rpc_input = ygdata.Container()
+        if inp is not None:
+            rpc_input = yadata.from_adata(SRC_DNODE, inp, True, ["Cisco-NX-OS-device:install_deactivate", "input"])
+        rpc_gdata = ygdata.Container({_ID_Cisco_NX_OS_device__install_deactivate: rpc_input})
+        tp.rpc(lambda _, err: cb(err), rpc_gdata)
+
+    install_commit: action(cb: action(?Exception) -> None, inp: ?Cisco_NX_OS_device__install_commit__input) -> None
+    def install_commit(cb, inp):
+        rpc_input = ygdata.Container()
+        if inp is not None:
+            rpc_input = yadata.from_adata(SRC_DNODE, inp, True, ["Cisco-NX-OS-device:install_commit", "input"])
+        rpc_gdata = ygdata.Container({_ID_Cisco_NX_OS_device__install_commit: rpc_input})
+        tp.rpc(lambda _, err: cb(err), rpc_gdata)
+
+    install_remove: action(cb: action(?Exception) -> None, inp: ?Cisco_NX_OS_device__install_remove__input) -> None
+    def install_remove(cb, inp):
+        rpc_input = ygdata.Container()
+        if inp is not None:
+            rpc_input = yadata.from_adata(SRC_DNODE, inp, True, ["Cisco-NX-OS-device:install_remove", "input"])
+        rpc_gdata = ygdata.Container({_ID_Cisco_NX_OS_device__install_remove: rpc_input})
+        tp.rpc(lambda _, err: cb(err), rpc_gdata)
+
+    copy: action(cb: action(?Exception) -> None, inp: ?Cisco_NX_OS_device__copy__input) -> None
+    def copy(cb, inp):
+        rpc_input = ygdata.Container()
+        if inp is not None:
+            rpc_input = yadata.from_adata(SRC_DNODE, inp, True, ["Cisco-NX-OS-device:copy", "input"])
+        rpc_gdata = ygdata.Container({_ID_Cisco_NX_OS_device__copy: rpc_input})
+        tp.rpc(lambda _, err: cb(err), rpc_gdata)
+
+    copy_src_local: action(cb: action(?Exception) -> None, inp: ?Cisco_NX_OS_device__copy_src_local__input) -> None
+    def copy_src_local(cb, inp):
+        rpc_input = ygdata.Container()
+        if inp is not None:
+            rpc_input = yadata.from_adata(SRC_DNODE, inp, True, ["Cisco-NX-OS-device:copy_src_local", "input"])
+        rpc_gdata = ygdata.Container({_ID_Cisco_NX_OS_device__copy_src_local: rpc_input})
+        tp.rpc(lambda _, err: cb(err), rpc_gdata)
+
+    copy_src_remote: action(cb: action(?Exception) -> None, inp: ?Cisco_NX_OS_device__copy_src_remote__input) -> None
+    def copy_src_remote(cb, inp):
+        rpc_input = ygdata.Container()
+        if inp is not None:
+            rpc_input = yadata.from_adata(SRC_DNODE, inp, True, ["Cisco-NX-OS-device:copy_src_remote", "input"])
+        rpc_gdata = ygdata.Container({_ID_Cisco_NX_OS_device__copy_src_remote: rpc_input})
+        tp.rpc(lambda _, err: cb(err), rpc_gdata)
+
+    copy_src_core: action(cb: action(?Exception) -> None, inp: ?Cisco_NX_OS_device__copy_src_core__input) -> None
+    def copy_src_core(cb, inp):
+        rpc_input = ygdata.Container()
+        if inp is not None:
+            rpc_input = yadata.from_adata(SRC_DNODE, inp, True, ["Cisco-NX-OS-device:copy_src_core", "input"])
+        rpc_gdata = ygdata.Container({_ID_Cisco_NX_OS_device__copy_src_core: rpc_input})
+        tp.rpc(lambda _, err: cb(err), rpc_gdata)
+
+    copy_running_config_src: action(cb: action(?Exception) -> None, inp: ?Cisco_NX_OS_device__copy_running_config_src__input) -> None
+    def copy_running_config_src(cb, inp):
+        rpc_input = ygdata.Container()
+        if inp is not None:
+            rpc_input = yadata.from_adata(SRC_DNODE, inp, True, ["Cisco-NX-OS-device:copy_running_config_src", "input"])
+        rpc_gdata = ygdata.Container({_ID_Cisco_NX_OS_device__copy_running_config_src: rpc_input})
+        tp.rpc(lambda _, err: cb(err), rpc_gdata)
+
+    copy_startup_config_src: action(cb: action(?Exception) -> None, inp: ?Cisco_NX_OS_device__copy_startup_config_src__input) -> None
+    def copy_startup_config_src(cb, inp):
+        rpc_input = ygdata.Container()
+        if inp is not None:
+            rpc_input = yadata.from_adata(SRC_DNODE, inp, True, ["Cisco-NX-OS-device:copy_startup_config_src", "input"])
+        rpc_gdata = ygdata.Container({_ID_Cisco_NX_OS_device__copy_startup_config_src: rpc_input})
+        tp.rpc(lambda _, err: cb(err), rpc_gdata)
+
+    copy_licenses: action(cb: action(?Exception) -> None, inp: ?Cisco_NX_OS_device__copy_licenses__input) -> None
+    def copy_licenses(cb, inp):
+        rpc_input = ygdata.Container()
+        if inp is not None:
+            rpc_input = yadata.from_adata(SRC_DNODE, inp, True, ["Cisco-NX-OS-device:copy_licenses", "input"])
+        rpc_gdata = ygdata.Container({_ID_Cisco_NX_OS_device__copy_licenses: rpc_input})
+        tp.rpc(lambda _, err: cb(err), rpc_gdata)
+
+    delete: action(cb: action(?Exception) -> None, inp: ?Cisco_NX_OS_device__delete__input) -> None
+    def delete(cb, inp):
+        rpc_input = ygdata.Container()
+        if inp is not None:
+            rpc_input = yadata.from_adata(SRC_DNODE, inp, True, ["Cisco-NX-OS-device:delete", "input"])
+        rpc_gdata = ygdata.Container({_ID_Cisco_NX_OS_device__delete: rpc_input})
+        tp.rpc(lambda _, err: cb(err), rpc_gdata)
+
+    delete_ca_certificate: action(cb: action(?Exception) -> None) -> None
+    def delete_ca_certificate(cb):
+        rpc_input = ygdata.Container()
+        rpc_gdata = ygdata.Container({_ID_Cisco_NX_OS_device__delete_ca_certificate: rpc_input})
+        tp.rpc(lambda _, err: cb(err), rpc_gdata)
+
+    delete_crl: action(cb: action(?Exception) -> None) -> None
+    def delete_crl(cb):
+        rpc_input = ygdata.Container()
+        rpc_gdata = ygdata.Container({_ID_Cisco_NX_OS_device__delete_crl: rpc_input})
+        tp.rpc(lambda _, err: cb(err), rpc_gdata)
+
+    boot_nxos: action(cb: action(?Exception) -> None, inp: ?Cisco_NX_OS_device__boot_nxos__input) -> None
+    def boot_nxos(cb, inp):
+        rpc_input = ygdata.Container()
+        if inp is not None:
+            rpc_input = yadata.from_adata(SRC_DNODE, inp, True, ["Cisco-NX-OS-device:boot_nxos", "input"])
+        rpc_gdata = ygdata.Container({_ID_Cisco_NX_OS_device__boot_nxos: rpc_input})
+        tp.rpc(lambda _, err: cb(err), rpc_gdata)
+
+    reload: action(cb: action(?Exception) -> None, inp: ?Cisco_NX_OS_device__reload__input) -> None
+    def reload(cb, inp):
+        rpc_input = ygdata.Container()
+        if inp is not None:
+            rpc_input = yadata.from_adata(SRC_DNODE, inp, True, ["Cisco-NX-OS-device:reload", "input"])
+        rpc_gdata = ygdata.Container({_ID_Cisco_NX_OS_device__reload: rpc_input})
+        tp.rpc(lambda _, err: cb(err), rpc_gdata)
+
+    dir: action(cb: action(?Cisco_NX_OS_device__dir__output, ?Exception) -> None, inp: ?Cisco_NX_OS_device__dir__input) -> None
+    def dir(cb, inp):
+        def cb_wrap(res: ?ygdata.Node, err: ?Exception):
+            if res is not None:
+                adata_res = Cisco_NX_OS_device__dir__output.from_gdata(res)
+                cb(adata_res, err)
+            else:
+                cb(None, err)
+
+        rpc_input = ygdata.Container()
+        if inp is not None:
+            rpc_input = yadata.from_adata(SRC_DNODE, inp, True, ["Cisco-NX-OS-device:dir", "input"])
+        rpc_gdata = ygdata.Container({_ID_Cisco_NX_OS_device__dir: rpc_input})
+        tp.rpc(cb_wrap, rpc_gdata)
+
+    get_diff: action(cb: action(?Cisco_NX_OS_device__get_diff__output, ?Exception) -> None, inp: ?Cisco_NX_OS_device__get_diff__input) -> None
+    def get_diff(cb, inp):
+        def cb_wrap(res: ?ygdata.Node, err: ?Exception):
+            if res is not None:
+                adata_res = Cisco_NX_OS_device__get_diff__output.from_gdata(res)
+                cb(adata_res, err)
+            else:
+                cb(None, err)
+
+        rpc_input = ygdata.Container()
+        if inp is not None:
+            rpc_input = yadata.from_adata(SRC_DNODE, inp, True, ["Cisco-NX-OS-device:get_diff", "input"])
+        rpc_gdata = ygdata.Container({_ID_Cisco_NX_OS_device__get_diff: rpc_input})
+        tp.rpc(cb_wrap, rpc_gdata)
+
+    checkpoint: action(cb: action(?Exception) -> None, inp: ?Cisco_NX_OS_device__checkpoint__input) -> None
+    def checkpoint(cb, inp):
+        rpc_input = ygdata.Container()
+        if inp is not None:
+            rpc_input = yadata.from_adata(SRC_DNODE, inp, True, ["Cisco-NX-OS-device:checkpoint", "input"])
+        rpc_gdata = ygdata.Container({_ID_Cisco_NX_OS_device__checkpoint: rpc_input})
+        tp.rpc(lambda _, err: cb(err), rpc_gdata)
+
+    rollback: action(cb: action(?Exception) -> None, inp: ?Cisco_NX_OS_device__rollback__input) -> None
+    def rollback(cb, inp):
+        rpc_input = ygdata.Container()
+        if inp is not None:
+            rpc_input = yadata.from_adata(SRC_DNODE, inp, True, ["Cisco-NX-OS-device:rollback", "input"])
+        rpc_gdata = ygdata.Container({_ID_Cisco_NX_OS_device__rollback: rpc_input})
+        tp.rpc(lambda _, err: cb(err), rpc_gdata)
+
+    import_ca_certificate: action(cb: action(?Exception) -> None, inp: Cisco_NX_OS_device__import_ca_certificate__input) -> None
+    def import_ca_certificate(cb, inp):
+        rpc_input = ygdata.Container()
+        if inp is not None:
+            rpc_input = yadata.from_adata(SRC_DNODE, inp, True, ["Cisco-NX-OS-device:import_ca_certificate", "input"])
+        rpc_gdata = ygdata.Container({_ID_Cisco_NX_OS_device__import_ca_certificate: rpc_input})
+        tp.rpc(lambda _, err: cb(err), rpc_gdata)
+
+
