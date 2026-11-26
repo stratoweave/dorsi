@@ -100,3 +100,15 @@ def _test_network_status_missing():
     status = rfs.nxos_network_status(xml.decode("""<rpc-reply xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"><data/></rpc-reply>"""))
     testing.assertEqual(status.0, None)
     testing.assertEqual(status.1, None)
+
+# The state of VRF t1-main on leaf2, whose layer 3 VNI is up
+_REPLY_VRF = """<rpc-reply xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="1"><data><System xmlns="http://cisco.com/ns/yang/cisco-nx-os-device"><inst-items><Inst-list><name>t1-main</name><operState>up</operState></Inst-list></inst-items><eps-items><epId-items><Ep-list><epId>1</epId><nws-items><opervni-items><OperNw-list><vni>1226145</vni><state>Up</state></OperNw-list></opervni-items></nws-items></Ep-list></epId-items></eps-items></System></data></rpc-reply>"""
+
+def _test_vrf_request():
+    request = rfs.nxos_vrf_request("t1-main", u64(1226145)).encode()
+    testing.assertEqual(request, """<get><filter type="subtree"><System xmlns="http://cisco.com/ns/yang/cisco-nx-os-device"><inst-items><Inst-list><name>t1-main</name><operState/></Inst-list></inst-items><eps-items><epId-items><Ep-list><epId>1</epId><nws-items><opervni-items><OperNw-list><vni>1226145</vni><state/></OperNw-list></opervni-items></nws-items></Ep-list></epId-items></eps-items></System></filter></get>""")
+
+def _test_vrf_status_up():
+    status = rfs.nxos_network_status(xml.decode(_REPLY_VRF))
+    testing.assertEqual(status.0, "up")
+    testing.assertEqual(status.1, "up")

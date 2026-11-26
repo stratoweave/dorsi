@@ -2084,6 +2084,18 @@ def nxos_network_request(vlan: u64, vni: u64) -> xml.Node:
     return xml.Node("get", children=[xml.Node("filter", attributes=[("type", "subtree")], children=[system])])
 
 
+def nxos_vrf_request(name: str, vni: u64) -> xml.Node:
+    """The <get> of the state of a VRF on an NX-OS and of its layer 3 VNI
+    on the VTEP. The VLAN of that VNI has no port, so it is down while the
+    VRF routes."""
+    vrf = _nxos_path(["inst-items"], _nxos_entry("Inst-list", "name", name, [xml.Node("operState")]))
+    nw = _nxos_path(["eps-items", "epId-items"],
+        _nxos_entry("Ep-list", "epId", str(_NXOS_VTEP), [_nxos_path(["nws-items", "opervni-items"],
+            _nxos_entry("OperNw-list", "vni", str(vni), [xml.Node("state")]))]))
+    system = xml.Node("System", nsdefs=[(None, _NXOS_NAMESPACE)], children=[vrf, nw])
+    return xml.Node("get", children=[xml.Node("filter", attributes=[("type", "subtree")], children=[system])])
+
+
 def _nxos_up_down(state: ?str) -> ?str:
     """up or down from an NX-OS state, which some objects spell Up and
     Down, unknown for any other."""
@@ -2096,33 +2108,37 @@ def _nxos_up_down(state: ?str) -> ?str:
 
 
 def nxos_network_status(reply: xml.Node) -> (?str, ?str):
-    """The state of the VLAN of a network and of its VNI on the VTEP from
-    the reply to nxos_network_request; None for what NX-OS does not have."""
+    """The state of the VLAN of a network, or of a VRF, and of its VNI on
+    the VTEP from the reply to nxos_network_request or nxos_vrf_request;
+    None for what NX-OS does not have."""
     oper_status: ?str = None
     evpn_status: ?str = None
     bd = _xml_find(reply, "BD-list")
     if bd is not None:
         oper_status = _nxos_up_down(_xml_text(bd, "operSt"))
+    vrf = _xml_find(reply, "Inst-list")
+    if vrf is not None:
+        oper_status = _nxos_up_down(_xml_text(vrf, "operState"))
     nw = _xml_find(reply, "OperNw-list")
     if nw is not None:
         evpn_status = _nxos_up_down(_xml_text(nw, "state"))
     return (oper_status, evpn_status)
 
 
-actor _NxosMacVrfPoll(path, dev: swdev.DeviceMgr, on_state: proc(?str, ?str)->None):
-    """Polls the state of a network on an NX-OS with one <get> per poll, as
-    _NxosPortPoll does for a port. After _STALE_AFTER_NS without a reply the
-    state is reported unknown."""
-    var _vlan: ?u64 = None
-    var _vni: ?u64 = None
+actor _NxosVniPoll(path, dev: swdev.DeviceMgr, on_state: proc(?str, ?str)->None):
+    """Polls the state of a network or a VRF and of its VNI on an NX-OS with
+    one <get> per poll, as _NxosPortPoll does for a port. After _STALE_AFTER_NS without a reply the state is
+    reported unknown."""
+    var _request: ?xml.Node = None
     var _running = True
     var _last_reply: ?int = None
     var _stale = False
     var _error_logged = False
 
-    def watch(vlan: u64, vni: u64):
-        _vlan = vlan
-        _vni = vni
+    def watch(request: xml.Node):
+        """Poll with request, from nxos_network_request or
+        nxos_vrf_request."""
+        _request = request
 
     def stop():
         _running = False
@@ -2144,10 +2160,9 @@ actor _NxosMacVrfPoll(path, dev: swdev.DeviceMgr, on_state: proc(?str, ?str)->No
     def _poll():
         if not _running:
             return
-        vlan = _vlan
-        vni = _vni
-        if vlan is not None and vni is not None:
-            dev.rpc_xml(on_reply, nxos_network_request(vlan, vni))
+        request = _request
+        if request is not None:
+            dev.rpc_xml(on_reply, request)
         last = _last_reply
         if last is not None and not _stale and time.monotonic_ns() - last > _STALE_AFTER_NS:
             print("{path}: no state from the device for {_STALE_AFTER_NS // 1000000000} s, reporting it as unknown", err=True)
@@ -2168,7 +2183,7 @@ actor MacVrfTransformActor(path, update_oper: proc(?y_1_oper.stratoweave_rfs__rf
     _oper = base.MacVrf.new_state(path)
     var _running = True
     var _crpd_poll: ?_CrpdMacVrfPoll = None
-    var _nxos_poll: ?_NxosMacVrfPoll = None
+    var _nxos_poll: ?_NxosVniPoll = None
 
     def publish(oper_status: ?str, evpn_status: ?str):
         # A reply to a poll sent before the network was removed would bring
@@ -2206,10 +2221,10 @@ actor MacVrfTransformActor(path, update_oper: proc(?y_1_oper.stratoweave_rfs__rf
         elif _NXOS_MODULE in dev.get_modules().0 and vlan is not None:
             nxos_poll = _nxos_poll
             if nxos_poll is not None:
-                nxos_poll.watch(vlan, conf.vni)
+                nxos_poll.watch(nxos_network_request(vlan, conf.vni))
             else:
-                new_nxos_poll = _NxosMacVrfPoll(path, dev, publish)
-                new_nxos_poll.watch(vlan, conf.vni)
+                new_nxos_poll = _NxosVniPoll(path, dev, publish)
+                new_nxos_poll.watch(nxos_network_request(vlan, conf.vni))
                 _nxos_poll = new_nxos_poll
 
     def shutdown():
@@ -2230,12 +2245,19 @@ proc def IpVrfTransform(path, update_oper: proc(?y_1_oper.stratoweave_rfs__rfs__
 
 actor IpVrfTransformActor(path, update_oper: proc(?y_1_oper.stratoweave_rfs__rfs__ip_vrf_entry)->None, dev: swdev.DeviceMgr, provider: gdata.TreeProvider):
     _oper = base.IpVrf.new_state(path)
+    var _running = True
+    var _nxos_poll: ?_NxosVniPoll = None
 
-    def on_srl(root: ?srl25_oper_root):
-        oper_status, evpn_status = _srl_network_instance_status(root)
+    def publish(oper_status: ?str, evpn_status: ?str):
+        if not _running:
+            return
         _oper.state.oper_status = oper_status
         _oper.state.evpn_status = evpn_status
         update_oper(_oper)
+
+    def on_srl(root: ?srl25_oper_root):
+        oper_status, evpn_status = _srl_network_instance_status(root)
+        publish(oper_status, evpn_status)
 
     def on_eos(root: ?eos436_oper_root, err: ?Exception):
         # EOS has no OpenConfig state of a VRF that dorsi reads yet
@@ -2245,9 +2267,23 @@ actor IpVrfTransformActor(path, update_oper: proc(?y_1_oper.stratoweave_rfs__rfs
 
     def on_conf(conf: y_1.stratoweave_rfs__rfs__ip_vrf_entry):
         _poll.declare(_srl_network_instance_subscriptions(conf.name), set())
+        if _NXOS_MODULE in dev.get_modules().0:
+            # On NX-OS the state of the VRF and of its layer 3 VNI on the
+            # VTEP
+            nxos_poll = _nxos_poll
+            if nxos_poll is not None:
+                nxos_poll.watch(nxos_vrf_request(conf.name, conf.vni))
+            else:
+                new_nxos_poll = _NxosVniPoll(path, dev, publish)
+                new_nxos_poll.watch(nxos_vrf_request(conf.name, conf.vni))
+                _nxos_poll = new_nxos_poll
 
     def shutdown():
+        _running = False
         _poll.shutdown()
+        nxos_poll = _nxos_poll
+        if nxos_poll is not None:
+            nxos_poll.stop()
 
 
 proc def ServerLagTransform(path, update_dynstate: proc(?ServerLagDynstate)->None, update_oper: proc(?y_1_oper.stratoweave_rfs__rfs__server_lag_entry)->None, dev: swdev.DeviceMgr):
