@@ -429,6 +429,23 @@ module dorsi-rfs {
                 description "The server-lag the port is a member of.";
                 type string;
             }
+            leaf-list trunk-vlan {
+                description
+                    "The VLANs of the networks of the port, on a switch that
+                     sets the VLANs a trunk carries in one value, Cisco NX-OS,
+                     where the network VLAN is the VLAN tag of its servers.";
+                type uint16 {
+                    range "1..4094";
+                }
+            }
+            leaf native-vlan {
+                description
+                    "The VLAN of the network that the port carries untagged,
+                     on Cisco NX-OS, among trunk-vlan.";
+                type uint16 {
+                    range "1..4094";
+                }
+            }
 
             container state {
                 config false;

@@ -39,6 +39,38 @@ topology:
     spine2:
       mgmt-ipv4: 172.31.42.22
       kind: nokia_srlinux
+    server1:
+      mgmt-ipv4: 172.31.42.31
+      kind: linux
+      image: ghcr.io/srl-labs/network-multitool
+      image-pull-policy: if-not-present
+      # The overlay test setup of ip-fabric-overlay.xml (tenant t1)
+      exec:
+        - ip link add link eth1 name eth1.30 type vlan id 30
+        - ip link set eth1.30 up
+        - ip address add 10.10.10.11/24 dev eth1.30
+    server2:
+      mgmt-ipv4: 172.31.42.32
+      kind: linux
+      image: ghcr.io/srl-labs/network-multitool
+      image-pull-policy: if-not-present
+      # The overlay test setup of ip-fabric-overlay.xml (tenant t1)
+      exec:
+        - ip link add link eth1 name eth1.30 type vlan id 30
+        - ip link set eth1.30 up
+        - ip address add 10.10.10.12/24 dev eth1.30
+        - ip address add 10.20.20.12/24 dev eth1
+    server3:
+      mgmt-ipv4: 172.31.42.33
+      kind: linux
+      image: ghcr.io/srl-labs/network-multitool
+      image-pull-policy: if-not-present
+      # The overlay test setup of ip-fabric-overlay.xml (tenant t1)
+      exec:
+        - ip link add link eth1 name eth1.30 type vlan id 30
+        - ip link set eth1.30 up
+        - ip address add 10.10.10.13/24 dev eth1.30
+        - ip address add 10.20.20.13/24 dev eth1
     sweave:
       mgmt-ipv4: 172.31.42.10
       kind: linux
@@ -57,3 +89,6 @@ topology:
     - endpoints: ["leaf2:eth2", "spine2:e1-2"]
     - endpoints: ["leaf3:eth1", "spine1:eth3"]
     - endpoints: ["leaf3:eth2", "spine2:e1-3"]
+    - endpoints: ["server1:eth1", "leaf1:e1-1"]
+    - endpoints: ["server2:eth1", "leaf2:eth3"]
+    - endpoints: ["server3:eth1", "leaf3:eth3"]

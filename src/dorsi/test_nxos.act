@@ -64,3 +64,15 @@ def _test_bgp_not_established():
 def _test_oper_status_other():
     reply = xml.decode(_REPLY_UP.replace("<operSt>up</operSt>", "<operSt>link-up</operSt>"))
     testing.assertEqual(rfs.nxos_oper_status(reply, "eth1/1"), "unknown")
+
+def _test_vlan_list():
+    testing.assertEqual(rfs.nxos_vlan_list([30]), "30")
+    testing.assertEqual(rfs.nxos_vlan_list([30, 12, 10, 11, 14]), "10-12,14,30")
+    testing.assertEqual(rfs.nxos_vlan_list([]), "")
+
+def _test_route_target():
+    testing.assertEqual(rfs.nxos_route_target("target:100:10030"), "route-target:as2-nn2:100:10030")
+    testing.assertEqual(rfs.nxos_route_target("target:100:100030"), "route-target:as2-nn4:100:100030")
+
+def _test_route_distinguisher():
+    testing.assertEqual(rfs.nxos_route_distinguisher("10.0.0.3:30"), "rd:ipv4-nn2:10.0.0.3:30")

@@ -80,6 +80,12 @@ _NXOS_IPV4_UNICAST = "ipv4-ucast"
 # NX-OS applies the layer, MTU and admin state of a port set over NETCONF
 # only with these flags
 _NXOS_ROUTED_PORT_FLAGS = "admin_layer,admin_mtu,admin_state"
+_NXOS_L2VPN_EVPN = "l2vpn-evpn"
+# The VTEP, nve1
+_NXOS_VTEP = 1
+# A spine passes the EVPN routes on with the next hop of the leaf that sent
+# them, its VTEP
+_NXOS_EVPN_NEXT_HOP_POLICY = "evpn-next-hop-unchanged"
 
 def nxos_physical_ports() -> list[str]:
     return ["eth1/{n}" for n in range(1, _NXOS_PHYSICAL_PORTS + 1)]
@@ -97,6 +103,44 @@ def _nxos_route_map(dev: nxos1064.root, name: str):
     entry = dev.System.rpm_items.rtmap_items.Rule_list.create(name).ent_items.Entry_list.create(u64(10))
     entry.action_ = "permit"
     return entry
+
+
+def nxos_vlan(vlan: int) -> str:
+    """A VLAN as NX-OS names it in its native model, such as vlan-30."""
+    return "vlan-{vlan}"
+
+
+def nxos_vlan_list(vlans: list[int]) -> str:
+    """VLANs as NX-OS writes the VLANs of a trunk: in order, with the runs
+    of consecutive VLANs as ranges, such as 10-12,30."""
+    parts: list[str] = []
+    ordered = sorted(vlans)
+    k = 0
+    while k < len(ordered):
+        first = ordered[k]
+        last = first
+        while k + 1 < len(ordered) and ordered[k + 1] <= last + 1:
+            k += 1
+            last = ordered[k]
+        parts.append(str(first) if first == last else "{first}-{last}")
+        k += 1
+    return ",".join(parts)
+
+
+def nxos_route_target(rt: str) -> str:
+    """A route target such as target:100:10030 as NX-OS has it:
+    route-target:as2-nn2:100:10030, as2-nn4 for a number above 65535."""
+    value = rt[len("target:"):] if rt.startswith("target:") else rt
+    parts = value.split(":")
+    kind = "as2-nn2" if int(parts[1]) <= 65535 else "as2-nn4"
+    return "route-target:{kind}:{value}"
+
+
+def nxos_route_distinguisher(rd: str) -> str:
+    """A route distinguisher such as 10.0.0.3:30 as NX-OS has it:
+    rd:ipv4-nn2:10.0.0.3:30."""
+    return "rd:ipv4-nn2:{rd}"
+
 
 # The VRF of Management0 on EOS. In the default VRF the management default
 # route would carry fabric traffic whenever the fabric has no route for it.
@@ -335,6 +379,30 @@ class FabricBaseConfig(base.FabricBaseConfig):
             template_af.rtctrl_items.RtCtrlP_list.create("out").rtMap = _FABRIC_EXPORT_POLICY
             template_af.rtctrl_items.RtCtrlP_list.create("in").rtMap = _FABRIC_IMPORT_POLICY
             _nxos_bgp_domain(dev, _NXOS_BGP_INTERNAL_DOMAIN).af_items.DomAf_list.create(_NXOS_IPV4_UNICAST)
+
+            # VLAN 1, which NX-OS has on every switch and does not remove
+            dev.System.bd_items.bd_items.BD_list.create(nxos_vlan(1))
+
+            if i.evpn:
+                # EVPN on the same eBGP sessions as the underlay, with the
+                # route targets, extended communities. A spine keeps the
+                # routes it imports into no network and passes them on with
+                # their next hop, the VTEP of the leaf that sent them.
+                evpn_af = dom.af_items.DomAf_list.create(_NXOS_L2VPN_EVPN)
+                template_evpn = template.af_items.PeerAf_list.create(_NXOS_L2VPN_EVPN)
+                template_evpn.sendComExt = "enabled"
+                if i.role != "leaf":
+                    evpn_af.retainRttAll = "enabled"
+                    nh = _nxos_route_map(dev, _NXOS_EVPN_NEXT_HOP_POLICY)
+                    nh.nhpa_items.v4Unchange = "enabled"
+                    template_evpn.rtctrl_items.RtCtrlP_list.create("out").rtMap = _NXOS_EVPN_NEXT_HOP_POLICY
+                else:
+                    # The VTEP on the loopback, flooding by ingress
+                    # replication with EVPN routes of type 3
+                    vtep = dev.System.eps_items.epId_items.Ep_list.create(u64(_NXOS_VTEP))
+                    vtep.adminSt = "enabled"
+                    vtep.hostReach = "bgp"
+                    vtep.sourceInterface = _NXOS_LOOPBACK
             return dev
 
         if _EOS_MODULE in di.modules:
@@ -1239,6 +1307,24 @@ class ServerPort(base.ServerPort):
             dev.configuration.protocols.lldp.interface.create(i.name)
             return dev
 
+        if _NXOS_MODULE in di.modules:
+            # The base configuration has the port as a layer 2 port; a port
+            # of networks trunks their VLANs, the untagged one as its native
+            # VLAN
+            print("RFS /rfs{{{di.name}}}/server-port transform running [{i.name}] for Cisco NX-OS", err=True)
+            if i.lag is not None:
+                raise ValueError("server-port {i.name}: dorsi cannot put a server port in a LAG on Cisco NX-OS yet")
+            dev = nxos1064.root()
+            phys = dev.System.intf_items.phys_items.PhysIf_list.create(i.name)
+            phys.descr = if_description
+            if len(i.trunk_vlan) > 0:
+                phys.mode = "trunk"
+                phys.trunkVlans = nxos_vlan_list([int(v) for v in i.trunk_vlan])
+                native = i.native_vlan
+                if native is not None:
+                    phys.nativeVlan = nxos_vlan(int(native))
+            return dev
+
         raise UnsupportedDevice()
 
 
@@ -1417,6 +1503,27 @@ class MacVrf(base.MacVrf):
                 bd.interface.create("{itf.name}.{tag}")
             return dev
 
+        if _NXOS_MODULE in di.modules:
+            if i.vlan is None:
+                raise ValueError("mac-vrf {i.name}: Cisco NX-OS needs the VLAN of the network")
+            if i.irb is not None:
+                raise ValueError("mac-vrf {i.name}: dorsi cannot route a network on Cisco NX-OS yet")
+            dev = nxos1064.root()
+            # The VLAN of the network and its VNI on the VTEP, flooded by
+            # ingress replication. The server ports trunk the VLAN (see
+            # ServerPort).
+            bd = dev.System.bd_items.bd_items.BD_list.create(nxos_vlan(int(i.vlan!)))
+            bd.accEncap = "vxlan-{i.vni}"
+            vtep = dev.System.eps_items.epId_items.Ep_list.create(u64(_NXOS_VTEP))
+            vtep.nws_items.vni_items.Nw_list.create(i.vni).IngRepl_items.proto = "bgp"
+            # Its EVPN instance
+            evi = dev.System.evpn_items.bdevi_items.BDEvi_list.create("vxlan-{i.vni}")
+            evi.rd = nxos_route_distinguisher(i.route_distinguisher)
+            rt = nxos_route_target(i.route_target)
+            evi.rttp_items.RttP_list.create("import").ent_items.RttEntry_list.create(rt)
+            evi.rttp_items.RttP_list.create("export").ent_items.RttEntry_list.create(rt)
+            return dev
+
         raise UnsupportedDevice()
 
 
@@ -1572,6 +1679,7 @@ actor ServerPortTransformActor(path, update_oper: proc(?y_1_oper.stratoweave_rfs
     var _stale = False
     var _running = True
     var _crpd_poll: ?_CrpdPortPoll = None
+    var _nxos_poll: ?_NxosPortPoll = None
 
     def _watchdog():
         if not _running:
@@ -1619,7 +1727,7 @@ actor ServerPortTransformActor(path, update_oper: proc(?y_1_oper.stratoweave_rfs
         _stale = False
         publish(oper_status, neighbor_device, neighbor_interface)
 
-    def on_crpd_state(oper_status: ?str, bgp_status: ?str, neighbor_device: ?str, neighbor_interface: ?str):
+    def on_polled_state(oper_status: ?str, bgp_status: ?str, neighbor_device: ?str, neighbor_interface: ?str):
         _last_delivery = time.monotonic_ns()
         _stale = False
         publish(oper_status, neighbor_device, neighbor_interface)
@@ -1638,9 +1746,17 @@ actor ServerPortTransformActor(path, update_oper: proc(?y_1_oper.stratoweave_rfs
             if poll is not None:
                 poll.watch(conf.name, None)
             else:
-                new_poll = _CrpdPortPoll(path, dev, on_crpd_state)
+                new_poll = _CrpdPortPoll(path, dev, on_polled_state)
                 new_poll.watch(conf.name, None)
                 _crpd_poll = new_poll
+        elif _NXOS_MODULE in modset:
+            nxos_poll = _nxos_poll
+            if nxos_poll is not None:
+                nxos_poll.watch(conf.name, None)
+            else:
+                new_nxos_poll = _NxosPortPoll(path, dev, on_polled_state)
+                new_nxos_poll.watch(conf.name, None)
+                _nxos_poll = new_nxos_poll
         _subs.declare(want)
 
     def shutdown():
@@ -1648,6 +1764,9 @@ actor ServerPortTransformActor(path, update_oper: proc(?y_1_oper.stratoweave_rfs
         poll = _crpd_poll
         if poll is not None:
             poll.stop()
+        nxos_poll = _nxos_poll
+        if nxos_poll is not None:
+            nxos_poll.stop()
 
     proc def __startup__():
         after _POLL_PERIOD: _watchdog()

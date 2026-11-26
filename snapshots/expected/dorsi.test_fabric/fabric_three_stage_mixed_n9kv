@@ -181,6 +181,9 @@ Dom_list_element = leaf2.System.bgp_items.inst_items.dom_items.Dom_list.create('
 # List /System/bgp-items/inst-items/dom-items/Dom-list[name='egress-loadbalance-resolution-']/af-items/DomAf-list element: 'ipv4-ucast'
 DomAf_list_element = Dom_list_element.af_items.DomAf_list.create('ipv4-ucast')
 
+# List /System/bd-items/bd-items/BD-list element: 'vlan-1'
+BD_list_element = leaf2.System.bd_items.bd_items.BD_list.create('vlan-1')
+
 # List /System/intf-items/phys-items/PhysIf-list element: 'eth1/1'
 PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/1', descr='Link to spine1 [eth1/2]', adminSt='up', mtu=u64(9000), layer='Layer3', userCfgdFlags='admin_layer,admin_mtu,admin_state')
 
@@ -471,6 +474,9 @@ Dom_list_element = leaf3.System.bgp_items.inst_items.dom_items.Dom_list.create('
 
 # List /System/bgp-items/inst-items/dom-items/Dom-list[name='egress-loadbalance-resolution-']/af-items/DomAf-list element: 'ipv4-ucast'
 DomAf_list_element = Dom_list_element.af_items.DomAf_list.create('ipv4-ucast')
+
+# List /System/bd-items/bd-items/BD-list element: 'vlan-1'
+BD_list_element = leaf3.System.bd_items.bd_items.BD_list.create('vlan-1')
 
 # List /System/intf-items/phys-items/PhysIf-list element: 'eth1/1'
 PhysIf_list_element = leaf3.System.intf_items.phys_items.PhysIf_list.create('eth1/1', descr='Link to spine1 [eth1/3]', adminSt='up', mtu=u64(9000), layer='Layer3', userCfgdFlags='admin_layer,admin_mtu,admin_state')
@@ -765,6 +771,9 @@ Dom_list_element = spine1.System.bgp_items.inst_items.dom_items.Dom_list.create(
 
 # List /System/bgp-items/inst-items/dom-items/Dom-list[name='egress-loadbalance-resolution-']/af-items/DomAf-list element: 'ipv4-ucast'
 DomAf_list_element = Dom_list_element.af_items.DomAf_list.create('ipv4-ucast')
+
+# List /System/bd-items/bd-items/BD-list element: 'vlan-1'
+BD_list_element = spine1.System.bd_items.bd_items.BD_list.create('vlan-1')
 
 # List /System/intf-items/phys-items/PhysIf-list element: 'eth1/1'
 PhysIf_list_element = spine1.System.intf_items.phys_items.PhysIf_list.create('eth1/1', descr='Link to leaf1 [ethernet-1/49]', adminSt='up', mtu=u64(9000), layer='Layer3', userCfgdFlags='admin_layer,admin_mtu,admin_state')

@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Acton Documentation Index</title>
+  <style>
+    /* Light theme colors (default) */
+    :root {
+      --text-primary: #24292e;
+      --text-secondary: #6a737d;
+      --text-link: #0366d6;
+      --bg-primary: #ffffff;
+      --bg-secondary: #f6f8fa;
+      --border: #e1e4e8;
+      --code-bg: #f6f8fa;
+      --type-color: #6f42c1;
+      --keyword-color: #d73a49;
+      --generic-color: #e36209;
+      --generic-hover: #fb8532;
+      --shadow: rgba(27, 31, 35, 0.04);
+      --shadow-medium: rgba(27, 31, 35, 0.12);
+    }
+    
+    /* Dark theme colors (activated by OS preference) */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --text-primary: #c9d1d9;
+        --text-secondary: #8b949e;
+        --text-link: #58a6ff;
+        --bg-primary: #0d1117;
+        --bg-secondary: #161b22;
+        --border: #30363d;
+        --code-bg: #161b22;
+        --type-color: #d2a8ff;
+        --keyword-color: #ff7b72;
+        --generic-color: #ffa657;
+        --generic-hover: #ffb77c;
+        --shadow: rgba(0, 0, 0, 0.3);
+        --shadow-medium: rgba(0, 0, 0, 0.5);
+      }
+    }
+    
+    * { box-sizing: border-box; }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.5;
+      color: var(--text-primary);
+      background: var(--bg-primary);
+      margin: 0;
+      padding: 0;
+    }
+    
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    
+    /* Typography */
+    h1 {
+      font-size: 2rem;
+      font-weight: 600;
+      margin: 0 0 1rem 0;
+      padding-bottom: 0.3rem;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    h2 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin: 2.5rem 0 1rem 0;
+    }
+    
+    h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin: 1.5rem 0 0.5rem 0;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+    
+    /* Indent ATTRIBUTES/METHODS headers under classes/actors */
+    .declaration-block h3 {
+      margin-left: 2rem;
+    }
+    
+    p {
+      margin: 0 0 1rem 0;
+    }
+    
+    /* Code */
+    code {
+      font-family: 'SF Mono', Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+      font-size: 0.875em;
+      background: var(--code-bg);
+      padding: 0.2em 0.4em;
+      border-radius: 3px;
+      border: 1px solid var(--border);
+    }
+    
+    h2 code {
+      background: none;
+      padding: 0;
+      font-size: 1em;
+      border: none;
+    }
+    
+    /* Type coloring */
+    .type {
+      color: var(--type-color);
+    }
+    
+    /* Type links */
+    .type-link {
+      color: var(--type-color);
+      text-decoration: none;
+      border-bottom: 1px dotted var(--type-color);
+    }
+    
+    .type-link:hover {
+      text-decoration: none;
+      border-bottom: 1px solid var(--type-color);
+    }
+    
+    .keyword {
+      color: var(--keyword-color);
+      font-weight: 500;
+      font-size: 1rem;
+    }
+    
+    .param-name {
+      font-weight: 500;
+    }
+    
+    .default-value {
+      color: var(--text-secondary);
+    }
+    
+    /* Generic type parameters */
+    .generic-type {
+      color: var(--generic-color);
+      cursor: pointer;
+      transition: color 0.2s ease;
+      position: relative;
+      display: inline-block;
+    }
+    
+    .generic-type:hover,
+    .generic-type.highlight {
+      color: var(--generic-hover);
+      text-decoration: underline;
+      text-decoration-style: dotted;
+    }
+    
+    /* Tooltip for generic types - default position below */
+    .generic-type[data-tooltip]:hover::after {
+      content: attr(data-tooltip);
+      display: block;
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      margin-top: 5px;
+      padding: 8px 12px;
+      background-color: rgba(0, 0, 0, 0.8);
+      color: white;
+      font-size: 0.75rem;
+      font-weight: normal;
+      white-space: pre-wrap;
+      max-width: 700px;
+      min-width: 200px;
+      text-align: left;
+      border-radius: 4px;
+      pointer-events: none;
+      opacity: 0;
+      animation: fadeIn 0.2s ease-in-out forwards;
+      z-index: 1000;
+    }
+    
+    /* Tooltip positioned above when not near top */
+    .generic-type[data-tooltip]:not(.tooltip-below):hover::after {
+      top: auto;
+      bottom: 100%;
+      margin-top: 0;
+      margin-bottom: 5px;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    /* Documentation strings */
+    .docstring {
+      color: var(--text-secondary);
+      margin: 0.5rem 0 1.5rem 0;
+      padding-left: 1rem;
+    }
+    
+    .module-doc {
+      margin: 1rem 0 2rem 0;
+      color: var(--text-primary);
+      font-size: 1.1rem;
+      line-height: 1.6;
+    }
+    
+    /* Sections */
+    .section {
+      margin: 1.5rem 0;
+      padding-left: 2rem;
+    }
+    
+    /* Lists */
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    
+    li {
+      margin: 0.5rem 0;
+    }
+    
+    /* Attribute items */
+    .attribute-item {
+      margin: 0.5rem 0;
+      padding-left: 1rem;
+      border-left: 3px solid var(--border);
+    }
+    
+    .attribute-item code {
+      background: none;
+      padding: 0;
+      border: none;
+    }
+    
+    /* Method items */
+    .method-item {
+      margin: 1rem 0;
+    }
+    
+    .method-signature {
+      font-family: 'SF Mono', Monaco, Consolas, monospace;
+      font-size: 0.875rem;
+      padding-left: 1rem;
+      border-left: 3px solid var(--border);
+    }
+    
+    .method-signature code {
+      background: none;
+      padding: 0;
+      border: none;
+    }
+    
+    .method-doc {
+      color: var(--text-secondary);
+      margin: 0.25rem 0 0 1.5rem;
+      font-size: 0.875rem;
+    }
+    
+    /* Attributes and methods sections */
+    .attributes, .methods {
+      margin: 1.5rem 0 1.5rem 2rem;
+    }
+    
+    /* Declaration blocks - no visual boxes, just spacing */
+    .declaration-block {
+      margin: 2rem 0;
+    }
+    
+    /* Module index styles */
+    .module-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    
+    .module-item {
+      margin: 0.5rem 0;
+      padding: 0.75rem 1rem;
+      background: var(--bg-secondary);
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      transition: all 0.2s ease;
+    }
+    
+    .module-item:hover {
+      border-color: var(--text-link);
+      transform: translateY(-1px);
+    }
+    
+    .module-link {
+      text-decoration: none;
+      color: var(--text-link);
+      font-weight: 500;
+      display: block;
+    }
+    
+    .module-path {
+      font-family: 'SF Mono', Monaco, Consolas, monospace;
+      font-size: 0.875rem;
+    }
+    
+    .module-doc {
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+      margin-top: 0.25rem;
+    }
+    
+    /* Smooth transitions for theme changes */
+    * {
+      transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .container {
+        padding: 1rem;
+      }
+      h1 {
+        font-size: 1.75rem;
+      }
+      h2 {
+        font-size: 1.25rem;
+      }
+    }
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Acton Project Documentation</h1>
+    <p>Documentation for all modules in this project.</p>
+    <ul class="module-list">
+      <li class="module-item">
+        <a href="dorsi_gen/dorsi_gen.html" class="module-link">
+          <span class="module-path">dorsi_gen.dorsi_gen</span>
+          <div class="module-doc"></div>
+        </a>
+      </li>
+    </ul>
+  </div>
+</body>
+</html>

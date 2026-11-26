@@ -35397,6 +35397,20 @@ module Cisco-NX-OS-device {
         default "import";
     }
 
+    typedef rtctrl_RttPType-key {
+        // Added for dorsi: rtctrl_RttPType without its default, for list keys
+        type enumeration {
+            enum import {
+                value 1;
+                description "Import";
+            }
+            enum export {
+                value 2;
+                description "Export";
+            }
+        }
+    }
+
     // ASM Control
     typedef rtdmc_ASMCtrl {
 
@@ -86015,7 +86029,9 @@ module Cisco-NX-OS-device {
         // Type
         leaf type {
 
-            type rtctrl_RttPType;
+            // Changed for dorsi: a list key; StratoWeave makes a key whose
+            // type has a default optional, which does not compile.
+            type rtctrl_RttPType-key;
             description "Type";
         }
 

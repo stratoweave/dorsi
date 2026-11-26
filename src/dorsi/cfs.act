@@ -8,6 +8,7 @@ import dorsi.layers.base_0 as base
 import dorsi.layers.y_0 as y_0
 import dorsi.layers.y_0_oper as y_0_oper
 import dorsi.layers.y_1_oper as y_1_oper
+import dorsi.layers.y_1_loose as y_1_loose
 # TODO: this import is required by the compiler, maybe related to
 # https://github.com/actonlang/acton/issues/2390
 import yang.identityref
@@ -137,8 +138,9 @@ def irb_index(evi: int) -> int:
 # SR Linux
 _EOS = "AristaEOS_4_36_3_2M"
 _CRPD = "JuniperCRPD_24_4R1_9"
+_NXOS = "CiscoNXOS_10_6_4M"
 # Device types that take the EVPN-VXLAN overlay
-_OVERLAY_TYPES = {"NokiaSRLinux_25_3_2", _EOS, _CRPD}
+_OVERLAY_TYPES = {"NokiaSRLinux_25_3_2", _EOS, _CRPD, _NXOS}
 # Device types that bridge a network in an internal VLAN of the switch
 _VLAN_BRIDGING_TYPES = {_EOS, _CRPD}
 
@@ -213,6 +215,28 @@ def _ipv4_int(address: str) -> int:
 def _ipv4_subnet(address: str, prefix_length: int) -> int:
     """The network part of an IPv4 address, validated by is_ipv4_address."""
     return _ipv4_int(address) >> (32 - prefix_length) if prefix_length > 0 else 0
+
+
+def nxos_network_vlans(f: y_0.ip_fabric__ip_fabric__fabric_entry, leaf: str, tenant: str, network: str) -> list[int]:
+    """The VLAN tags of the servers of a network on a leaf, without
+    repetition, in the order of the servers."""
+    res: list[int] = []
+    for server in f.server:
+        if leaf in server_leaf_ports(server):
+            for att in server.attachment:
+                tag = att.vlan
+                if att.tenant == tenant and att.network == network and tag is not None and int(tag) not in res:
+                    res.append(int(tag))
+    return res
+
+
+def nxos_network_vlan(f: y_0.ip_fabric__ip_fabric__fabric_entry, leaf: str, tenant: str, network: str, vni: int) -> int:
+    """The VLAN of a network on a Cisco NX-OS leaf. NX-OS bridges a network
+    in one VLAN of the switch, which is the VLAN tag of its servers there:
+    dorsi does not translate VLAN tags on NX-OS. A network whose servers are
+    all untagged there takes its internal VLAN."""
+    tags = nxos_network_vlans(f, leaf, tenant, network)
+    return tags[0] if len(tags) > 0 else overlay_vlan(vni)
 
 
 def server_leaf_ports(server: y_0.ip_fabric__ip_fabric__fabric__server_entry) -> dict[str, list[str]]:
@@ -411,11 +435,12 @@ def validate_overlay(f: y_0.ip_fabric__ip_fabric__fabric_entry, switches: dict[s
     if len(f.tenant) == 0:
         return errors
 
-    # The overlay is built on SR Linux, Arista EOS and Juniper cRPD: every
+    # The overlay is built on SR Linux, Arista EOS, Juniper cRPD and Cisco
+    # NX-OS: every
     # switch carries EVPN routes, the spines too
     for sw in f.switch:
         if sw.type not in _OVERLAY_TYPES:
-            errors.append("switch {sw.name}: the EVPN overlay is supported on NokiaSRLinux_25_3_2, {_EOS} and {_CRPD} only, not {sw.type}")
+            errors.append("switch {sw.name}: the EVPN overlay is supported on NokiaSRLinux_25_3_2, {_EOS}, {_CRPD} and {_NXOS} only, not {sw.type}")
 
     # Identifiers derived or set must be unique in the fabric, those of VRFs
     # and networks together: they share the VNIs, EVIs and the names of
@@ -459,7 +484,18 @@ def validate_overlay(f: y_0.ip_fabric__ip_fabric__fabric_entry, switches: dict[s
             leaves = network_leaves(f, tenant.name, network.name)
             for leaf in leaves:
                 sw = switches.get(leaf)
-                if sw is not None and sw.type in _VLAN_BRIDGING_TYPES:
+                if sw is not None and sw.type == _NXOS:
+                    tags = nxos_network_vlans(f, leaf, tenant.name, network.name)
+                    if len(tags) > 1:
+                        errors.append("{what}: its servers on {leaf} ({_NXOS}) use VLANs {", ".join([str(t) for t in tags])}, they must use one VLAN there")
+                    nxos_vlan = nxos_network_vlan(f, leaf, tenant.name, network.name, vni)
+                    if leaf not in leaf_vlans:
+                        leaf_vlans[leaf] = {}
+                    if nxos_vlan in leaf_vlans[leaf]:
+                        errors.append("{what}: its VLAN {nxos_vlan} on {leaf} ({_NXOS}) is also that of {leaf_vlans[leaf][nxos_vlan]}, the switch bridges a VLAN in one network")
+                    else:
+                        leaf_vlans[leaf][nxos_vlan] = what
+                elif sw is not None and sw.type in _VLAN_BRIDGING_TYPES:
                     if leaf not in leaf_vlans:
                         leaf_vlans[leaf] = {}
                     if vlan in leaf_vlans[leaf]:
@@ -476,8 +512,8 @@ def validate_overlay(f: y_0.ip_fabric__ip_fabric__fabric_entry, switches: dict[s
                 irb = irb_index(overlay_evi(vni))
                 for leaf in leaves:
                     sw = switches.get(leaf)
-                    if sw is not None and sw.type == _CRPD:
-                        errors.append("{what}: a routed network cannot be placed on {leaf} ({_CRPD}) yet")
+                    if sw is not None and (sw.type == _CRPD or sw.type == _NXOS):
+                        errors.append("{what}: a routed network cannot be placed on {leaf} ({sw.type}) yet")
                     elif sw is not None and sw.type == _EOS:
                         # The gateway of EOS is on the VLAN interface of the
                         # internal VLAN, checked above
@@ -573,6 +609,8 @@ def validate_overlay(f: y_0.ip_fabric__ip_fabric__fabric_entry, switches: dict[s
                             # VLAN needs no translation
                             if other != "network {att.tenant}/{att.network}":
                                 errors.append("{what}: its VLAN {tag} on {leaf} is the internal VLAN of {other}, the switch would bridge it there")
+                if sw is not None and sw.type == _NXOS and server_uses_lag(server, leaf_ports[leaf]):
+                    errors.append("{what}: a server on a LAG cannot be attached on {leaf} ({_NXOS}) yet")
                 if sw is not None and sw.type == _CRPD:
                     # cRPD bridges a server port as a VLAN subinterface; an
                     # untagged port and a LAG did not come up in the lab
@@ -674,6 +712,9 @@ class Fabric(base.Fabric):
         # The port or LAG of every server on each of its leaves, by server and
         # leaf, for the networks it is attached to
         server_interfaces: dict[str, dict[str, str]] = {}
+        # The server ports of Cisco NX-OS leaves by leaf and port, which
+        # carry the VLANs of their networks (see trunk-vlan)
+        nxos_ports: dict[str, dict[str, y_1_loose.stratoweave_rfs__rfs__server_port_entry]] = {}
         for server in i.server:
             print("CFS fabric server", server.name, server.connectivity.profile)
             server_interfaces[server.name] = {}
@@ -690,6 +731,10 @@ class Fabric(base.Fabric):
                         port = o.rfs.create(leaf).server_port.create(link.switch_port, server=server.name, server_port=link.server_port, profile=server.connectivity.profile)
                         if uses_lag:
                             port.lag = interface
+                        if switches[leaf].type == _NXOS:
+                            if leaf not in nxos_ports:
+                                nxos_ports[leaf] = {}
+                            nxos_ports[leaf][link.switch_port] = port
                 server_interfaces[server.name][leaf] = interface
 
         # A network is placed on the leaves of the servers attached to it,
@@ -710,7 +755,16 @@ class Fabric(base.Fabric):
                         for leaf, interface in server_interfaces[server.name].items():
                             rd = overlay_route_distinguisher(int(switches[leaf].id), evi)
                             mac_vrf = o.rfs.create(leaf).mac_vrf.create(name, u64(vni), u64(evi), rd, route_target)
-                            mac_vrf.vlan = u64(overlay_vlan(vni))
+                            if switches[leaf].type == _NXOS:
+                                net_vlan = nxos_network_vlan(i, leaf, tenant.name, network.name, vni)
+                                mac_vrf.vlan = u64(net_vlan)
+                                nxos_port = nxos_ports[leaf][interface]
+                                if u64(net_vlan) not in nxos_port.trunk_vlan:
+                                    nxos_port.trunk_vlan.append(u64(net_vlan))
+                                if att.vlan is None:
+                                    nxos_port.native_vlan = u64(net_vlan)
+                            else:
+                                mac_vrf.vlan = u64(overlay_vlan(vni))
                             mac_vrf.interface.create(interface).vlan = att.vlan
                             vrf = network.vrf
                             gateway = network.gateway

@@ -336,6 +336,8 @@ SRC_DNODE_CHILD_49: DList = DList(module='dorsi-rfs', namespace='http://example.
     DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='server-port', config=True, is_key=False, mandatory=True, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[]), adata_name='server_port'),
     DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='profile', config=True, description='Connectivity profile of the server.', is_key=False, mandatory=True, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[]), adata_name='profile'),
     DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='lag', config=True, description='The server-lag the port is a member of.', is_key=False, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[]), adata_name='lag'),
+    DLeafList(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='trunk-vlan', config=True, description='The VLANs of the networks of the port, on a switch that\nsets the VLANs a trunk carries in one value, Cisco NX-OS,\nwhere the network VLAN is the VLAN tag of its servers.', min_elements=0, ordered_by='system', type=DTypeIntegerUnsigned(name='uint16', description=None, reference=None, units=None, exts=[], builtin_type='uint16', default=None, ranges=Ranges([(1, 4094)])), adata_name='trunk_vlan'),
+    DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='native-vlan', config=True, description='The VLAN of the network that the port carries untagged,\non Cisco NX-OS, among trunk-vlan.', is_key=False, mandatory=False, type=DTypeIntegerUnsigned(name='uint16', description=None, reference=None, units=None, exts=[], builtin_type='uint16', default=None, ranges=Ranges([(1, 4094)])), adata_name='native_vlan'),
     DContainer(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='state', config=False, description='Operational state of the leaf port, polled from the\ndevice.', presence=False, adata_name='state', children=[
         DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='oper-status', config=False, is_key=False, mandatory=False, type=DTypeEnum(name='enumeration', description=None, reference=None, units=None, exts=[], builtin_type='enumeration', default=None, name_to_val={'up':0, 'down':1, 'unknown':2}), adata_name='oper_status'),
         DContainer(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='lldp-neighbor', config=False, description='The neighbor that LLDP reports on the port. Empty when\nthe server sends no LLDP, which many do not.', presence=False, adata_name='lldp_neighbor', children=[
@@ -784,6 +786,23 @@ SRC_YANG_0: str = r"""module dorsi-rfs {
             leaf lag {
                 description "The server-lag the port is a member of.";
                 type string;
+            }
+            leaf-list trunk-vlan {
+                description
+                    "The VLANs of the networks of the port, on a switch that
+                     sets the VLANs a trunk carries in one value, Cisco NX-OS,
+                     where the network VLAN is the VLAN tag of its servers.";
+                type uint16 {
+                    range "1..4094";
+                }
+            }
+            leaf native-vlan {
+                description
+                    "The VLAN of the network that the port carries untagged,
+                     on Cisco NX-OS, among trunk-vlan.";
+                type uint16 {
+                    range "1..4094";
+                }
             }
 
             container state {
@@ -3062,6 +3081,7 @@ _ID_dorsi_rfs__mac_vrf: ygdata.Id = ygdata.Id(NS_dorsi_rfs, 'mac-vrf')
 _ID_dorsi_rfs__management_address: ygdata.Id = ygdata.Id(NS_dorsi_rfs, 'management-address')
 _ID_dorsi_rfs__management_gateway: ygdata.Id = ygdata.Id(NS_dorsi_rfs, 'management-gateway')
 _ID_dorsi_rfs__name: ygdata.Id = ygdata.Id(NS_dorsi_rfs, 'name')
+_ID_dorsi_rfs__native_vlan: ygdata.Id = ygdata.Id(NS_dorsi_rfs, 'native-vlan')
 _ID_dorsi_rfs__oper_status: ygdata.Id = ygdata.Id(NS_dorsi_rfs, 'oper-status')
 _ID_dorsi_rfs__overlay_peer: ygdata.Id = ygdata.Id(NS_dorsi_rfs, 'overlay-peer')
 _ID_dorsi_rfs__peer_address: ygdata.Id = ygdata.Id(NS_dorsi_rfs, 'peer-address')
@@ -3075,6 +3095,7 @@ _ID_dorsi_rfs__server: ygdata.Id = ygdata.Id(NS_dorsi_rfs, 'server')
 _ID_dorsi_rfs__server_lag: ygdata.Id = ygdata.Id(NS_dorsi_rfs, 'server-lag')
 _ID_dorsi_rfs__server_port: ygdata.Id = ygdata.Id(NS_dorsi_rfs, 'server-port')
 _ID_dorsi_rfs__state: ygdata.Id = ygdata.Id(NS_dorsi_rfs, 'state')
+_ID_dorsi_rfs__trunk_vlan: ygdata.Id = ygdata.Id(NS_dorsi_rfs, 'trunk-vlan')
 _ID_dorsi_rfs__vlan: ygdata.Id = ygdata.Id(NS_dorsi_rfs, 'vlan')
 _ID_dorsi_rfs__vni: ygdata.Id = ygdata.Id(NS_dorsi_rfs, 'vni')
 _ID_stratoweave_rfs__adapter: ygdata.Id = ygdata.Id(NS_stratoweave_rfs, 'adapter')
@@ -5194,14 +5215,18 @@ class stratoweave_rfs__rfs__server_port_entry(yadata.MNode):
     server_port: ?str
     profile: ?str
     lag: ?str
+    trunk_vlan: list[u64]
+    native_vlan: ?u64
     state: stratoweave_rfs__rfs__server_port__state
 
-    mut def __init__(self, name: str, server: ?str=None, server_port: ?str=None, profile: ?str=None, lag: ?str=None, state: ?stratoweave_rfs__rfs__server_port__state=None) -> None:
+    mut def __init__(self, name: str, server: ?str=None, server_port: ?str=None, profile: ?str=None, lag: ?str=None, trunk_vlan: ?list[u64]=None, native_vlan: ?u64=None, state: ?stratoweave_rfs__rfs__server_port__state=None) -> None:
         self.name = name
         self.server = server
         self.server_port = server_port
         self.profile = profile
         self.lag = lag
+        self.trunk_vlan = trunk_vlan if trunk_vlan is not None else []
+        self.native_vlan = native_vlan
         self.state = state if state is not None else stratoweave_rfs__rfs__server_port__state()
 
     mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
@@ -5209,7 +5234,7 @@ class stratoweave_rfs__rfs__server_port_entry(yadata.MNode):
 
     @staticmethod
     mut def from_gdata(n: ygdata.Node) -> stratoweave_rfs__rfs__server_port_entry:
-        return stratoweave_rfs__rfs__server_port_entry(name=n.get_str(_ID_dorsi_rfs__name), server=n.get_opt_str(_ID_dorsi_rfs__server), server_port=n.get_opt_str(_ID_dorsi_rfs__server_port), profile=n.get_opt_str(_ID_dorsi_rfs__profile), lag=n.get_opt_str(_ID_dorsi_rfs__lag), state=stratoweave_rfs__rfs__server_port__state.from_gdata(n.get_opt_cnt(_ID_dorsi_rfs__state)))
+        return stratoweave_rfs__rfs__server_port_entry(name=n.get_str(_ID_dorsi_rfs__name), server=n.get_opt_str(_ID_dorsi_rfs__server), server_port=n.get_opt_str(_ID_dorsi_rfs__server_port), profile=n.get_opt_str(_ID_dorsi_rfs__profile), lag=n.get_opt_str(_ID_dorsi_rfs__lag), trunk_vlan=n.get_opt_u64s(_ID_dorsi_rfs__trunk_vlan), native_vlan=n.get_opt_u64(_ID_dorsi_rfs__native_vlan), state=stratoweave_rfs__rfs__server_port__state.from_gdata(n.get_opt_cnt(_ID_dorsi_rfs__state)))
 
     mut def copy(self) -> stratoweave_rfs__rfs__server_port_entry:
         """Create a deep copy of this adata object"""
@@ -5220,7 +5245,7 @@ class stratoweave_rfs__rfs__server_port(yadata.MKeyedList[str, stratoweave_rfs__
     mut def __init__(self, elements: list[stratoweave_rfs__rfs__server_port_entry]=[]) -> None:
         yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
 
-    mut def create(self, key: str, server: ?str=None, server_port: ?str=None, profile: ?str=None, lag: ?str=None) -> stratoweave_rfs__rfs__server_port_entry:
+    mut def create(self, key: str, server: ?str=None, server_port: ?str=None, profile: ?str=None, lag: ?str=None, native_vlan: ?u64=None) -> stratoweave_rfs__rfs__server_port_entry:
         e = self.get(key)
         if e is not None:
             if server is not None:
@@ -5231,9 +5256,11 @@ class stratoweave_rfs__rfs__server_port(yadata.MKeyedList[str, stratoweave_rfs__
                 e.profile = profile
             if lag is not None:
                 e.lag = lag
+            if native_vlan is not None:
+                e.native_vlan = native_vlan
             return e
         name = key
-        res = stratoweave_rfs__rfs__server_port_entry(name=name, server=server, server_port=server_port, profile=profile, lag=lag)
+        res = stratoweave_rfs__rfs__server_port_entry(name=name, server=server, server_port=server_port, profile=profile, lag=lag, native_vlan=native_vlan)
         self._append(res)
         return res
 
@@ -8123,6 +8150,8 @@ class stratoweave_rfs__rfs__server_port_entry_subs(SubscriptionNode):
     server_port: SubscriptionNode
     profile: SubscriptionNode
     lag: SubscriptionNode
+    trunk_vlan: SubscriptionNode
+    native_vlan: SubscriptionNode
     state: stratoweave_rfs__rfs__server_port__state_subs
 
     pure def __init__(self, path: ?SubscriptionPath=None) -> None:
@@ -8132,10 +8161,12 @@ class stratoweave_rfs__rfs__server_port_entry_subs(SubscriptionNode):
         self.server_port = SubscriptionNode(SubscriptionPath(_ID_dorsi_rfs__server_port, parent=path))
         self.profile = SubscriptionNode(SubscriptionPath(_ID_dorsi_rfs__profile, parent=path))
         self.lag = SubscriptionNode(SubscriptionPath(_ID_dorsi_rfs__lag, parent=path))
+        self.trunk_vlan = SubscriptionNode(SubscriptionPath(_ID_dorsi_rfs__trunk_vlan, parent=path))
+        self.native_vlan = SubscriptionNode(SubscriptionPath(_ID_dorsi_rfs__native_vlan, parent=path))
         self.state = stratoweave_rfs__rfs__server_port__state_subs(SubscriptionPath(_ID_dorsi_rfs__state, parent=path))
 
     pure def _direct_children(self) -> list[SubscriptionNode]:
-        direct: list[SubscriptionNode] = [self.name, self.server, self.server_port, self.profile, self.lag, self.state]
+        direct: list[SubscriptionNode] = [self.name, self.server, self.server_port, self.profile, self.lag, self.trunk_vlan, self.native_vlan, self.state]
         return direct
 
 _breaker145: None = None
@@ -8165,6 +8196,8 @@ class stratoweave_rfs__rfs__server_port_subs(SubscriptionNode):
     server_port: SubscriptionNode
     profile: SubscriptionNode
     lag: SubscriptionNode
+    trunk_vlan: SubscriptionNode
+    native_vlan: SubscriptionNode
     state: stratoweave_rfs__rfs__server_port__state_subs
     pure def __init__(self, path: ?SubscriptionPath=None) -> None:
         SubscriptionNode.__init__(self, path)
@@ -8173,6 +8206,8 @@ class stratoweave_rfs__rfs__server_port_subs(SubscriptionNode):
         self.server_port = SubscriptionNode(SubscriptionPath(_ID_dorsi_rfs__server_port, parent=path))
         self.profile = SubscriptionNode(SubscriptionPath(_ID_dorsi_rfs__profile, parent=path))
         self.lag = SubscriptionNode(SubscriptionPath(_ID_dorsi_rfs__lag, parent=path))
+        self.trunk_vlan = SubscriptionNode(SubscriptionPath(_ID_dorsi_rfs__trunk_vlan, parent=path))
+        self.native_vlan = SubscriptionNode(SubscriptionPath(_ID_dorsi_rfs__native_vlan, parent=path))
         self.state = stratoweave_rfs__rfs__server_port__state_subs(SubscriptionPath(_ID_dorsi_rfs__state, parent=path))
 
     pure def entry(self, name: str) -> stratoweave_rfs__rfs__server_port_entry_subs:
@@ -8190,7 +8225,7 @@ class stratoweave_rfs__rfs__server_port_subs(SubscriptionNode):
         return ygdata.Dst(a.on_update, root=self.filt(), synced=a.synced)
 
     pure def _direct_children(self) -> list[SubscriptionNode]:
-        direct: list[SubscriptionNode] = [self.name, self.server, self.server_port, self.profile, self.lag, self.state]
+        direct: list[SubscriptionNode] = [self.name, self.server, self.server_port, self.profile, self.lag, self.trunk_vlan, self.native_vlan, self.state]
         return direct
 
 _breaker146: None = None
