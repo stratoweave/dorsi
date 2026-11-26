@@ -770,6 +770,14 @@ def _is_device(seen: str, expected: str) -> bool:
     return seen == expected or seen.startswith(expected + ".")
 
 
+def _is_interface(seen: str, expected: str) -> bool:
+    """Whether the LLDP port ID `seen` is the port `expected`. NX-OS names a
+    port eth1/2 in its native model but sends Ethernet1/2 over LLDP."""
+    if seen == expected:
+        return True
+    return expected.startswith("eth") and expected[3:4] in "0123456789" and "/" in expected and seen == "Ethernet" + expected[3:]
+
+
 def end_cabling_status(oper: ?str, seen_device: ?str, seen_interface: ?str, expected_device: str, expected_interface: str) -> ?str:
     """Whether one end of a link sees the switch and port it should over LLDP.
     None when the end is not up, LLDP needs a working link."""
@@ -778,7 +786,7 @@ def end_cabling_status(oper: ?str, seen_device: ?str, seen_interface: ?str, expe
     if seen_device is None and seen_interface is None:
         return "no-neighbor"
     if seen_device is not None and seen_interface is not None:
-        if _is_device(seen_device, expected_device) and seen_interface == expected_interface:
+        if _is_device(seen_device, expected_device) and _is_interface(seen_interface, expected_interface):
             return "ok"
     return "mismatch"
 

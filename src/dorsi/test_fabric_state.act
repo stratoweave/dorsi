@@ -17,6 +17,13 @@ def _test_end_cabling_other_port():
 def _test_end_cabling_name_prefix_is_another_switch():
     testing.assertEqual(cfs.end_cabling_status("up", "spine10", "ethernet-1/1", "spine1", "ethernet-1/1"), "mismatch")
 
+def _test_end_cabling_nxos_port():
+    # NX-OS sends Ethernet1/2 over LLDP for its port eth1/2
+    testing.assertEqual(cfs.end_cabling_status("up", "leaf2", "Ethernet1/2", "leaf2", "eth1/2"), "ok")
+    testing.assertEqual(cfs.end_cabling_status("up", "leaf2", "Ethernet1/3", "leaf2", "eth1/2"), "mismatch")
+    # cRPD names its ports eth1 and sends that name itself
+    testing.assertEqual(cfs.end_cabling_status("up", "spine1", "Ethernet1", "spine1", "eth1"), "mismatch")
+
 def _test_end_cabling_no_neighbor():
     testing.assertEqual(cfs.end_cabling_status("up", None, None, "spine1", "ethernet-1/1"), "no-neighbor")
 
