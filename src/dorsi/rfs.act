@@ -98,6 +98,20 @@ def _nxos_ipv4_address(dev: nxos1064.root, vrf: str, interface: str, address: st
 def _nxos_bgp_domain(dev: nxos1064.root, name: str):
     return dev.System.bgp_items.inst_items.dom_items.Dom_list.create(name)
 
+def _nxos_vrf(dev: nxos1064.root, name: str):
+    """A VRF with its domain, of the same name"""
+    vrf = dev.System.inst_items.Inst_list.create(name)
+    vrf.dom_items.Dom_list.create(name)
+    return vrf
+
+def _nxos_svi(dev: nxos1064.root, vlan: int, vrf: str) -> str:
+    """The VLAN interface of a VLAN, up, in a VRF. Returns its name."""
+    name = "vlan{vlan}"
+    svi = dev.System.intf_items.svi_items.If_list.create(name)
+    svi.adminSt = "up"
+    svi.rtvrfMbr_items.tDn = "/System/inst-items/Inst-list[name='{vrf}']"
+    return name
+
 def _nxos_route_map(dev: nxos1064.root, name: str):
     """A route map with a single permit entry"""
     entry = dev.System.rpm_items.rtmap_items.Rule_list.create(name).ent_items.Entry_list.create(u64(10))
@@ -380,8 +394,12 @@ class FabricBaseConfig(base.FabricBaseConfig):
             template_af.rtctrl_items.RtCtrlP_list.create("in").rtMap = _FABRIC_IMPORT_POLICY
             _nxos_bgp_domain(dev, _NXOS_BGP_INTERNAL_DOMAIN).af_items.DomAf_list.create(_NXOS_IPV4_UNICAST)
 
-            # VLAN 1, which NX-OS has on every switch and does not remove
+            # VLAN 1 and its VLAN interface, shut, and the VRFs NX-OS has of
+            # its own, which it does not remove
             dev.System.bd_items.bd_items.BD_list.create(nxos_vlan(1))
+            dev.System.intf_items.svi_items.If_list.create("vlan1").adminSt = "down"
+            for vrf_name in [_NXOS_DEFAULT_VRF, _NXOS_MGMT_VRF, _NXOS_BGP_INTERNAL_DOMAIN]:
+                _nxos_vrf(dev, vrf_name)
 
             if i.evpn:
                 # EVPN on the same eBGP sessions as the underlay, with the
@@ -403,6 +421,9 @@ class FabricBaseConfig(base.FabricBaseConfig):
                     vtep.adminSt = "enabled"
                     vtep.hostReach = "bgp"
                     vtep.sourceInterface = _NXOS_LOOPBACK
+                    # The MAC address of the anycast gateways, as NX-OS
+                    # writes it
+                    dev.System.hmm_items.fwdinst_items.amac = _ANYCAST_GW_MAC.upper()
             return dev
 
         if _EOS_MODULE in di.modules:
@@ -1506,8 +1527,6 @@ class MacVrf(base.MacVrf):
         if _NXOS_MODULE in di.modules:
             if i.vlan is None:
                 raise ValueError("mac-vrf {i.name}: Cisco NX-OS needs the VLAN of the network")
-            if i.irb is not None:
-                raise ValueError("mac-vrf {i.name}: dorsi cannot route a network on Cisco NX-OS yet")
             dev = nxos1064.root()
             # The VLAN of the network and its VNI on the VTEP, flooded by
             # ingress replication. The server ports trunk the VLAN (see
@@ -1522,6 +1541,17 @@ class MacVrf(base.MacVrf):
             rt = nxos_route_target(i.route_target)
             evi.rttp_items.RttP_list.create("import").ent_items.RttEntry_list.create(rt)
             evi.rttp_items.RttP_list.create("export").ent_items.RttEntry_list.create(rt)
+
+            nxos_irb = i.irb
+            if nxos_irb is not None:
+                # The anycast gateway, on the VLAN interface of the network
+                # in its VRF
+                irb_vrf = nxos_irb.vrf
+                if irb_vrf is None:
+                    raise ValueError("mac-vrf {i.name}: Cisco NX-OS needs the VRF of the network")
+                svi = _nxos_svi(dev, int(i.vlan!), irb_vrf!)
+                _nxos_ipv4_address(dev, irb_vrf!, svi, nxos_irb.gateway)
+                dev.System.hmm_items.fwdinst_items.if_items.FwdIf_list.create(svi).mode = "anycastGW"
             return dev
 
         raise UnsupportedDevice()
@@ -1594,6 +1624,37 @@ class IpVrf(base.IpVrf):
             tc.config.src_protocol = eos436.openconfig_policy_types_DIRECTLY_CONNECTED
             tc.config.dst_protocol = eos436.openconfig_policy_types_BGP
             tc.config.address_family = eos436.openconfig_types_IPV4
+            return dev
+
+        if _NXOS_MODULE in di.modules:
+            if i.vlan is None:
+                raise ValueError("ip-vrf {i.name}: Cisco NX-OS needs the VLAN of its layer 3 VNI")
+            l3_vlan = int(i.vlan!)
+            dev = nxos1064.root()
+            # The VRF with its layer 3 VNI, and its routes in EVPN
+            vrf = _nxos_vrf(dev, i.name)
+            vrf.encap = "vxlan-{i.vni}"
+            dom = vrf.dom_items.Dom_list.create(i.name)
+            dom.rd = nxos_route_distinguisher(i.route_distinguisher)
+            ctrl = dom.af_items.DomAf_list.create(_NXOS_IPV4_UNICAST).ctrl_items.AfCtrl_list.create(_NXOS_L2VPN_EVPN)
+            rt = nxos_route_target(i.route_target)
+            ctrl.rttp_items.RttP_list.create("import").ent_items.RttEntry_list.create(rt)
+            ctrl.rttp_items.RttP_list.create("export").ent_items.RttEntry_list.create(rt)
+
+            # The layer 3 VNI is routed on a VLAN of its own and its VLAN
+            # interface, on the VTEP as the VNI of the VRF
+            dev.System.bd_items.bd_items.BD_list.create(nxos_vlan(l3_vlan)).accEncap = "vxlan-{i.vni}"
+            svi = _nxos_svi(dev, l3_vlan, i.name)
+            dev.System.ipv4_items.inst_items.dom_items.Dom_list.create(i.name).if_items.If_list.create(svi).forward = "enabled"
+            dev.System.eps_items.epId_items.Ep_list.create(u64(_NXOS_VTEP)).nws_items.vni_items.Nw_list.create(i.vni).associateVrfFlag = True
+
+            # BGP in the VRF: the subnets of its networks, its connected
+            # routes, go out as IP prefix routes
+            af = _nxos_bgp_domain(dev, i.name).af_items.DomAf_list.create(_NXOS_IPV4_UNICAST)
+            af.advertL2vpnEvpn = "enabled"
+            leak = af.interleak_items.InterLeakP_list.create(("direct", "none"))
+            leak.asn = "none"
+            leak.rtMap = _FABRIC_IMPORT_POLICY
             return dev
 
         raise UnsupportedDevice()

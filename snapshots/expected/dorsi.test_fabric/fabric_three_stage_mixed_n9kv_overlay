@@ -254,21 +254,6 @@ Dom_list_element = leaf2.System.bgp_items.inst_items.dom_items.Dom_list.create('
 # List /System/bgp-items/inst-items/dom-items/Dom-list[name='egress-loadbalance-resolution-']/af-items/DomAf-list element: 'ipv4-ucast'
 DomAf_list_element = Dom_list_element.af_items.DomAf_list.create('ipv4-ucast')
 
-# List /System/evpn-items/bdevi-items/BDEvi-list element: 'vxlan-15906'
-BDEvi_list_element = leaf2.System.evpn_items.bdevi_items.BDEvi_list.create('vxlan-15906', rd='rd:ipv4-nn2:10.0.0.2:15907')
-
-# List /System/evpn-items/bdevi-items/BDEvi-list[encap='vxlan-15906']/rttp-items/RttP-list element: 'export'
-RttP_list_element = BDEvi_list_element.rttp_items.RttP_list.create('export')
-
-# List /System/evpn-items/bdevi-items/BDEvi-list[encap='vxlan-15906']/rttp-items/RttP-list[type='export']/ent-items/RttEntry-list element: 'route-target:as2-nn2:45278:15906'
-RttEntry_list_element = RttP_list_element.ent_items.RttEntry_list.create('route-target:as2-nn2:45278:15906')
-
-# List /System/evpn-items/bdevi-items/BDEvi-list[encap='vxlan-15906']/rttp-items/RttP-list element: 'import'
-RttP_list_element = BDEvi_list_element.rttp_items.RttP_list.create('import')
-
-# List /System/evpn-items/bdevi-items/BDEvi-list[encap='vxlan-15906']/rttp-items/RttP-list[type='import']/ent-items/RttEntry-list element: 'route-target:as2-nn2:45278:15906'
-RttEntry_list_element = RttP_list_element.ent_items.RttEntry_list.create('route-target:as2-nn2:45278:15906')
-
 # List /System/evpn-items/bdevi-items/BDEvi-list element: 'vxlan-268182'
 BDEvi_list_element = leaf2.System.evpn_items.bdevi_items.BDEvi_list.create('vxlan-268182', rd='rd:ipv4-nn2:10.0.0.2:6043')
 
@@ -284,14 +269,14 @@ RttP_list_element = BDEvi_list_element.rttp_items.RttP_list.create('import')
 # List /System/evpn-items/bdevi-items/BDEvi-list[encap='vxlan-268182']/rttp-items/RttP-list[type='import']/ent-items/RttEntry-list element: 'route-target:as2-nn4:45278:268182'
 RttEntry_list_element = RttP_list_element.ent_items.RttEntry_list.create('route-target:as2-nn4:45278:268182')
 
+# Container: /System/hmm-items/fwdinst-items
+leaf2.System.hmm_items.fwdinst_items.amac = '02:DC:00:00:00:01'
+
 # List /System/bd-items/bd-items/BD-list element: 'vlan-1'
 BD_list_element = leaf2.System.bd_items.bd_items.BD_list.create('vlan-1')
 
 # List /System/bd-items/bd-items/BD-list element: 'vlan-268'
 BD_list_element = leaf2.System.bd_items.bd_items.BD_list.create('vlan-268', accEncap='vxlan-268182')
-
-# List /System/bd-items/bd-items/BD-list element: 'vlan-30'
-BD_list_element = leaf2.System.bd_items.bd_items.BD_list.create('vlan-30', accEncap='vxlan-15906')
 
 # List /System/intf-items/phys-items/PhysIf-list element: 'eth1/1'
 PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/1', descr='Link to spine1 [eth1/2]', adminSt='up', mtu=u64(9000), layer='Layer3', userCfgdFlags='admin_layer,admin_mtu,admin_state')
@@ -360,7 +345,7 @@ PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth
 PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/29', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
 
 # List /System/intf-items/phys-items/PhysIf-list element: 'eth1/3'
-PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/3', descr='Server server2 [eth1] (single-homed)', adminSt='up', mtu=u64(1500), mode='trunk', layer='Layer2', trunkVlans='30,268', nativeVlan='vlan-268', userCfgdFlags='')
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/3', descr='Server server2 [eth1] (single-homed)', adminSt='up', mtu=u64(1500), mode='trunk', layer='Layer2', trunkVlans='268', nativeVlan='vlan-268', userCfgdFlags='')
 
 # List /System/intf-items/phys-items/PhysIf-list element: 'eth1/30'
 PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/30', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
@@ -488,50 +473,65 @@ PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth
 # List /System/intf-items/lb-items/LbRtdIf-list element: 'lo0'
 LbRtdIf_list_element = leaf2.System.intf_items.lb_items.LbRtdIf_list.create('lo0', adminSt='up')
 
+# List /System/intf-items/svi-items/If-list element: 'vlan1'
+If_list_element = leaf2.System.intf_items.svi_items.If_list.create('vlan1', adminSt='down')
+
 # List /System/ipv4-items/inst-items/dom-items/Dom-list element: 'default'
 Dom_list_element_2 = leaf2.System.ipv4_items.inst_items.dom_items.Dom_list.create('default')
 
 # List /System/ipv4-items/inst-items/dom-items/Dom-list[name='default']/if-items/If-list element: 'eth1/1'
-If_list_element = Dom_list_element_2.if_items.If_list.create('eth1/1')
+If_list_element_2 = Dom_list_element_2.if_items.If_list.create('eth1/1')
 
 # List /System/ipv4-items/inst-items/dom-items/Dom-list[name='default']/if-items/If-list[id='eth1/1']/addr-items/Addr-list element: '10.100.1.2/31'
-Addr_list_element = If_list_element.addr_items.Addr_list.create('10.100.1.2/31')
+Addr_list_element = If_list_element_2.addr_items.Addr_list.create('10.100.1.2/31')
 
 # List /System/ipv4-items/inst-items/dom-items/Dom-list[name='default']/if-items/If-list element: 'eth1/2'
-If_list_element = Dom_list_element_2.if_items.If_list.create('eth1/2')
+If_list_element_2 = Dom_list_element_2.if_items.If_list.create('eth1/2')
 
 # List /System/ipv4-items/inst-items/dom-items/Dom-list[name='default']/if-items/If-list[id='eth1/2']/addr-items/Addr-list element: '10.100.1.4/31'
-Addr_list_element = If_list_element.addr_items.Addr_list.create('10.100.1.4/31')
+Addr_list_element = If_list_element_2.addr_items.Addr_list.create('10.100.1.4/31')
 
 # List /System/ipv4-items/inst-items/dom-items/Dom-list[name='default']/if-items/If-list element: 'lo0'
-If_list_element = Dom_list_element_2.if_items.If_list.create('lo0')
+If_list_element_2 = Dom_list_element_2.if_items.If_list.create('lo0')
 
 # List /System/ipv4-items/inst-items/dom-items/Dom-list[name='default']/if-items/If-list[id='lo0']/addr-items/Addr-list element: '10.0.0.2/32'
-Addr_list_element = If_list_element.addr_items.Addr_list.create('10.0.0.2/32')
+Addr_list_element = If_list_element_2.addr_items.Addr_list.create('10.0.0.2/32')
 
 # List /System/ipv4-items/inst-items/dom-items/Dom-list element: 'management'
 Dom_list_element_2 = leaf2.System.ipv4_items.inst_items.dom_items.Dom_list.create('management')
 
 # List /System/ipv4-items/inst-items/dom-items/Dom-list[name='management']/if-items/If-list element: 'mgmt0'
-If_list_element = Dom_list_element_2.if_items.If_list.create('mgmt0')
+If_list_element_2 = Dom_list_element_2.if_items.If_list.create('mgmt0')
 
 # List /System/ipv4-items/inst-items/dom-items/Dom-list[name='management']/if-items/If-list[id='mgmt0']/addr-items/Addr-list element: '172.31.42.12/24'
-Addr_list_element = If_list_element.addr_items.Addr_list.create('172.31.42.12/24')
+Addr_list_element = If_list_element_2.addr_items.Addr_list.create('172.31.42.12/24')
 
 # List /System/eps-items/epId-items/Ep-list element: 1
 Ep_list_element = leaf2.System.eps_items.epId_items.Ep_list.create(u64(1), adminSt='enabled', sourceInterface='lo0', hostReach='bgp')
-
-# List /System/eps-items/epId-items/Ep-list[epId='1']/nws-items/vni-items/Nw-list element: 15906
-Nw_list_element = Ep_list_element.nws_items.vni_items.Nw_list.create(u64(15906))
-
-# Container: /System/eps-items/epId-items/Ep-list[epId='1']/nws-items/vni-items/Nw-list[vni='15906']/IngRepl-items
-Nw_list_element.IngRepl_items.proto = 'bgp'
 
 # List /System/eps-items/epId-items/Ep-list[epId='1']/nws-items/vni-items/Nw-list element: 268182
 Nw_list_element = Ep_list_element.nws_items.vni_items.Nw_list.create(u64(268182))
 
 # Container: /System/eps-items/epId-items/Ep-list[epId='1']/nws-items/vni-items/Nw-list[vni='268182']/IngRepl-items
 Nw_list_element.IngRepl_items.proto = 'bgp'
+
+# List /System/inst-items/Inst-list element: 'default'
+Inst_list_element = leaf2.System.inst_items.Inst_list.create('default')
+
+# List /System/inst-items/Inst-list[name='default']/dom-items/Dom-list element: 'default'
+Dom_list_element_3 = Inst_list_element.dom_items.Dom_list.create('default')
+
+# List /System/inst-items/Inst-list element: 'egress-loadbalance-resolution-'
+Inst_list_element = leaf2.System.inst_items.Inst_list.create('egress-loadbalance-resolution-')
+
+# List /System/inst-items/Inst-list[name='egress-loadbalance-resolution-']/dom-items/Dom-list element: 'egress-loadbalance-resolution-'
+Dom_list_element_3 = Inst_list_element.dom_items.Dom_list.create('egress-loadbalance-resolution-')
+
+# List /System/inst-items/Inst-list element: 'management'
+Inst_list_element = leaf2.System.inst_items.Inst_list.create('management')
+
+# List /System/inst-items/Inst-list[name='management']/dom-items/Dom-list element: 'management'
+Dom_list_element_3 = Inst_list_element.dom_items.Dom_list.create('management')
 
 # List /System/rpm-items/rtmap-items/Rule-list element: 'accept-all'
 Rule_list_element = leaf2.System.rpm_items.rtmap_items.Rule_list.create('accept-all')
@@ -634,6 +634,9 @@ RttP_list_element = BDEvi_list_element.rttp_items.RttP_list.create('import')
 
 # List /System/evpn-items/bdevi-items/BDEvi-list[encap='vxlan-268182']/rttp-items/RttP-list[type='import']/ent-items/RttEntry-list element: 'route-target:as2-nn4:45278:268182'
 RttEntry_list_element = RttP_list_element.ent_items.RttEntry_list.create('route-target:as2-nn4:45278:268182')
+
+# Container: /System/hmm-items/fwdinst-items
+leaf3.System.hmm_items.fwdinst_items.amac = '02:DC:00:00:00:01'
 
 # List /System/bd-items/bd-items/BD-list element: 'vlan-1'
 BD_list_element = leaf3.System.bd_items.bd_items.BD_list.create('vlan-1')
@@ -839,35 +842,38 @@ PhysIf_list_element = leaf3.System.intf_items.phys_items.PhysIf_list.create('eth
 # List /System/intf-items/lb-items/LbRtdIf-list element: 'lo0'
 LbRtdIf_list_element = leaf3.System.intf_items.lb_items.LbRtdIf_list.create('lo0', adminSt='up')
 
+# List /System/intf-items/svi-items/If-list element: 'vlan1'
+If_list_element = leaf3.System.intf_items.svi_items.If_list.create('vlan1', adminSt='down')
+
 # List /System/ipv4-items/inst-items/dom-items/Dom-list element: 'default'
 Dom_list_element_2 = leaf3.System.ipv4_items.inst_items.dom_items.Dom_list.create('default')
 
 # List /System/ipv4-items/inst-items/dom-items/Dom-list[name='default']/if-items/If-list element: 'eth1/1'
-If_list_element = Dom_list_element_2.if_items.If_list.create('eth1/1')
+If_list_element_2 = Dom_list_element_2.if_items.If_list.create('eth1/1')
 
 # List /System/ipv4-items/inst-items/dom-items/Dom-list[name='default']/if-items/If-list[id='eth1/1']/addr-items/Addr-list element: '10.100.1.130/31'
-Addr_list_element = If_list_element.addr_items.Addr_list.create('10.100.1.130/31')
+Addr_list_element = If_list_element_2.addr_items.Addr_list.create('10.100.1.130/31')
 
 # List /System/ipv4-items/inst-items/dom-items/Dom-list[name='default']/if-items/If-list element: 'eth1/2'
-If_list_element = Dom_list_element_2.if_items.If_list.create('eth1/2')
+If_list_element_2 = Dom_list_element_2.if_items.If_list.create('eth1/2')
 
 # List /System/ipv4-items/inst-items/dom-items/Dom-list[name='default']/if-items/If-list[id='eth1/2']/addr-items/Addr-list element: '10.100.1.132/31'
-Addr_list_element = If_list_element.addr_items.Addr_list.create('10.100.1.132/31')
+Addr_list_element = If_list_element_2.addr_items.Addr_list.create('10.100.1.132/31')
 
 # List /System/ipv4-items/inst-items/dom-items/Dom-list[name='default']/if-items/If-list element: 'lo0'
-If_list_element = Dom_list_element_2.if_items.If_list.create('lo0')
+If_list_element_2 = Dom_list_element_2.if_items.If_list.create('lo0')
 
 # List /System/ipv4-items/inst-items/dom-items/Dom-list[name='default']/if-items/If-list[id='lo0']/addr-items/Addr-list element: '10.0.0.3/32'
-Addr_list_element = If_list_element.addr_items.Addr_list.create('10.0.0.3/32')
+Addr_list_element = If_list_element_2.addr_items.Addr_list.create('10.0.0.3/32')
 
 # List /System/ipv4-items/inst-items/dom-items/Dom-list element: 'management'
 Dom_list_element_2 = leaf3.System.ipv4_items.inst_items.dom_items.Dom_list.create('management')
 
 # List /System/ipv4-items/inst-items/dom-items/Dom-list[name='management']/if-items/If-list element: 'mgmt0'
-If_list_element = Dom_list_element_2.if_items.If_list.create('mgmt0')
+If_list_element_2 = Dom_list_element_2.if_items.If_list.create('mgmt0')
 
 # List /System/ipv4-items/inst-items/dom-items/Dom-list[name='management']/if-items/If-list[id='mgmt0']/addr-items/Addr-list element: '172.31.42.13/24'
-Addr_list_element = If_list_element.addr_items.Addr_list.create('172.31.42.13/24')
+Addr_list_element = If_list_element_2.addr_items.Addr_list.create('172.31.42.13/24')
 
 # List /System/eps-items/epId-items/Ep-list element: 1
 Ep_list_element = leaf3.System.eps_items.epId_items.Ep_list.create(u64(1), adminSt='enabled', sourceInterface='lo0', hostReach='bgp')
@@ -883,6 +889,24 @@ Nw_list_element = Ep_list_element.nws_items.vni_items.Nw_list.create(u64(268182)
 
 # Container: /System/eps-items/epId-items/Ep-list[epId='1']/nws-items/vni-items/Nw-list[vni='268182']/IngRepl-items
 Nw_list_element.IngRepl_items.proto = 'bgp'
+
+# List /System/inst-items/Inst-list element: 'default'
+Inst_list_element = leaf3.System.inst_items.Inst_list.create('default')
+
+# List /System/inst-items/Inst-list[name='default']/dom-items/Dom-list element: 'default'
+Dom_list_element_3 = Inst_list_element.dom_items.Dom_list.create('default')
+
+# List /System/inst-items/Inst-list element: 'egress-loadbalance-resolution-'
+Inst_list_element = leaf3.System.inst_items.Inst_list.create('egress-loadbalance-resolution-')
+
+# List /System/inst-items/Inst-list[name='egress-loadbalance-resolution-']/dom-items/Dom-list element: 'egress-loadbalance-resolution-'
+Dom_list_element_3 = Inst_list_element.dom_items.Dom_list.create('egress-loadbalance-resolution-')
+
+# List /System/inst-items/Inst-list element: 'management'
+Inst_list_element = leaf3.System.inst_items.Inst_list.create('management')
+
+# List /System/inst-items/Inst-list[name='management']/dom-items/Dom-list element: 'management'
+Dom_list_element_3 = Inst_list_element.dom_items.Dom_list.create('management')
 
 # List /System/rpm-items/rtmap-items/Rule-list element: 'accept-all'
 Rule_list_element = leaf3.System.rpm_items.rtmap_items.Rule_list.create('accept-all')
@@ -1160,41 +1184,62 @@ PhysIf_list_element = spine1.System.intf_items.phys_items.PhysIf_list.create('et
 # List /System/intf-items/lb-items/LbRtdIf-list element: 'lo0'
 LbRtdIf_list_element = spine1.System.intf_items.lb_items.LbRtdIf_list.create('lo0', adminSt='up')
 
+# List /System/intf-items/svi-items/If-list element: 'vlan1'
+If_list_element = spine1.System.intf_items.svi_items.If_list.create('vlan1', adminSt='down')
+
 # List /System/ipv4-items/inst-items/dom-items/Dom-list element: 'default'
 Dom_list_element_2 = spine1.System.ipv4_items.inst_items.dom_items.Dom_list.create('default')
 
 # List /System/ipv4-items/inst-items/dom-items/Dom-list[name='default']/if-items/If-list element: 'eth1/1'
-If_list_element = Dom_list_element_2.if_items.If_list.create('eth1/1')
+If_list_element_2 = Dom_list_element_2.if_items.If_list.create('eth1/1')
 
 # List /System/ipv4-items/inst-items/dom-items/Dom-list[name='default']/if-items/If-list[id='eth1/1']/addr-items/Addr-list element: '10.100.0.227/31'
-Addr_list_element = If_list_element.addr_items.Addr_list.create('10.100.0.227/31')
+Addr_list_element = If_list_element_2.addr_items.Addr_list.create('10.100.0.227/31')
 
 # List /System/ipv4-items/inst-items/dom-items/Dom-list[name='default']/if-items/If-list element: 'eth1/2'
-If_list_element = Dom_list_element_2.if_items.If_list.create('eth1/2')
+If_list_element_2 = Dom_list_element_2.if_items.If_list.create('eth1/2')
 
 # List /System/ipv4-items/inst-items/dom-items/Dom-list[name='default']/if-items/If-list[id='eth1/2']/addr-items/Addr-list element: '10.100.1.3/31'
-Addr_list_element = If_list_element.addr_items.Addr_list.create('10.100.1.3/31')
+Addr_list_element = If_list_element_2.addr_items.Addr_list.create('10.100.1.3/31')
 
 # List /System/ipv4-items/inst-items/dom-items/Dom-list[name='default']/if-items/If-list element: 'eth1/3'
-If_list_element = Dom_list_element_2.if_items.If_list.create('eth1/3')
+If_list_element_2 = Dom_list_element_2.if_items.If_list.create('eth1/3')
 
 # List /System/ipv4-items/inst-items/dom-items/Dom-list[name='default']/if-items/If-list[id='eth1/3']/addr-items/Addr-list element: '10.100.1.131/31'
-Addr_list_element = If_list_element.addr_items.Addr_list.create('10.100.1.131/31')
+Addr_list_element = If_list_element_2.addr_items.Addr_list.create('10.100.1.131/31')
 
 # List /System/ipv4-items/inst-items/dom-items/Dom-list[name='default']/if-items/If-list element: 'lo0'
-If_list_element = Dom_list_element_2.if_items.If_list.create('lo0')
+If_list_element_2 = Dom_list_element_2.if_items.If_list.create('lo0')
 
 # List /System/ipv4-items/inst-items/dom-items/Dom-list[name='default']/if-items/If-list[id='lo0']/addr-items/Addr-list element: '10.0.0.11/32'
-Addr_list_element = If_list_element.addr_items.Addr_list.create('10.0.0.11/32')
+Addr_list_element = If_list_element_2.addr_items.Addr_list.create('10.0.0.11/32')
 
 # List /System/ipv4-items/inst-items/dom-items/Dom-list element: 'management'
 Dom_list_element_2 = spine1.System.ipv4_items.inst_items.dom_items.Dom_list.create('management')
 
 # List /System/ipv4-items/inst-items/dom-items/Dom-list[name='management']/if-items/If-list element: 'mgmt0'
-If_list_element = Dom_list_element_2.if_items.If_list.create('mgmt0')
+If_list_element_2 = Dom_list_element_2.if_items.If_list.create('mgmt0')
 
 # List /System/ipv4-items/inst-items/dom-items/Dom-list[name='management']/if-items/If-list[id='mgmt0']/addr-items/Addr-list element: '172.31.42.21/24'
-Addr_list_element = If_list_element.addr_items.Addr_list.create('172.31.42.21/24')
+Addr_list_element = If_list_element_2.addr_items.Addr_list.create('172.31.42.21/24')
+
+# List /System/inst-items/Inst-list element: 'default'
+Inst_list_element = spine1.System.inst_items.Inst_list.create('default')
+
+# List /System/inst-items/Inst-list[name='default']/dom-items/Dom-list element: 'default'
+Dom_list_element_3 = Inst_list_element.dom_items.Dom_list.create('default')
+
+# List /System/inst-items/Inst-list element: 'egress-loadbalance-resolution-'
+Inst_list_element = spine1.System.inst_items.Inst_list.create('egress-loadbalance-resolution-')
+
+# List /System/inst-items/Inst-list[name='egress-loadbalance-resolution-']/dom-items/Dom-list element: 'egress-loadbalance-resolution-'
+Dom_list_element_3 = Inst_list_element.dom_items.Dom_list.create('egress-loadbalance-resolution-')
+
+# List /System/inst-items/Inst-list element: 'management'
+Inst_list_element = spine1.System.inst_items.Inst_list.create('management')
+
+# List /System/inst-items/Inst-list[name='management']/dom-items/Dom-list element: 'management'
+Dom_list_element_3 = Inst_list_element.dom_items.Dom_list.create('management')
 
 # List /System/rpm-items/rtmap-items/Rule-list element: 'accept-all'
 Rule_list_element = spine1.System.rpm_items.rtmap_items.Rule_list.create('accept-all')

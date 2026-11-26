@@ -104,12 +104,6 @@
                 <name>server2</name>
                 <attachment>
                     <tenant>t1</tenant>
-                    <network>web</network>
-                    <vlan>30</vlan>
-                    <ipv4-address>10.10.10.12/24</ipv4-address>
-                </attachment>
-                <attachment>
-                    <tenant>t1</tenant>
                     <network>db</network>
                     <ipv4-address>10.20.20.12/24</ipv4-address>
                 </attachment>

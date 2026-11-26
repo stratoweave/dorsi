@@ -157,7 +157,11 @@ def overlay_vlan(vni: int) -> int:
 
 def irb_interface(switch_type: str, evi: int, vlan: int) -> str:
     """The routed interface of a network on a leaf, in its VRF."""
-    return "Vlan{vlan}" if switch_type == _EOS else "irb0.{irb_index(evi)}"
+    if switch_type == _EOS:
+        return "Vlan{vlan}"
+    if switch_type == _NXOS:
+        return "vlan{vlan}"
+    return "irb0.{irb_index(evi)}"
 
 
 def ip_vrf_name(tenant: str, vrf: str) -> str:
@@ -512,11 +516,11 @@ def validate_overlay(f: y_0.ip_fabric__ip_fabric__fabric_entry, switches: dict[s
                 irb = irb_index(overlay_evi(vni))
                 for leaf in leaves:
                     sw = switches.get(leaf)
-                    if sw is not None and (sw.type == _CRPD or sw.type == _NXOS):
+                    if sw is not None and sw.type == _CRPD:
                         errors.append("{what}: a routed network cannot be placed on {leaf} ({sw.type}) yet")
-                    elif sw is not None and sw.type == _EOS:
-                        # The gateway of EOS is on the VLAN interface of the
-                        # internal VLAN, checked above
+                    elif sw is not None and (sw.type == _EOS or sw.type == _NXOS):
+                        # The gateway of EOS and NX-OS is on the VLAN
+                        # interface of the VLAN of the network, checked above
                         pass
                     else:
                         if leaf not in leaf_irbs:
@@ -542,6 +546,19 @@ def validate_overlay(f: y_0.ip_fabric__ip_fabric__fabric_entry, switches: dict[s
                         if subnet >> (length - shorter) == other_subnet >> (other_length - shorter):
                             errors.append("{what}: its subnet overlaps that of network {tenant.name}/{other} in VRF {vrf}")
                     gateways[vrf].append((subnet, length, network.name))
+        # NX-OS routes the layer 3 VNI of a VRF on a VLAN of its own
+        for vrf in tenant.vrf:
+            what = "VRF {tenant.name}/{vrf.name}"
+            l3_vlan = overlay_vlan(vrf_vni(f.name, tenant.name, vrf))
+            for leaf in vrf_leaves(f, tenant, vrf.name):
+                sw = switches.get(leaf)
+                if sw is not None and sw.type == _NXOS:
+                    if leaf not in leaf_vlans:
+                        leaf_vlans[leaf] = {}
+                    if l3_vlan in leaf_vlans[leaf]:
+                        errors.append("{what}: the VLAN {l3_vlan} of its layer 3 VNI on {leaf} ({_NXOS}) is also that of {leaf_vlans[leaf][l3_vlan]}, set another vni on one of them")
+                    else:
+                        leaf_vlans[leaf][l3_vlan] = what
 
     # Attachments: an existing network, one VLAN per network on a server and
     # the addresses of a network in one subnet
@@ -755,8 +772,11 @@ class Fabric(base.Fabric):
                         for leaf, interface in server_interfaces[server.name].items():
                             rd = overlay_route_distinguisher(int(switches[leaf].id), evi)
                             mac_vrf = o.rfs.create(leaf).mac_vrf.create(name, u64(vni), u64(evi), rd, route_target)
+                            # The VLAN the switch bridges the network in
+                            bridge_vlan = overlay_vlan(vni)
                             if switches[leaf].type == _NXOS:
                                 net_vlan = nxos_network_vlan(i, leaf, tenant.name, network.name, vni)
+                                bridge_vlan = net_vlan
                                 mac_vrf.vlan = u64(net_vlan)
                                 nxos_port = nxos_ports[leaf][interface]
                                 if u64(net_vlan) not in nxos_port.trunk_vlan:
@@ -770,12 +790,13 @@ class Fabric(base.Fabric):
                             gateway = network.gateway
                             if vrf is not None and gateway is not None:
                                 irb = irb_index(evi)
-                                mac_vrf.create_irb(u64(irb), gateway)
+                                mac_irb = mac_vrf.create_irb(u64(irb), gateway)
+                                mac_irb.vrf = ip_vrf_name(tenant.name, vrf)
                                 if vrf not in vrf_irbs:
                                     vrf_irbs[vrf] = {}
                                 if leaf not in vrf_irbs[vrf]:
                                     vrf_irbs[vrf][leaf] = []
-                                irb_if = irb_interface(switches[leaf].type, evi, overlay_vlan(vni))
+                                irb_if = irb_interface(switches[leaf].type, evi, bridge_vlan)
                                 if irb_if not in vrf_irbs[vrf][leaf]:
                                     vrf_irbs[vrf][leaf].append(irb_if)
             for vrf in tenant.vrf:
@@ -788,6 +809,8 @@ class Fabric(base.Fabric):
                     rd = overlay_route_distinguisher(int(switches[leaf].id), evi)
                     ip_vrf = o.rfs.create(leaf).ip_vrf.create(ip_vrf_name(tenant.name, vrf.name), u64(vni), u64(evi), rd, overlay_route_target(i.name, vni))
                     ip_vrf.irb_interface = irbs
+                    if switches[leaf].type == _NXOS:
+                        ip_vrf.vlan = u64(overlay_vlan(vni))
 
         return o
 

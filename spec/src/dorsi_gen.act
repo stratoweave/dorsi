@@ -227,6 +227,25 @@ actor main(env):
     "/top:System/evpn-items/bdevi-items/BDEvi-list/rd",
     "/top:System/evpn-items/bdevi-items/BDEvi-list/rttp-items/RttP-list/type",
     "/top:System/evpn-items/bdevi-items/BDEvi-list/rttp-items/RttP-list/ent-items/RttEntry-list/rtt",
+    "/top:System/eps-items/epId-items/Ep-list/nws-items/vni-items/Nw-list/associateVrfFlag",
+    # Routed networks: the VRFs with their layer 3 VNI, the VLAN interfaces
+    # (anycast gateways and those of the layer 3 VNIs) and BGP in the VRFs
+    "/top:System/inst-items/Inst-list/name",
+    "/top:System/inst-items/Inst-list/encap",
+    "/top:System/inst-items/Inst-list/dom-items/Dom-list/name",
+    "/top:System/inst-items/Inst-list/dom-items/Dom-list/rd",
+    "/top:System/inst-items/Inst-list/dom-items/Dom-list/af-items/DomAf-list/type",
+    "/top:System/inst-items/Inst-list/dom-items/Dom-list/af-items/DomAf-list/ctrl-items/AfCtrl-list/type",
+    "/top:System/inst-items/Inst-list/dom-items/Dom-list/af-items/DomAf-list/ctrl-items/AfCtrl-list/rttp-items/RttP-list/type",
+    "/top:System/inst-items/Inst-list/dom-items/Dom-list/af-items/DomAf-list/ctrl-items/AfCtrl-list/rttp-items/RttP-list/ent-items/RttEntry-list/rtt",
+    "/top:System/intf-items/svi-items/If-list/id",
+    "/top:System/intf-items/svi-items/If-list/adminSt",
+    "/top:System/intf-items/svi-items/If-list/rtvrfMbr-items/tDn",
+    "/top:System/ipv4-items/inst-items/dom-items/Dom-list/if-items/If-list/forward",
+    "/top:System/hmm-items/fwdinst-items/amac",
+    "/top:System/hmm-items/fwdinst-items/if-items/FwdIf-list/id",
+    "/top:System/hmm-items/fwdinst-items/if-items/FwdIf-list/mode",
+    "/top:System/bgp-items/inst-items/dom-items/Dom-list/af-items/DomAf-list/advertL2vpnEvpn",
     ]
 
     # Keep only the SRL configuration nodes that dorsi's RFS transforms

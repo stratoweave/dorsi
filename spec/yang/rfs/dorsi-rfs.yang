@@ -162,6 +162,13 @@ module dorsi-rfs {
                     type string;
                     mandatory true;
                 }
+                leaf vrf {
+                    description
+                        "The ip-vrf of the network. Cisco NX-OS keeps the
+                         gateway address and the VRF membership on the VLAN
+                         interface of the network.";
+                    type string;
+                }
             }
             container state {
                 config false;
@@ -237,6 +244,14 @@ module dorsi-rfs {
             leaf-list irb-interface {
                 description "IRB subinterfaces of its networks, such as irb0.10.";
                 type string;
+            }
+            leaf vlan {
+                description
+                    "The VLAN of the layer 3 VNI, on a switch that routes it
+                     on a VLAN interface, Cisco NX-OS.";
+                type uint16 {
+                    range "2..4094";
+                }
             }
             container state {
                 config false;

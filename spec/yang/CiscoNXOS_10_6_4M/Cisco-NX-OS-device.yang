@@ -147931,7 +147931,9 @@ module Cisco-NX-OS-device {
         // Type
         leaf type {
 
-            type bgp_AfT;
+            // Changed for dorsi: a list key; StratoWeave makes a key whose
+            // type has a default optional, which does not compile.
+            type bgp_AfT-key;
             description "Type";
         }
 
@@ -147966,7 +147968,9 @@ module Cisco-NX-OS-device {
         // Type
         leaf type {
 
-            type bgp_AfT;
+            // Changed for dorsi: a list key; StratoWeave makes a key whose
+            // type has a default optional, which does not compile.
+            type bgp_AfT-key;
             description "Type";
         }
 

@@ -258,7 +258,8 @@ SRC_DNODE_CHILD_45: DList = DList(module='dorsi-rfs', namespace='http://example.
     DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='vlan', config=True, description='The VLAN of the network inside a switch that bridges in\nVLANs, such as Arista EOS, apart from the VLAN tags of\nthe servers. SR Linux has no use for it.', is_key=False, mandatory=False, type=DTypeIntegerUnsigned(name='uint16', description=None, reference=None, units=None, exts=[], builtin_type='uint16', default=None, ranges=Ranges([(2, 4094)])), adata_name='vlan'),
     DContainer(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='irb', config=True, description='The anycast gateway of the network, on irb0.', presence=True, adata_name='irb', children=[
         DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='index', config=True, is_key=False, mandatory=True, type=DTypeIntegerUnsigned(name='uint16', description=None, reference=None, units=None, exts=[], builtin_type='uint16', default=None, ranges=Ranges([(1, 9999)])), adata_name='index'),
-        DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='gateway', config=True, description='Such as 10.10.10.1/24.', is_key=False, mandatory=True, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[]), adata_name='gateway')
+        DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='gateway', config=True, description='Such as 10.10.10.1/24.', is_key=False, mandatory=True, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[]), adata_name='gateway'),
+        DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='vrf', config=True, description='The ip-vrf of the network. Cisco NX-OS keeps the\ngateway address and the VRF membership on the VLAN\ninterface of the network.', is_key=False, mandatory=False, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[]), adata_name='vrf')
     ]),
     DContainer(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='state', config=False, description='Operational state of the MAC-VRF, polled from the\ndevice.', presence=False, adata_name='state', children=[
         DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='oper-status', config=False, description='The oper-state of the network instance.', is_key=False, mandatory=False, type=DTypeEnum(name='enumeration', description=None, reference=None, units=None, exts=[], builtin_type='enumeration', default=None, name_to_val={'up':0, 'down':1, 'unknown':2}), adata_name='oper_status'),
@@ -279,6 +280,7 @@ SRC_DNODE_CHILD_46: DList = DList(module='dorsi-rfs', namespace='http://example.
     DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='route-distinguisher', config=True, is_key=False, mandatory=True, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[]), adata_name='route_distinguisher'),
     DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='route-target', config=True, is_key=False, mandatory=True, type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[]), adata_name='route_target'),
     DLeafList(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='irb-interface', config=True, description='IRB subinterfaces of its networks, such as irb0.10.', min_elements=0, ordered_by='system', type=DTypeString(name='string', description=None, reference=None, units=None, exts=[], builtin_type='string', default=None, length=None, patterns=[]), adata_name='irb_interface'),
+    DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='vlan', config=True, description='The VLAN of the layer 3 VNI, on a switch that routes it\non a VLAN interface, Cisco NX-OS.', is_key=False, mandatory=False, type=DTypeIntegerUnsigned(name='uint16', description=None, reference=None, units=None, exts=[], builtin_type='uint16', default=None, ranges=Ranges([(2, 4094)])), adata_name='vlan'),
     DContainer(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='state', config=False, description='Operational state of the IP-VRF, polled from the device.', presence=False, adata_name='state', children=[
         DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='oper-status', config=False, description='The oper-state of the network instance.', is_key=False, mandatory=False, type=DTypeEnum(name='enumeration', description=None, reference=None, units=None, exts=[], builtin_type='enumeration', default=None, name_to_val={'up':0, 'down':1, 'unknown':2}), adata_name='oper_status'),
         DLeaf(module='dorsi-rfs', namespace='http://example.com/dorsi-rfs', prefix='dorsi-rfs', name='evpn-status', config=False, description='The oper-state of its EVPN instance.', is_key=False, mandatory=False, type=DTypeEnum(name='enumeration', description=None, reference=None, units=None, exts=[], builtin_type='enumeration', default=None, name_to_val={'up':0, 'down':1, 'unknown':2}), adata_name='evpn_status')
@@ -520,6 +522,13 @@ SRC_YANG_0: str = r"""module dorsi-rfs {
                     type string;
                     mandatory true;
                 }
+                leaf vrf {
+                    description
+                        "The ip-vrf of the network. Cisco NX-OS keeps the
+                         gateway address and the VRF membership on the VLAN
+                         interface of the network.";
+                    type string;
+                }
             }
             container state {
                 config false;
@@ -595,6 +604,14 @@ SRC_YANG_0: str = r"""module dorsi-rfs {
             leaf-list irb-interface {
                 description "IRB subinterfaces of its networks, such as irb0.10.";
                 type string;
+            }
+            leaf vlan {
+                description
+                    "The VLAN of the layer 3 VNI, on a switch that routes it
+                     on a VLAN interface, Cisco NX-OS.";
+                type uint16 {
+                    range "2..4094";
+                }
             }
             container state {
                 config false;
@@ -3098,6 +3115,7 @@ _ID_dorsi_rfs__state: ygdata.Id = ygdata.Id(NS_dorsi_rfs, 'state')
 _ID_dorsi_rfs__trunk_vlan: ygdata.Id = ygdata.Id(NS_dorsi_rfs, 'trunk-vlan')
 _ID_dorsi_rfs__vlan: ygdata.Id = ygdata.Id(NS_dorsi_rfs, 'vlan')
 _ID_dorsi_rfs__vni: ygdata.Id = ygdata.Id(NS_dorsi_rfs, 'vni')
+_ID_dorsi_rfs__vrf: ygdata.Id = ygdata.Id(NS_dorsi_rfs, 'vrf')
 _ID_stratoweave_rfs__adapter: ygdata.Id = ygdata.Id(NS_stratoweave_rfs, 'adapter')
 _ID_stratoweave_rfs__address: ygdata.Id = ygdata.Id(NS_stratoweave_rfs, 'address')
 _ID_stratoweave_rfs__algorithm: ygdata.Id = ygdata.Id(NS_stratoweave_rfs, 'algorithm')
@@ -4617,10 +4635,12 @@ _breaker49: None = None
 class stratoweave_rfs__rfs__mac_vrf__irb(yadata.MNode):
     index: ?u64
     gateway: ?str
+    vrf: ?str
 
-    mut def __init__(self, index: ?u64=None, gateway: ?str=None) -> None:
+    mut def __init__(self, index: ?u64=None, gateway: ?str=None, vrf: ?str=None) -> None:
         self.index = index
         self.gateway = gateway
+        self.vrf = vrf
 
     mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
         return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['stratoweave-rfs:rfs', 'dorsi-rfs:mac-vrf', 'irb'], prev=prev)
@@ -4628,7 +4648,7 @@ class stratoweave_rfs__rfs__mac_vrf__irb(yadata.MNode):
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> ?stratoweave_rfs__rfs__mac_vrf__irb:
         if n is not None:
-            return stratoweave_rfs__rfs__mac_vrf__irb(index=n.get_opt_u64(_ID_dorsi_rfs__index), gateway=n.get_opt_str(_ID_dorsi_rfs__gateway))
+            return stratoweave_rfs__rfs__mac_vrf__irb(index=n.get_opt_u64(_ID_dorsi_rfs__index), gateway=n.get_opt_str(_ID_dorsi_rfs__gateway), vrf=n.get_opt_str(_ID_dorsi_rfs__vrf))
         return None
 
     mut def copy(self) -> stratoweave_rfs__rfs__mac_vrf__irb:
@@ -4738,15 +4758,17 @@ class stratoweave_rfs__rfs__mac_vrf_entry(yadata.MNode):
         self.state = state if state is not None else stratoweave_rfs__rfs__mac_vrf__state()
         self.interface = stratoweave_rfs__rfs__mac_vrf__interface(elements=interface)
 
-    mut def create_irb(self, index: ?u64=None, gateway: ?str=None) -> stratoweave_rfs__rfs__mac_vrf__irb:
+    mut def create_irb(self, index: ?u64=None, gateway: ?str=None, vrf: ?str=None) -> stratoweave_rfs__rfs__mac_vrf__irb:
         existing = self.irb
         if existing is not None:
             if index is not None:
                 existing.index = index
             if gateway is not None:
                 existing.gateway = gateway
+            if vrf is not None:
+                existing.vrf = vrf
             return existing
-        res = stratoweave_rfs__rfs__mac_vrf__irb(index=index, gateway=gateway)
+        res = stratoweave_rfs__rfs__mac_vrf__irb(index=index, gateway=gateway, vrf=vrf)
         self.irb = res
         return res
 
@@ -4833,15 +4855,17 @@ class stratoweave_rfs__rfs__ip_vrf_entry(yadata.MNode):
     route_distinguisher: ?str
     route_target: ?str
     irb_interface: list[str]
+    vlan: ?u64
     state: stratoweave_rfs__rfs__ip_vrf__state
 
-    mut def __init__(self, name: str, vni: ?u64=None, evi: ?u64=None, route_distinguisher: ?str=None, route_target: ?str=None, irb_interface: ?list[str]=None, state: ?stratoweave_rfs__rfs__ip_vrf__state=None) -> None:
+    mut def __init__(self, name: str, vni: ?u64=None, evi: ?u64=None, route_distinguisher: ?str=None, route_target: ?str=None, irb_interface: ?list[str]=None, vlan: ?u64=None, state: ?stratoweave_rfs__rfs__ip_vrf__state=None) -> None:
         self.name = name
         self.vni = vni
         self.evi = evi
         self.route_distinguisher = route_distinguisher
         self.route_target = route_target
         self.irb_interface = irb_interface if irb_interface is not None else []
+        self.vlan = vlan
         self.state = state if state is not None else stratoweave_rfs__rfs__ip_vrf__state()
 
     mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
@@ -4849,7 +4873,7 @@ class stratoweave_rfs__rfs__ip_vrf_entry(yadata.MNode):
 
     @staticmethod
     mut def from_gdata(n: ygdata.Node) -> stratoweave_rfs__rfs__ip_vrf_entry:
-        return stratoweave_rfs__rfs__ip_vrf_entry(name=n.get_str(_ID_dorsi_rfs__name), vni=n.get_opt_u64(_ID_dorsi_rfs__vni), evi=n.get_opt_u64(_ID_dorsi_rfs__evi), route_distinguisher=n.get_opt_str(_ID_dorsi_rfs__route_distinguisher), route_target=n.get_opt_str(_ID_dorsi_rfs__route_target), irb_interface=n.get_opt_strs(_ID_dorsi_rfs__irb_interface), state=stratoweave_rfs__rfs__ip_vrf__state.from_gdata(n.get_opt_cnt(_ID_dorsi_rfs__state)))
+        return stratoweave_rfs__rfs__ip_vrf_entry(name=n.get_str(_ID_dorsi_rfs__name), vni=n.get_opt_u64(_ID_dorsi_rfs__vni), evi=n.get_opt_u64(_ID_dorsi_rfs__evi), route_distinguisher=n.get_opt_str(_ID_dorsi_rfs__route_distinguisher), route_target=n.get_opt_str(_ID_dorsi_rfs__route_target), irb_interface=n.get_opt_strs(_ID_dorsi_rfs__irb_interface), vlan=n.get_opt_u64(_ID_dorsi_rfs__vlan), state=stratoweave_rfs__rfs__ip_vrf__state.from_gdata(n.get_opt_cnt(_ID_dorsi_rfs__state)))
 
     mut def copy(self) -> stratoweave_rfs__rfs__ip_vrf_entry:
         """Create a deep copy of this adata object"""
@@ -4860,7 +4884,7 @@ class stratoweave_rfs__rfs__ip_vrf(yadata.MKeyedList[str, stratoweave_rfs__rfs__
     mut def __init__(self, elements: list[stratoweave_rfs__rfs__ip_vrf_entry]=[]) -> None:
         yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
 
-    mut def create(self, key: str, vni: ?u64=None, evi: ?u64=None, route_distinguisher: ?str=None, route_target: ?str=None) -> stratoweave_rfs__rfs__ip_vrf_entry:
+    mut def create(self, key: str, vni: ?u64=None, evi: ?u64=None, route_distinguisher: ?str=None, route_target: ?str=None, vlan: ?u64=None) -> stratoweave_rfs__rfs__ip_vrf_entry:
         e = self.get(key)
         if e is not None:
             if vni is not None:
@@ -4871,9 +4895,11 @@ class stratoweave_rfs__rfs__ip_vrf(yadata.MKeyedList[str, stratoweave_rfs__rfs__
                 e.route_distinguisher = route_distinguisher
             if route_target is not None:
                 e.route_target = route_target
+            if vlan is not None:
+                e.vlan = vlan
             return e
         name = key
-        res = stratoweave_rfs__rfs__ip_vrf_entry(name=name, vni=vni, evi=evi, route_distinguisher=route_distinguisher, route_target=route_target)
+        res = stratoweave_rfs__rfs__ip_vrf_entry(name=name, vni=vni, evi=evi, route_distinguisher=route_distinguisher, route_target=route_target, vlan=vlan)
         self._append(res)
         return res
 
@@ -7314,14 +7340,16 @@ actor stratoweave_rfs__rfs__mac_vrf__irb_dst(cb: action(?(rfs_name: str, mac_vrf
 class stratoweave_rfs__rfs__mac_vrf__irb_subs(SubscriptionNode):
     index: SubscriptionNode
     gateway: SubscriptionNode
+    vrf: SubscriptionNode
 
     pure def __init__(self, path: ?SubscriptionPath=None) -> None:
         SubscriptionNode.__init__(self, path)
         self.index = SubscriptionNode(SubscriptionPath(_ID_dorsi_rfs__index, parent=path))
         self.gateway = SubscriptionNode(SubscriptionPath(_ID_dorsi_rfs__gateway, parent=path))
+        self.vrf = SubscriptionNode(SubscriptionPath(_ID_dorsi_rfs__vrf, parent=path))
 
     pure def _direct_children(self) -> list[SubscriptionNode]:
-        direct: list[SubscriptionNode] = [self.index, self.gateway]
+        direct: list[SubscriptionNode] = [self.index, self.gateway, self.vrf]
         return direct
 
     proc def dst(self, cb: action(?(rfs_name: str, mac_vrf_name: str), ?stratoweave_rfs__rfs__mac_vrf__irb, ?Exception) -> None) -> ygdata.Dst:
@@ -7574,6 +7602,7 @@ class stratoweave_rfs__rfs__ip_vrf_entry_subs(SubscriptionNode):
     route_distinguisher: SubscriptionNode
     route_target: SubscriptionNode
     irb_interface: SubscriptionNode
+    vlan: SubscriptionNode
     state: stratoweave_rfs__rfs__ip_vrf__state_subs
 
     pure def __init__(self, path: ?SubscriptionPath=None) -> None:
@@ -7584,10 +7613,11 @@ class stratoweave_rfs__rfs__ip_vrf_entry_subs(SubscriptionNode):
         self.route_distinguisher = SubscriptionNode(SubscriptionPath(_ID_dorsi_rfs__route_distinguisher, parent=path))
         self.route_target = SubscriptionNode(SubscriptionPath(_ID_dorsi_rfs__route_target, parent=path))
         self.irb_interface = SubscriptionNode(SubscriptionPath(_ID_dorsi_rfs__irb_interface, parent=path))
+        self.vlan = SubscriptionNode(SubscriptionPath(_ID_dorsi_rfs__vlan, parent=path))
         self.state = stratoweave_rfs__rfs__ip_vrf__state_subs(SubscriptionPath(_ID_dorsi_rfs__state, parent=path))
 
     pure def _direct_children(self) -> list[SubscriptionNode]:
-        direct: list[SubscriptionNode] = [self.name, self.vni, self.evi, self.route_distinguisher, self.route_target, self.irb_interface, self.state]
+        direct: list[SubscriptionNode] = [self.name, self.vni, self.evi, self.route_distinguisher, self.route_target, self.irb_interface, self.vlan, self.state]
         return direct
 
 _breaker131: None = None
@@ -7618,6 +7648,7 @@ class stratoweave_rfs__rfs__ip_vrf_subs(SubscriptionNode):
     route_distinguisher: SubscriptionNode
     route_target: SubscriptionNode
     irb_interface: SubscriptionNode
+    vlan: SubscriptionNode
     state: stratoweave_rfs__rfs__ip_vrf__state_subs
     pure def __init__(self, path: ?SubscriptionPath=None) -> None:
         SubscriptionNode.__init__(self, path)
@@ -7627,6 +7658,7 @@ class stratoweave_rfs__rfs__ip_vrf_subs(SubscriptionNode):
         self.route_distinguisher = SubscriptionNode(SubscriptionPath(_ID_dorsi_rfs__route_distinguisher, parent=path))
         self.route_target = SubscriptionNode(SubscriptionPath(_ID_dorsi_rfs__route_target, parent=path))
         self.irb_interface = SubscriptionNode(SubscriptionPath(_ID_dorsi_rfs__irb_interface, parent=path))
+        self.vlan = SubscriptionNode(SubscriptionPath(_ID_dorsi_rfs__vlan, parent=path))
         self.state = stratoweave_rfs__rfs__ip_vrf__state_subs(SubscriptionPath(_ID_dorsi_rfs__state, parent=path))
 
     pure def entry(self, name: str) -> stratoweave_rfs__rfs__ip_vrf_entry_subs:
@@ -7644,7 +7676,7 @@ class stratoweave_rfs__rfs__ip_vrf_subs(SubscriptionNode):
         return ygdata.Dst(a.on_update, root=self.filt(), synced=a.synced)
 
     pure def _direct_children(self) -> list[SubscriptionNode]:
-        direct: list[SubscriptionNode] = [self.name, self.vni, self.evi, self.route_distinguisher, self.route_target, self.irb_interface, self.state]
+        direct: list[SubscriptionNode] = [self.name, self.vni, self.evi, self.route_distinguisher, self.route_target, self.irb_interface, self.vlan, self.state]
         return direct
 
 _breaker132: None = None

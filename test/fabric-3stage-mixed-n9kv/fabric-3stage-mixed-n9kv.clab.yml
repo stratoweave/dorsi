@@ -44,28 +44,33 @@ topology:
       kind: linux
       image: ghcr.io/srl-labs/network-multitool
       image-pull-policy: if-not-present
-      # The overlay test setup of ip-fabric-overlay.xml (tenant t1)
+      # The overlay test setup of ip-fabric-overlay.xml and
+      # ip-fabric-routed.xml (tenant t1): network web on VLAN 30, and
+      # network db through the gateway of web
       exec:
         - ip link add link eth1 name eth1.30 type vlan id 30
         - ip link set eth1.30 up
         - ip address add 10.10.10.11/24 dev eth1.30
+        - ip route add 10.20.20.0/24 via 10.10.10.1
     server2:
       mgmt-ipv4: 172.31.42.32
       kind: linux
       image: ghcr.io/srl-labs/network-multitool
       image-pull-policy: if-not-present
-      # The overlay test setup of ip-fabric-overlay.xml (tenant t1)
+      # The overlay test setup of ip-fabric-overlay.xml and
+      # ip-fabric-routed.xml (tenant t1): network db only, untagged, and
+      # network web through the gateway of db
       exec:
-        - ip link add link eth1 name eth1.30 type vlan id 30
-        - ip link set eth1.30 up
-        - ip address add 10.10.10.12/24 dev eth1.30
         - ip address add 10.20.20.12/24 dev eth1
+        - ip route add 10.10.10.0/24 via 10.20.20.1
     server3:
       mgmt-ipv4: 172.31.42.33
       kind: linux
       image: ghcr.io/srl-labs/network-multitool
       image-pull-policy: if-not-present
-      # The overlay test setup of ip-fabric-overlay.xml (tenant t1)
+      # The overlay test setup of ip-fabric-overlay.xml and
+      # ip-fabric-routed.xml (tenant t1): network web on VLAN 30 and
+      # network db untagged
       exec:
         - ip link add link eth1 name eth1.30 type vlan id 30
         - ip link set eth1.30 up
