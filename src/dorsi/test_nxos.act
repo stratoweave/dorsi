@@ -1,4 +1,5 @@
 import testing
+import std.xml as xml
 
 import dorsi.rfs as rfs
 
@@ -10,3 +11,56 @@ def _test_physical_ports():
     testing.assertEqual(len(ports), 64)
     testing.assertEqual(ports[0], "eth1/1")
     testing.assertEqual(ports[-1], "eth1/64")
+
+# Replies of a Nexus 9300v 10.6(4) in the fabric-3stage-mixed-n9kv lab to
+# nxos_state_request, cut down to the elements read
+
+_REPLY_UP = """<rpc-reply xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"><data><System xmlns="http://cisco.com/ns/yang/cisco-nx-os-device">
+<intf-items><phys-items><PhysIf-list><id>eth1/1</id><phys-items><operSt>up</operSt></phys-items></PhysIf-list></phys-items></intf-items>
+<lldp-items><inst-items><if-items><If-list><id>eth1/1</id><adj-items><AdjEp-list><id>1</id><chassisIdV>0c24.3700.0102</chassisIdV><portIdV>Ethernet1/2</portIdV><sysName>spine1</sysName></AdjEp-list></adj-items></If-list></if-items></inst-items></lldp-items>
+<bgp-items><inst-items><dom-items><Dom-list><name>default</name><peer-items><Peer-list><addr>10.100.1.3</addr><ent-items><PeerEntry-list><addr>10.100.1.3</addr><operSt>established</operSt><prevOperSt>open-confirm</prevOperSt></PeerEntry-list></ent-items></Peer-list></peer-items></Dom-list></dom-items></inst-items></bgp-items>
+</System></data></rpc-reply>"""
+
+# A port without cable and a peer that is not configured
+_REPLY_DOWN = """<rpc-reply xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"><data><System xmlns="http://cisco.com/ns/yang/cisco-nx-os-device">
+<intf-items><phys-items><PhysIf-list><id>eth1/5</id><phys-items><operSt>down</operSt></phys-items></PhysIf-list></phys-items></intf-items>
+<lldp-items><inst-items><if-items><If-list><id>eth1/5</id></If-list></if-items></inst-items></lldp-items>
+<bgp-items><inst-items><dom-items><Dom-list><name>default</name></Dom-list></dom-items></inst-items></bgp-items>
+</System></data></rpc-reply>"""
+
+def _test_state_request():
+    request = rfs.nxos_state_request("eth1/1", "10.100.1.3").encode()
+    testing.assertEqual(request, """<get><filter type="subtree"><System xmlns="http://cisco.com/ns/yang/cisco-nx-os-device"><intf-items><phys-items><PhysIf-list><id>eth1/1</id><phys-items><operSt/></phys-items></PhysIf-list></phys-items></intf-items><lldp-items><inst-items><if-items><If-list><id>eth1/1</id><adj-items/></If-list></if-items></inst-items></lldp-items><bgp-items><inst-items><dom-items><Dom-list><name>default</name><peer-items><Peer-list><addr>10.100.1.3</addr><ent-items><PeerEntry-list><operSt/></PeerEntry-list></ent-items></Peer-list></peer-items></Dom-list></dom-items></inst-items></bgp-items></System></filter></get>""")
+
+def _test_state_request_no_peer():
+    request = rfs.nxos_state_request("eth1/1", None).encode()
+    testing.assertTrue("bgp-items" not in request)
+
+def _test_state_up():
+    reply = xml.decode(_REPLY_UP)
+    testing.assertEqual(rfs.nxos_oper_status(reply, "eth1/1"), "up")
+    testing.assertEqual(rfs.nxos_bgp_status(reply, "10.100.1.3"), "up")
+    neighbor = rfs.nxos_lldp_neighbor(reply)
+    testing.assertEqual(neighbor.0, "spine1")
+    testing.assertEqual(neighbor.1, "Ethernet1/2")
+
+def _test_state_down():
+    reply = xml.decode(_REPLY_DOWN)
+    testing.assertEqual(rfs.nxos_oper_status(reply, "eth1/5"), "down")
+    testing.assertEqual(rfs.nxos_bgp_status(reply, "10.100.1.3"), None)
+    neighbor = rfs.nxos_lldp_neighbor(reply)
+    testing.assertEqual(neighbor.0, None)
+    testing.assertEqual(neighbor.1, None)
+
+def _test_state_other_port_and_peer():
+    reply = xml.decode(_REPLY_UP)
+    testing.assertEqual(rfs.nxos_oper_status(reply, "eth1/10"), None)
+    testing.assertEqual(rfs.nxos_bgp_status(reply, "10.100.1.30"), None)
+
+def _test_bgp_not_established():
+    reply = xml.decode(_REPLY_UP.replace("<operSt>established</operSt>", "<operSt>active</operSt>"))
+    testing.assertEqual(rfs.nxos_bgp_status(reply, "10.100.1.3"), "down")
+
+def _test_oper_status_other():
+    reply = xml.decode(_REPLY_UP.replace("<operSt>up</operSt>", "<operSt>link-up</operSt>"))
+    testing.assertEqual(rfs.nxos_oper_status(reply, "eth1/1"), "unknown")

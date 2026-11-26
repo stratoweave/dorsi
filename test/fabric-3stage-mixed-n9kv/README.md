@@ -24,5 +24,9 @@ are established, leaf2 reaches the loopbacks of leaf3 over both spines
 and NX-OS, and 9000 byte pings with DF set pass on the fabric links. LLDP
 cabling is ok on every link.
 
-dorsi reads no state from NX-OS yet: the link and BGP status of an NX-OS
-end are unknown.
+dorsi polls the state of each NX-OS fabric port with a `<get>` of the
+native model: the port's operSt, its LLDP neighbor and the state of its BGP
+session. Every link reports link, BGP and cabling status on both ends. With
+e1-49 of leaf1 down, the link to spine1 went down at once, and the
+cabling became no-neighbor after the 120 s LLDP hold time. All three were
+back within a minute of bringing the port up.

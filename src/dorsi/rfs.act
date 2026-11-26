@@ -901,6 +901,132 @@ actor _CrpdPortPoll(path, dev: swdev.DeviceMgr, on_state: proc(?str, ?str, ?str,
         _poll()
 
 
+# Cisco NX-OS has the state of a port, of its LLDP neighbor and of its BGP
+# session in the native model, config false below the PhysIf-list, the LLDP
+# If-list and the BGP Peer-list. The LLDP If-list is configuration that NX-OS
+# has for every port, which dorsi would own, and delete, if it were in the
+# schema of the device type. So the state is read with a <get> and a subtree
+# filter, as raw XML, like the state of a cRPD.
+_NXOS_NAMESPACE = "http://cisco.com/ns/yang/cisco-nx-os-device"
+
+
+def _nxos_path(tags: list[str], leaf: xml.Node) -> xml.Node:
+    """Nested elements tags, outermost first, around leaf."""
+    node = leaf
+    for tag in reversed(tags):
+        node = xml.Node(tag, children=[node])
+    return node
+
+
+def _nxos_entry(tag: str, key: str, value: str, children: list[xml.Node]) -> xml.Node:
+    return xml.Node(tag, children=[xml.Node(key, text=value)] + children)
+
+
+def nxos_state_request(port: str, peer_address: ?str) -> xml.Node:
+    """The <get> of the oper state and the LLDP neighbors of a port and, for
+    a fabric port, of the state of the BGP session to peer_address."""
+    parts = [
+        _nxos_path(["intf-items", "phys-items"],
+            _nxos_entry("PhysIf-list", "id", port, [xml.Node("phys-items", children=[xml.Node("operSt")])])),
+        _nxos_path(["lldp-items", "inst-items", "if-items"],
+            _nxos_entry("If-list", "id", port, [xml.Node("adj-items")])),
+    ]
+    if peer_address is not None:
+        peer = _nxos_entry("Peer-list", "addr", peer_address, [
+            _nxos_path(["ent-items", "PeerEntry-list"], xml.Node("operSt"))])
+        parts.append(_nxos_path(["bgp-items", "inst-items", "dom-items"],
+            _nxos_entry("Dom-list", "name", _NXOS_DEFAULT_VRF, [xml.Node("peer-items", children=[peer])])))
+    system = xml.Node("System", nsdefs=[(None, _NXOS_NAMESPACE)], children=parts)
+    return xml.Node("get", children=[xml.Node("filter", attributes=[("type", "subtree")], children=[system])])
+
+
+def nxos_oper_status(reply: xml.Node, port: str) -> ?str:
+    """The operSt of a port from the reply to nxos_state_request: up, down,
+    or unknown for the others, such as link-up or sfp-missing."""
+    intf = _xml_find(reply, "intf-items")
+    if intf is not None:
+        for phys in _xml_find_all(intf, "PhysIf-list"):
+            if _xml_text(phys, "id") == port:
+                state = _xml_text(phys, "operSt")
+                if state == "up" or state == "down":
+                    return state
+                if state is not None:
+                    return "unknown"
+    return None
+
+
+def nxos_lldp_neighbor(reply: xml.Node) -> (?str, ?str):
+    """System name and port ID of the LLDP neighbor from the reply to
+    nxos_state_request, like _srl_lldp_neighbor."""
+    lldp = _xml_find(reply, "lldp-items")
+    if lldp is not None:
+        neighbor = _xml_find(lldp, "AdjEp-list")
+        if neighbor is not None:
+            return (_xml_text(neighbor, "sysName"), _xml_text(neighbor, "portIdV"))
+    return (None, None)
+
+
+def nxos_bgp_status(reply: xml.Node, peer_address: str) -> ?str:
+    """The state of the BGP session to peer_address from the reply to
+    nxos_state_request; None while the peer is not configured."""
+    bgp = _xml_find(reply, "bgp-items")
+    if bgp is not None:
+        for entry in _xml_find_all(bgp, "PeerEntry-list"):
+            if _xml_text(entry, "addr") == peer_address:
+                state = _xml_text(entry, "operSt")
+                if state == "established":
+                    return "up"
+                if state is not None:
+                    # idle, connect, active, open-sent, open-confirm, shut
+                    # and the others
+                    return "down"
+    return None
+
+
+actor _NxosPortPoll(path, dev: swdev.DeviceMgr, on_state: proc(?str, ?str, ?str, ?str)->None):
+    """Polls the state of a port of an NX-OS and of the BGP session over it,
+    with one <get> per poll. A device that does not answer passes on
+    nothing."""
+    var _port: ?str = None
+    var _peer_address: ?str = None
+    var _running = True
+    var _error_logged = False
+
+    def watch(port: str, peer_address: ?str):
+        _port = port
+        _peer_address = peer_address
+
+    def stop():
+        _running = False
+
+    def on_reply(reply: ?xml.Node, err: ?Exception, port: str, peer_address: ?str):
+        if not _running:
+            return
+        if err is not None:
+            # Not connected is for the watchdog of the transform to report;
+            # any other failure is logged once until the next reply
+            if not isinstance(err, NotConnectedError) and not _error_logged:
+                print("{path}: polling the NX-OS failed: {err}", err=True)
+                _error_logged = True
+        elif reply is not None:
+            _error_logged = False
+            bgp_status = nxos_bgp_status(reply, peer_address) if peer_address is not None else None
+            neighbor = nxos_lldp_neighbor(reply)
+            on_state(nxos_oper_status(reply, port), bgp_status, neighbor.0, neighbor.1)
+
+    def _poll():
+        if not _running:
+            return
+        port = _port
+        if port is not None:
+            peer_address = _peer_address
+            dev.rpc_xml(lambda r, e: on_reply(r, e, port, peer_address), nxos_state_request(port, peer_address))
+        after _POLL_PERIOD: _poll()
+
+    proc def __startup__():
+        _poll()
+
+
 proc def FabricInterfaceTransform(path, update_oper: proc(?y_1_oper.stratoweave_rfs__rfs__fabric_interface_entry)->None, dev: swdev.DeviceMgr):
     provider = await async dev.tree_provider()
     return FabricInterfaceTransformActor(path, update_oper, dev, provider)
@@ -922,6 +1048,7 @@ actor FabricInterfaceTransformActor(path, update_oper: proc(?y_1_oper.stratoweav
     var _eos_no_neighbor_since: ?int = None
     var _eos_no_neighbor_logged = False
     var _crpd_poll: ?_CrpdPortPoll = None
+    var _nxos_poll: ?_NxosPortPoll = None
 
     def _watchdog():
         if not _running:
@@ -1018,7 +1145,7 @@ actor FabricInterfaceTransformActor(path, update_oper: proc(?y_1_oper.stratoweav
         _eos_bgp_status_seen = bgp_status
         _eos_publish()
 
-    def on_crpd_state(oper_status: ?str, bgp_status: ?str, neighbor_device: ?str, neighbor_interface: ?str):
+    def on_polled_state(oper_status: ?str, bgp_status: ?str, neighbor_device: ?str, neighbor_interface: ?str):
         _last_delivery = time.monotonic_ns()
         _stale = False
         publish(oper_status, bgp_status, neighbor_device, neighbor_interface)
@@ -1043,9 +1170,17 @@ actor FabricInterfaceTransformActor(path, update_oper: proc(?y_1_oper.stratoweav
             if poll is not None:
                 poll.watch(conf.name, conf.bgp.peer_address)
             else:
-                new_poll = _CrpdPortPoll(path, dev, on_crpd_state)
+                new_poll = _CrpdPortPoll(path, dev, on_polled_state)
                 new_poll.watch(conf.name, conf.bgp.peer_address)
                 _crpd_poll = new_poll
+        elif _NXOS_MODULE in modset:
+            nxos_poll = _nxos_poll
+            if nxos_poll is not None:
+                nxos_poll.watch(conf.name, conf.bgp.peer_address)
+            else:
+                new_nxos_poll = _NxosPortPoll(path, dev, on_polled_state)
+                new_nxos_poll.watch(conf.name, conf.bgp.peer_address)
+                _nxos_poll = new_nxos_poll
         _subs.declare(want)
 
     def shutdown():
@@ -1053,6 +1188,9 @@ actor FabricInterfaceTransformActor(path, update_oper: proc(?y_1_oper.stratoweav
         poll = _crpd_poll
         if poll is not None:
             poll.stop()
+        nxos_poll = _nxos_poll
+        if nxos_poll is not None:
+            nxos_poll.stop()
 
     proc def __startup__():
         after _POLL_PERIOD: _watchdog()
