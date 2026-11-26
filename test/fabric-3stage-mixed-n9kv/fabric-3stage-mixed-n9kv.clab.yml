@@ -18,6 +18,11 @@ topology:
       image: vrnetlab/cisco_n9kv:9300-10.6.4.M
       image-pull-policy: never
       startup-config: n9kv-startup.cfg
+      # mgmt0 takes the container's management address and gateway instead
+      # of 10.0.0.15 behind NAT, so dorsi reaches the switch at the address
+      # it renders on mgmt0 (management-address), as with Arista EOS
+      env:
+        CLAB_MGMT_PASSTHROUGH: "true"
   nodes:
     leaf1:
       mgmt-ipv4: 172.31.42.11

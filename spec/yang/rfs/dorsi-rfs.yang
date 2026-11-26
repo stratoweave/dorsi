@@ -72,6 +72,14 @@ module dorsi-rfs {
                 type boolean;
                 default false;
             }
+            leaf-list fabric-port {
+                description
+                    "The ports of the switch's fabric links. Cisco NX-OS
+                     cannot delete a physical port and reports every setting
+                     of every port, so its base configuration renders all
+                     its physical ports, these as routed ports.";
+                type string;
+            }
             list overlay-peer {
                 description
                     "An eBGP session between loopbacks that carries EVPN

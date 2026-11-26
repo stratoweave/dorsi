@@ -63,12 +63,40 @@ _NXOS_MODULE = "Cisco-NX-OS-device"
 
 # The physical ports of a Nexus 9300v (nexus9300v64), eth1/1 to eth1/64.
 # NX-OS refuses to delete a physical port ("Cannot delete object of
-# class:l1PhysIf"), and dorsi owns the port list, so every port is rendered,
-# a port no fabric link or server uses by its id alone.
+# class:l1PhysIf") and reports the layer, MTU and admin state of every port,
+# also when they are the defaults. dorsi owns these, so the base config
+# renders every port: a fabric port routed, any other with the defaults
+# NX-OS reports. Only one transform may set them, as two that differ do not
+# merge.
 _NXOS_PHYSICAL_PORTS = 64
+_NXOS_LOOPBACK = "lo0"
+_NXOS_MGMT_INTERFACE = "mgmt0"
+_NXOS_MGMT_VRF = "management"
+_NXOS_DEFAULT_VRF = "default"
+# NX-OS makes this BGP domain of its own with the first BGP configuration,
+# with an IPv4 unicast address family, and would have it deleted otherwise
+_NXOS_BGP_INTERNAL_DOMAIN = "egress-loadbalance-resolution-"
+_NXOS_IPV4_UNICAST = "ipv4-ucast"
+# NX-OS applies the layer, MTU and admin state of a port set over NETCONF
+# only with these flags
+_NXOS_ROUTED_PORT_FLAGS = "admin_layer,admin_mtu,admin_state"
 
 def nxos_physical_ports() -> list[str]:
     return ["eth1/{n}" for n in range(1, _NXOS_PHYSICAL_PORTS + 1)]
+
+def _nxos_ipv4_address(dev: nxos1064.root, vrf: str, interface: str, address: str):
+    """address with its prefix length, as 10.0.0.1/32"""
+    dom = dev.System.ipv4_items.inst_items.dom_items.Dom_list.create(vrf)
+    dom.if_items.If_list.create(interface).addr_items.Addr_list.create(address)
+
+def _nxos_bgp_domain(dev: nxos1064.root, name: str):
+    return dev.System.bgp_items.inst_items.dom_items.Dom_list.create(name)
+
+def _nxos_route_map(dev: nxos1064.root, name: str):
+    """A route map with a single permit entry"""
+    entry = dev.System.rpm_items.rtmap_items.Rule_list.create(name).ent_items.Entry_list.create(u64(10))
+    entry.action_ = "permit"
+    return entry
 
 # The VRF of Management0 on EOS. In the default VRF the management default
 # route would carry fabric traffic whenever the fabric has no route for it.
@@ -253,8 +281,60 @@ class FabricBaseConfig(base.FabricBaseConfig):
             print("RFS /rfs{{{di.name}}}/fabric-base-config transform running {i.role} for Cisco NX-OS", err=True)
             dev = nxos1064.root()
             dev.System.name = di.name
+
             for port in nxos_physical_ports():
-                dev.System.intf_items.phys_items.PhysIf_list.create(port)
+                phys = dev.System.intf_items.phys_items.PhysIf_list.create(port)
+                if port in i.fabric_port:
+                    phys.layer = "Layer3"
+                    phys.mtu = u64(_FABRIC_IP_MTU)
+                    phys.adminSt = "up"
+                    phys.userCfgdFlags = _NXOS_ROUTED_PORT_FLAGS
+                else:
+                    phys.layer = "Layer2"
+                    phys.mtu = u64(1500)
+                    phys.adminSt = "up"
+                    phys.userCfgdFlags = ""
+
+            # Management. Its address is in the IPv4 configuration dorsi
+            # manages, so it has to be in the target or dorsi removes it. The
+            # default route of the management VRF is left as it is.
+            mgmt = i.management_address
+            if mgmt is not None:
+                _nxos_ipv4_address(dev, _NXOS_MGMT_VRF, _NXOS_MGMT_INTERFACE, mgmt)
+
+            # Loopback
+            lo = dev.System.intf_items.lb_items.LbRtdIf_list.create(_NXOS_LOOPBACK)
+            lo.adminSt = "up"
+            _nxos_ipv4_address(dev, _NXOS_DEFAULT_VRF, _NXOS_LOOPBACK, "{i.ipv4_address}/32")
+
+            # Advertise the loopbacks and accept everything the fabric sends us
+            pl = dev.System.rpm_items.pfxlistv4_items.RuleV4_list.create(_FABRIC_LOOPBACK_PREFIX_SET)
+            pl_entry = pl.ent_items.Entry_list.create(u64(5))
+            pl_entry.action_ = "permit"
+            pl_entry.criteria = "inexact"
+            pl_entry.pfx = "10.0.0.0/16"
+            pl_entry.fromPfxLen = u64(32)
+            pl_entry.toPfxLen = u64(32)
+            exp = _nxos_route_map(dev, _FABRIC_EXPORT_POLICY)
+            exp.mrtdst_items.rsrtDstAtt_items.RsRtDstAtt_list.create("/System/rpm-items/pfxlistv4-items/RuleV4-list[name='{_FABRIC_LOOPBACK_PREFIX_SET}']")
+            _nxos_route_map(dev, _FABRIC_IMPORT_POLICY)
+
+            # BGP with ECMP. NX-OS advertises only routes in BGP: redistribute
+            # the connected routes, of which the export policy lets only the
+            # loopbacks out. The peer template carries the policies.
+            dev.System.bgp_items.inst_items.asn = str(i.asn)
+            dom = _nxos_bgp_domain(dev, _NXOS_DEFAULT_VRF)
+            dom.rtrId = i.ipv4_address
+            af = dom.af_items.DomAf_list.create(_NXOS_IPV4_UNICAST)
+            af.maxExtEcmp = u64(_FABRIC_ECMP_PATHS)
+            leak = af.interleak_items.InterLeakP_list.create(("direct", "none"))
+            leak.asn = "none"
+            leak.rtMap = _FABRIC_EXPORT_POLICY
+            template = dom.peercont_items.PeerCont_list.create(_FABRIC_GROUP)
+            template_af = template.af_items.PeerAf_list.create(_NXOS_IPV4_UNICAST)
+            template_af.rtctrl_items.RtCtrlP_list.create("out").rtMap = _FABRIC_EXPORT_POLICY
+            template_af.rtctrl_items.RtCtrlP_list.create("in").rtMap = _FABRIC_IMPORT_POLICY
+            _nxos_bgp_domain(dev, _NXOS_BGP_INTERNAL_DOMAIN).af_items.DomAf_list.create(_NXOS_IPV4_UNICAST)
             return dev
 
         if _EOS_MODULE in di.modules:
@@ -499,10 +579,18 @@ class FabricInterface(base.FabricInterface):
             return dev
 
         if _NXOS_MODULE in di.modules:
-            # Not rendered yet: the NX-OS device type is a stub
+            print("RFS /rfs{{{di.name}}}/fabric-interface transform running [{i.name}] <-> {i.remote.device} [{i.remote.interface}] for Cisco NX-OS", err=True)
             dev = nxos1064.root()
-            phys = dev.System.intf_items.phys_items.PhysIf_list.create(i.name)
-            phys.descr = _link_description(i.remote.device, i.remote.interface)
+            # The base config makes the port routed, from fabric-port
+            dev.System.intf_items.phys_items.PhysIf_list.create(i.name).descr = if_description
+            _nxos_ipv4_address(dev, _NXOS_DEFAULT_VRF, i.name, "%s/%s" % (i.ipv4_address, str(i.ipv4_prefix_length)))
+
+            # eBGP session to the other end of the link, with the peer
+            # template of the fabric
+            peer = _nxos_bgp_domain(dev, _NXOS_DEFAULT_VRF).peer_items.Peer_list.create(i.bgp.peer_address)
+            peer.asn = str(i.bgp.peer_asn)
+            peer.name = if_description
+            peer.peerImp = _FABRIC_GROUP
             return dev
 
         if _EOS_MODULE in di.modules:

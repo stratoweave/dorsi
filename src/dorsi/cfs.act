@@ -261,7 +261,7 @@ def server_uses_lag(server: y_0.ip_fabric__ip_fabric__fabric__server_entry, port
 # dorsi manages, so they need no management-address. Every other type, a new
 # one too, needs it: its address sits in configuration dorsi owns, which would
 # otherwise drop it and cut dorsi off from the device.
-DHCP_MANAGEMENT_TYPES = {"NokiaSRLinux_25_3_2", "JuniperCRPD_24_4R1_9", "CiscoNXOS_10_6_4M"}
+DHCP_MANAGEMENT_TYPES = {"NokiaSRLinux_25_3_2", "JuniperCRPD_24_4R1_9"}
 
 
 def _decimal_at_most(s: str, max_digits: int, max_value: int) -> bool:
@@ -649,6 +649,9 @@ class Fabric(base.Fabric):
             lower_asn = fabric_asn(lower.role, int(lower.id), lower.pod, lower.plane)
             upper_asn = fabric_asn(upper.role, int(upper.id), upper.pod, upper.plane)
             lower_addr, upper_addr = fabric_link_addresses(int(lower.id), link.lower_port)
+
+            base_configs[link.lower_switch].fabric_port.append(link.lower_port)
+            base_configs[link.upper_switch].fabric_port.append(link.upper_port)
 
             li = o.rfs.create(link.lower_switch).fabric_interface.create(link.lower_port, ipv4_address=lower_addr)
             li.remote.device = link.upper_switch

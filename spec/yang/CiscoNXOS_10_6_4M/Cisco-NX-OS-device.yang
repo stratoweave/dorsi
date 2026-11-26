@@ -4130,6 +4130,72 @@ module Cisco-NX-OS-device {
         default "ipv4-ucast";
     }
 
+    typedef bgp_AfT-key {
+        // Added for dorsi: bgp_AfT without its default, for list keys
+        type enumeration {
+            enum ipv4-ucast {
+                value 1;
+                description "IPv4 unicast address family";
+            }
+            enum ipv4-mcast {
+                value 2;
+                description "IPv4 multicast address family";
+            }
+            enum vpnv4-ucast {
+                value 3;
+                description "Vpnv4 unicast address family";
+            }
+            enum ipv6-ucast {
+                value 5;
+                description "IPv6 unicast address family";
+            }
+            enum ipv6-mcast {
+                value 6;
+                description "IPv6 multicast address family";
+            }
+            enum vpnv6-ucast {
+                value 7;
+                description "Vpnv6 unicast address family";
+            }
+            enum l2vpn-evpn {
+                value 9;
+                description "L2Vpn EVpn address family";
+            }
+            enum ipv4-lucast {
+                value 10;
+                description "IPv4 labeled unicast  address family";
+            }
+            enum ipv6-lucast {
+                value 11;
+                description "IPv6 labeled unicast  address family";
+            }
+            enum lnkstate {
+                value 12;
+                description "Link state address family";
+            }
+            enum ipv4-mvpn {
+                value 13;
+                description "IPv4 mvpn address family";
+            }
+            enum ipv6-mvpn {
+                value 14;
+                description "IPv6 mvpn address family";
+            }
+            enum l2vpn-vpls {
+                value 15;
+                description "L2Vpn vpls address family";
+            }
+            enum ipv4-mdt {
+                value 16;
+                description "IPv4 mdt address family";
+            }
+            enum vpnv6-mcast {
+                value 8;
+                description "Vpnv6 multicast address family";
+            }
+        }
+    }
+
     // Activate the affinity group
     typedef bgp_AffGrpActv {
         type uint16 {
@@ -35302,6 +35368,20 @@ module Cisco-NX-OS-device {
         default "in";
     }
 
+    typedef rtctrl_RtCtrlDir-key {
+        // Added for dorsi: rtctrl_RtCtrlDir without its default, for list keys
+        type enumeration {
+            enum in {
+                value 1;
+                description "Incoming";
+            }
+            enum out {
+                value 2;
+                description "Outgoing";
+            }
+        }
+    }
+
     // Route target policy type
     typedef rtctrl_RttPType {
         type enumeration {
@@ -35945,6 +36025,80 @@ module Cisco-NX-OS-device {
             }
         }
         default "unspecified";
+    }
+
+    typedef rtleak_Proto-key {
+        // Added for dorsi: rtleak_Proto without its default, for list keys
+        type enumeration {
+            enum unspecified {
+                value 0;
+                description "Unspecified";
+            }
+            enum static {
+                value 1;
+                description "Static";
+            }
+            enum direct {
+                value 2;
+                description "Direct";
+            }
+            enum bgp {
+                value 3;
+                description "BGP";
+            }
+            enum isis {
+                value 4;
+                description "ISIS";
+            }
+            enum ospf {
+                value 5;
+                description "OSPF";
+            }
+            enum ospfv3 {
+                value 6;
+                description "OSPFv3";
+            }
+            enum eigrp {
+                value 7;
+                description "EIGRP";
+            }
+            enum host {
+                value 8;
+                description "HOST";
+            }
+            enum rip {
+                value 9;
+                description "RIP";
+            }
+            enum amt {
+                value 10;
+                description "AMT";
+            }
+            enum lisp {
+                value 11;
+                description "LISP";
+            }
+            enum hmm {
+                value 12;
+                description "HMM";
+            }
+            enum am {
+                value 13;
+                description "AM";
+            }
+            enum srv6 {
+                value 14;
+                description "SRV6";
+            }
+            enum dhcpv6 {
+                value 15;
+                description "DHCPV6";
+            }
+            enum icmpv6 {
+                value 16;
+                description "ICMPv6";
+            }
+        }
     }
 
     // Maximum number of retries to retrieve the leaked routes
@@ -49825,7 +49979,9 @@ module Cisco-NX-OS-device {
         // Type
         leaf type {
 
-            type bgp_AfT;
+            // Changed for dorsi: a list key; StratoWeave makes a key whose
+            // type has a default optional, which does not compile.
+            type bgp_AfT-key;
             description "Address Family Type";
         }
 
@@ -51838,7 +51994,9 @@ module Cisco-NX-OS-device {
         // Direction [in/out]
         leaf direction {
 
-            type rtctrl_RtCtrlDir;
+            // Changed for dorsi: a list key; StratoWeave makes a key whose
+            // type has a default optional, which does not compile.
+            type rtctrl_RtCtrlDir-key;
             description "Direction";
         }
         leaf rtMap {
@@ -52922,7 +53080,9 @@ module Cisco-NX-OS-device {
         // Type
         leaf type {
 
-            type bgp_AfT;
+            // Changed for dorsi: a list key; StratoWeave makes a key whose
+            // type has a default optional, which does not compile.
+            type bgp_AfT-key;
             description "Address Family Type";
         }
 
@@ -54429,7 +54589,9 @@ module Cisco-NX-OS-device {
         // Protocol from where the routes are leaked
         leaf proto {
 
-            type rtleak_Proto;
+            // Changed for dorsi: a list key; StratoWeave makes a key whose
+            // type has a default optional, which does not compile.
+            type rtleak_Proto-key;
             description "Protocol";
         }
 

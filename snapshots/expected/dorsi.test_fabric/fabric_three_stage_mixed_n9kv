@@ -14,8 +14,38 @@ leaf1.system.name.host_name = 'leaf1'
 # P-container: /system/lldp (srl_nokia-lldp)
 lldp = leaf1.system.create_lldp(admin_state='enable')
 
+# List /system/lldp/interface element: 'ethernet-1/49'
+interface_element = lldp.interface.create('ethernet-1/49', admin_state='enable')
+
+# List /system/lldp/interface element: 'ethernet-1/50'
+interface_element = lldp.interface.create('ethernet-1/50', admin_state='enable')
+
 # List /system/lldp/interface element: 'mgmt0'
 interface_element = lldp.interface.create('mgmt0', admin_state='enable')
+
+# List /interface (srl_nokia-interfaces) element: 'ethernet-1/49'
+interface_element_2 = leaf1.interface.create('ethernet-1/49', description='Link to spine1 [eth1/1]', admin_state='enable')
+
+# List /interface[name='ethernet-1/49']/subinterface element: 0
+subinterface_element = interface_element_2.subinterface.create(u64(0), description='Link to spine1 [eth1/1]', admin_state='enable', ip_mtu=u64(9000))
+
+# Container: /interface[name='ethernet-1/49']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# List /interface[name='ethernet-1/49']/subinterface[index='0']/ipv4/address element: '10.100.0.226/31'
+address_element = subinterface_element.ipv4.address.create('10.100.0.226/31')
+
+# List /interface (srl_nokia-interfaces) element: 'ethernet-1/50'
+interface_element_2 = leaf1.interface.create('ethernet-1/50', description='Link to spine2 [ethernet-1/1]', admin_state='enable')
+
+# List /interface[name='ethernet-1/50']/subinterface element: 0
+subinterface_element = interface_element_2.subinterface.create(u64(0), description='Link to spine2 [ethernet-1/1]', admin_state='enable', ip_mtu=u64(9000))
+
+# Container: /interface[name='ethernet-1/50']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# List /interface[name='ethernet-1/50']/subinterface[index='0']/ipv4/address element: '10.100.0.228/31'
+address_element = subinterface_element.ipv4.address.create('10.100.0.228/31')
 
 # List /interface (srl_nokia-interfaces) element: 'mgmt0'
 interface_element_2 = leaf1.interface.create('mgmt0', admin_state='enable')
@@ -44,6 +74,12 @@ address_element = subinterface_element.ipv4.address.create('10.0.0.1/32')
 # List /network-instance (srl_nokia-network-instance) element: 'default'
 network_instance_element = leaf1.network_instance.create('default')
 
+# List /network-instance[name='default']/interface element: 'ethernet-1/49.0'
+interface_element_3 = network_instance_element.interface.create('ethernet-1/49.0')
+
+# List /network-instance[name='default']/interface element: 'ethernet-1/50.0'
+interface_element_3 = network_instance_element.interface.create('ethernet-1/50.0')
+
 # List /network-instance[name='default']/interface element: 'system0.0'
 interface_element_3 = network_instance_element.interface.create('system0.0')
 
@@ -60,6 +96,12 @@ afi_safi_element.multipath.ebgp.maximum_paths = u64(64)
 group_element = bgp.group.create('fabric')
 group_element.export_policy = ['export-loopbacks']
 group_element.import_policy = ['accept-all']
+
+# List /network-instance[name='default']/protocols/bgp/neighbor element: '10.100.0.227'
+neighbor_element = bgp.neighbor.create('10.100.0.227', admin_state='enable', description='Link to spine1 [eth1/1]', peer_as=u64(4200100101), peer_group='fabric')
+
+# List /network-instance[name='default']/protocols/bgp/neighbor element: '10.100.0.229'
+neighbor_element = bgp.neighbor.create('10.100.0.229', admin_state='enable', description='Link to spine2 [ethernet-1/1]', peer_as=u64(4200100101), peer_group='fabric')
 
 # List /network-instance (srl_nokia-network-instance) element: 'mgmt'
 network_instance_element = leaf1.network_instance.create('mgmt', type=Identityref('ip-vrf', ns='urn:nokia.com:srlinux:net-inst:network-instance', mod='srl_nokia-network-instance', pfx='srl_nokia-netinst'), admin_state='enable', description='Management network instance')
@@ -103,197 +145,878 @@ leaf2 = root()
 # Container: /System (Cisco-NX-OS-device)
 leaf2.System.name = 'leaf2'
 
+# Container: /System/bgp-items/inst-items
+leaf2.System.bgp_items.inst_items.asn = '4200000002'
+
+# List /System/bgp-items/inst-items/dom-items/Dom-list element: 'default'
+Dom_list_element = leaf2.System.bgp_items.inst_items.dom_items.Dom_list.create('default', rtrId='10.0.0.2')
+
+# List /System/bgp-items/inst-items/dom-items/Dom-list[name='default']/peercont-items/PeerCont-list element: 'fabric'
+PeerCont_list_element = Dom_list_element.peercont_items.PeerCont_list.create('fabric')
+
+# List /System/bgp-items/inst-items/dom-items/Dom-list[name='default']/peercont-items/PeerCont-list[name='fabric']/af-items/PeerAf-list element: 'ipv4-ucast'
+PeerAf_list_element = PeerCont_list_element.af_items.PeerAf_list.create('ipv4-ucast')
+
+# List /System/bgp-items/inst-items/dom-items/Dom-list[name='default']/peercont-items/PeerCont-list[name='fabric']/af-items/PeerAf-list[type='ipv4-ucast']/rtctrl-items/RtCtrlP-list element: 'in'
+RtCtrlP_list_element = PeerAf_list_element.rtctrl_items.RtCtrlP_list.create('in', rtMap='accept-all')
+
+# List /System/bgp-items/inst-items/dom-items/Dom-list[name='default']/peercont-items/PeerCont-list[name='fabric']/af-items/PeerAf-list[type='ipv4-ucast']/rtctrl-items/RtCtrlP-list element: 'out'
+RtCtrlP_list_element = PeerAf_list_element.rtctrl_items.RtCtrlP_list.create('out', rtMap='export-loopbacks')
+
+# List /System/bgp-items/inst-items/dom-items/Dom-list[name='default']/af-items/DomAf-list element: 'ipv4-ucast'
+DomAf_list_element = Dom_list_element.af_items.DomAf_list.create('ipv4-ucast', maxExtEcmp=u64(64))
+
+# List /System/bgp-items/inst-items/dom-items/Dom-list[name='default']/af-items/DomAf-list[type='ipv4-ucast']/interleak-items/InterLeakP-list element: 'direct', 'none'
+InterLeakP_list_element = DomAf_list_element.interleak_items.InterLeakP_list.create((proto='direct', inst='none'), rtMap='export-loopbacks', asn='none')
+
+# List /System/bgp-items/inst-items/dom-items/Dom-list[name='default']/peer-items/Peer-list element: '10.100.1.3'
+Peer_list_element = Dom_list_element.peer_items.Peer_list.create('10.100.1.3', name='Link to spine1 [eth1/2]', asn='4200100101', peerImp='fabric')
+
+# List /System/bgp-items/inst-items/dom-items/Dom-list[name='default']/peer-items/Peer-list element: '10.100.1.5'
+Peer_list_element = Dom_list_element.peer_items.Peer_list.create('10.100.1.5', name='Link to spine2 [ethernet-1/2]', asn='4200100101', peerImp='fabric')
+
+# List /System/bgp-items/inst-items/dom-items/Dom-list element: 'egress-loadbalance-resolution-'
+Dom_list_element = leaf2.System.bgp_items.inst_items.dom_items.Dom_list.create('egress-loadbalance-resolution-')
+
+# List /System/bgp-items/inst-items/dom-items/Dom-list[name='egress-loadbalance-resolution-']/af-items/DomAf-list element: 'ipv4-ucast'
+DomAf_list_element = Dom_list_element.af_items.DomAf_list.create('ipv4-ucast')
+
 # List /System/intf-items/phys-items/PhysIf-list element: 'eth1/1'
-PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/1')
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/1', descr='Link to spine1 [eth1/2]', adminSt='up', mtu=u64(9000), layer='Layer3', userCfgdFlags='admin_layer,admin_mtu,admin_state')
 
 # List /System/intf-items/phys-items/PhysIf-list element: 'eth1/10'
-PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/10')
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/10', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
 
 # List /System/intf-items/phys-items/PhysIf-list element: 'eth1/11'
-PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/11')
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/11', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
 
 # List /System/intf-items/phys-items/PhysIf-list element: 'eth1/12'
-PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/12')
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/12', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
 
 # List /System/intf-items/phys-items/PhysIf-list element: 'eth1/13'
-PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/13')
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/13', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
 
 # List /System/intf-items/phys-items/PhysIf-list element: 'eth1/14'
-PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/14')
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/14', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
 
 # List /System/intf-items/phys-items/PhysIf-list element: 'eth1/15'
-PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/15')
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/15', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
 
 # List /System/intf-items/phys-items/PhysIf-list element: 'eth1/16'
-PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/16')
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/16', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
 
 # List /System/intf-items/phys-items/PhysIf-list element: 'eth1/17'
-PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/17')
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/17', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
 
 # List /System/intf-items/phys-items/PhysIf-list element: 'eth1/18'
-PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/18')
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/18', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
 
 # List /System/intf-items/phys-items/PhysIf-list element: 'eth1/19'
-PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/19')
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/19', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
 
 # List /System/intf-items/phys-items/PhysIf-list element: 'eth1/2'
-PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/2', descr='Link to spine2 [ethernet-1/2]')
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/2', descr='Link to spine2 [ethernet-1/2]', adminSt='up', mtu=u64(9000), layer='Layer3', userCfgdFlags='admin_layer,admin_mtu,admin_state')
 
 # List /System/intf-items/phys-items/PhysIf-list element: 'eth1/20'
-PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/20')
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/20', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
 
 # List /System/intf-items/phys-items/PhysIf-list element: 'eth1/21'
-PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/21')
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/21', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
 
 # List /System/intf-items/phys-items/PhysIf-list element: 'eth1/22'
-PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/22')
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/22', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
 
 # List /System/intf-items/phys-items/PhysIf-list element: 'eth1/23'
-PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/23')
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/23', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
 
 # List /System/intf-items/phys-items/PhysIf-list element: 'eth1/24'
-PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/24')
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/24', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
 
 # List /System/intf-items/phys-items/PhysIf-list element: 'eth1/25'
-PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/25')
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/25', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
 
 # List /System/intf-items/phys-items/PhysIf-list element: 'eth1/26'
-PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/26')
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/26', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
 
 # List /System/intf-items/phys-items/PhysIf-list element: 'eth1/27'
-PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/27')
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/27', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
 
 # List /System/intf-items/phys-items/PhysIf-list element: 'eth1/28'
-PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/28')
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/28', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
 
 # List /System/intf-items/phys-items/PhysIf-list element: 'eth1/29'
-PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/29')
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/29', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
 
 # List /System/intf-items/phys-items/PhysIf-list element: 'eth1/3'
-PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/3')
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/3', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
 
 # List /System/intf-items/phys-items/PhysIf-list element: 'eth1/30'
-PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/30')
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/30', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
 
 # List /System/intf-items/phys-items/PhysIf-list element: 'eth1/31'
-PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/31')
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/31', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
 
 # List /System/intf-items/phys-items/PhysIf-list element: 'eth1/32'
-PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/32')
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/32', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
 
 # List /System/intf-items/phys-items/PhysIf-list element: 'eth1/33'
-PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/33')
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/33', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
 
 # List /System/intf-items/phys-items/PhysIf-list element: 'eth1/34'
-PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/34')
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/34', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
 
 # List /System/intf-items/phys-items/PhysIf-list element: 'eth1/35'
-PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/35')
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/35', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
 
 # List /System/intf-items/phys-items/PhysIf-list element: 'eth1/36'
-PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/36')
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/36', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
 
 # List /System/intf-items/phys-items/PhysIf-list element: 'eth1/37'
-PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/37')
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/37', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
 
 # List /System/intf-items/phys-items/PhysIf-list element: 'eth1/38'
-PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/38')
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/38', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
 
 # List /System/intf-items/phys-items/PhysIf-list element: 'eth1/39'
-PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/39')
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/39', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
 
 # List /System/intf-items/phys-items/PhysIf-list element: 'eth1/4'
-PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/4')
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/4', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
 
 # List /System/intf-items/phys-items/PhysIf-list element: 'eth1/40'
-PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/40')
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/40', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
 
 # List /System/intf-items/phys-items/PhysIf-list element: 'eth1/41'
-PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/41')
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/41', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
 
 # List /System/intf-items/phys-items/PhysIf-list element: 'eth1/42'
-PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/42')
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/42', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
 
 # List /System/intf-items/phys-items/PhysIf-list element: 'eth1/43'
-PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/43')
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/43', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
 
 # List /System/intf-items/phys-items/PhysIf-list element: 'eth1/44'
-PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/44')
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/44', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
 
 # List /System/intf-items/phys-items/PhysIf-list element: 'eth1/45'
-PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/45')
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/45', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
 
 # List /System/intf-items/phys-items/PhysIf-list element: 'eth1/46'
-PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/46')
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/46', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
 
 # List /System/intf-items/phys-items/PhysIf-list element: 'eth1/47'
-PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/47')
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/47', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
 
 # List /System/intf-items/phys-items/PhysIf-list element: 'eth1/48'
-PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/48')
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/48', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
 
 # List /System/intf-items/phys-items/PhysIf-list element: 'eth1/49'
-PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/49')
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/49', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
 
 # List /System/intf-items/phys-items/PhysIf-list element: 'eth1/5'
-PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/5')
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/5', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
 
 # List /System/intf-items/phys-items/PhysIf-list element: 'eth1/50'
-PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/50')
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/50', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
 
 # List /System/intf-items/phys-items/PhysIf-list element: 'eth1/51'
-PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/51')
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/51', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
 
 # List /System/intf-items/phys-items/PhysIf-list element: 'eth1/52'
-PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/52')
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/52', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
 
 # List /System/intf-items/phys-items/PhysIf-list element: 'eth1/53'
-PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/53')
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/53', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
 
 # List /System/intf-items/phys-items/PhysIf-list element: 'eth1/54'
-PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/54')
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/54', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
 
 # List /System/intf-items/phys-items/PhysIf-list element: 'eth1/55'
-PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/55')
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/55', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
 
 # List /System/intf-items/phys-items/PhysIf-list element: 'eth1/56'
-PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/56')
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/56', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
 
 # List /System/intf-items/phys-items/PhysIf-list element: 'eth1/57'
-PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/57')
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/57', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
 
 # List /System/intf-items/phys-items/PhysIf-list element: 'eth1/58'
-PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/58')
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/58', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
 
 # List /System/intf-items/phys-items/PhysIf-list element: 'eth1/59'
-PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/59')
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/59', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
 
 # List /System/intf-items/phys-items/PhysIf-list element: 'eth1/6'
-PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/6')
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/6', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
 
 # List /System/intf-items/phys-items/PhysIf-list element: 'eth1/60'
-PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/60')
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/60', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
 
 # List /System/intf-items/phys-items/PhysIf-list element: 'eth1/61'
-PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/61')
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/61', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
 
 # List /System/intf-items/phys-items/PhysIf-list element: 'eth1/62'
-PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/62')
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/62', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
 
 # List /System/intf-items/phys-items/PhysIf-list element: 'eth1/63'
-PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/63')
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/63', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
 
 # List /System/intf-items/phys-items/PhysIf-list element: 'eth1/64'
-PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/64')
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/64', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
 
 # List /System/intf-items/phys-items/PhysIf-list element: 'eth1/7'
-PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/7')
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/7', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
 
 # List /System/intf-items/phys-items/PhysIf-list element: 'eth1/8'
-PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/8')
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/8', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
 
 # List /System/intf-items/phys-items/PhysIf-list element: 'eth1/9'
-PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/9')
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/9', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/lb-items/LbRtdIf-list element: 'lo0'
+LbRtdIf_list_element = leaf2.System.intf_items.lb_items.LbRtdIf_list.create('lo0', adminSt='up')
+
+# List /System/ipv4-items/inst-items/dom-items/Dom-list element: 'default'
+Dom_list_element_2 = leaf2.System.ipv4_items.inst_items.dom_items.Dom_list.create('default')
+
+# List /System/ipv4-items/inst-items/dom-items/Dom-list[name='default']/if-items/If-list element: 'eth1/1'
+If_list_element = Dom_list_element_2.if_items.If_list.create('eth1/1')
+
+# List /System/ipv4-items/inst-items/dom-items/Dom-list[name='default']/if-items/If-list[id='eth1/1']/addr-items/Addr-list element: '10.100.1.2/31'
+Addr_list_element = If_list_element.addr_items.Addr_list.create('10.100.1.2/31')
+
+# List /System/ipv4-items/inst-items/dom-items/Dom-list[name='default']/if-items/If-list element: 'eth1/2'
+If_list_element = Dom_list_element_2.if_items.If_list.create('eth1/2')
+
+# List /System/ipv4-items/inst-items/dom-items/Dom-list[name='default']/if-items/If-list[id='eth1/2']/addr-items/Addr-list element: '10.100.1.4/31'
+Addr_list_element = If_list_element.addr_items.Addr_list.create('10.100.1.4/31')
+
+# List /System/ipv4-items/inst-items/dom-items/Dom-list[name='default']/if-items/If-list element: 'lo0'
+If_list_element = Dom_list_element_2.if_items.If_list.create('lo0')
+
+# List /System/ipv4-items/inst-items/dom-items/Dom-list[name='default']/if-items/If-list[id='lo0']/addr-items/Addr-list element: '10.0.0.2/32'
+Addr_list_element = If_list_element.addr_items.Addr_list.create('10.0.0.2/32')
+
+# List /System/ipv4-items/inst-items/dom-items/Dom-list element: 'management'
+Dom_list_element_2 = leaf2.System.ipv4_items.inst_items.dom_items.Dom_list.create('management')
+
+# List /System/ipv4-items/inst-items/dom-items/Dom-list[name='management']/if-items/If-list element: 'mgmt0'
+If_list_element = Dom_list_element_2.if_items.If_list.create('mgmt0')
+
+# List /System/ipv4-items/inst-items/dom-items/Dom-list[name='management']/if-items/If-list[id='mgmt0']/addr-items/Addr-list element: '172.31.42.12/24'
+Addr_list_element = If_list_element.addr_items.Addr_list.create('172.31.42.12/24')
+
+# List /System/rpm-items/rtmap-items/Rule-list element: 'accept-all'
+Rule_list_element = leaf2.System.rpm_items.rtmap_items.Rule_list.create('accept-all')
+
+# List /System/rpm-items/rtmap-items/Rule-list[name='accept-all']/ent-items/Entry-list element: 10
+Entry_list_element = Rule_list_element.ent_items.Entry_list.create(u64(10), action_='permit')
+
+# List /System/rpm-items/rtmap-items/Rule-list element: 'export-loopbacks'
+Rule_list_element = leaf2.System.rpm_items.rtmap_items.Rule_list.create('export-loopbacks')
+
+# List /System/rpm-items/rtmap-items/Rule-list[name='export-loopbacks']/ent-items/Entry-list element: 10
+Entry_list_element = Rule_list_element.ent_items.Entry_list.create(u64(10), action_='permit')
+
+# List /System/rpm-items/rtmap-items/Rule-list[name='export-loopbacks']/ent-items/Entry-list[order='10']/mrtdst-items/rsrtDstAtt-items/RsRtDstAtt-list element: "/System/rpm-items/pfxlistv4-items/RuleV4-list[name='loopbacks']"
+RsRtDstAtt_list_element = Entry_list_element.mrtdst_items.rsrtDstAtt_items.RsRtDstAtt_list.create("/System/rpm-items/pfxlistv4-items/RuleV4-list[name='loopbacks']")
+
+# List /System/rpm-items/pfxlistv4-items/RuleV4-list element: 'loopbacks'
+RuleV4_list_element = leaf2.System.rpm_items.pfxlistv4_items.RuleV4_list.create('loopbacks')
+
+# List /System/rpm-items/pfxlistv4-items/RuleV4-list[name='loopbacks']/ent-items/Entry-list element: 5
+Entry_list_element_2 = RuleV4_list_element.ent_items.Entry_list.create(u64(5), pfx='10.0.0.0/16', criteria='inexact', fromPfxLen=u64(32), toPfxLen=u64(32), action_='permit')
+
+# device leaf3
+# YANG module (prefix) and namespace:
+#   Cisco-NX-OS-device (top)  http://cisco.com/ns/yang/cisco-nx-os-device
+# Top node: /
+leaf3 = root()
+
+# Container: /System (Cisco-NX-OS-device)
+leaf3.System.name = 'leaf3'
+
+# Container: /System/bgp-items/inst-items
+leaf3.System.bgp_items.inst_items.asn = '4200000003'
+
+# List /System/bgp-items/inst-items/dom-items/Dom-list element: 'default'
+Dom_list_element = leaf3.System.bgp_items.inst_items.dom_items.Dom_list.create('default', rtrId='10.0.0.3')
+
+# List /System/bgp-items/inst-items/dom-items/Dom-list[name='default']/peercont-items/PeerCont-list element: 'fabric'
+PeerCont_list_element = Dom_list_element.peercont_items.PeerCont_list.create('fabric')
+
+# List /System/bgp-items/inst-items/dom-items/Dom-list[name='default']/peercont-items/PeerCont-list[name='fabric']/af-items/PeerAf-list element: 'ipv4-ucast'
+PeerAf_list_element = PeerCont_list_element.af_items.PeerAf_list.create('ipv4-ucast')
+
+# List /System/bgp-items/inst-items/dom-items/Dom-list[name='default']/peercont-items/PeerCont-list[name='fabric']/af-items/PeerAf-list[type='ipv4-ucast']/rtctrl-items/RtCtrlP-list element: 'in'
+RtCtrlP_list_element = PeerAf_list_element.rtctrl_items.RtCtrlP_list.create('in', rtMap='accept-all')
+
+# List /System/bgp-items/inst-items/dom-items/Dom-list[name='default']/peercont-items/PeerCont-list[name='fabric']/af-items/PeerAf-list[type='ipv4-ucast']/rtctrl-items/RtCtrlP-list element: 'out'
+RtCtrlP_list_element = PeerAf_list_element.rtctrl_items.RtCtrlP_list.create('out', rtMap='export-loopbacks')
+
+# List /System/bgp-items/inst-items/dom-items/Dom-list[name='default']/af-items/DomAf-list element: 'ipv4-ucast'
+DomAf_list_element = Dom_list_element.af_items.DomAf_list.create('ipv4-ucast', maxExtEcmp=u64(64))
+
+# List /System/bgp-items/inst-items/dom-items/Dom-list[name='default']/af-items/DomAf-list[type='ipv4-ucast']/interleak-items/InterLeakP-list element: 'direct', 'none'
+InterLeakP_list_element = DomAf_list_element.interleak_items.InterLeakP_list.create((proto='direct', inst='none'), rtMap='export-loopbacks', asn='none')
+
+# List /System/bgp-items/inst-items/dom-items/Dom-list[name='default']/peer-items/Peer-list element: '10.100.1.131'
+Peer_list_element = Dom_list_element.peer_items.Peer_list.create('10.100.1.131', name='Link to spine1 [eth1/3]', asn='4200100101', peerImp='fabric')
+
+# List /System/bgp-items/inst-items/dom-items/Dom-list[name='default']/peer-items/Peer-list element: '10.100.1.133'
+Peer_list_element = Dom_list_element.peer_items.Peer_list.create('10.100.1.133', name='Link to spine2 [ethernet-1/3]', asn='4200100101', peerImp='fabric')
+
+# List /System/bgp-items/inst-items/dom-items/Dom-list element: 'egress-loadbalance-resolution-'
+Dom_list_element = leaf3.System.bgp_items.inst_items.dom_items.Dom_list.create('egress-loadbalance-resolution-')
+
+# List /System/bgp-items/inst-items/dom-items/Dom-list[name='egress-loadbalance-resolution-']/af-items/DomAf-list element: 'ipv4-ucast'
+DomAf_list_element = Dom_list_element.af_items.DomAf_list.create('ipv4-ucast')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/1'
+PhysIf_list_element = leaf3.System.intf_items.phys_items.PhysIf_list.create('eth1/1', descr='Link to spine1 [eth1/3]', adminSt='up', mtu=u64(9000), layer='Layer3', userCfgdFlags='admin_layer,admin_mtu,admin_state')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/10'
+PhysIf_list_element = leaf3.System.intf_items.phys_items.PhysIf_list.create('eth1/10', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/11'
+PhysIf_list_element = leaf3.System.intf_items.phys_items.PhysIf_list.create('eth1/11', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/12'
+PhysIf_list_element = leaf3.System.intf_items.phys_items.PhysIf_list.create('eth1/12', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/13'
+PhysIf_list_element = leaf3.System.intf_items.phys_items.PhysIf_list.create('eth1/13', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/14'
+PhysIf_list_element = leaf3.System.intf_items.phys_items.PhysIf_list.create('eth1/14', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/15'
+PhysIf_list_element = leaf3.System.intf_items.phys_items.PhysIf_list.create('eth1/15', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/16'
+PhysIf_list_element = leaf3.System.intf_items.phys_items.PhysIf_list.create('eth1/16', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/17'
+PhysIf_list_element = leaf3.System.intf_items.phys_items.PhysIf_list.create('eth1/17', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/18'
+PhysIf_list_element = leaf3.System.intf_items.phys_items.PhysIf_list.create('eth1/18', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/19'
+PhysIf_list_element = leaf3.System.intf_items.phys_items.PhysIf_list.create('eth1/19', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/2'
+PhysIf_list_element = leaf3.System.intf_items.phys_items.PhysIf_list.create('eth1/2', descr='Link to spine2 [ethernet-1/3]', adminSt='up', mtu=u64(9000), layer='Layer3', userCfgdFlags='admin_layer,admin_mtu,admin_state')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/20'
+PhysIf_list_element = leaf3.System.intf_items.phys_items.PhysIf_list.create('eth1/20', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/21'
+PhysIf_list_element = leaf3.System.intf_items.phys_items.PhysIf_list.create('eth1/21', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/22'
+PhysIf_list_element = leaf3.System.intf_items.phys_items.PhysIf_list.create('eth1/22', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/23'
+PhysIf_list_element = leaf3.System.intf_items.phys_items.PhysIf_list.create('eth1/23', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/24'
+PhysIf_list_element = leaf3.System.intf_items.phys_items.PhysIf_list.create('eth1/24', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/25'
+PhysIf_list_element = leaf3.System.intf_items.phys_items.PhysIf_list.create('eth1/25', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/26'
+PhysIf_list_element = leaf3.System.intf_items.phys_items.PhysIf_list.create('eth1/26', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/27'
+PhysIf_list_element = leaf3.System.intf_items.phys_items.PhysIf_list.create('eth1/27', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/28'
+PhysIf_list_element = leaf3.System.intf_items.phys_items.PhysIf_list.create('eth1/28', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/29'
+PhysIf_list_element = leaf3.System.intf_items.phys_items.PhysIf_list.create('eth1/29', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/3'
+PhysIf_list_element = leaf3.System.intf_items.phys_items.PhysIf_list.create('eth1/3', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/30'
+PhysIf_list_element = leaf3.System.intf_items.phys_items.PhysIf_list.create('eth1/30', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/31'
+PhysIf_list_element = leaf3.System.intf_items.phys_items.PhysIf_list.create('eth1/31', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/32'
+PhysIf_list_element = leaf3.System.intf_items.phys_items.PhysIf_list.create('eth1/32', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/33'
+PhysIf_list_element = leaf3.System.intf_items.phys_items.PhysIf_list.create('eth1/33', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/34'
+PhysIf_list_element = leaf3.System.intf_items.phys_items.PhysIf_list.create('eth1/34', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/35'
+PhysIf_list_element = leaf3.System.intf_items.phys_items.PhysIf_list.create('eth1/35', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/36'
+PhysIf_list_element = leaf3.System.intf_items.phys_items.PhysIf_list.create('eth1/36', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/37'
+PhysIf_list_element = leaf3.System.intf_items.phys_items.PhysIf_list.create('eth1/37', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/38'
+PhysIf_list_element = leaf3.System.intf_items.phys_items.PhysIf_list.create('eth1/38', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/39'
+PhysIf_list_element = leaf3.System.intf_items.phys_items.PhysIf_list.create('eth1/39', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/4'
+PhysIf_list_element = leaf3.System.intf_items.phys_items.PhysIf_list.create('eth1/4', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/40'
+PhysIf_list_element = leaf3.System.intf_items.phys_items.PhysIf_list.create('eth1/40', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/41'
+PhysIf_list_element = leaf3.System.intf_items.phys_items.PhysIf_list.create('eth1/41', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/42'
+PhysIf_list_element = leaf3.System.intf_items.phys_items.PhysIf_list.create('eth1/42', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/43'
+PhysIf_list_element = leaf3.System.intf_items.phys_items.PhysIf_list.create('eth1/43', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/44'
+PhysIf_list_element = leaf3.System.intf_items.phys_items.PhysIf_list.create('eth1/44', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/45'
+PhysIf_list_element = leaf3.System.intf_items.phys_items.PhysIf_list.create('eth1/45', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/46'
+PhysIf_list_element = leaf3.System.intf_items.phys_items.PhysIf_list.create('eth1/46', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/47'
+PhysIf_list_element = leaf3.System.intf_items.phys_items.PhysIf_list.create('eth1/47', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/48'
+PhysIf_list_element = leaf3.System.intf_items.phys_items.PhysIf_list.create('eth1/48', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/49'
+PhysIf_list_element = leaf3.System.intf_items.phys_items.PhysIf_list.create('eth1/49', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/5'
+PhysIf_list_element = leaf3.System.intf_items.phys_items.PhysIf_list.create('eth1/5', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/50'
+PhysIf_list_element = leaf3.System.intf_items.phys_items.PhysIf_list.create('eth1/50', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/51'
+PhysIf_list_element = leaf3.System.intf_items.phys_items.PhysIf_list.create('eth1/51', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/52'
+PhysIf_list_element = leaf3.System.intf_items.phys_items.PhysIf_list.create('eth1/52', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/53'
+PhysIf_list_element = leaf3.System.intf_items.phys_items.PhysIf_list.create('eth1/53', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/54'
+PhysIf_list_element = leaf3.System.intf_items.phys_items.PhysIf_list.create('eth1/54', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/55'
+PhysIf_list_element = leaf3.System.intf_items.phys_items.PhysIf_list.create('eth1/55', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/56'
+PhysIf_list_element = leaf3.System.intf_items.phys_items.PhysIf_list.create('eth1/56', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/57'
+PhysIf_list_element = leaf3.System.intf_items.phys_items.PhysIf_list.create('eth1/57', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/58'
+PhysIf_list_element = leaf3.System.intf_items.phys_items.PhysIf_list.create('eth1/58', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/59'
+PhysIf_list_element = leaf3.System.intf_items.phys_items.PhysIf_list.create('eth1/59', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/6'
+PhysIf_list_element = leaf3.System.intf_items.phys_items.PhysIf_list.create('eth1/6', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/60'
+PhysIf_list_element = leaf3.System.intf_items.phys_items.PhysIf_list.create('eth1/60', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/61'
+PhysIf_list_element = leaf3.System.intf_items.phys_items.PhysIf_list.create('eth1/61', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/62'
+PhysIf_list_element = leaf3.System.intf_items.phys_items.PhysIf_list.create('eth1/62', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/63'
+PhysIf_list_element = leaf3.System.intf_items.phys_items.PhysIf_list.create('eth1/63', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/64'
+PhysIf_list_element = leaf3.System.intf_items.phys_items.PhysIf_list.create('eth1/64', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/7'
+PhysIf_list_element = leaf3.System.intf_items.phys_items.PhysIf_list.create('eth1/7', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/8'
+PhysIf_list_element = leaf3.System.intf_items.phys_items.PhysIf_list.create('eth1/8', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/9'
+PhysIf_list_element = leaf3.System.intf_items.phys_items.PhysIf_list.create('eth1/9', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/lb-items/LbRtdIf-list element: 'lo0'
+LbRtdIf_list_element = leaf3.System.intf_items.lb_items.LbRtdIf_list.create('lo0', adminSt='up')
+
+# List /System/ipv4-items/inst-items/dom-items/Dom-list element: 'default'
+Dom_list_element_2 = leaf3.System.ipv4_items.inst_items.dom_items.Dom_list.create('default')
+
+# List /System/ipv4-items/inst-items/dom-items/Dom-list[name='default']/if-items/If-list element: 'eth1/1'
+If_list_element = Dom_list_element_2.if_items.If_list.create('eth1/1')
+
+# List /System/ipv4-items/inst-items/dom-items/Dom-list[name='default']/if-items/If-list[id='eth1/1']/addr-items/Addr-list element: '10.100.1.130/31'
+Addr_list_element = If_list_element.addr_items.Addr_list.create('10.100.1.130/31')
+
+# List /System/ipv4-items/inst-items/dom-items/Dom-list[name='default']/if-items/If-list element: 'eth1/2'
+If_list_element = Dom_list_element_2.if_items.If_list.create('eth1/2')
+
+# List /System/ipv4-items/inst-items/dom-items/Dom-list[name='default']/if-items/If-list[id='eth1/2']/addr-items/Addr-list element: '10.100.1.132/31'
+Addr_list_element = If_list_element.addr_items.Addr_list.create('10.100.1.132/31')
+
+# List /System/ipv4-items/inst-items/dom-items/Dom-list[name='default']/if-items/If-list element: 'lo0'
+If_list_element = Dom_list_element_2.if_items.If_list.create('lo0')
+
+# List /System/ipv4-items/inst-items/dom-items/Dom-list[name='default']/if-items/If-list[id='lo0']/addr-items/Addr-list element: '10.0.0.3/32'
+Addr_list_element = If_list_element.addr_items.Addr_list.create('10.0.0.3/32')
+
+# List /System/ipv4-items/inst-items/dom-items/Dom-list element: 'management'
+Dom_list_element_2 = leaf3.System.ipv4_items.inst_items.dom_items.Dom_list.create('management')
+
+# List /System/ipv4-items/inst-items/dom-items/Dom-list[name='management']/if-items/If-list element: 'mgmt0'
+If_list_element = Dom_list_element_2.if_items.If_list.create('mgmt0')
+
+# List /System/ipv4-items/inst-items/dom-items/Dom-list[name='management']/if-items/If-list[id='mgmt0']/addr-items/Addr-list element: '172.31.42.13/24'
+Addr_list_element = If_list_element.addr_items.Addr_list.create('172.31.42.13/24')
+
+# List /System/rpm-items/rtmap-items/Rule-list element: 'accept-all'
+Rule_list_element = leaf3.System.rpm_items.rtmap_items.Rule_list.create('accept-all')
+
+# List /System/rpm-items/rtmap-items/Rule-list[name='accept-all']/ent-items/Entry-list element: 10
+Entry_list_element = Rule_list_element.ent_items.Entry_list.create(u64(10), action_='permit')
+
+# List /System/rpm-items/rtmap-items/Rule-list element: 'export-loopbacks'
+Rule_list_element = leaf3.System.rpm_items.rtmap_items.Rule_list.create('export-loopbacks')
+
+# List /System/rpm-items/rtmap-items/Rule-list[name='export-loopbacks']/ent-items/Entry-list element: 10
+Entry_list_element = Rule_list_element.ent_items.Entry_list.create(u64(10), action_='permit')
+
+# List /System/rpm-items/rtmap-items/Rule-list[name='export-loopbacks']/ent-items/Entry-list[order='10']/mrtdst-items/rsrtDstAtt-items/RsRtDstAtt-list element: "/System/rpm-items/pfxlistv4-items/RuleV4-list[name='loopbacks']"
+RsRtDstAtt_list_element = Entry_list_element.mrtdst_items.rsrtDstAtt_items.RsRtDstAtt_list.create("/System/rpm-items/pfxlistv4-items/RuleV4-list[name='loopbacks']")
+
+# List /System/rpm-items/pfxlistv4-items/RuleV4-list element: 'loopbacks'
+RuleV4_list_element = leaf3.System.rpm_items.pfxlistv4_items.RuleV4_list.create('loopbacks')
+
+# List /System/rpm-items/pfxlistv4-items/RuleV4-list[name='loopbacks']/ent-items/Entry-list element: 5
+Entry_list_element_2 = RuleV4_list_element.ent_items.Entry_list.create(u64(5), pfx='10.0.0.0/16', criteria='inexact', fromPfxLen=u64(32), toPfxLen=u64(32), action_='permit')
+
+# device spine1
+# YANG module (prefix) and namespace:
+#   Cisco-NX-OS-device (top)  http://cisco.com/ns/yang/cisco-nx-os-device
+# Top node: /
+spine1 = root()
+
+# Container: /System (Cisco-NX-OS-device)
+spine1.System.name = 'spine1'
+
+# Container: /System/bgp-items/inst-items
+spine1.System.bgp_items.inst_items.asn = '4200100101'
+
+# List /System/bgp-items/inst-items/dom-items/Dom-list element: 'default'
+Dom_list_element = spine1.System.bgp_items.inst_items.dom_items.Dom_list.create('default', rtrId='10.0.0.11')
+
+# List /System/bgp-items/inst-items/dom-items/Dom-list[name='default']/peercont-items/PeerCont-list element: 'fabric'
+PeerCont_list_element = Dom_list_element.peercont_items.PeerCont_list.create('fabric')
+
+# List /System/bgp-items/inst-items/dom-items/Dom-list[name='default']/peercont-items/PeerCont-list[name='fabric']/af-items/PeerAf-list element: 'ipv4-ucast'
+PeerAf_list_element = PeerCont_list_element.af_items.PeerAf_list.create('ipv4-ucast')
+
+# List /System/bgp-items/inst-items/dom-items/Dom-list[name='default']/peercont-items/PeerCont-list[name='fabric']/af-items/PeerAf-list[type='ipv4-ucast']/rtctrl-items/RtCtrlP-list element: 'in'
+RtCtrlP_list_element = PeerAf_list_element.rtctrl_items.RtCtrlP_list.create('in', rtMap='accept-all')
+
+# List /System/bgp-items/inst-items/dom-items/Dom-list[name='default']/peercont-items/PeerCont-list[name='fabric']/af-items/PeerAf-list[type='ipv4-ucast']/rtctrl-items/RtCtrlP-list element: 'out'
+RtCtrlP_list_element = PeerAf_list_element.rtctrl_items.RtCtrlP_list.create('out', rtMap='export-loopbacks')
+
+# List /System/bgp-items/inst-items/dom-items/Dom-list[name='default']/af-items/DomAf-list element: 'ipv4-ucast'
+DomAf_list_element = Dom_list_element.af_items.DomAf_list.create('ipv4-ucast', maxExtEcmp=u64(64))
+
+# List /System/bgp-items/inst-items/dom-items/Dom-list[name='default']/af-items/DomAf-list[type='ipv4-ucast']/interleak-items/InterLeakP-list element: 'direct', 'none'
+InterLeakP_list_element = DomAf_list_element.interleak_items.InterLeakP_list.create((proto='direct', inst='none'), rtMap='export-loopbacks', asn='none')
+
+# List /System/bgp-items/inst-items/dom-items/Dom-list[name='default']/peer-items/Peer-list element: '10.100.0.226'
+Peer_list_element = Dom_list_element.peer_items.Peer_list.create('10.100.0.226', name='Link to leaf1 [ethernet-1/49]', asn='4200000001', peerImp='fabric')
+
+# List /System/bgp-items/inst-items/dom-items/Dom-list[name='default']/peer-items/Peer-list element: '10.100.1.130'
+Peer_list_element = Dom_list_element.peer_items.Peer_list.create('10.100.1.130', name='Link to leaf3 [eth1/1]', asn='4200000003', peerImp='fabric')
+
+# List /System/bgp-items/inst-items/dom-items/Dom-list[name='default']/peer-items/Peer-list element: '10.100.1.2'
+Peer_list_element = Dom_list_element.peer_items.Peer_list.create('10.100.1.2', name='Link to leaf2 [eth1/1]', asn='4200000002', peerImp='fabric')
+
+# List /System/bgp-items/inst-items/dom-items/Dom-list element: 'egress-loadbalance-resolution-'
+Dom_list_element = spine1.System.bgp_items.inst_items.dom_items.Dom_list.create('egress-loadbalance-resolution-')
+
+# List /System/bgp-items/inst-items/dom-items/Dom-list[name='egress-loadbalance-resolution-']/af-items/DomAf-list element: 'ipv4-ucast'
+DomAf_list_element = Dom_list_element.af_items.DomAf_list.create('ipv4-ucast')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/1'
+PhysIf_list_element = spine1.System.intf_items.phys_items.PhysIf_list.create('eth1/1', descr='Link to leaf1 [ethernet-1/49]', adminSt='up', mtu=u64(9000), layer='Layer3', userCfgdFlags='admin_layer,admin_mtu,admin_state')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/10'
+PhysIf_list_element = spine1.System.intf_items.phys_items.PhysIf_list.create('eth1/10', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/11'
+PhysIf_list_element = spine1.System.intf_items.phys_items.PhysIf_list.create('eth1/11', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/12'
+PhysIf_list_element = spine1.System.intf_items.phys_items.PhysIf_list.create('eth1/12', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/13'
+PhysIf_list_element = spine1.System.intf_items.phys_items.PhysIf_list.create('eth1/13', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/14'
+PhysIf_list_element = spine1.System.intf_items.phys_items.PhysIf_list.create('eth1/14', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/15'
+PhysIf_list_element = spine1.System.intf_items.phys_items.PhysIf_list.create('eth1/15', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/16'
+PhysIf_list_element = spine1.System.intf_items.phys_items.PhysIf_list.create('eth1/16', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/17'
+PhysIf_list_element = spine1.System.intf_items.phys_items.PhysIf_list.create('eth1/17', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/18'
+PhysIf_list_element = spine1.System.intf_items.phys_items.PhysIf_list.create('eth1/18', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/19'
+PhysIf_list_element = spine1.System.intf_items.phys_items.PhysIf_list.create('eth1/19', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/2'
+PhysIf_list_element = spine1.System.intf_items.phys_items.PhysIf_list.create('eth1/2', descr='Link to leaf2 [eth1/1]', adminSt='up', mtu=u64(9000), layer='Layer3', userCfgdFlags='admin_layer,admin_mtu,admin_state')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/20'
+PhysIf_list_element = spine1.System.intf_items.phys_items.PhysIf_list.create('eth1/20', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/21'
+PhysIf_list_element = spine1.System.intf_items.phys_items.PhysIf_list.create('eth1/21', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/22'
+PhysIf_list_element = spine1.System.intf_items.phys_items.PhysIf_list.create('eth1/22', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/23'
+PhysIf_list_element = spine1.System.intf_items.phys_items.PhysIf_list.create('eth1/23', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/24'
+PhysIf_list_element = spine1.System.intf_items.phys_items.PhysIf_list.create('eth1/24', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/25'
+PhysIf_list_element = spine1.System.intf_items.phys_items.PhysIf_list.create('eth1/25', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/26'
+PhysIf_list_element = spine1.System.intf_items.phys_items.PhysIf_list.create('eth1/26', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/27'
+PhysIf_list_element = spine1.System.intf_items.phys_items.PhysIf_list.create('eth1/27', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/28'
+PhysIf_list_element = spine1.System.intf_items.phys_items.PhysIf_list.create('eth1/28', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/29'
+PhysIf_list_element = spine1.System.intf_items.phys_items.PhysIf_list.create('eth1/29', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/3'
+PhysIf_list_element = spine1.System.intf_items.phys_items.PhysIf_list.create('eth1/3', descr='Link to leaf3 [eth1/1]', adminSt='up', mtu=u64(9000), layer='Layer3', userCfgdFlags='admin_layer,admin_mtu,admin_state')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/30'
+PhysIf_list_element = spine1.System.intf_items.phys_items.PhysIf_list.create('eth1/30', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/31'
+PhysIf_list_element = spine1.System.intf_items.phys_items.PhysIf_list.create('eth1/31', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/32'
+PhysIf_list_element = spine1.System.intf_items.phys_items.PhysIf_list.create('eth1/32', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/33'
+PhysIf_list_element = spine1.System.intf_items.phys_items.PhysIf_list.create('eth1/33', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/34'
+PhysIf_list_element = spine1.System.intf_items.phys_items.PhysIf_list.create('eth1/34', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/35'
+PhysIf_list_element = spine1.System.intf_items.phys_items.PhysIf_list.create('eth1/35', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/36'
+PhysIf_list_element = spine1.System.intf_items.phys_items.PhysIf_list.create('eth1/36', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/37'
+PhysIf_list_element = spine1.System.intf_items.phys_items.PhysIf_list.create('eth1/37', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/38'
+PhysIf_list_element = spine1.System.intf_items.phys_items.PhysIf_list.create('eth1/38', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/39'
+PhysIf_list_element = spine1.System.intf_items.phys_items.PhysIf_list.create('eth1/39', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/4'
+PhysIf_list_element = spine1.System.intf_items.phys_items.PhysIf_list.create('eth1/4', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/40'
+PhysIf_list_element = spine1.System.intf_items.phys_items.PhysIf_list.create('eth1/40', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/41'
+PhysIf_list_element = spine1.System.intf_items.phys_items.PhysIf_list.create('eth1/41', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/42'
+PhysIf_list_element = spine1.System.intf_items.phys_items.PhysIf_list.create('eth1/42', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/43'
+PhysIf_list_element = spine1.System.intf_items.phys_items.PhysIf_list.create('eth1/43', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/44'
+PhysIf_list_element = spine1.System.intf_items.phys_items.PhysIf_list.create('eth1/44', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/45'
+PhysIf_list_element = spine1.System.intf_items.phys_items.PhysIf_list.create('eth1/45', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/46'
+PhysIf_list_element = spine1.System.intf_items.phys_items.PhysIf_list.create('eth1/46', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/47'
+PhysIf_list_element = spine1.System.intf_items.phys_items.PhysIf_list.create('eth1/47', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/48'
+PhysIf_list_element = spine1.System.intf_items.phys_items.PhysIf_list.create('eth1/48', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/49'
+PhysIf_list_element = spine1.System.intf_items.phys_items.PhysIf_list.create('eth1/49', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/5'
+PhysIf_list_element = spine1.System.intf_items.phys_items.PhysIf_list.create('eth1/5', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/50'
+PhysIf_list_element = spine1.System.intf_items.phys_items.PhysIf_list.create('eth1/50', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/51'
+PhysIf_list_element = spine1.System.intf_items.phys_items.PhysIf_list.create('eth1/51', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/52'
+PhysIf_list_element = spine1.System.intf_items.phys_items.PhysIf_list.create('eth1/52', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/53'
+PhysIf_list_element = spine1.System.intf_items.phys_items.PhysIf_list.create('eth1/53', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/54'
+PhysIf_list_element = spine1.System.intf_items.phys_items.PhysIf_list.create('eth1/54', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/55'
+PhysIf_list_element = spine1.System.intf_items.phys_items.PhysIf_list.create('eth1/55', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/56'
+PhysIf_list_element = spine1.System.intf_items.phys_items.PhysIf_list.create('eth1/56', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/57'
+PhysIf_list_element = spine1.System.intf_items.phys_items.PhysIf_list.create('eth1/57', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/58'
+PhysIf_list_element = spine1.System.intf_items.phys_items.PhysIf_list.create('eth1/58', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/59'
+PhysIf_list_element = spine1.System.intf_items.phys_items.PhysIf_list.create('eth1/59', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/6'
+PhysIf_list_element = spine1.System.intf_items.phys_items.PhysIf_list.create('eth1/6', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/60'
+PhysIf_list_element = spine1.System.intf_items.phys_items.PhysIf_list.create('eth1/60', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/61'
+PhysIf_list_element = spine1.System.intf_items.phys_items.PhysIf_list.create('eth1/61', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/62'
+PhysIf_list_element = spine1.System.intf_items.phys_items.PhysIf_list.create('eth1/62', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/63'
+PhysIf_list_element = spine1.System.intf_items.phys_items.PhysIf_list.create('eth1/63', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/64'
+PhysIf_list_element = spine1.System.intf_items.phys_items.PhysIf_list.create('eth1/64', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/7'
+PhysIf_list_element = spine1.System.intf_items.phys_items.PhysIf_list.create('eth1/7', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/8'
+PhysIf_list_element = spine1.System.intf_items.phys_items.PhysIf_list.create('eth1/8', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/9'
+PhysIf_list_element = spine1.System.intf_items.phys_items.PhysIf_list.create('eth1/9', adminSt='up', mtu=u64(1500), layer='Layer2', userCfgdFlags='')
+
+# List /System/intf-items/lb-items/LbRtdIf-list element: 'lo0'
+LbRtdIf_list_element = spine1.System.intf_items.lb_items.LbRtdIf_list.create('lo0', adminSt='up')
+
+# List /System/ipv4-items/inst-items/dom-items/Dom-list element: 'default'
+Dom_list_element_2 = spine1.System.ipv4_items.inst_items.dom_items.Dom_list.create('default')
+
+# List /System/ipv4-items/inst-items/dom-items/Dom-list[name='default']/if-items/If-list element: 'eth1/1'
+If_list_element = Dom_list_element_2.if_items.If_list.create('eth1/1')
+
+# List /System/ipv4-items/inst-items/dom-items/Dom-list[name='default']/if-items/If-list[id='eth1/1']/addr-items/Addr-list element: '10.100.0.227/31'
+Addr_list_element = If_list_element.addr_items.Addr_list.create('10.100.0.227/31')
+
+# List /System/ipv4-items/inst-items/dom-items/Dom-list[name='default']/if-items/If-list element: 'eth1/2'
+If_list_element = Dom_list_element_2.if_items.If_list.create('eth1/2')
+
+# List /System/ipv4-items/inst-items/dom-items/Dom-list[name='default']/if-items/If-list[id='eth1/2']/addr-items/Addr-list element: '10.100.1.3/31'
+Addr_list_element = If_list_element.addr_items.Addr_list.create('10.100.1.3/31')
+
+# List /System/ipv4-items/inst-items/dom-items/Dom-list[name='default']/if-items/If-list element: 'eth1/3'
+If_list_element = Dom_list_element_2.if_items.If_list.create('eth1/3')
+
+# List /System/ipv4-items/inst-items/dom-items/Dom-list[name='default']/if-items/If-list[id='eth1/3']/addr-items/Addr-list element: '10.100.1.131/31'
+Addr_list_element = If_list_element.addr_items.Addr_list.create('10.100.1.131/31')
+
+# List /System/ipv4-items/inst-items/dom-items/Dom-list[name='default']/if-items/If-list element: 'lo0'
+If_list_element = Dom_list_element_2.if_items.If_list.create('lo0')
+
+# List /System/ipv4-items/inst-items/dom-items/Dom-list[name='default']/if-items/If-list[id='lo0']/addr-items/Addr-list element: '10.0.0.11/32'
+Addr_list_element = If_list_element.addr_items.Addr_list.create('10.0.0.11/32')
+
+# List /System/ipv4-items/inst-items/dom-items/Dom-list element: 'management'
+Dom_list_element_2 = spine1.System.ipv4_items.inst_items.dom_items.Dom_list.create('management')
+
+# List /System/ipv4-items/inst-items/dom-items/Dom-list[name='management']/if-items/If-list element: 'mgmt0'
+If_list_element = Dom_list_element_2.if_items.If_list.create('mgmt0')
+
+# List /System/ipv4-items/inst-items/dom-items/Dom-list[name='management']/if-items/If-list[id='mgmt0']/addr-items/Addr-list element: '172.31.42.21/24'
+Addr_list_element = If_list_element.addr_items.Addr_list.create('172.31.42.21/24')
+
+# List /System/rpm-items/rtmap-items/Rule-list element: 'accept-all'
+Rule_list_element = spine1.System.rpm_items.rtmap_items.Rule_list.create('accept-all')
+
+# List /System/rpm-items/rtmap-items/Rule-list[name='accept-all']/ent-items/Entry-list element: 10
+Entry_list_element = Rule_list_element.ent_items.Entry_list.create(u64(10), action_='permit')
+
+# List /System/rpm-items/rtmap-items/Rule-list element: 'export-loopbacks'
+Rule_list_element = spine1.System.rpm_items.rtmap_items.Rule_list.create('export-loopbacks')
+
+# List /System/rpm-items/rtmap-items/Rule-list[name='export-loopbacks']/ent-items/Entry-list element: 10
+Entry_list_element = Rule_list_element.ent_items.Entry_list.create(u64(10), action_='permit')
+
+# List /System/rpm-items/rtmap-items/Rule-list[name='export-loopbacks']/ent-items/Entry-list[order='10']/mrtdst-items/rsrtDstAtt-items/RsRtDstAtt-list element: "/System/rpm-items/pfxlistv4-items/RuleV4-list[name='loopbacks']"
+RsRtDstAtt_list_element = Entry_list_element.mrtdst_items.rsrtDstAtt_items.RsRtDstAtt_list.create("/System/rpm-items/pfxlistv4-items/RuleV4-list[name='loopbacks']")
+
+# List /System/rpm-items/pfxlistv4-items/RuleV4-list element: 'loopbacks'
+RuleV4_list_element = spine1.System.rpm_items.pfxlistv4_items.RuleV4_list.create('loopbacks')
+
+# List /System/rpm-items/pfxlistv4-items/RuleV4-list[name='loopbacks']/ent-items/Entry-list element: 5
+Entry_list_element_2 = RuleV4_list_element.ent_items.Entry_list.create(u64(5), pfx='10.0.0.0/16', criteria='inexact', fromPfxLen=u64(32), toPfxLen=u64(32), action_='permit')
 
 # device spine2
 # YANG module (prefix) and namespace:
@@ -311,11 +1034,29 @@ spine2.system.name.host_name = 'spine2'
 # P-container: /system/lldp (srl_nokia-lldp)
 lldp = spine2.system.create_lldp(admin_state='enable')
 
+# List /system/lldp/interface element: 'ethernet-1/1'
+interface_element = lldp.interface.create('ethernet-1/1', admin_state='enable')
+
 # List /system/lldp/interface element: 'ethernet-1/2'
 interface_element = lldp.interface.create('ethernet-1/2', admin_state='enable')
 
+# List /system/lldp/interface element: 'ethernet-1/3'
+interface_element = lldp.interface.create('ethernet-1/3', admin_state='enable')
+
 # List /system/lldp/interface element: 'mgmt0'
 interface_element = lldp.interface.create('mgmt0', admin_state='enable')
+
+# List /interface (srl_nokia-interfaces) element: 'ethernet-1/1'
+interface_element_2 = spine2.interface.create('ethernet-1/1', description='Link to leaf1 [ethernet-1/50]', admin_state='enable')
+
+# List /interface[name='ethernet-1/1']/subinterface element: 0
+subinterface_element = interface_element_2.subinterface.create(u64(0), description='Link to leaf1 [ethernet-1/50]', admin_state='enable', ip_mtu=u64(9000))
+
+# Container: /interface[name='ethernet-1/1']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# List /interface[name='ethernet-1/1']/subinterface[index='0']/ipv4/address element: '10.100.0.229/31'
+address_element = subinterface_element.ipv4.address.create('10.100.0.229/31')
 
 # List /interface (srl_nokia-interfaces) element: 'ethernet-1/2'
 interface_element_2 = spine2.interface.create('ethernet-1/2', description='Link to leaf2 [eth1/2]', admin_state='enable')
@@ -328,6 +1069,18 @@ subinterface_element.ipv4.admin_state = 'enable'
 
 # List /interface[name='ethernet-1/2']/subinterface[index='0']/ipv4/address element: '10.100.1.5/31'
 address_element = subinterface_element.ipv4.address.create('10.100.1.5/31')
+
+# List /interface (srl_nokia-interfaces) element: 'ethernet-1/3'
+interface_element_2 = spine2.interface.create('ethernet-1/3', description='Link to leaf3 [eth1/2]', admin_state='enable')
+
+# List /interface[name='ethernet-1/3']/subinterface element: 0
+subinterface_element = interface_element_2.subinterface.create(u64(0), description='Link to leaf3 [eth1/2]', admin_state='enable', ip_mtu=u64(9000))
+
+# Container: /interface[name='ethernet-1/3']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# List /interface[name='ethernet-1/3']/subinterface[index='0']/ipv4/address element: '10.100.1.133/31'
+address_element = subinterface_element.ipv4.address.create('10.100.1.133/31')
 
 # List /interface (srl_nokia-interfaces) element: 'mgmt0'
 interface_element_2 = spine2.interface.create('mgmt0', admin_state='enable')
@@ -356,8 +1109,14 @@ address_element = subinterface_element.ipv4.address.create('10.0.0.12/32')
 # List /network-instance (srl_nokia-network-instance) element: 'default'
 network_instance_element = spine2.network_instance.create('default')
 
+# List /network-instance[name='default']/interface element: 'ethernet-1/1.0'
+interface_element_3 = network_instance_element.interface.create('ethernet-1/1.0')
+
 # List /network-instance[name='default']/interface element: 'ethernet-1/2.0'
 interface_element_3 = network_instance_element.interface.create('ethernet-1/2.0')
+
+# List /network-instance[name='default']/interface element: 'ethernet-1/3.0'
+interface_element_3 = network_instance_element.interface.create('ethernet-1/3.0')
 
 # List /network-instance[name='default']/interface element: 'system0.0'
 interface_element_3 = network_instance_element.interface.create('system0.0')
@@ -375,6 +1134,12 @@ afi_safi_element.multipath.ebgp.maximum_paths = u64(64)
 group_element = bgp.group.create('fabric')
 group_element.export_policy = ['export-loopbacks']
 group_element.import_policy = ['accept-all']
+
+# List /network-instance[name='default']/protocols/bgp/neighbor element: '10.100.0.228'
+neighbor_element = bgp.neighbor.create('10.100.0.228', admin_state='enable', description='Link to leaf1 [ethernet-1/50]', peer_as=u64(4200000001), peer_group='fabric')
+
+# List /network-instance[name='default']/protocols/bgp/neighbor element: '10.100.1.132'
+neighbor_element = bgp.neighbor.create('10.100.1.132', admin_state='enable', description='Link to leaf3 [eth1/2]', peer_as=u64(4200000003), peer_group='fabric')
 
 # List /network-instance[name='default']/protocols/bgp/neighbor element: '10.100.1.4'
 neighbor_element = bgp.neighbor.create('10.100.1.4', admin_state='enable', description='Link to leaf2 [eth1/2]', peer_as=u64(4200000002), peer_group='fabric')

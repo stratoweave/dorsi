@@ -253,17 +253,24 @@ def three_stage_mixed_crpd_overlay():
     f.server.get("server3")!.attachment.create(("t1", "web"), vlan=30, ipv4_address="10.10.10.13/24")
     return root
 
-# A Cisco NX-OS (Nexus 9300v) leaf between two SR Linux switches, as in the
-# fabric-3stage-mixed-n9kv lab: the NX-OS device type is a stub, which sets
-# the hostname and the description of its fabric port, and renders every
-# physical port, as NX-OS cannot delete one.
+# The three-stage Clos of the fabric-3stage-mixed-n9kv lab, the underlay
+# only: leaf1 and spine2 SR Linux, leaf2, leaf3 and spine1 Cisco NX-OS
+# (Nexus 9300v), which renders every physical port, as NX-OS cannot delete
+# one. NX-OS keeps its management address in configuration dorsi owns.
 def three_stage_mixed_n9kv():
     root = _empty_root()
     f = root.ip_fabric.fabric.create("dc1")
     add_switch(f, "leaf1", 1, "leaf")
-    add_switch(f, "leaf2", 2, "leaf", device_type=NXOS)
+    add_switch(f, "leaf2", 2, "leaf", device_type=NXOS, management_address="172.31.42.12/24", management_gateway="172.31.42.1")
+    add_switch(f, "leaf3", 3, "leaf", device_type=NXOS, management_address="172.31.42.13/24", management_gateway="172.31.42.1")
+    add_switch(f, "spine1", 11, "spine", device_type=NXOS, management_address="172.31.42.21/24", management_gateway="172.31.42.1")
     add_switch(f, "spine2", 12, "spine")
+    add_link(f, "leaf1", "ethernet-1/49", "spine1", "eth1/1")
+    add_link(f, "leaf1", "ethernet-1/50", "spine2", "ethernet-1/1")
+    add_link(f, "leaf2", "eth1/1", "spine1", "eth1/2")
     add_link(f, "leaf2", "eth1/2", "spine2", "ethernet-1/2")
+    add_link(f, "leaf3", "eth1/1", "spine1", "eth1/3")
+    add_link(f, "leaf3", "eth1/2", "spine2", "ethernet-1/3")
     return root
 
 # TransformTester takes its snapshot as soon as the CFS commit completes, which

@@ -28,11 +28,31 @@ pure def src_yang() -> list[YangSource]:
 
 NS_Cisco_NX_OS_device: str = 'http://cisco.com/ns/yang/cisco-nx-os-device'
 
+_ID_Cisco_NX_OS_device__Addr_list: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'Addr-list')
+_ID_Cisco_NX_OS_device__Dom_list: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'Dom-list')
+_ID_Cisco_NX_OS_device__DomAf_list: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'DomAf-list')
+_ID_Cisco_NX_OS_device__Entry_list: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'Entry-list')
+_ID_Cisco_NX_OS_device__If_list: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'If-list')
+_ID_Cisco_NX_OS_device__InterLeakP_list: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'InterLeakP-list')
+_ID_Cisco_NX_OS_device__LbRtdIf_list: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'LbRtdIf-list')
+_ID_Cisco_NX_OS_device__Peer_list: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'Peer-list')
+_ID_Cisco_NX_OS_device__PeerAf_list: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'PeerAf-list')
+_ID_Cisco_NX_OS_device__PeerCont_list: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'PeerCont-list')
 _ID_Cisco_NX_OS_device__PhysIf_list: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'PhysIf-list')
+_ID_Cisco_NX_OS_device__RsRtDstAtt_list: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'RsRtDstAtt-list')
+_ID_Cisco_NX_OS_device__RtCtrlP_list: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'RtCtrlP-list')
+_ID_Cisco_NX_OS_device__Rule_list: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'Rule-list')
+_ID_Cisco_NX_OS_device__RuleV4_list: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'RuleV4-list')
 _ID_Cisco_NX_OS_device__System: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'System')
 _ID_Cisco_NX_OS_device__action: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'action')
 _ID_Cisco_NX_OS_device__activate: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'activate')
 _ID_Cisco_NX_OS_device__add: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'add')
+_ID_Cisco_NX_OS_device__addr: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'addr')
+_ID_Cisco_NX_OS_device__addr_items: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'addr-items')
+_ID_Cisco_NX_OS_device__adminSt: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'adminSt')
+_ID_Cisco_NX_OS_device__af_items: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'af-items')
+_ID_Cisco_NX_OS_device__asn: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'asn')
+_ID_Cisco_NX_OS_device__bgp_items: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'bgp-items')
 _ID_Cisco_NX_OS_device__bios: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'bios')
 _ID_Cisco_NX_OS_device__bios_force: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'bios-force')
 _ID_Cisco_NX_OS_device__boot_nxos: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'boot_nxos')
@@ -48,6 +68,7 @@ _ID_Cisco_NX_OS_device__copy_src_core: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_devi
 _ID_Cisco_NX_OS_device__copy_src_local: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'copy_src_local')
 _ID_Cisco_NX_OS_device__copy_src_remote: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'copy_src_remote')
 _ID_Cisco_NX_OS_device__copy_startup_config_src: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'copy_startup_config_src')
+_ID_Cisco_NX_OS_device__criteria: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'criteria')
 _ID_Cisco_NX_OS_device__deactivate: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'deactivate')
 _ID_Cisco_NX_OS_device__delete: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'delete')
 _ID_Cisco_NX_OS_device__delete_ca_certificate: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'delete_ca_certificate')
@@ -60,18 +81,25 @@ _ID_Cisco_NX_OS_device__dest_local_core: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_de
 _ID_Cisco_NX_OS_device__dest_remote: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'dest_remote')
 _ID_Cisco_NX_OS_device__destination: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'destination')
 _ID_Cisco_NX_OS_device__dir: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'dir')
+_ID_Cisco_NX_OS_device__direction: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'direction')
+_ID_Cisco_NX_OS_device__dom_items: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'dom-items')
 _ID_Cisco_NX_OS_device__downgrade: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'downgrade')
 _ID_Cisco_NX_OS_device__echo_commands: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'echo-commands')
+_ID_Cisco_NX_OS_device__ent_items: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'ent-items')
 _ID_Cisco_NX_OS_device__fabric: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'fabric')
 _ID_Cisco_NX_OS_device__file: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'file')
 _ID_Cisco_NX_OS_device__filemask: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'filemask')
 _ID_Cisco_NX_OS_device__forced: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'forced')
+_ID_Cisco_NX_OS_device__fromPfxLen: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'fromPfxLen')
 _ID_Cisco_NX_OS_device__get_diff: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'get_diff')
 _ID_Cisco_NX_OS_device__id: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'id')
+_ID_Cisco_NX_OS_device__if_items: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'if-items')
 _ID_Cisco_NX_OS_device__image: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'image')
 _ID_Cisco_NX_OS_device__import_ca_certificate: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'import_ca_certificate')
 _ID_Cisco_NX_OS_device__inactive: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'inactive')
 _ID_Cisco_NX_OS_device__initial: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'initial')
+_ID_Cisco_NX_OS_device__inst: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'inst')
+_ID_Cisco_NX_OS_device__inst_items: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'inst-items')
 _ID_Cisco_NX_OS_device__install_activate: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'install_activate')
 _ID_Cisco_NX_OS_device__install_add: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'install_add')
 _ID_Cisco_NX_OS_device__install_all_nxos: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'install_all_nxos')
@@ -79,11 +107,18 @@ _ID_Cisco_NX_OS_device__install_commit: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_dev
 _ID_Cisco_NX_OS_device__install_deactivate: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'install_deactivate')
 _ID_Cisco_NX_OS_device__install_force_all_nxos: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'install_force_all_nxos')
 _ID_Cisco_NX_OS_device__install_remove: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'install_remove')
+_ID_Cisco_NX_OS_device__interleak_items: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'interleak-items')
 _ID_Cisco_NX_OS_device__intf_items: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'intf-items')
+_ID_Cisco_NX_OS_device__ipv4_items: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'ipv4-items')
+_ID_Cisco_NX_OS_device__layer: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'layer')
+_ID_Cisco_NX_OS_device__lb_items: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'lb-items')
 _ID_Cisco_NX_OS_device__licenses: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'licenses')
+_ID_Cisco_NX_OS_device__maxExtEcmp: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'maxExtEcmp')
 _ID_Cisco_NX_OS_device__message: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'message')
 _ID_Cisco_NX_OS_device__mode: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'mode')
 _ID_Cisco_NX_OS_device__module: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'module')
+_ID_Cisco_NX_OS_device__mrtdst_items: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'mrtdst-items')
+_ID_Cisco_NX_OS_device__mtu: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'mtu')
 _ID_Cisco_NX_OS_device__name: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'name')
 _ID_Cisco_NX_OS_device__no_reload: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'no-reload')
 _ID_Cisco_NX_OS_device__no_save: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'no-save')
@@ -91,13 +126,26 @@ _ID_Cisco_NX_OS_device__non_interruptive: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_d
 _ID_Cisco_NX_OS_device__noswitchover: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'noswitchover')
 _ID_Cisco_NX_OS_device__nxos: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'nxos')
 _ID_Cisco_NX_OS_device__option: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'option')
+_ID_Cisco_NX_OS_device__order: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'order')
 _ID_Cisco_NX_OS_device__passphrase: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'passphrase')
+_ID_Cisco_NX_OS_device__peer_items: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'peer-items')
+_ID_Cisco_NX_OS_device__peerImp: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'peerImp')
+_ID_Cisco_NX_OS_device__peercont_items: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'peercont-items')
+_ID_Cisco_NX_OS_device__pfx: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'pfx')
+_ID_Cisco_NX_OS_device__pfxlistv4_items: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'pfxlistv4-items')
 _ID_Cisco_NX_OS_device__phys_items: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'phys-items')
 _ID_Cisco_NX_OS_device__pkcs12: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'pkcs12')
+_ID_Cisco_NX_OS_device__proto: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'proto')
 _ID_Cisco_NX_OS_device__recursive: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'recursive')
 _ID_Cisco_NX_OS_device__reload: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'reload')
 _ID_Cisco_NX_OS_device__remove: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'remove')
 _ID_Cisco_NX_OS_device__rollback: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'rollback')
+_ID_Cisco_NX_OS_device__rpm_items: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'rpm-items')
+_ID_Cisco_NX_OS_device__rsrtDstAtt_items: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'rsrtDstAtt-items')
+_ID_Cisco_NX_OS_device__rtMap: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'rtMap')
+_ID_Cisco_NX_OS_device__rtctrl_items: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'rtctrl-items')
+_ID_Cisco_NX_OS_device__rtmap_items: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'rtmap-items')
+_ID_Cisco_NX_OS_device__rtrId: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'rtrId')
 _ID_Cisco_NX_OS_device__running: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'running')
 _ID_Cisco_NX_OS_device__running_config: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'running-config')
 _ID_Cisco_NX_OS_device__scheduled_config: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'scheduled-config')
@@ -108,47 +156,646 @@ _ID_Cisco_NX_OS_device__src_local: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 
 _ID_Cisco_NX_OS_device__src_remote: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'src_remote')
 _ID_Cisco_NX_OS_device__startup_config: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'startup-config')
 _ID_Cisco_NX_OS_device__stop_at_first_failure: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'stop-at-first-failure')
+_ID_Cisco_NX_OS_device__tDn: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'tDn')
 _ID_Cisco_NX_OS_device__target: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'target')
+_ID_Cisco_NX_OS_device__toPfxLen: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'toPfxLen')
 _ID_Cisco_NX_OS_device__trustpoint: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'trustpoint')
 _ID_Cisco_NX_OS_device__type: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'type')
 _ID_Cisco_NX_OS_device__upgrade: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'upgrade')
+_ID_Cisco_NX_OS_device__userCfgdFlags: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'userCfgdFlags')
 _ID_Cisco_NX_OS_device__vdc_all: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'vdc-all')
 _ID_Cisco_NX_OS_device__vrf: ygdata.Id = ygdata.Id(NS_Cisco_NX_OS_device, 'vrf')
 
 
 _breaker1: None = None
+class Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list__af_items__PeerAf_list__rtctrl_items__RtCtrlP_list_entry(yadata.MNode):
+    direction: str
+    rtMap: ?str
+
+    mut def __init__(self, direction: str, rtMap: ?str=None) -> None:
+        self.direction = direction
+        self.rtMap = rtMap
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['Cisco-NX-OS-device:System', 'bgp-items', 'inst-items', 'dom-items', 'Dom-list', 'peercont-items', 'PeerCont-list', 'af-items', 'PeerAf-list', 'rtctrl-items', 'RtCtrlP-list'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ygdata.Node) -> Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list__af_items__PeerAf_list__rtctrl_items__RtCtrlP_list_entry:
+        return Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list__af_items__PeerAf_list__rtctrl_items__RtCtrlP_list_entry(direction=n.get_str(_ID_Cisco_NX_OS_device__direction), rtMap=n.get_opt_str(_ID_Cisco_NX_OS_device__rtMap))
+
+    mut def copy(self) -> Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list__af_items__PeerAf_list__rtctrl_items__RtCtrlP_list_entry:
+        """Create a deep copy of this adata object"""
+        return Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list__af_items__PeerAf_list__rtctrl_items__RtCtrlP_list_entry.from_gdata(self.to_gdata())
+
+_breaker2: None = None
+class Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list__af_items__PeerAf_list__rtctrl_items__RtCtrlP_list(yadata.MKeyedList[str, Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list__af_items__PeerAf_list__rtctrl_items__RtCtrlP_list_entry]):
+    mut def __init__(self, elements: list[Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list__af_items__PeerAf_list__rtctrl_items__RtCtrlP_list_entry]=[]) -> None:
+        yadata.MKeyedList.__init__(self, lambda e: e.direction, elements)
+
+    mut def create(self, key: str, rtMap: ?str=None) -> Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list__af_items__PeerAf_list__rtctrl_items__RtCtrlP_list_entry:
+        e = self.get(key)
+        if e is not None:
+            if rtMap is not None:
+                e.rtMap = rtMap
+            return e
+        direction = key
+        res = Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list__af_items__PeerAf_list__rtctrl_items__RtCtrlP_list_entry(direction=direction, rtMap=rtMap)
+        self._append(res)
+        return res
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.List) -> list[Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list__af_items__PeerAf_list__rtctrl_items__RtCtrlP_list_entry]:
+        if n is not None:
+            return [Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list__af_items__PeerAf_list__rtctrl_items__RtCtrlP_list_entry.from_gdata(e) for e in n.entries()]
+        return []
+
+    mut def copy(self) -> Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list__af_items__PeerAf_list__rtctrl_items__RtCtrlP_list:
+        """Create a deep copy of this list object"""
+        # Copy each element in the list
+        copied_elements = []
+        for e in self:
+            ce = e.copy()
+            if ce is not None:
+                copied_elements.append(ce)
+        return Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list__af_items__PeerAf_list__rtctrl_items__RtCtrlP_list(elements=copied_elements)
+
+
+_breaker3: None = None
+class Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list__af_items__PeerAf_list__rtctrl_items(yadata.MNode):
+    RtCtrlP_list: Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list__af_items__PeerAf_list__rtctrl_items__RtCtrlP_list
+
+    mut def __init__(self, RtCtrlP_list: list[Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list__af_items__PeerAf_list__rtctrl_items__RtCtrlP_list_entry]=[]) -> None:
+        self.RtCtrlP_list = Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list__af_items__PeerAf_list__rtctrl_items__RtCtrlP_list(elements=RtCtrlP_list)
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['Cisco-NX-OS-device:System', 'bgp-items', 'inst-items', 'dom-items', 'Dom-list', 'peercont-items', 'PeerCont-list', 'af-items', 'PeerAf-list', 'rtctrl-items'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list__af_items__PeerAf_list__rtctrl_items:
+        if n is not None:
+            return Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list__af_items__PeerAf_list__rtctrl_items(RtCtrlP_list=Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list__af_items__PeerAf_list__rtctrl_items__RtCtrlP_list.from_gdata(n.get_opt_list(_ID_Cisco_NX_OS_device__RtCtrlP_list)))
+        return Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list__af_items__PeerAf_list__rtctrl_items()
+
+    mut def copy(self) -> Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list__af_items__PeerAf_list__rtctrl_items:
+        """Create a deep copy of this adata object"""
+        return Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list__af_items__PeerAf_list__rtctrl_items.from_gdata(self.to_gdata())
+
+
+_breaker4: None = None
+class Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list__af_items__PeerAf_list_entry(yadata.MNode):
+    type: str
+    rtctrl_items: Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list__af_items__PeerAf_list__rtctrl_items
+
+    mut def __init__(self, type: str, rtctrl_items: ?Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list__af_items__PeerAf_list__rtctrl_items=None) -> None:
+        self.type = type
+        self.rtctrl_items = rtctrl_items if rtctrl_items is not None else Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list__af_items__PeerAf_list__rtctrl_items()
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['Cisco-NX-OS-device:System', 'bgp-items', 'inst-items', 'dom-items', 'Dom-list', 'peercont-items', 'PeerCont-list', 'af-items', 'PeerAf-list'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ygdata.Node) -> Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list__af_items__PeerAf_list_entry:
+        return Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list__af_items__PeerAf_list_entry(type=n.get_str(_ID_Cisco_NX_OS_device__type), rtctrl_items=Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list__af_items__PeerAf_list__rtctrl_items.from_gdata(n.get_opt_cnt(_ID_Cisco_NX_OS_device__rtctrl_items)))
+
+    mut def copy(self) -> Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list__af_items__PeerAf_list_entry:
+        """Create a deep copy of this adata object"""
+        return Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list__af_items__PeerAf_list_entry.from_gdata(self.to_gdata())
+
+_breaker5: None = None
+class Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list__af_items__PeerAf_list(yadata.MKeyedList[str, Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list__af_items__PeerAf_list_entry]):
+    mut def __init__(self, elements: list[Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list__af_items__PeerAf_list_entry]=[]) -> None:
+        yadata.MKeyedList.__init__(self, lambda e: e.type, elements)
+
+    mut def create(self, key: str) -> Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list__af_items__PeerAf_list_entry:
+        e = self.get(key)
+        if e is not None:
+            return e
+        type = key
+        res = Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list__af_items__PeerAf_list_entry(type=type)
+        self._append(res)
+        return res
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.List) -> list[Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list__af_items__PeerAf_list_entry]:
+        if n is not None:
+            return [Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list__af_items__PeerAf_list_entry.from_gdata(e) for e in n.entries()]
+        return []
+
+    mut def copy(self) -> Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list__af_items__PeerAf_list:
+        """Create a deep copy of this list object"""
+        # Copy each element in the list
+        copied_elements = []
+        for e in self:
+            ce = e.copy()
+            if ce is not None:
+                copied_elements.append(ce)
+        return Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list__af_items__PeerAf_list(elements=copied_elements)
+
+
+_breaker6: None = None
+class Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list__af_items(yadata.MNode):
+    PeerAf_list: Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list__af_items__PeerAf_list
+
+    mut def __init__(self, PeerAf_list: list[Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list__af_items__PeerAf_list_entry]=[]) -> None:
+        self.PeerAf_list = Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list__af_items__PeerAf_list(elements=PeerAf_list)
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['Cisco-NX-OS-device:System', 'bgp-items', 'inst-items', 'dom-items', 'Dom-list', 'peercont-items', 'PeerCont-list', 'af-items'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list__af_items:
+        if n is not None:
+            return Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list__af_items(PeerAf_list=Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list__af_items__PeerAf_list.from_gdata(n.get_opt_list(_ID_Cisco_NX_OS_device__PeerAf_list)))
+        return Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list__af_items()
+
+    mut def copy(self) -> Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list__af_items:
+        """Create a deep copy of this adata object"""
+        return Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list__af_items.from_gdata(self.to_gdata())
+
+
+_breaker7: None = None
+class Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list_entry(yadata.MNode):
+    name: str
+    af_items: Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list__af_items
+
+    mut def __init__(self, name: str, af_items: ?Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list__af_items=None) -> None:
+        self.name = name
+        self.af_items = af_items if af_items is not None else Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list__af_items()
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['Cisco-NX-OS-device:System', 'bgp-items', 'inst-items', 'dom-items', 'Dom-list', 'peercont-items', 'PeerCont-list'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ygdata.Node) -> Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list_entry:
+        return Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list_entry(name=n.get_str(_ID_Cisco_NX_OS_device__name), af_items=Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list__af_items.from_gdata(n.get_opt_cnt(_ID_Cisco_NX_OS_device__af_items)))
+
+    mut def copy(self) -> Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list_entry:
+        """Create a deep copy of this adata object"""
+        return Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list_entry.from_gdata(self.to_gdata())
+
+_breaker8: None = None
+class Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list(yadata.MKeyedList[str, Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list_entry]):
+    mut def __init__(self, elements: list[Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list_entry]=[]) -> None:
+        yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
+
+    mut def create(self, key: str) -> Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list_entry:
+        e = self.get(key)
+        if e is not None:
+            return e
+        name = key
+        res = Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list_entry(name=name)
+        self._append(res)
+        return res
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.List) -> list[Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list_entry]:
+        if n is not None:
+            return [Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list_entry.from_gdata(e) for e in n.entries()]
+        return []
+
+    mut def copy(self) -> Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list:
+        """Create a deep copy of this list object"""
+        # Copy each element in the list
+        copied_elements = []
+        for e in self:
+            ce = e.copy()
+            if ce is not None:
+                copied_elements.append(ce)
+        return Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list(elements=copied_elements)
+
+
+_breaker9: None = None
+class Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items(yadata.MNode):
+    PeerCont_list: Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list
+
+    mut def __init__(self, PeerCont_list: list[Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list_entry]=[]) -> None:
+        self.PeerCont_list = Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list(elements=PeerCont_list)
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['Cisco-NX-OS-device:System', 'bgp-items', 'inst-items', 'dom-items', 'Dom-list', 'peercont-items'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items:
+        if n is not None:
+            return Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items(PeerCont_list=Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items__PeerCont_list.from_gdata(n.get_opt_list(_ID_Cisco_NX_OS_device__PeerCont_list)))
+        return Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items()
+
+    mut def copy(self) -> Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items:
+        """Create a deep copy of this adata object"""
+        return Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items.from_gdata(self.to_gdata())
+
+
+_breaker10: None = None
+class Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__af_items__DomAf_list__interleak_items__InterLeakP_list_entry(yadata.MNode):
+    proto: str
+    inst: str
+    rtMap: ?str
+    asn: ?str
+
+    mut def __init__(self, proto: str, inst: str, rtMap: ?str=None, asn: ?str=None) -> None:
+        self.proto = proto
+        self.inst = inst
+        self.rtMap = rtMap
+        self.asn = asn
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['Cisco-NX-OS-device:System', 'bgp-items', 'inst-items', 'dom-items', 'Dom-list', 'af-items', 'DomAf-list', 'interleak-items', 'InterLeakP-list'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ygdata.Node) -> Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__af_items__DomAf_list__interleak_items__InterLeakP_list_entry:
+        return Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__af_items__DomAf_list__interleak_items__InterLeakP_list_entry(proto=n.get_str(_ID_Cisco_NX_OS_device__proto), inst=n.get_str(_ID_Cisco_NX_OS_device__inst), rtMap=n.get_opt_str(_ID_Cisco_NX_OS_device__rtMap), asn=n.get_opt_str(_ID_Cisco_NX_OS_device__asn))
+
+    mut def copy(self) -> Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__af_items__DomAf_list__interleak_items__InterLeakP_list_entry:
+        """Create a deep copy of this adata object"""
+        return Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__af_items__DomAf_list__interleak_items__InterLeakP_list_entry.from_gdata(self.to_gdata())
+
+_breaker11: None = None
+class Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__af_items__DomAf_list__interleak_items__InterLeakP_list(yadata.MKeyedList[(proto: str, inst: str), Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__af_items__DomAf_list__interleak_items__InterLeakP_list_entry]):
+    mut def __init__(self, elements: list[Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__af_items__DomAf_list__interleak_items__InterLeakP_list_entry]=[]) -> None:
+        yadata.MKeyedList.__init__(self, lambda e: (proto=e.proto, inst=e.inst), elements)
+
+    mut def create(self, key: (proto: str, inst: str), rtMap: ?str=None, asn: ?str=None) -> Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__af_items__DomAf_list__interleak_items__InterLeakP_list_entry:
+        e = self.get(key)
+        if e is not None:
+            if rtMap is not None:
+                e.rtMap = rtMap
+            if asn is not None:
+                e.asn = asn
+            return e
+        (proto=proto, inst=inst) = key
+        res = Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__af_items__DomAf_list__interleak_items__InterLeakP_list_entry(proto=proto, inst=inst, rtMap=rtMap, asn=asn)
+        self._append(res)
+        return res
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.List) -> list[Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__af_items__DomAf_list__interleak_items__InterLeakP_list_entry]:
+        if n is not None:
+            return [Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__af_items__DomAf_list__interleak_items__InterLeakP_list_entry.from_gdata(e) for e in n.entries()]
+        return []
+
+    mut def copy(self) -> Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__af_items__DomAf_list__interleak_items__InterLeakP_list:
+        """Create a deep copy of this list object"""
+        # Copy each element in the list
+        copied_elements = []
+        for e in self:
+            ce = e.copy()
+            if ce is not None:
+                copied_elements.append(ce)
+        return Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__af_items__DomAf_list__interleak_items__InterLeakP_list(elements=copied_elements)
+
+
+_breaker12: None = None
+class Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__af_items__DomAf_list__interleak_items(yadata.MNode):
+    InterLeakP_list: Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__af_items__DomAf_list__interleak_items__InterLeakP_list
+
+    mut def __init__(self, InterLeakP_list: list[Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__af_items__DomAf_list__interleak_items__InterLeakP_list_entry]=[]) -> None:
+        self.InterLeakP_list = Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__af_items__DomAf_list__interleak_items__InterLeakP_list(elements=InterLeakP_list)
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['Cisco-NX-OS-device:System', 'bgp-items', 'inst-items', 'dom-items', 'Dom-list', 'af-items', 'DomAf-list', 'interleak-items'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__af_items__DomAf_list__interleak_items:
+        if n is not None:
+            return Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__af_items__DomAf_list__interleak_items(InterLeakP_list=Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__af_items__DomAf_list__interleak_items__InterLeakP_list.from_gdata(n.get_opt_list(_ID_Cisco_NX_OS_device__InterLeakP_list)))
+        return Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__af_items__DomAf_list__interleak_items()
+
+    mut def copy(self) -> Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__af_items__DomAf_list__interleak_items:
+        """Create a deep copy of this adata object"""
+        return Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__af_items__DomAf_list__interleak_items.from_gdata(self.to_gdata())
+
+
+_breaker13: None = None
+class Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__af_items__DomAf_list_entry(yadata.MNode):
+    type: str
+    maxExtEcmp: ?u64
+    interleak_items: Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__af_items__DomAf_list__interleak_items
+
+    mut def __init__(self, type: str, maxExtEcmp: ?u64=None, interleak_items: ?Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__af_items__DomAf_list__interleak_items=None) -> None:
+        self.type = type
+        self.maxExtEcmp = maxExtEcmp
+        self.interleak_items = interleak_items if interleak_items is not None else Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__af_items__DomAf_list__interleak_items()
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['Cisco-NX-OS-device:System', 'bgp-items', 'inst-items', 'dom-items', 'Dom-list', 'af-items', 'DomAf-list'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ygdata.Node) -> Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__af_items__DomAf_list_entry:
+        return Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__af_items__DomAf_list_entry(type=n.get_str(_ID_Cisco_NX_OS_device__type), maxExtEcmp=n.get_opt_u64(_ID_Cisco_NX_OS_device__maxExtEcmp), interleak_items=Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__af_items__DomAf_list__interleak_items.from_gdata(n.get_opt_cnt(_ID_Cisco_NX_OS_device__interleak_items)))
+
+    mut def copy(self) -> Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__af_items__DomAf_list_entry:
+        """Create a deep copy of this adata object"""
+        return Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__af_items__DomAf_list_entry.from_gdata(self.to_gdata())
+
+_breaker14: None = None
+class Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__af_items__DomAf_list(yadata.MKeyedList[str, Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__af_items__DomAf_list_entry]):
+    mut def __init__(self, elements: list[Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__af_items__DomAf_list_entry]=[]) -> None:
+        yadata.MKeyedList.__init__(self, lambda e: e.type, elements)
+
+    mut def create(self, key: str, maxExtEcmp: ?u64=None) -> Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__af_items__DomAf_list_entry:
+        e = self.get(key)
+        if e is not None:
+            if maxExtEcmp is not None:
+                e.maxExtEcmp = maxExtEcmp
+            return e
+        type = key
+        res = Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__af_items__DomAf_list_entry(type=type, maxExtEcmp=maxExtEcmp)
+        self._append(res)
+        return res
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.List) -> list[Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__af_items__DomAf_list_entry]:
+        if n is not None:
+            return [Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__af_items__DomAf_list_entry.from_gdata(e) for e in n.entries()]
+        return []
+
+    mut def copy(self) -> Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__af_items__DomAf_list:
+        """Create a deep copy of this list object"""
+        # Copy each element in the list
+        copied_elements = []
+        for e in self:
+            ce = e.copy()
+            if ce is not None:
+                copied_elements.append(ce)
+        return Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__af_items__DomAf_list(elements=copied_elements)
+
+
+_breaker15: None = None
+class Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__af_items(yadata.MNode):
+    DomAf_list: Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__af_items__DomAf_list
+
+    mut def __init__(self, DomAf_list: list[Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__af_items__DomAf_list_entry]=[]) -> None:
+        self.DomAf_list = Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__af_items__DomAf_list(elements=DomAf_list)
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['Cisco-NX-OS-device:System', 'bgp-items', 'inst-items', 'dom-items', 'Dom-list', 'af-items'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__af_items:
+        if n is not None:
+            return Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__af_items(DomAf_list=Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__af_items__DomAf_list.from_gdata(n.get_opt_list(_ID_Cisco_NX_OS_device__DomAf_list)))
+        return Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__af_items()
+
+    mut def copy(self) -> Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__af_items:
+        """Create a deep copy of this adata object"""
+        return Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__af_items.from_gdata(self.to_gdata())
+
+
+_breaker16: None = None
+class Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peer_items__Peer_list_entry(yadata.MNode):
+    addr: str
+    name: ?str
+    asn: ?str
+    peerImp: ?str
+
+    mut def __init__(self, addr: str, name: ?str=None, asn: ?str=None, peerImp: ?str=None) -> None:
+        self.addr = addr
+        self.name = name
+        self.asn = asn
+        self.peerImp = peerImp
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['Cisco-NX-OS-device:System', 'bgp-items', 'inst-items', 'dom-items', 'Dom-list', 'peer-items', 'Peer-list'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ygdata.Node) -> Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peer_items__Peer_list_entry:
+        return Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peer_items__Peer_list_entry(addr=n.get_str(_ID_Cisco_NX_OS_device__addr), name=n.get_opt_str(_ID_Cisco_NX_OS_device__name), asn=n.get_opt_str(_ID_Cisco_NX_OS_device__asn), peerImp=n.get_opt_str(_ID_Cisco_NX_OS_device__peerImp))
+
+    mut def copy(self) -> Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peer_items__Peer_list_entry:
+        """Create a deep copy of this adata object"""
+        return Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peer_items__Peer_list_entry.from_gdata(self.to_gdata())
+
+_breaker17: None = None
+class Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peer_items__Peer_list(yadata.MKeyedList[str, Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peer_items__Peer_list_entry]):
+    mut def __init__(self, elements: list[Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peer_items__Peer_list_entry]=[]) -> None:
+        yadata.MKeyedList.__init__(self, lambda e: e.addr, elements)
+
+    mut def create(self, key: str, name: ?str=None, asn: ?str=None, peerImp: ?str=None) -> Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peer_items__Peer_list_entry:
+        e = self.get(key)
+        if e is not None:
+            if name is not None:
+                e.name = name
+            if asn is not None:
+                e.asn = asn
+            if peerImp is not None:
+                e.peerImp = peerImp
+            return e
+        addr = key
+        res = Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peer_items__Peer_list_entry(addr=addr, name=name, asn=asn, peerImp=peerImp)
+        self._append(res)
+        return res
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.List) -> list[Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peer_items__Peer_list_entry]:
+        if n is not None:
+            return [Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peer_items__Peer_list_entry.from_gdata(e) for e in n.entries()]
+        return []
+
+    mut def copy(self) -> Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peer_items__Peer_list:
+        """Create a deep copy of this list object"""
+        # Copy each element in the list
+        copied_elements = []
+        for e in self:
+            ce = e.copy()
+            if ce is not None:
+                copied_elements.append(ce)
+        return Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peer_items__Peer_list(elements=copied_elements)
+
+
+_breaker18: None = None
+class Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peer_items(yadata.MNode):
+    Peer_list: Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peer_items__Peer_list
+
+    mut def __init__(self, Peer_list: list[Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peer_items__Peer_list_entry]=[]) -> None:
+        self.Peer_list = Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peer_items__Peer_list(elements=Peer_list)
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['Cisco-NX-OS-device:System', 'bgp-items', 'inst-items', 'dom-items', 'Dom-list', 'peer-items'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peer_items:
+        if n is not None:
+            return Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peer_items(Peer_list=Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peer_items__Peer_list.from_gdata(n.get_opt_list(_ID_Cisco_NX_OS_device__Peer_list)))
+        return Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peer_items()
+
+    mut def copy(self) -> Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peer_items:
+        """Create a deep copy of this adata object"""
+        return Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peer_items.from_gdata(self.to_gdata())
+
+
+_breaker19: None = None
+class Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list_entry(yadata.MNode):
+    name: str
+    rtrId: ?str
+    peercont_items: Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items
+    af_items: Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__af_items
+    peer_items: Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peer_items
+
+    mut def __init__(self, name: str, rtrId: ?str=None, peercont_items: ?Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items=None, af_items: ?Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__af_items=None, peer_items: ?Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peer_items=None) -> None:
+        self.name = name
+        self.rtrId = rtrId
+        self.peercont_items = peercont_items if peercont_items is not None else Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items()
+        self.af_items = af_items if af_items is not None else Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__af_items()
+        self.peer_items = peer_items if peer_items is not None else Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peer_items()
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['Cisco-NX-OS-device:System', 'bgp-items', 'inst-items', 'dom-items', 'Dom-list'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ygdata.Node) -> Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list_entry:
+        return Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list_entry(name=n.get_str(_ID_Cisco_NX_OS_device__name), rtrId=n.get_opt_str(_ID_Cisco_NX_OS_device__rtrId), peercont_items=Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peercont_items.from_gdata(n.get_opt_cnt(_ID_Cisco_NX_OS_device__peercont_items)), af_items=Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__af_items.from_gdata(n.get_opt_cnt(_ID_Cisco_NX_OS_device__af_items)), peer_items=Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list__peer_items.from_gdata(n.get_opt_cnt(_ID_Cisco_NX_OS_device__peer_items)))
+
+    mut def copy(self) -> Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list_entry:
+        """Create a deep copy of this adata object"""
+        return Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list_entry.from_gdata(self.to_gdata())
+
+_breaker20: None = None
+class Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list(yadata.MKeyedList[str, Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list_entry]):
+    mut def __init__(self, elements: list[Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list_entry]=[]) -> None:
+        yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
+
+    mut def create(self, key: str, rtrId: ?str=None) -> Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list_entry:
+        e = self.get(key)
+        if e is not None:
+            if rtrId is not None:
+                e.rtrId = rtrId
+            return e
+        name = key
+        res = Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list_entry(name=name, rtrId=rtrId)
+        self._append(res)
+        return res
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.List) -> list[Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list_entry]:
+        if n is not None:
+            return [Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list_entry.from_gdata(e) for e in n.entries()]
+        return []
+
+    mut def copy(self) -> Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list:
+        """Create a deep copy of this list object"""
+        # Copy each element in the list
+        copied_elements = []
+        for e in self:
+            ce = e.copy()
+            if ce is not None:
+                copied_elements.append(ce)
+        return Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list(elements=copied_elements)
+
+
+_breaker21: None = None
+class Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items(yadata.MNode):
+    Dom_list: Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list
+
+    mut def __init__(self, Dom_list: list[Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list_entry]=[]) -> None:
+        self.Dom_list = Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list(elements=Dom_list)
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['Cisco-NX-OS-device:System', 'bgp-items', 'inst-items', 'dom-items'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items:
+        if n is not None:
+            return Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items(Dom_list=Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items__Dom_list.from_gdata(n.get_opt_list(_ID_Cisco_NX_OS_device__Dom_list)))
+        return Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items()
+
+    mut def copy(self) -> Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items:
+        """Create a deep copy of this adata object"""
+        return Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items.from_gdata(self.to_gdata())
+
+
+_breaker22: None = None
+class Cisco_NX_OS_device__System__bgp_items__inst_items(yadata.MNode):
+    asn: ?str
+    dom_items: Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items
+
+    mut def __init__(self, asn: ?str=None, dom_items: ?Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items=None) -> None:
+        self.asn = asn
+        self.dom_items = dom_items if dom_items is not None else Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items()
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['Cisco-NX-OS-device:System', 'bgp-items', 'inst-items'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> Cisco_NX_OS_device__System__bgp_items__inst_items:
+        if n is not None:
+            return Cisco_NX_OS_device__System__bgp_items__inst_items(asn=n.get_opt_str(_ID_Cisco_NX_OS_device__asn), dom_items=Cisco_NX_OS_device__System__bgp_items__inst_items__dom_items.from_gdata(n.get_opt_cnt(_ID_Cisco_NX_OS_device__dom_items)))
+        return Cisco_NX_OS_device__System__bgp_items__inst_items()
+
+    mut def copy(self) -> Cisco_NX_OS_device__System__bgp_items__inst_items:
+        """Create a deep copy of this adata object"""
+        return Cisco_NX_OS_device__System__bgp_items__inst_items.from_gdata(self.to_gdata())
+
+
+_breaker23: None = None
+class Cisco_NX_OS_device__System__bgp_items(yadata.MNode):
+    inst_items: Cisco_NX_OS_device__System__bgp_items__inst_items
+
+    mut def __init__(self, inst_items: ?Cisco_NX_OS_device__System__bgp_items__inst_items=None) -> None:
+        self.inst_items = inst_items if inst_items is not None else Cisco_NX_OS_device__System__bgp_items__inst_items()
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['Cisco-NX-OS-device:System', 'bgp-items'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> Cisco_NX_OS_device__System__bgp_items:
+        if n is not None:
+            return Cisco_NX_OS_device__System__bgp_items(inst_items=Cisco_NX_OS_device__System__bgp_items__inst_items.from_gdata(n.get_opt_cnt(_ID_Cisco_NX_OS_device__inst_items)))
+        return Cisco_NX_OS_device__System__bgp_items()
+
+    mut def copy(self) -> Cisco_NX_OS_device__System__bgp_items:
+        """Create a deep copy of this adata object"""
+        return Cisco_NX_OS_device__System__bgp_items.from_gdata(self.to_gdata())
+
+
+_breaker24: None = None
 class Cisco_NX_OS_device__System__intf_items__phys_items__PhysIf_list_entry(yadata.MNode):
     id: str
     descr: ?str
+    adminSt: ?str
+    mtu: ?u64
+    layer: ?str
+    userCfgdFlags: ?str
 
-    mut def __init__(self, id: str, descr: ?str=None) -> None:
+    mut def __init__(self, id: str, descr: ?str=None, adminSt: ?str=None, mtu: ?u64=None, layer: ?str=None, userCfgdFlags: ?str=None) -> None:
         self.id = id
         self.descr = descr
+        self.adminSt = adminSt
+        self.mtu = mtu
+        self.layer = layer
+        self.userCfgdFlags = userCfgdFlags
 
     mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
         return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['Cisco-NX-OS-device:System', 'intf-items', 'phys-items', 'PhysIf-list'], prev=prev)
 
     @staticmethod
     mut def from_gdata(n: ygdata.Node) -> Cisco_NX_OS_device__System__intf_items__phys_items__PhysIf_list_entry:
-        return Cisco_NX_OS_device__System__intf_items__phys_items__PhysIf_list_entry(id=n.get_str(_ID_Cisco_NX_OS_device__id), descr=n.get_opt_str(_ID_Cisco_NX_OS_device__descr))
+        return Cisco_NX_OS_device__System__intf_items__phys_items__PhysIf_list_entry(id=n.get_str(_ID_Cisco_NX_OS_device__id), descr=n.get_opt_str(_ID_Cisco_NX_OS_device__descr), adminSt=n.get_opt_str(_ID_Cisco_NX_OS_device__adminSt), mtu=n.get_opt_u64(_ID_Cisco_NX_OS_device__mtu), layer=n.get_opt_str(_ID_Cisco_NX_OS_device__layer), userCfgdFlags=n.get_opt_str(_ID_Cisco_NX_OS_device__userCfgdFlags))
 
     mut def copy(self) -> Cisco_NX_OS_device__System__intf_items__phys_items__PhysIf_list_entry:
         """Create a deep copy of this adata object"""
         return Cisco_NX_OS_device__System__intf_items__phys_items__PhysIf_list_entry.from_gdata(self.to_gdata())
 
-_breaker2: None = None
+_breaker25: None = None
 class Cisco_NX_OS_device__System__intf_items__phys_items__PhysIf_list(yadata.MKeyedList[str, Cisco_NX_OS_device__System__intf_items__phys_items__PhysIf_list_entry]):
     mut def __init__(self, elements: list[Cisco_NX_OS_device__System__intf_items__phys_items__PhysIf_list_entry]=[]) -> None:
         yadata.MKeyedList.__init__(self, lambda e: e.id, elements)
 
-    mut def create(self, key: str, descr: ?str=None) -> Cisco_NX_OS_device__System__intf_items__phys_items__PhysIf_list_entry:
+    mut def create(self, key: str, descr: ?str=None, adminSt: ?str=None, mtu: ?u64=None, layer: ?str=None, userCfgdFlags: ?str=None) -> Cisco_NX_OS_device__System__intf_items__phys_items__PhysIf_list_entry:
         e = self.get(key)
         if e is not None:
             if descr is not None:
                 e.descr = descr
+            if adminSt is not None:
+                e.adminSt = adminSt
+            if mtu is not None:
+                e.mtu = mtu
+            if layer is not None:
+                e.layer = layer
+            if userCfgdFlags is not None:
+                e.userCfgdFlags = userCfgdFlags
             return e
         id = key
-        res = Cisco_NX_OS_device__System__intf_items__phys_items__PhysIf_list_entry(id=id, descr=descr)
+        res = Cisco_NX_OS_device__System__intf_items__phys_items__PhysIf_list_entry(id=id, descr=descr, adminSt=adminSt, mtu=mtu, layer=layer, userCfgdFlags=userCfgdFlags)
         self._append(res)
         return res
 
@@ -169,7 +816,7 @@ class Cisco_NX_OS_device__System__intf_items__phys_items__PhysIf_list(yadata.MKe
         return Cisco_NX_OS_device__System__intf_items__phys_items__PhysIf_list(elements=copied_elements)
 
 
-_breaker3: None = None
+_breaker26: None = None
 class Cisco_NX_OS_device__System__intf_items__phys_items(yadata.MNode):
     PhysIf_list: Cisco_NX_OS_device__System__intf_items__phys_items__PhysIf_list
 
@@ -190,12 +837,88 @@ class Cisco_NX_OS_device__System__intf_items__phys_items(yadata.MNode):
         return Cisco_NX_OS_device__System__intf_items__phys_items.from_gdata(self.to_gdata())
 
 
-_breaker4: None = None
+_breaker27: None = None
+class Cisco_NX_OS_device__System__intf_items__lb_items__LbRtdIf_list_entry(yadata.MNode):
+    id: str
+    adminSt: ?str
+
+    mut def __init__(self, id: str, adminSt: ?str=None) -> None:
+        self.id = id
+        self.adminSt = adminSt
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['Cisco-NX-OS-device:System', 'intf-items', 'lb-items', 'LbRtdIf-list'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ygdata.Node) -> Cisco_NX_OS_device__System__intf_items__lb_items__LbRtdIf_list_entry:
+        return Cisco_NX_OS_device__System__intf_items__lb_items__LbRtdIf_list_entry(id=n.get_str(_ID_Cisco_NX_OS_device__id), adminSt=n.get_opt_str(_ID_Cisco_NX_OS_device__adminSt))
+
+    mut def copy(self) -> Cisco_NX_OS_device__System__intf_items__lb_items__LbRtdIf_list_entry:
+        """Create a deep copy of this adata object"""
+        return Cisco_NX_OS_device__System__intf_items__lb_items__LbRtdIf_list_entry.from_gdata(self.to_gdata())
+
+_breaker28: None = None
+class Cisco_NX_OS_device__System__intf_items__lb_items__LbRtdIf_list(yadata.MKeyedList[str, Cisco_NX_OS_device__System__intf_items__lb_items__LbRtdIf_list_entry]):
+    mut def __init__(self, elements: list[Cisco_NX_OS_device__System__intf_items__lb_items__LbRtdIf_list_entry]=[]) -> None:
+        yadata.MKeyedList.__init__(self, lambda e: e.id, elements)
+
+    mut def create(self, key: str, adminSt: ?str=None) -> Cisco_NX_OS_device__System__intf_items__lb_items__LbRtdIf_list_entry:
+        e = self.get(key)
+        if e is not None:
+            if adminSt is not None:
+                e.adminSt = adminSt
+            return e
+        id = key
+        res = Cisco_NX_OS_device__System__intf_items__lb_items__LbRtdIf_list_entry(id=id, adminSt=adminSt)
+        self._append(res)
+        return res
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.List) -> list[Cisco_NX_OS_device__System__intf_items__lb_items__LbRtdIf_list_entry]:
+        if n is not None:
+            return [Cisco_NX_OS_device__System__intf_items__lb_items__LbRtdIf_list_entry.from_gdata(e) for e in n.entries()]
+        return []
+
+    mut def copy(self) -> Cisco_NX_OS_device__System__intf_items__lb_items__LbRtdIf_list:
+        """Create a deep copy of this list object"""
+        # Copy each element in the list
+        copied_elements = []
+        for e in self:
+            ce = e.copy()
+            if ce is not None:
+                copied_elements.append(ce)
+        return Cisco_NX_OS_device__System__intf_items__lb_items__LbRtdIf_list(elements=copied_elements)
+
+
+_breaker29: None = None
+class Cisco_NX_OS_device__System__intf_items__lb_items(yadata.MNode):
+    LbRtdIf_list: Cisco_NX_OS_device__System__intf_items__lb_items__LbRtdIf_list
+
+    mut def __init__(self, LbRtdIf_list: list[Cisco_NX_OS_device__System__intf_items__lb_items__LbRtdIf_list_entry]=[]) -> None:
+        self.LbRtdIf_list = Cisco_NX_OS_device__System__intf_items__lb_items__LbRtdIf_list(elements=LbRtdIf_list)
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['Cisco-NX-OS-device:System', 'intf-items', 'lb-items'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> Cisco_NX_OS_device__System__intf_items__lb_items:
+        if n is not None:
+            return Cisco_NX_OS_device__System__intf_items__lb_items(LbRtdIf_list=Cisco_NX_OS_device__System__intf_items__lb_items__LbRtdIf_list.from_gdata(n.get_opt_list(_ID_Cisco_NX_OS_device__LbRtdIf_list)))
+        return Cisco_NX_OS_device__System__intf_items__lb_items()
+
+    mut def copy(self) -> Cisco_NX_OS_device__System__intf_items__lb_items:
+        """Create a deep copy of this adata object"""
+        return Cisco_NX_OS_device__System__intf_items__lb_items.from_gdata(self.to_gdata())
+
+
+_breaker30: None = None
 class Cisco_NX_OS_device__System__intf_items(yadata.MNode):
     phys_items: Cisco_NX_OS_device__System__intf_items__phys_items
+    lb_items: Cisco_NX_OS_device__System__intf_items__lb_items
 
-    mut def __init__(self, phys_items: ?Cisco_NX_OS_device__System__intf_items__phys_items=None) -> None:
+    mut def __init__(self, phys_items: ?Cisco_NX_OS_device__System__intf_items__phys_items=None, lb_items: ?Cisco_NX_OS_device__System__intf_items__lb_items=None) -> None:
         self.phys_items = phys_items if phys_items is not None else Cisco_NX_OS_device__System__intf_items__phys_items()
+        self.lb_items = lb_items if lb_items is not None else Cisco_NX_OS_device__System__intf_items__lb_items()
 
     mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
         return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['Cisco-NX-OS-device:System', 'intf-items'], prev=prev)
@@ -203,7 +926,7 @@ class Cisco_NX_OS_device__System__intf_items(yadata.MNode):
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> Cisco_NX_OS_device__System__intf_items:
         if n is not None:
-            return Cisco_NX_OS_device__System__intf_items(phys_items=Cisco_NX_OS_device__System__intf_items__phys_items.from_gdata(n.get_opt_cnt(_ID_Cisco_NX_OS_device__phys_items)))
+            return Cisco_NX_OS_device__System__intf_items(phys_items=Cisco_NX_OS_device__System__intf_items__phys_items.from_gdata(n.get_opt_cnt(_ID_Cisco_NX_OS_device__phys_items)), lb_items=Cisco_NX_OS_device__System__intf_items__lb_items.from_gdata(n.get_opt_cnt(_ID_Cisco_NX_OS_device__lb_items)))
         return Cisco_NX_OS_device__System__intf_items()
 
     mut def copy(self) -> Cisco_NX_OS_device__System__intf_items:
@@ -211,14 +934,700 @@ class Cisco_NX_OS_device__System__intf_items(yadata.MNode):
         return Cisco_NX_OS_device__System__intf_items.from_gdata(self.to_gdata())
 
 
-_breaker5: None = None
+_breaker31: None = None
+class Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list__if_items__If_list__addr_items__Addr_list_entry(yadata.MNode):
+    addr: str
+
+    mut def __init__(self, addr: str) -> None:
+        self.addr = addr
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['Cisco-NX-OS-device:System', 'ipv4-items', 'inst-items', 'dom-items', 'Dom-list', 'if-items', 'If-list', 'addr-items', 'Addr-list'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ygdata.Node) -> Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list__if_items__If_list__addr_items__Addr_list_entry:
+        return Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list__if_items__If_list__addr_items__Addr_list_entry(addr=n.get_str(_ID_Cisco_NX_OS_device__addr))
+
+    mut def copy(self) -> Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list__if_items__If_list__addr_items__Addr_list_entry:
+        """Create a deep copy of this adata object"""
+        return Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list__if_items__If_list__addr_items__Addr_list_entry.from_gdata(self.to_gdata())
+
+_breaker32: None = None
+class Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list__if_items__If_list__addr_items__Addr_list(yadata.MKeyedList[str, Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list__if_items__If_list__addr_items__Addr_list_entry]):
+    mut def __init__(self, elements: list[Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list__if_items__If_list__addr_items__Addr_list_entry]=[]) -> None:
+        yadata.MKeyedList.__init__(self, lambda e: e.addr, elements)
+
+    mut def create(self, key: str) -> Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list__if_items__If_list__addr_items__Addr_list_entry:
+        e = self.get(key)
+        if e is not None:
+            return e
+        addr = key
+        res = Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list__if_items__If_list__addr_items__Addr_list_entry(addr=addr)
+        self._append(res)
+        return res
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.List) -> list[Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list__if_items__If_list__addr_items__Addr_list_entry]:
+        if n is not None:
+            return [Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list__if_items__If_list__addr_items__Addr_list_entry.from_gdata(e) for e in n.entries()]
+        return []
+
+    mut def copy(self) -> Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list__if_items__If_list__addr_items__Addr_list:
+        """Create a deep copy of this list object"""
+        # Copy each element in the list
+        copied_elements = []
+        for e in self:
+            ce = e.copy()
+            if ce is not None:
+                copied_elements.append(ce)
+        return Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list__if_items__If_list__addr_items__Addr_list(elements=copied_elements)
+
+
+_breaker33: None = None
+class Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list__if_items__If_list__addr_items(yadata.MNode):
+    Addr_list: Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list__if_items__If_list__addr_items__Addr_list
+
+    mut def __init__(self, Addr_list: list[Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list__if_items__If_list__addr_items__Addr_list_entry]=[]) -> None:
+        self.Addr_list = Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list__if_items__If_list__addr_items__Addr_list(elements=Addr_list)
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['Cisco-NX-OS-device:System', 'ipv4-items', 'inst-items', 'dom-items', 'Dom-list', 'if-items', 'If-list', 'addr-items'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list__if_items__If_list__addr_items:
+        if n is not None:
+            return Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list__if_items__If_list__addr_items(Addr_list=Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list__if_items__If_list__addr_items__Addr_list.from_gdata(n.get_opt_list(_ID_Cisco_NX_OS_device__Addr_list)))
+        return Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list__if_items__If_list__addr_items()
+
+    mut def copy(self) -> Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list__if_items__If_list__addr_items:
+        """Create a deep copy of this adata object"""
+        return Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list__if_items__If_list__addr_items.from_gdata(self.to_gdata())
+
+
+_breaker34: None = None
+class Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list__if_items__If_list_entry(yadata.MNode):
+    id: str
+    addr_items: Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list__if_items__If_list__addr_items
+
+    mut def __init__(self, id: str, addr_items: ?Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list__if_items__If_list__addr_items=None) -> None:
+        self.id = id
+        self.addr_items = addr_items if addr_items is not None else Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list__if_items__If_list__addr_items()
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['Cisco-NX-OS-device:System', 'ipv4-items', 'inst-items', 'dom-items', 'Dom-list', 'if-items', 'If-list'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ygdata.Node) -> Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list__if_items__If_list_entry:
+        return Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list__if_items__If_list_entry(id=n.get_str(_ID_Cisco_NX_OS_device__id), addr_items=Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list__if_items__If_list__addr_items.from_gdata(n.get_opt_cnt(_ID_Cisco_NX_OS_device__addr_items)))
+
+    mut def copy(self) -> Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list__if_items__If_list_entry:
+        """Create a deep copy of this adata object"""
+        return Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list__if_items__If_list_entry.from_gdata(self.to_gdata())
+
+_breaker35: None = None
+class Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list__if_items__If_list(yadata.MKeyedList[str, Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list__if_items__If_list_entry]):
+    mut def __init__(self, elements: list[Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list__if_items__If_list_entry]=[]) -> None:
+        yadata.MKeyedList.__init__(self, lambda e: e.id, elements)
+
+    mut def create(self, key: str) -> Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list__if_items__If_list_entry:
+        e = self.get(key)
+        if e is not None:
+            return e
+        id = key
+        res = Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list__if_items__If_list_entry(id=id)
+        self._append(res)
+        return res
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.List) -> list[Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list__if_items__If_list_entry]:
+        if n is not None:
+            return [Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list__if_items__If_list_entry.from_gdata(e) for e in n.entries()]
+        return []
+
+    mut def copy(self) -> Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list__if_items__If_list:
+        """Create a deep copy of this list object"""
+        # Copy each element in the list
+        copied_elements = []
+        for e in self:
+            ce = e.copy()
+            if ce is not None:
+                copied_elements.append(ce)
+        return Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list__if_items__If_list(elements=copied_elements)
+
+
+_breaker36: None = None
+class Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list__if_items(yadata.MNode):
+    If_list: Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list__if_items__If_list
+
+    mut def __init__(self, If_list: list[Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list__if_items__If_list_entry]=[]) -> None:
+        self.If_list = Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list__if_items__If_list(elements=If_list)
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['Cisco-NX-OS-device:System', 'ipv4-items', 'inst-items', 'dom-items', 'Dom-list', 'if-items'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list__if_items:
+        if n is not None:
+            return Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list__if_items(If_list=Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list__if_items__If_list.from_gdata(n.get_opt_list(_ID_Cisco_NX_OS_device__If_list)))
+        return Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list__if_items()
+
+    mut def copy(self) -> Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list__if_items:
+        """Create a deep copy of this adata object"""
+        return Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list__if_items.from_gdata(self.to_gdata())
+
+
+_breaker37: None = None
+class Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list_entry(yadata.MNode):
+    name: str
+    if_items: Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list__if_items
+
+    mut def __init__(self, name: str, if_items: ?Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list__if_items=None) -> None:
+        self.name = name
+        self.if_items = if_items if if_items is not None else Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list__if_items()
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['Cisco-NX-OS-device:System', 'ipv4-items', 'inst-items', 'dom-items', 'Dom-list'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ygdata.Node) -> Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list_entry:
+        return Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list_entry(name=n.get_str(_ID_Cisco_NX_OS_device__name), if_items=Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list__if_items.from_gdata(n.get_opt_cnt(_ID_Cisco_NX_OS_device__if_items)))
+
+    mut def copy(self) -> Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list_entry:
+        """Create a deep copy of this adata object"""
+        return Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list_entry.from_gdata(self.to_gdata())
+
+_breaker38: None = None
+class Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list(yadata.MKeyedList[str, Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list_entry]):
+    mut def __init__(self, elements: list[Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list_entry]=[]) -> None:
+        yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
+
+    mut def create(self, key: str) -> Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list_entry:
+        e = self.get(key)
+        if e is not None:
+            return e
+        name = key
+        res = Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list_entry(name=name)
+        self._append(res)
+        return res
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.List) -> list[Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list_entry]:
+        if n is not None:
+            return [Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list_entry.from_gdata(e) for e in n.entries()]
+        return []
+
+    mut def copy(self) -> Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list:
+        """Create a deep copy of this list object"""
+        # Copy each element in the list
+        copied_elements = []
+        for e in self:
+            ce = e.copy()
+            if ce is not None:
+                copied_elements.append(ce)
+        return Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list(elements=copied_elements)
+
+
+_breaker39: None = None
+class Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items(yadata.MNode):
+    Dom_list: Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list
+
+    mut def __init__(self, Dom_list: list[Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list_entry]=[]) -> None:
+        self.Dom_list = Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list(elements=Dom_list)
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['Cisco-NX-OS-device:System', 'ipv4-items', 'inst-items', 'dom-items'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items:
+        if n is not None:
+            return Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items(Dom_list=Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items__Dom_list.from_gdata(n.get_opt_list(_ID_Cisco_NX_OS_device__Dom_list)))
+        return Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items()
+
+    mut def copy(self) -> Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items:
+        """Create a deep copy of this adata object"""
+        return Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items.from_gdata(self.to_gdata())
+
+
+_breaker40: None = None
+class Cisco_NX_OS_device__System__ipv4_items__inst_items(yadata.MNode):
+    dom_items: Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items
+
+    mut def __init__(self, dom_items: ?Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items=None) -> None:
+        self.dom_items = dom_items if dom_items is not None else Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items()
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['Cisco-NX-OS-device:System', 'ipv4-items', 'inst-items'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> Cisco_NX_OS_device__System__ipv4_items__inst_items:
+        if n is not None:
+            return Cisco_NX_OS_device__System__ipv4_items__inst_items(dom_items=Cisco_NX_OS_device__System__ipv4_items__inst_items__dom_items.from_gdata(n.get_opt_cnt(_ID_Cisco_NX_OS_device__dom_items)))
+        return Cisco_NX_OS_device__System__ipv4_items__inst_items()
+
+    mut def copy(self) -> Cisco_NX_OS_device__System__ipv4_items__inst_items:
+        """Create a deep copy of this adata object"""
+        return Cisco_NX_OS_device__System__ipv4_items__inst_items.from_gdata(self.to_gdata())
+
+
+_breaker41: None = None
+class Cisco_NX_OS_device__System__ipv4_items(yadata.MNode):
+    inst_items: Cisco_NX_OS_device__System__ipv4_items__inst_items
+
+    mut def __init__(self, inst_items: ?Cisco_NX_OS_device__System__ipv4_items__inst_items=None) -> None:
+        self.inst_items = inst_items if inst_items is not None else Cisco_NX_OS_device__System__ipv4_items__inst_items()
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['Cisco-NX-OS-device:System', 'ipv4-items'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> Cisco_NX_OS_device__System__ipv4_items:
+        if n is not None:
+            return Cisco_NX_OS_device__System__ipv4_items(inst_items=Cisco_NX_OS_device__System__ipv4_items__inst_items.from_gdata(n.get_opt_cnt(_ID_Cisco_NX_OS_device__inst_items)))
+        return Cisco_NX_OS_device__System__ipv4_items()
+
+    mut def copy(self) -> Cisco_NX_OS_device__System__ipv4_items:
+        """Create a deep copy of this adata object"""
+        return Cisco_NX_OS_device__System__ipv4_items.from_gdata(self.to_gdata())
+
+
+_breaker42: None = None
+class Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list__ent_items__Entry_list__mrtdst_items__rsrtDstAtt_items__RsRtDstAtt_list_entry(yadata.MNode):
+    tDn: str
+
+    mut def __init__(self, tDn: str) -> None:
+        self.tDn = tDn
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['Cisco-NX-OS-device:System', 'rpm-items', 'rtmap-items', 'Rule-list', 'ent-items', 'Entry-list', 'mrtdst-items', 'rsrtDstAtt-items', 'RsRtDstAtt-list'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ygdata.Node) -> Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list__ent_items__Entry_list__mrtdst_items__rsrtDstAtt_items__RsRtDstAtt_list_entry:
+        return Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list__ent_items__Entry_list__mrtdst_items__rsrtDstAtt_items__RsRtDstAtt_list_entry(tDn=n.get_str(_ID_Cisco_NX_OS_device__tDn))
+
+    mut def copy(self) -> Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list__ent_items__Entry_list__mrtdst_items__rsrtDstAtt_items__RsRtDstAtt_list_entry:
+        """Create a deep copy of this adata object"""
+        return Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list__ent_items__Entry_list__mrtdst_items__rsrtDstAtt_items__RsRtDstAtt_list_entry.from_gdata(self.to_gdata())
+
+_breaker43: None = None
+class Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list__ent_items__Entry_list__mrtdst_items__rsrtDstAtt_items__RsRtDstAtt_list(yadata.MKeyedList[str, Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list__ent_items__Entry_list__mrtdst_items__rsrtDstAtt_items__RsRtDstAtt_list_entry]):
+    mut def __init__(self, elements: list[Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list__ent_items__Entry_list__mrtdst_items__rsrtDstAtt_items__RsRtDstAtt_list_entry]=[]) -> None:
+        yadata.MKeyedList.__init__(self, lambda e: e.tDn, elements)
+
+    mut def create(self, key: str) -> Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list__ent_items__Entry_list__mrtdst_items__rsrtDstAtt_items__RsRtDstAtt_list_entry:
+        e = self.get(key)
+        if e is not None:
+            return e
+        tDn = key
+        res = Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list__ent_items__Entry_list__mrtdst_items__rsrtDstAtt_items__RsRtDstAtt_list_entry(tDn=tDn)
+        self._append(res)
+        return res
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.List) -> list[Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list__ent_items__Entry_list__mrtdst_items__rsrtDstAtt_items__RsRtDstAtt_list_entry]:
+        if n is not None:
+            return [Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list__ent_items__Entry_list__mrtdst_items__rsrtDstAtt_items__RsRtDstAtt_list_entry.from_gdata(e) for e in n.entries()]
+        return []
+
+    mut def copy(self) -> Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list__ent_items__Entry_list__mrtdst_items__rsrtDstAtt_items__RsRtDstAtt_list:
+        """Create a deep copy of this list object"""
+        # Copy each element in the list
+        copied_elements = []
+        for e in self:
+            ce = e.copy()
+            if ce is not None:
+                copied_elements.append(ce)
+        return Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list__ent_items__Entry_list__mrtdst_items__rsrtDstAtt_items__RsRtDstAtt_list(elements=copied_elements)
+
+
+_breaker44: None = None
+class Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list__ent_items__Entry_list__mrtdst_items__rsrtDstAtt_items(yadata.MNode):
+    RsRtDstAtt_list: Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list__ent_items__Entry_list__mrtdst_items__rsrtDstAtt_items__RsRtDstAtt_list
+
+    mut def __init__(self, RsRtDstAtt_list: list[Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list__ent_items__Entry_list__mrtdst_items__rsrtDstAtt_items__RsRtDstAtt_list_entry]=[]) -> None:
+        self.RsRtDstAtt_list = Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list__ent_items__Entry_list__mrtdst_items__rsrtDstAtt_items__RsRtDstAtt_list(elements=RsRtDstAtt_list)
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['Cisco-NX-OS-device:System', 'rpm-items', 'rtmap-items', 'Rule-list', 'ent-items', 'Entry-list', 'mrtdst-items', 'rsrtDstAtt-items'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list__ent_items__Entry_list__mrtdst_items__rsrtDstAtt_items:
+        if n is not None:
+            return Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list__ent_items__Entry_list__mrtdst_items__rsrtDstAtt_items(RsRtDstAtt_list=Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list__ent_items__Entry_list__mrtdst_items__rsrtDstAtt_items__RsRtDstAtt_list.from_gdata(n.get_opt_list(_ID_Cisco_NX_OS_device__RsRtDstAtt_list)))
+        return Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list__ent_items__Entry_list__mrtdst_items__rsrtDstAtt_items()
+
+    mut def copy(self) -> Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list__ent_items__Entry_list__mrtdst_items__rsrtDstAtt_items:
+        """Create a deep copy of this adata object"""
+        return Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list__ent_items__Entry_list__mrtdst_items__rsrtDstAtt_items.from_gdata(self.to_gdata())
+
+
+_breaker45: None = None
+class Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list__ent_items__Entry_list__mrtdst_items(yadata.MNode):
+    rsrtDstAtt_items: Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list__ent_items__Entry_list__mrtdst_items__rsrtDstAtt_items
+
+    mut def __init__(self, rsrtDstAtt_items: ?Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list__ent_items__Entry_list__mrtdst_items__rsrtDstAtt_items=None) -> None:
+        self.rsrtDstAtt_items = rsrtDstAtt_items if rsrtDstAtt_items is not None else Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list__ent_items__Entry_list__mrtdst_items__rsrtDstAtt_items()
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['Cisco-NX-OS-device:System', 'rpm-items', 'rtmap-items', 'Rule-list', 'ent-items', 'Entry-list', 'mrtdst-items'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list__ent_items__Entry_list__mrtdst_items:
+        if n is not None:
+            return Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list__ent_items__Entry_list__mrtdst_items(rsrtDstAtt_items=Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list__ent_items__Entry_list__mrtdst_items__rsrtDstAtt_items.from_gdata(n.get_opt_cnt(_ID_Cisco_NX_OS_device__rsrtDstAtt_items)))
+        return Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list__ent_items__Entry_list__mrtdst_items()
+
+    mut def copy(self) -> Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list__ent_items__Entry_list__mrtdst_items:
+        """Create a deep copy of this adata object"""
+        return Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list__ent_items__Entry_list__mrtdst_items.from_gdata(self.to_gdata())
+
+
+_breaker46: None = None
+class Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list__ent_items__Entry_list_entry(yadata.MNode):
+    order: u64
+    action_: ?str
+    mrtdst_items: Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list__ent_items__Entry_list__mrtdst_items
+
+    mut def __init__(self, order: u64, action_: ?str=None, mrtdst_items: ?Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list__ent_items__Entry_list__mrtdst_items=None) -> None:
+        self.order = order
+        self.action_ = action_
+        self.mrtdst_items = mrtdst_items if mrtdst_items is not None else Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list__ent_items__Entry_list__mrtdst_items()
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['Cisco-NX-OS-device:System', 'rpm-items', 'rtmap-items', 'Rule-list', 'ent-items', 'Entry-list'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ygdata.Node) -> Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list__ent_items__Entry_list_entry:
+        return Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list__ent_items__Entry_list_entry(order=n.get_u64(_ID_Cisco_NX_OS_device__order), action_=n.get_opt_str(_ID_Cisco_NX_OS_device__action), mrtdst_items=Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list__ent_items__Entry_list__mrtdst_items.from_gdata(n.get_opt_cnt(_ID_Cisco_NX_OS_device__mrtdst_items)))
+
+    mut def copy(self) -> Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list__ent_items__Entry_list_entry:
+        """Create a deep copy of this adata object"""
+        return Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list__ent_items__Entry_list_entry.from_gdata(self.to_gdata())
+
+_breaker47: None = None
+class Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list__ent_items__Entry_list(yadata.MKeyedList[u64, Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list__ent_items__Entry_list_entry]):
+    mut def __init__(self, elements: list[Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list__ent_items__Entry_list_entry]=[]) -> None:
+        yadata.MKeyedList.__init__(self, lambda e: e.order, elements)
+
+    mut def create(self, key: u64, action_: ?str=None) -> Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list__ent_items__Entry_list_entry:
+        e = self.get(key)
+        if e is not None:
+            if action_ is not None:
+                e.action_ = action_
+            return e
+        order = key
+        res = Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list__ent_items__Entry_list_entry(order=order, action_=action_)
+        self._append(res)
+        return res
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.List) -> list[Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list__ent_items__Entry_list_entry]:
+        if n is not None:
+            return [Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list__ent_items__Entry_list_entry.from_gdata(e) for e in n.entries()]
+        return []
+
+    mut def copy(self) -> Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list__ent_items__Entry_list:
+        """Create a deep copy of this list object"""
+        # Copy each element in the list
+        copied_elements = []
+        for e in self:
+            ce = e.copy()
+            if ce is not None:
+                copied_elements.append(ce)
+        return Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list__ent_items__Entry_list(elements=copied_elements)
+
+
+_breaker48: None = None
+class Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list__ent_items(yadata.MNode):
+    Entry_list: Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list__ent_items__Entry_list
+
+    mut def __init__(self, Entry_list: list[Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list__ent_items__Entry_list_entry]=[]) -> None:
+        self.Entry_list = Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list__ent_items__Entry_list(elements=Entry_list)
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['Cisco-NX-OS-device:System', 'rpm-items', 'rtmap-items', 'Rule-list', 'ent-items'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list__ent_items:
+        if n is not None:
+            return Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list__ent_items(Entry_list=Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list__ent_items__Entry_list.from_gdata(n.get_opt_list(_ID_Cisco_NX_OS_device__Entry_list)))
+        return Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list__ent_items()
+
+    mut def copy(self) -> Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list__ent_items:
+        """Create a deep copy of this adata object"""
+        return Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list__ent_items.from_gdata(self.to_gdata())
+
+
+_breaker49: None = None
+class Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list_entry(yadata.MNode):
+    name: str
+    ent_items: Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list__ent_items
+
+    mut def __init__(self, name: str, ent_items: ?Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list__ent_items=None) -> None:
+        self.name = name
+        self.ent_items = ent_items if ent_items is not None else Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list__ent_items()
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['Cisco-NX-OS-device:System', 'rpm-items', 'rtmap-items', 'Rule-list'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ygdata.Node) -> Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list_entry:
+        return Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list_entry(name=n.get_str(_ID_Cisco_NX_OS_device__name), ent_items=Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list__ent_items.from_gdata(n.get_opt_cnt(_ID_Cisco_NX_OS_device__ent_items)))
+
+    mut def copy(self) -> Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list_entry:
+        """Create a deep copy of this adata object"""
+        return Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list_entry.from_gdata(self.to_gdata())
+
+_breaker50: None = None
+class Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list(yadata.MKeyedList[str, Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list_entry]):
+    mut def __init__(self, elements: list[Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list_entry]=[]) -> None:
+        yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
+
+    mut def create(self, key: str) -> Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list_entry:
+        e = self.get(key)
+        if e is not None:
+            return e
+        name = key
+        res = Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list_entry(name=name)
+        self._append(res)
+        return res
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.List) -> list[Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list_entry]:
+        if n is not None:
+            return [Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list_entry.from_gdata(e) for e in n.entries()]
+        return []
+
+    mut def copy(self) -> Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list:
+        """Create a deep copy of this list object"""
+        # Copy each element in the list
+        copied_elements = []
+        for e in self:
+            ce = e.copy()
+            if ce is not None:
+                copied_elements.append(ce)
+        return Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list(elements=copied_elements)
+
+
+_breaker51: None = None
+class Cisco_NX_OS_device__System__rpm_items__rtmap_items(yadata.MNode):
+    Rule_list: Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list
+
+    mut def __init__(self, Rule_list: list[Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list_entry]=[]) -> None:
+        self.Rule_list = Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list(elements=Rule_list)
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['Cisco-NX-OS-device:System', 'rpm-items', 'rtmap-items'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> Cisco_NX_OS_device__System__rpm_items__rtmap_items:
+        if n is not None:
+            return Cisco_NX_OS_device__System__rpm_items__rtmap_items(Rule_list=Cisco_NX_OS_device__System__rpm_items__rtmap_items__Rule_list.from_gdata(n.get_opt_list(_ID_Cisco_NX_OS_device__Rule_list)))
+        return Cisco_NX_OS_device__System__rpm_items__rtmap_items()
+
+    mut def copy(self) -> Cisco_NX_OS_device__System__rpm_items__rtmap_items:
+        """Create a deep copy of this adata object"""
+        return Cisco_NX_OS_device__System__rpm_items__rtmap_items.from_gdata(self.to_gdata())
+
+
+_breaker52: None = None
+class Cisco_NX_OS_device__System__rpm_items__pfxlistv4_items__RuleV4_list__ent_items__Entry_list_entry(yadata.MNode):
+    order: u64
+    pfx: ?str
+    criteria: ?str
+    fromPfxLen: ?u64
+    toPfxLen: ?u64
+    action_: ?str
+
+    mut def __init__(self, order: u64, pfx: ?str=None, criteria: ?str=None, fromPfxLen: ?u64=None, toPfxLen: ?u64=None, action_: ?str=None) -> None:
+        self.order = order
+        self.pfx = pfx
+        self.criteria = criteria
+        self.fromPfxLen = fromPfxLen
+        self.toPfxLen = toPfxLen
+        self.action_ = action_
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['Cisco-NX-OS-device:System', 'rpm-items', 'pfxlistv4-items', 'RuleV4-list', 'ent-items', 'Entry-list'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ygdata.Node) -> Cisco_NX_OS_device__System__rpm_items__pfxlistv4_items__RuleV4_list__ent_items__Entry_list_entry:
+        return Cisco_NX_OS_device__System__rpm_items__pfxlistv4_items__RuleV4_list__ent_items__Entry_list_entry(order=n.get_u64(_ID_Cisco_NX_OS_device__order), pfx=n.get_opt_str(_ID_Cisco_NX_OS_device__pfx), criteria=n.get_opt_str(_ID_Cisco_NX_OS_device__criteria), fromPfxLen=n.get_opt_u64(_ID_Cisco_NX_OS_device__fromPfxLen), toPfxLen=n.get_opt_u64(_ID_Cisco_NX_OS_device__toPfxLen), action_=n.get_opt_str(_ID_Cisco_NX_OS_device__action))
+
+    mut def copy(self) -> Cisco_NX_OS_device__System__rpm_items__pfxlistv4_items__RuleV4_list__ent_items__Entry_list_entry:
+        """Create a deep copy of this adata object"""
+        return Cisco_NX_OS_device__System__rpm_items__pfxlistv4_items__RuleV4_list__ent_items__Entry_list_entry.from_gdata(self.to_gdata())
+
+_breaker53: None = None
+class Cisco_NX_OS_device__System__rpm_items__pfxlistv4_items__RuleV4_list__ent_items__Entry_list(yadata.MKeyedList[u64, Cisco_NX_OS_device__System__rpm_items__pfxlistv4_items__RuleV4_list__ent_items__Entry_list_entry]):
+    mut def __init__(self, elements: list[Cisco_NX_OS_device__System__rpm_items__pfxlistv4_items__RuleV4_list__ent_items__Entry_list_entry]=[]) -> None:
+        yadata.MKeyedList.__init__(self, lambda e: e.order, elements)
+
+    mut def create(self, key: u64, pfx: ?str=None, criteria: ?str=None, fromPfxLen: ?u64=None, toPfxLen: ?u64=None, action_: ?str=None) -> Cisco_NX_OS_device__System__rpm_items__pfxlistv4_items__RuleV4_list__ent_items__Entry_list_entry:
+        e = self.get(key)
+        if e is not None:
+            if pfx is not None:
+                e.pfx = pfx
+            if criteria is not None:
+                e.criteria = criteria
+            if fromPfxLen is not None:
+                e.fromPfxLen = fromPfxLen
+            if toPfxLen is not None:
+                e.toPfxLen = toPfxLen
+            if action_ is not None:
+                e.action_ = action_
+            return e
+        order = key
+        res = Cisco_NX_OS_device__System__rpm_items__pfxlistv4_items__RuleV4_list__ent_items__Entry_list_entry(order=order, pfx=pfx, criteria=criteria, fromPfxLen=fromPfxLen, toPfxLen=toPfxLen, action_=action_)
+        self._append(res)
+        return res
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.List) -> list[Cisco_NX_OS_device__System__rpm_items__pfxlistv4_items__RuleV4_list__ent_items__Entry_list_entry]:
+        if n is not None:
+            return [Cisco_NX_OS_device__System__rpm_items__pfxlistv4_items__RuleV4_list__ent_items__Entry_list_entry.from_gdata(e) for e in n.entries()]
+        return []
+
+    mut def copy(self) -> Cisco_NX_OS_device__System__rpm_items__pfxlistv4_items__RuleV4_list__ent_items__Entry_list:
+        """Create a deep copy of this list object"""
+        # Copy each element in the list
+        copied_elements = []
+        for e in self:
+            ce = e.copy()
+            if ce is not None:
+                copied_elements.append(ce)
+        return Cisco_NX_OS_device__System__rpm_items__pfxlistv4_items__RuleV4_list__ent_items__Entry_list(elements=copied_elements)
+
+
+_breaker54: None = None
+class Cisco_NX_OS_device__System__rpm_items__pfxlistv4_items__RuleV4_list__ent_items(yadata.MNode):
+    Entry_list: Cisco_NX_OS_device__System__rpm_items__pfxlistv4_items__RuleV4_list__ent_items__Entry_list
+
+    mut def __init__(self, Entry_list: list[Cisco_NX_OS_device__System__rpm_items__pfxlistv4_items__RuleV4_list__ent_items__Entry_list_entry]=[]) -> None:
+        self.Entry_list = Cisco_NX_OS_device__System__rpm_items__pfxlistv4_items__RuleV4_list__ent_items__Entry_list(elements=Entry_list)
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['Cisco-NX-OS-device:System', 'rpm-items', 'pfxlistv4-items', 'RuleV4-list', 'ent-items'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> Cisco_NX_OS_device__System__rpm_items__pfxlistv4_items__RuleV4_list__ent_items:
+        if n is not None:
+            return Cisco_NX_OS_device__System__rpm_items__pfxlistv4_items__RuleV4_list__ent_items(Entry_list=Cisco_NX_OS_device__System__rpm_items__pfxlistv4_items__RuleV4_list__ent_items__Entry_list.from_gdata(n.get_opt_list(_ID_Cisco_NX_OS_device__Entry_list)))
+        return Cisco_NX_OS_device__System__rpm_items__pfxlistv4_items__RuleV4_list__ent_items()
+
+    mut def copy(self) -> Cisco_NX_OS_device__System__rpm_items__pfxlistv4_items__RuleV4_list__ent_items:
+        """Create a deep copy of this adata object"""
+        return Cisco_NX_OS_device__System__rpm_items__pfxlistv4_items__RuleV4_list__ent_items.from_gdata(self.to_gdata())
+
+
+_breaker55: None = None
+class Cisco_NX_OS_device__System__rpm_items__pfxlistv4_items__RuleV4_list_entry(yadata.MNode):
+    name: str
+    ent_items: Cisco_NX_OS_device__System__rpm_items__pfxlistv4_items__RuleV4_list__ent_items
+
+    mut def __init__(self, name: str, ent_items: ?Cisco_NX_OS_device__System__rpm_items__pfxlistv4_items__RuleV4_list__ent_items=None) -> None:
+        self.name = name
+        self.ent_items = ent_items if ent_items is not None else Cisco_NX_OS_device__System__rpm_items__pfxlistv4_items__RuleV4_list__ent_items()
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['Cisco-NX-OS-device:System', 'rpm-items', 'pfxlistv4-items', 'RuleV4-list'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ygdata.Node) -> Cisco_NX_OS_device__System__rpm_items__pfxlistv4_items__RuleV4_list_entry:
+        return Cisco_NX_OS_device__System__rpm_items__pfxlistv4_items__RuleV4_list_entry(name=n.get_str(_ID_Cisco_NX_OS_device__name), ent_items=Cisco_NX_OS_device__System__rpm_items__pfxlistv4_items__RuleV4_list__ent_items.from_gdata(n.get_opt_cnt(_ID_Cisco_NX_OS_device__ent_items)))
+
+    mut def copy(self) -> Cisco_NX_OS_device__System__rpm_items__pfxlistv4_items__RuleV4_list_entry:
+        """Create a deep copy of this adata object"""
+        return Cisco_NX_OS_device__System__rpm_items__pfxlistv4_items__RuleV4_list_entry.from_gdata(self.to_gdata())
+
+_breaker56: None = None
+class Cisco_NX_OS_device__System__rpm_items__pfxlistv4_items__RuleV4_list(yadata.MKeyedList[str, Cisco_NX_OS_device__System__rpm_items__pfxlistv4_items__RuleV4_list_entry]):
+    mut def __init__(self, elements: list[Cisco_NX_OS_device__System__rpm_items__pfxlistv4_items__RuleV4_list_entry]=[]) -> None:
+        yadata.MKeyedList.__init__(self, lambda e: e.name, elements)
+
+    mut def create(self, key: str) -> Cisco_NX_OS_device__System__rpm_items__pfxlistv4_items__RuleV4_list_entry:
+        e = self.get(key)
+        if e is not None:
+            return e
+        name = key
+        res = Cisco_NX_OS_device__System__rpm_items__pfxlistv4_items__RuleV4_list_entry(name=name)
+        self._append(res)
+        return res
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.List) -> list[Cisco_NX_OS_device__System__rpm_items__pfxlistv4_items__RuleV4_list_entry]:
+        if n is not None:
+            return [Cisco_NX_OS_device__System__rpm_items__pfxlistv4_items__RuleV4_list_entry.from_gdata(e) for e in n.entries()]
+        return []
+
+    mut def copy(self) -> Cisco_NX_OS_device__System__rpm_items__pfxlistv4_items__RuleV4_list:
+        """Create a deep copy of this list object"""
+        # Copy each element in the list
+        copied_elements = []
+        for e in self:
+            ce = e.copy()
+            if ce is not None:
+                copied_elements.append(ce)
+        return Cisco_NX_OS_device__System__rpm_items__pfxlistv4_items__RuleV4_list(elements=copied_elements)
+
+
+_breaker57: None = None
+class Cisco_NX_OS_device__System__rpm_items__pfxlistv4_items(yadata.MNode):
+    RuleV4_list: Cisco_NX_OS_device__System__rpm_items__pfxlistv4_items__RuleV4_list
+
+    mut def __init__(self, RuleV4_list: list[Cisco_NX_OS_device__System__rpm_items__pfxlistv4_items__RuleV4_list_entry]=[]) -> None:
+        self.RuleV4_list = Cisco_NX_OS_device__System__rpm_items__pfxlistv4_items__RuleV4_list(elements=RuleV4_list)
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['Cisco-NX-OS-device:System', 'rpm-items', 'pfxlistv4-items'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> Cisco_NX_OS_device__System__rpm_items__pfxlistv4_items:
+        if n is not None:
+            return Cisco_NX_OS_device__System__rpm_items__pfxlistv4_items(RuleV4_list=Cisco_NX_OS_device__System__rpm_items__pfxlistv4_items__RuleV4_list.from_gdata(n.get_opt_list(_ID_Cisco_NX_OS_device__RuleV4_list)))
+        return Cisco_NX_OS_device__System__rpm_items__pfxlistv4_items()
+
+    mut def copy(self) -> Cisco_NX_OS_device__System__rpm_items__pfxlistv4_items:
+        """Create a deep copy of this adata object"""
+        return Cisco_NX_OS_device__System__rpm_items__pfxlistv4_items.from_gdata(self.to_gdata())
+
+
+_breaker58: None = None
+class Cisco_NX_OS_device__System__rpm_items(yadata.MNode):
+    rtmap_items: Cisco_NX_OS_device__System__rpm_items__rtmap_items
+    pfxlistv4_items: Cisco_NX_OS_device__System__rpm_items__pfxlistv4_items
+
+    mut def __init__(self, rtmap_items: ?Cisco_NX_OS_device__System__rpm_items__rtmap_items=None, pfxlistv4_items: ?Cisco_NX_OS_device__System__rpm_items__pfxlistv4_items=None) -> None:
+        self.rtmap_items = rtmap_items if rtmap_items is not None else Cisco_NX_OS_device__System__rpm_items__rtmap_items()
+        self.pfxlistv4_items = pfxlistv4_items if pfxlistv4_items is not None else Cisco_NX_OS_device__System__rpm_items__pfxlistv4_items()
+
+    mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
+        return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['Cisco-NX-OS-device:System', 'rpm-items'], prev=prev)
+
+    @staticmethod
+    mut def from_gdata(n: ?ygdata.Node) -> Cisco_NX_OS_device__System__rpm_items:
+        if n is not None:
+            return Cisco_NX_OS_device__System__rpm_items(rtmap_items=Cisco_NX_OS_device__System__rpm_items__rtmap_items.from_gdata(n.get_opt_cnt(_ID_Cisco_NX_OS_device__rtmap_items)), pfxlistv4_items=Cisco_NX_OS_device__System__rpm_items__pfxlistv4_items.from_gdata(n.get_opt_cnt(_ID_Cisco_NX_OS_device__pfxlistv4_items)))
+        return Cisco_NX_OS_device__System__rpm_items()
+
+    mut def copy(self) -> Cisco_NX_OS_device__System__rpm_items:
+        """Create a deep copy of this adata object"""
+        return Cisco_NX_OS_device__System__rpm_items.from_gdata(self.to_gdata())
+
+
+_breaker59: None = None
 class Cisco_NX_OS_device__System(yadata.MNode):
     name: ?str
+    bgp_items: Cisco_NX_OS_device__System__bgp_items
     intf_items: Cisco_NX_OS_device__System__intf_items
+    ipv4_items: Cisco_NX_OS_device__System__ipv4_items
+    rpm_items: Cisco_NX_OS_device__System__rpm_items
 
-    mut def __init__(self, name: ?str=None, intf_items: ?Cisco_NX_OS_device__System__intf_items=None) -> None:
+    mut def __init__(self, name: ?str=None, bgp_items: ?Cisco_NX_OS_device__System__bgp_items=None, intf_items: ?Cisco_NX_OS_device__System__intf_items=None, ipv4_items: ?Cisco_NX_OS_device__System__ipv4_items=None, rpm_items: ?Cisco_NX_OS_device__System__rpm_items=None) -> None:
         self.name = name
+        self.bgp_items = bgp_items if bgp_items is not None else Cisco_NX_OS_device__System__bgp_items()
         self.intf_items = intf_items if intf_items is not None else Cisco_NX_OS_device__System__intf_items()
+        self.ipv4_items = ipv4_items if ipv4_items is not None else Cisco_NX_OS_device__System__ipv4_items()
+        self.rpm_items = rpm_items if rpm_items is not None else Cisco_NX_OS_device__System__rpm_items()
 
     mut def to_gdata(self, prev: ?ygdata.Container=None) -> ygdata.Node:
         return yadata.from_adata(SRC_DNODE, self, loose=True, root_path=['Cisco-NX-OS-device:System'], prev=prev)
@@ -226,7 +1635,7 @@ class Cisco_NX_OS_device__System(yadata.MNode):
     @staticmethod
     mut def from_gdata(n: ?ygdata.Node) -> Cisco_NX_OS_device__System:
         if n is not None:
-            return Cisco_NX_OS_device__System(name=n.get_opt_str(_ID_Cisco_NX_OS_device__name), intf_items=Cisco_NX_OS_device__System__intf_items.from_gdata(n.get_opt_cnt(_ID_Cisco_NX_OS_device__intf_items)))
+            return Cisco_NX_OS_device__System(name=n.get_opt_str(_ID_Cisco_NX_OS_device__name), bgp_items=Cisco_NX_OS_device__System__bgp_items.from_gdata(n.get_opt_cnt(_ID_Cisco_NX_OS_device__bgp_items)), intf_items=Cisco_NX_OS_device__System__intf_items.from_gdata(n.get_opt_cnt(_ID_Cisco_NX_OS_device__intf_items)), ipv4_items=Cisco_NX_OS_device__System__ipv4_items.from_gdata(n.get_opt_cnt(_ID_Cisco_NX_OS_device__ipv4_items)), rpm_items=Cisco_NX_OS_device__System__rpm_items.from_gdata(n.get_opt_cnt(_ID_Cisco_NX_OS_device__rpm_items)))
         return Cisco_NX_OS_device__System()
 
     mut def copy(self) -> Cisco_NX_OS_device__System:
@@ -234,7 +1643,7 @@ class Cisco_NX_OS_device__System(yadata.MNode):
         return Cisco_NX_OS_device__System.from_gdata(self.to_gdata())
 
 
-_breaker6: None = None
+_breaker60: None = None
 class root(yadata.MNode):
     System: Cisco_NX_OS_device__System
 
@@ -255,7 +1664,7 @@ class root(yadata.MNode):
         return root.from_gdata(self.to_gdata())
 
 
-_breaker7: None = None
+_breaker61: None = None
 class Cisco_NX_OS_device__cli__input(yadata.MNode):
     mode: ?str
     cmdline: ?str
@@ -278,7 +1687,7 @@ class Cisco_NX_OS_device__cli__input(yadata.MNode):
         return Cisco_NX_OS_device__cli__input.from_gdata(self.to_gdata())
 
 
-_breaker8: None = None
+_breaker62: None = None
 class Cisco_NX_OS_device__cli__output(yadata.MNode):
     message: ?str
 
@@ -299,7 +1708,7 @@ class Cisco_NX_OS_device__cli__output(yadata.MNode):
         return Cisco_NX_OS_device__cli__output.from_gdata(self.to_gdata())
 
 
-_breaker9: None = None
+_breaker63: None = None
 class Cisco_NX_OS_device__install_all_nxos__input(yadata.MNode):
     nxos: ?str
     no_reload: ?bool
@@ -332,7 +1741,7 @@ class Cisco_NX_OS_device__install_all_nxos__input(yadata.MNode):
         return Cisco_NX_OS_device__install_all_nxos__input.from_gdata(self.to_gdata())
 
 
-_breaker10: None = None
+_breaker64: None = None
 class Cisco_NX_OS_device__install_force_all_nxos__input(yadata.MNode):
     nxos: ?str
     no_reload: ?bool
@@ -365,7 +1774,7 @@ class Cisco_NX_OS_device__install_force_all_nxos__input(yadata.MNode):
         return Cisco_NX_OS_device__install_force_all_nxos__input.from_gdata(self.to_gdata())
 
 
-_breaker11: None = None
+_breaker65: None = None
 class Cisco_NX_OS_device__install_add__input(yadata.MNode):
     add: ?str
     vrf: ?str
@@ -396,7 +1805,7 @@ class Cisco_NX_OS_device__install_add__input(yadata.MNode):
         return Cisco_NX_OS_device__install_add__input.from_gdata(self.to_gdata())
 
 
-_breaker12: None = None
+_breaker66: None = None
 class Cisco_NX_OS_device__install_activate__input(yadata.MNode):
     activate: ?str
     forced: ?bool
@@ -419,7 +1828,7 @@ class Cisco_NX_OS_device__install_activate__input(yadata.MNode):
         return Cisco_NX_OS_device__install_activate__input.from_gdata(self.to_gdata())
 
 
-_breaker13: None = None
+_breaker67: None = None
 class Cisco_NX_OS_device__install_deactivate__input(yadata.MNode):
     deactivate: ?str
     forced: ?bool
@@ -442,7 +1851,7 @@ class Cisco_NX_OS_device__install_deactivate__input(yadata.MNode):
         return Cisco_NX_OS_device__install_deactivate__input.from_gdata(self.to_gdata())
 
 
-_breaker14: None = None
+_breaker68: None = None
 class Cisco_NX_OS_device__install_commit__input(yadata.MNode):
     commit: ?str
 
@@ -463,7 +1872,7 @@ class Cisco_NX_OS_device__install_commit__input(yadata.MNode):
         return Cisco_NX_OS_device__install_commit__input.from_gdata(self.to_gdata())
 
 
-_breaker15: None = None
+_breaker69: None = None
 class Cisco_NX_OS_device__install_remove__input(yadata.MNode):
     remove: ?atom
     inactive: ?bool
@@ -488,7 +1897,7 @@ class Cisco_NX_OS_device__install_remove__input(yadata.MNode):
         return Cisco_NX_OS_device__install_remove__input.from_gdata(self.to_gdata())
 
 
-_breaker16: None = None
+_breaker70: None = None
 class Cisco_NX_OS_device__copy__input(yadata.MNode):
     source: ?str
     destination: ?str
@@ -515,7 +1924,7 @@ class Cisco_NX_OS_device__copy__input(yadata.MNode):
         return Cisco_NX_OS_device__copy__input.from_gdata(self.to_gdata())
 
 
-_breaker17: None = None
+_breaker71: None = None
 class Cisco_NX_OS_device__copy_src_local__input(yadata.MNode):
     src_local: ?str
     dest_remote: ?str
@@ -554,7 +1963,7 @@ class Cisco_NX_OS_device__copy_src_local__input(yadata.MNode):
         return Cisco_NX_OS_device__copy_src_local__input.from_gdata(self.to_gdata())
 
 
-_breaker18: None = None
+_breaker72: None = None
 class Cisco_NX_OS_device__copy_src_remote__input(yadata.MNode):
     src_remote: ?str
     source_interface: ?str
@@ -589,7 +1998,7 @@ class Cisco_NX_OS_device__copy_src_remote__input(yadata.MNode):
         return Cisco_NX_OS_device__copy_src_remote__input.from_gdata(self.to_gdata())
 
 
-_breaker19: None = None
+_breaker73: None = None
 class Cisco_NX_OS_device__copy_src_core__input(yadata.MNode):
     src_core: ?str
     dest_remote: ?str
@@ -618,7 +2027,7 @@ class Cisco_NX_OS_device__copy_src_core__input(yadata.MNode):
         return Cisco_NX_OS_device__copy_src_core__input.from_gdata(self.to_gdata())
 
 
-_breaker20: None = None
+_breaker74: None = None
 class Cisco_NX_OS_device__copy_running_config_src__input(yadata.MNode):
     vdc_all: ?bool
     dest_remote: ?str
@@ -651,7 +2060,7 @@ class Cisco_NX_OS_device__copy_running_config_src__input(yadata.MNode):
         return Cisco_NX_OS_device__copy_running_config_src__input.from_gdata(self.to_gdata())
 
 
-_breaker21: None = None
+_breaker75: None = None
 class Cisco_NX_OS_device__copy_startup_config_src__input(yadata.MNode):
     dest_remote: ?str
     source_interface: ?str
@@ -684,7 +2093,7 @@ class Cisco_NX_OS_device__copy_startup_config_src__input(yadata.MNode):
         return Cisco_NX_OS_device__copy_startup_config_src__input.from_gdata(self.to_gdata())
 
 
-_breaker22: None = None
+_breaker76: None = None
 class Cisco_NX_OS_device__copy_licenses__input(yadata.MNode):
     licenses: ?str
 
@@ -705,7 +2114,7 @@ class Cisco_NX_OS_device__copy_licenses__input(yadata.MNode):
         return Cisco_NX_OS_device__copy_licenses__input.from_gdata(self.to_gdata())
 
 
-_breaker23: None = None
+_breaker77: None = None
 class Cisco_NX_OS_device__delete__input(yadata.MNode):
     target: ?str
 
@@ -726,7 +2135,7 @@ class Cisco_NX_OS_device__delete__input(yadata.MNode):
         return Cisco_NX_OS_device__delete__input.from_gdata(self.to_gdata())
 
 
-_breaker24: None = None
+_breaker78: None = None
 class Cisco_NX_OS_device__boot_nxos__input(yadata.MNode):
     image: ?str
 
@@ -747,7 +2156,7 @@ class Cisco_NX_OS_device__boot_nxos__input(yadata.MNode):
         return Cisco_NX_OS_device__boot_nxos__input.from_gdata(self.to_gdata())
 
 
-_breaker25: None = None
+_breaker79: None = None
 class Cisco_NX_OS_device__reload__input(yadata.MNode):
     module: ?int
 
@@ -768,7 +2177,7 @@ class Cisco_NX_OS_device__reload__input(yadata.MNode):
         return Cisco_NX_OS_device__reload__input.from_gdata(self.to_gdata())
 
 
-_breaker26: None = None
+_breaker80: None = None
 class Cisco_NX_OS_device__dir__input(yadata.MNode):
     filemask: ?str
 
@@ -789,7 +2198,7 @@ class Cisco_NX_OS_device__dir__input(yadata.MNode):
         return Cisco_NX_OS_device__dir__input.from_gdata(self.to_gdata())
 
 
-_breaker27: None = None
+_breaker81: None = None
 class Cisco_NX_OS_device__dir__output(yadata.MNode):
 
     mut def __init__(self) -> None:
@@ -809,7 +2218,7 @@ class Cisco_NX_OS_device__dir__output(yadata.MNode):
         return Cisco_NX_OS_device__dir__output.from_gdata(self.to_gdata())
 
 
-_breaker28: None = None
+_breaker82: None = None
 class Cisco_NX_OS_device__get_diff__input__source(yadata.MNode):
     running: ?bool
     candidate: ?bool
@@ -832,7 +2241,7 @@ class Cisco_NX_OS_device__get_diff__input__source(yadata.MNode):
         return Cisco_NX_OS_device__get_diff__input__source.from_gdata(self.to_gdata())
 
 
-_breaker29: None = None
+_breaker83: None = None
 class Cisco_NX_OS_device__get_diff__input__target(yadata.MNode):
     running: ?bool
     candidate: ?bool
@@ -855,7 +2264,7 @@ class Cisco_NX_OS_device__get_diff__input__target(yadata.MNode):
         return Cisco_NX_OS_device__get_diff__input__target.from_gdata(self.to_gdata())
 
 
-_breaker30: None = None
+_breaker84: None = None
 class Cisco_NX_OS_device__get_diff__input(yadata.MNode):
     source: Cisco_NX_OS_device__get_diff__input__source
     target: Cisco_NX_OS_device__get_diff__input__target
@@ -880,7 +2289,7 @@ class Cisco_NX_OS_device__get_diff__input(yadata.MNode):
         return Cisco_NX_OS_device__get_diff__input.from_gdata(self.to_gdata())
 
 
-_breaker31: None = None
+_breaker85: None = None
 class Cisco_NX_OS_device__get_diff__output(yadata.MNode):
 
     mut def __init__(self) -> None:
@@ -900,7 +2309,7 @@ class Cisco_NX_OS_device__get_diff__output(yadata.MNode):
         return Cisco_NX_OS_device__get_diff__output.from_gdata(self.to_gdata())
 
 
-_breaker32: None = None
+_breaker86: None = None
 class Cisco_NX_OS_device__checkpoint__input(yadata.MNode):
     action_: ?str
     name: ?str
@@ -927,7 +2336,7 @@ class Cisco_NX_OS_device__checkpoint__input(yadata.MNode):
         return Cisco_NX_OS_device__checkpoint__input.from_gdata(self.to_gdata())
 
 
-_breaker33: None = None
+_breaker87: None = None
 class Cisco_NX_OS_device__rollback__input(yadata.MNode):
     name: ?str
     file: ?str
@@ -952,7 +2361,7 @@ class Cisco_NX_OS_device__rollback__input(yadata.MNode):
         return Cisco_NX_OS_device__rollback__input.from_gdata(self.to_gdata())
 
 
-_breaker34: None = None
+_breaker88: None = None
 class Cisco_NX_OS_device__import_ca_certificate__input(yadata.MNode):
     trustpoint: ?str
     pkcs12: ?str
