@@ -1,0 +1,12 @@
+import testing
+
+import dorsi.rfs as rfs
+
+# Cisco NX-OS: every physical port of a Nexus 9300v is rendered, as NX-OS
+# refuses to delete one
+
+def _test_physical_ports():
+    ports = rfs.nxos_physical_ports()
+    testing.assertEqual(len(ports), 64)
+    testing.assertEqual(ports[0], "eth1/1")
+    testing.assertEqual(ports[-1], "eth1/64")

@@ -1,0 +1,413 @@
+# device leaf1
+# YANG module (prefix) and namespace:
+#   srl_nokia-bgp (srl_nokia-bgp)                   urn:nokia.com:srlinux:bgp:bgp
+#   srl_nokia-interfaces (srl_nokia-if)             urn:nokia.com:srlinux:chassis:interfaces
+#   srl_nokia-lldp (srl_nokia-lldp)                 urn:nokia.com:srlinux:lldp:lldp
+#   srl_nokia-network-instance (srl_nokia-netinst)  urn:nokia.com:srlinux:net-inst:network-instance
+#   srl_nokia-system-name (srl_nokia-system-name)   urn:nokia.com:srlinux:chassis:system-name
+# Top node: /
+leaf1 = root()
+
+# Container: /system/name (srl_nokia-system-name)
+leaf1.system.name.host_name = 'leaf1'
+
+# P-container: /system/lldp (srl_nokia-lldp)
+lldp = leaf1.system.create_lldp(admin_state='enable')
+
+# List /system/lldp/interface element: 'mgmt0'
+interface_element = lldp.interface.create('mgmt0', admin_state='enable')
+
+# List /interface (srl_nokia-interfaces) element: 'mgmt0'
+interface_element_2 = leaf1.interface.create('mgmt0', admin_state='enable')
+
+# List /interface[name='mgmt0']/subinterface element: 0
+subinterface_element = interface_element_2.subinterface.create(u64(0), admin_state='enable')
+
+# Container: /interface[name='mgmt0']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# Container: /interface[name='mgmt0']/subinterface[index='0']/ipv6
+subinterface_element.ipv6.admin_state = 'enable'
+
+# List /interface (srl_nokia-interfaces) element: 'system0'
+interface_element_2 = leaf1.interface.create('system0')
+
+# List /interface[name='system0']/subinterface element: 0
+subinterface_element = interface_element_2.subinterface.create(u64(0))
+
+# Container: /interface[name='system0']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# List /interface[name='system0']/subinterface[index='0']/ipv4/address element: '10.0.0.1/32'
+address_element = subinterface_element.ipv4.address.create('10.0.0.1/32')
+
+# List /network-instance (srl_nokia-network-instance) element: 'default'
+network_instance_element = leaf1.network_instance.create('default')
+
+# List /network-instance[name='default']/interface element: 'system0.0'
+interface_element_3 = network_instance_element.interface.create('system0.0')
+
+# P-container: /network-instance[name='default']/protocols/bgp (srl_nokia-bgp)
+bgp = network_instance_element.protocols.create_bgp(autonomous_system=u64(4200000001), router_id='10.0.0.1')
+
+# List /network-instance[name='default']/protocols/bgp/afi-safi element: Identityref('ipv4-unicast', ns='urn:nokia.com:srlinux:general:common', mod='srl_nokia-common', pfx='srl_nokia-comm')
+afi_safi_element = bgp.afi_safi.create(Identityref('ipv4-unicast', ns='urn:nokia.com:srlinux:general:common', mod='srl_nokia-common', pfx='srl_nokia-comm'), admin_state='enable')
+
+# Container: /network-instance[name='default']/protocols/bgp/afi-safi[afi-safi-name='Identityref(\'ipv4-unicast\', ns=\'urn:nokia.com:srlinux:general:common\', mod=\'srl_nokia-common\', pfx=\'srl_nokia-comm\')']/multipath/ebgp
+afi_safi_element.multipath.ebgp.maximum_paths = u64(64)
+
+# List /network-instance[name='default']/protocols/bgp/group element: 'fabric'
+group_element = bgp.group.create('fabric')
+group_element.export_policy = ['export-loopbacks']
+group_element.import_policy = ['accept-all']
+
+# List /network-instance (srl_nokia-network-instance) element: 'mgmt'
+network_instance_element = leaf1.network_instance.create('mgmt', type=Identityref('ip-vrf', ns='urn:nokia.com:srlinux:net-inst:network-instance', mod='srl_nokia-network-instance', pfx='srl_nokia-netinst'), admin_state='enable', description='Management network instance')
+
+# List /network-instance[name='mgmt']/interface element: 'mgmt0.0'
+interface_element_3 = network_instance_element.interface.create('mgmt0.0')
+
+# List /routing-policy/prefix-set element: 'loopbacks'
+prefix_set_element = leaf1.routing_policy.prefix_set.create('loopbacks')
+
+# List /routing-policy/prefix-set[name='loopbacks']/prefix element: '10.0.0.0/16', '32..32'
+prefix_element = prefix_set_element.prefix.create((ip_prefix='10.0.0.0/16', mask_length_range='32..32'))
+
+# List /routing-policy/policy element: 'accept-all'
+policy_element = leaf1.routing_policy.policy.create('accept-all')
+
+# List /routing-policy/policy[name='accept-all']/statement element: '10'
+statement_element = policy_element.statement.create('10')
+
+# Container: /routing-policy/policy[name='accept-all']/statement[name='10']/action
+statement_element.action_.policy_result = 'accept'
+
+# List /routing-policy/policy element: 'export-loopbacks'
+policy_element = leaf1.routing_policy.policy.create('export-loopbacks')
+
+# List /routing-policy/policy[name='export-loopbacks']/statement element: '10'
+statement_element = policy_element.statement.create('10')
+
+# Container: /routing-policy/policy[name='export-loopbacks']/statement[name='10']/match/prefix
+statement_element.match.prefix.prefix_set = 'loopbacks'
+
+# Container: /routing-policy/policy[name='export-loopbacks']/statement[name='10']/action
+statement_element.action_.policy_result = 'accept'
+
+# device leaf2
+# YANG module (prefix) and namespace:
+#   Cisco-NX-OS-device (top)  http://cisco.com/ns/yang/cisco-nx-os-device
+# Top node: /
+leaf2 = root()
+
+# Container: /System (Cisco-NX-OS-device)
+leaf2.System.name = 'leaf2'
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/1'
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/1')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/10'
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/10')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/11'
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/11')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/12'
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/12')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/13'
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/13')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/14'
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/14')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/15'
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/15')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/16'
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/16')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/17'
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/17')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/18'
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/18')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/19'
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/19')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/2'
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/2', descr='Link to spine2 [ethernet-1/2]')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/20'
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/20')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/21'
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/21')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/22'
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/22')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/23'
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/23')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/24'
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/24')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/25'
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/25')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/26'
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/26')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/27'
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/27')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/28'
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/28')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/29'
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/29')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/3'
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/3')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/30'
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/30')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/31'
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/31')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/32'
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/32')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/33'
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/33')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/34'
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/34')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/35'
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/35')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/36'
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/36')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/37'
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/37')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/38'
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/38')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/39'
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/39')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/4'
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/4')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/40'
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/40')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/41'
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/41')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/42'
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/42')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/43'
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/43')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/44'
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/44')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/45'
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/45')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/46'
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/46')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/47'
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/47')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/48'
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/48')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/49'
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/49')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/5'
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/5')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/50'
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/50')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/51'
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/51')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/52'
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/52')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/53'
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/53')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/54'
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/54')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/55'
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/55')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/56'
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/56')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/57'
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/57')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/58'
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/58')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/59'
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/59')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/6'
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/6')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/60'
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/60')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/61'
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/61')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/62'
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/62')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/63'
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/63')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/64'
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/64')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/7'
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/7')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/8'
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/8')
+
+# List /System/intf-items/phys-items/PhysIf-list element: 'eth1/9'
+PhysIf_list_element = leaf2.System.intf_items.phys_items.PhysIf_list.create('eth1/9')
+
+# device spine2
+# YANG module (prefix) and namespace:
+#   srl_nokia-bgp (srl_nokia-bgp)                   urn:nokia.com:srlinux:bgp:bgp
+#   srl_nokia-interfaces (srl_nokia-if)             urn:nokia.com:srlinux:chassis:interfaces
+#   srl_nokia-lldp (srl_nokia-lldp)                 urn:nokia.com:srlinux:lldp:lldp
+#   srl_nokia-network-instance (srl_nokia-netinst)  urn:nokia.com:srlinux:net-inst:network-instance
+#   srl_nokia-system-name (srl_nokia-system-name)   urn:nokia.com:srlinux:chassis:system-name
+# Top node: /
+spine2 = root()
+
+# Container: /system/name (srl_nokia-system-name)
+spine2.system.name.host_name = 'spine2'
+
+# P-container: /system/lldp (srl_nokia-lldp)
+lldp = spine2.system.create_lldp(admin_state='enable')
+
+# List /system/lldp/interface element: 'ethernet-1/2'
+interface_element = lldp.interface.create('ethernet-1/2', admin_state='enable')
+
+# List /system/lldp/interface element: 'mgmt0'
+interface_element = lldp.interface.create('mgmt0', admin_state='enable')
+
+# List /interface (srl_nokia-interfaces) element: 'ethernet-1/2'
+interface_element_2 = spine2.interface.create('ethernet-1/2', description='Link to leaf2 [eth1/2]', admin_state='enable')
+
+# List /interface[name='ethernet-1/2']/subinterface element: 0
+subinterface_element = interface_element_2.subinterface.create(u64(0), description='Link to leaf2 [eth1/2]', admin_state='enable', ip_mtu=u64(9000))
+
+# Container: /interface[name='ethernet-1/2']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# List /interface[name='ethernet-1/2']/subinterface[index='0']/ipv4/address element: '10.100.1.5/31'
+address_element = subinterface_element.ipv4.address.create('10.100.1.5/31')
+
+# List /interface (srl_nokia-interfaces) element: 'mgmt0'
+interface_element_2 = spine2.interface.create('mgmt0', admin_state='enable')
+
+# List /interface[name='mgmt0']/subinterface element: 0
+subinterface_element = interface_element_2.subinterface.create(u64(0), admin_state='enable')
+
+# Container: /interface[name='mgmt0']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# Container: /interface[name='mgmt0']/subinterface[index='0']/ipv6
+subinterface_element.ipv6.admin_state = 'enable'
+
+# List /interface (srl_nokia-interfaces) element: 'system0'
+interface_element_2 = spine2.interface.create('system0')
+
+# List /interface[name='system0']/subinterface element: 0
+subinterface_element = interface_element_2.subinterface.create(u64(0))
+
+# Container: /interface[name='system0']/subinterface[index='0']/ipv4
+subinterface_element.ipv4.admin_state = 'enable'
+
+# List /interface[name='system0']/subinterface[index='0']/ipv4/address element: '10.0.0.12/32'
+address_element = subinterface_element.ipv4.address.create('10.0.0.12/32')
+
+# List /network-instance (srl_nokia-network-instance) element: 'default'
+network_instance_element = spine2.network_instance.create('default')
+
+# List /network-instance[name='default']/interface element: 'ethernet-1/2.0'
+interface_element_3 = network_instance_element.interface.create('ethernet-1/2.0')
+
+# List /network-instance[name='default']/interface element: 'system0.0'
+interface_element_3 = network_instance_element.interface.create('system0.0')
+
+# P-container: /network-instance[name='default']/protocols/bgp (srl_nokia-bgp)
+bgp = network_instance_element.protocols.create_bgp(autonomous_system=u64(4200100101), router_id='10.0.0.12')
+
+# List /network-instance[name='default']/protocols/bgp/afi-safi element: Identityref('ipv4-unicast', ns='urn:nokia.com:srlinux:general:common', mod='srl_nokia-common', pfx='srl_nokia-comm')
+afi_safi_element = bgp.afi_safi.create(Identityref('ipv4-unicast', ns='urn:nokia.com:srlinux:general:common', mod='srl_nokia-common', pfx='srl_nokia-comm'), admin_state='enable')
+
+# Container: /network-instance[name='default']/protocols/bgp/afi-safi[afi-safi-name='Identityref(\'ipv4-unicast\', ns=\'urn:nokia.com:srlinux:general:common\', mod=\'srl_nokia-common\', pfx=\'srl_nokia-comm\')']/multipath/ebgp
+afi_safi_element.multipath.ebgp.maximum_paths = u64(64)
+
+# List /network-instance[name='default']/protocols/bgp/group element: 'fabric'
+group_element = bgp.group.create('fabric')
+group_element.export_policy = ['export-loopbacks']
+group_element.import_policy = ['accept-all']
+
+# List /network-instance[name='default']/protocols/bgp/neighbor element: '10.100.1.4'
+neighbor_element = bgp.neighbor.create('10.100.1.4', admin_state='enable', description='Link to leaf2 [eth1/2]', peer_as=u64(4200000002), peer_group='fabric')
+
+# List /network-instance (srl_nokia-network-instance) element: 'mgmt'
+network_instance_element = spine2.network_instance.create('mgmt', type=Identityref('ip-vrf', ns='urn:nokia.com:srlinux:net-inst:network-instance', mod='srl_nokia-network-instance', pfx='srl_nokia-netinst'), admin_state='enable', description='Management network instance')
+
+# List /network-instance[name='mgmt']/interface element: 'mgmt0.0'
+interface_element_3 = network_instance_element.interface.create('mgmt0.0')
+
+# List /routing-policy/prefix-set element: 'loopbacks'
+prefix_set_element = spine2.routing_policy.prefix_set.create('loopbacks')
+
+# List /routing-policy/prefix-set[name='loopbacks']/prefix element: '10.0.0.0/16', '32..32'
+prefix_element = prefix_set_element.prefix.create((ip_prefix='10.0.0.0/16', mask_length_range='32..32'))
+
+# List /routing-policy/policy element: 'accept-all'
+policy_element = spine2.routing_policy.policy.create('accept-all')
+
+# List /routing-policy/policy[name='accept-all']/statement element: '10'
+statement_element = policy_element.statement.create('10')
+
+# Container: /routing-policy/policy[name='accept-all']/statement[name='10']/action
+statement_element.action_.policy_result = 'accept'
+
+# List /routing-policy/policy element: 'export-loopbacks'
+policy_element = spine2.routing_policy.policy.create('export-loopbacks')
+
+# List /routing-policy/policy[name='export-loopbacks']/statement element: '10'
+statement_element = policy_element.statement.create('10')
+
+# Container: /routing-policy/policy[name='export-loopbacks']/statement[name='10']/match/prefix
+statement_element.match.prefix.prefix_set = 'loopbacks'
+
+# Container: /routing-policy/policy[name='export-loopbacks']/statement[name='10']/action
+statement_element.action_.policy_result = 'accept'

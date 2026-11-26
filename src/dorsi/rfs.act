@@ -61,6 +61,15 @@ _EOS_MODULE = "arista-netinst-augments"
 # Cisco NX-OS (Nexus 9300v) is configured through its native model
 _NXOS_MODULE = "Cisco-NX-OS-device"
 
+# The physical ports of a Nexus 9300v (nexus9300v64), eth1/1 to eth1/64.
+# NX-OS refuses to delete a physical port ("Cannot delete object of
+# class:l1PhysIf"), and dorsi owns the port list, so every port is rendered,
+# a port no fabric link or server uses by its id alone.
+_NXOS_PHYSICAL_PORTS = 64
+
+def nxos_physical_ports() -> list[str]:
+    return ["eth1/{n}" for n in range(1, _NXOS_PHYSICAL_PORTS + 1)]
+
 # The VRF of Management0 on EOS. In the default VRF the management default
 # route would carry fabric traffic whenever the fabric has no route for it.
 # Moving Management0 between VRFs drops its address and the NETCONF session,
@@ -244,6 +253,8 @@ class FabricBaseConfig(base.FabricBaseConfig):
             print("RFS /rfs{{{di.name}}}/fabric-base-config transform running {i.role} for Cisco NX-OS", err=True)
             dev = nxos1064.root()
             dev.System.name = di.name
+            for port in nxos_physical_ports():
+                dev.System.intf_items.phys_items.PhysIf_list.create(port)
             return dev
 
         if _EOS_MODULE in di.modules:

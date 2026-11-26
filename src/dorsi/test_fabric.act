@@ -9,6 +9,7 @@ import stratoweave.test_rig as swts
 SRL = "NokiaSRLinux_25_3_2"
 EOS = "AristaEOS_4_36_3_2M"
 CRPD = "JuniperCRPD_24_4R1_9"
+NXOS = "CiscoNXOS_10_6_4M"
 
 def add_switch(fabric: cfs_layer.ip_fabric__ip_fabric__fabric_entry, name: str, id: u64, role: str, pod: ?str=None, plane: ?str=None, device_type: str=SRL, management_address: ?str=None, management_gateway: ?str=None):
     s = fabric.switch.create(name, id, device_type, role)
@@ -252,6 +253,19 @@ def three_stage_mixed_crpd_overlay():
     f.server.get("server3")!.attachment.create(("t1", "web"), vlan=30, ipv4_address="10.10.10.13/24")
     return root
 
+# A Cisco NX-OS (Nexus 9300v) leaf between two SR Linux switches, as in the
+# fabric-3stage-mixed-n9kv lab: the NX-OS device type is a stub, which sets
+# the hostname and the description of its fabric port, and renders every
+# physical port, as NX-OS cannot delete one.
+def three_stage_mixed_n9kv():
+    root = _empty_root()
+    f = root.ip_fabric.fabric.create("dc1")
+    add_switch(f, "leaf1", 1, "leaf")
+    add_switch(f, "leaf2", 2, "leaf", device_type=NXOS)
+    add_switch(f, "spine2", 12, "spine")
+    add_link(f, "leaf2", "eth1/2", "spine2", "ethernet-1/2")
+    return root
+
 # TransformTester takes its snapshot as soon as the CFS commit completes, which
 # can be before the device configuration exists. Wait for it to settle: until
 # the snapshot has not changed for two seconds. On a busy machine a device can
@@ -357,3 +371,8 @@ actor _test_fabric_three_stage_mixed_crpd_overlay(t: testing.AsyncT):
     proc def __startup__():
         t.timeout(30.0)
         FabricTester(t, three_stage_mixed_crpd_overlay().to_gdata())
+
+actor _test_fabric_three_stage_mixed_n9kv(t: testing.AsyncT):
+    proc def __startup__():
+        t.timeout(30.0)
+        FabricTester(t, three_stage_mixed_n9kv().to_gdata())
