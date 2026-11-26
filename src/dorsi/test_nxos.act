@@ -76,3 +76,27 @@ def _test_route_target():
 
 def _test_route_distinguisher():
     testing.assertEqual(rfs.nxos_route_distinguisher("10.0.0.3:30"), "rd:ipv4-nn2:10.0.0.3:30")
+
+# The state of network t1/web on leaf3: its VLAN and its VNI on nve1, which
+# NX-OS spells Up
+_REPLY_NETWORK = """<rpc-reply xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="1"><data><System xmlns="http://cisco.com/ns/yang/cisco-nx-os-device"><bd-items><bd-items><BD-list><fabEncap>vlan-30</fabEncap><operSt>up</operSt></BD-list></bd-items></bd-items><eps-items><epId-items><Ep-list><epId>1</epId><nws-items><opervni-items><OperNw-list><vni>15906</vni><state>Up</state></OperNw-list></opervni-items></nws-items></Ep-list></epId-items></eps-items></System></data></rpc-reply>"""
+
+def _test_network_request():
+    request = rfs.nxos_network_request(u64(30), u64(15906)).encode()
+    testing.assertEqual(request, """<get><filter type="subtree"><System xmlns="http://cisco.com/ns/yang/cisco-nx-os-device"><bd-items><bd-items><BD-list><fabEncap>vlan-30</fabEncap><operSt/></BD-list></bd-items></bd-items><eps-items><epId-items><Ep-list><epId>1</epId><nws-items><opervni-items><OperNw-list><vni>15906</vni><state/></OperNw-list></opervni-items></nws-items></Ep-list></epId-items></eps-items></System></filter></get>""")
+
+def _test_network_status_up():
+    status = rfs.nxos_network_status(xml.decode(_REPLY_NETWORK))
+    testing.assertEqual(status.0, "up")
+    testing.assertEqual(status.1, "up")
+
+def _test_network_status_vni_down():
+    status = rfs.nxos_network_status(xml.decode(_REPLY_NETWORK.replace("<state>Up</state>", "<state>Down</state>")))
+    testing.assertEqual(status.0, "up")
+    testing.assertEqual(status.1, "down")
+
+def _test_network_status_missing():
+    # Before the network reaches the switch NX-OS has neither
+    status = rfs.nxos_network_status(xml.decode("""<rpc-reply xmlns="urn:ietf:params:xml:ns:netconf:base:1.0"><data/></rpc-reply>"""))
+    testing.assertEqual(status.0, None)
+    testing.assertEqual(status.1, None)

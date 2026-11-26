@@ -2011,6 +2011,93 @@ actor _CrpdMacVrfPoll(path, dev: swdev.DeviceMgr, on_state: proc(?str, ?str)->No
         _poll()
 
 
+def nxos_network_request(vlan: u64, vni: u64) -> xml.Node:
+    """The <get> of the state of a network on an NX-OS: its VLAN and its
+    VNI on the VTEP."""
+    bd = _nxos_path(["bd-items", "bd-items"],
+        _nxos_entry("BD-list", "fabEncap", nxos_vlan(int(vlan)), [xml.Node("operSt")]))
+    nw = _nxos_path(["eps-items", "epId-items"],
+        _nxos_entry("Ep-list", "epId", str(_NXOS_VTEP), [_nxos_path(["nws-items", "opervni-items"],
+            _nxos_entry("OperNw-list", "vni", str(vni), [xml.Node("state")]))]))
+    system = xml.Node("System", nsdefs=[(None, _NXOS_NAMESPACE)], children=[bd, nw])
+    return xml.Node("get", children=[xml.Node("filter", attributes=[("type", "subtree")], children=[system])])
+
+
+def _nxos_up_down(state: ?str) -> ?str:
+    """up or down from an NX-OS state, which some objects spell Up and
+    Down, unknown for any other."""
+    if state is not None:
+        value = state.lower()
+        if value == "up" or value == "down":
+            return value
+        return "unknown"
+    return None
+
+
+def nxos_network_status(reply: xml.Node) -> (?str, ?str):
+    """The state of the VLAN of a network and of its VNI on the VTEP from
+    the reply to nxos_network_request; None for what NX-OS does not have."""
+    oper_status: ?str = None
+    evpn_status: ?str = None
+    bd = _xml_find(reply, "BD-list")
+    if bd is not None:
+        oper_status = _nxos_up_down(_xml_text(bd, "operSt"))
+    nw = _xml_find(reply, "OperNw-list")
+    if nw is not None:
+        evpn_status = _nxos_up_down(_xml_text(nw, "state"))
+    return (oper_status, evpn_status)
+
+
+actor _NxosMacVrfPoll(path, dev: swdev.DeviceMgr, on_state: proc(?str, ?str)->None):
+    """Polls the state of a network on an NX-OS with one <get> per poll, as
+    _NxosPortPoll does for a port. After _STALE_AFTER_NS without a reply the
+    state is reported unknown."""
+    var _vlan: ?u64 = None
+    var _vni: ?u64 = None
+    var _running = True
+    var _last_reply: ?int = None
+    var _stale = False
+    var _error_logged = False
+
+    def watch(vlan: u64, vni: u64):
+        _vlan = vlan
+        _vni = vni
+
+    def stop():
+        _running = False
+
+    def on_reply(reply: ?xml.Node, err: ?Exception):
+        if not _running:
+            return
+        if err is not None:
+            if not isinstance(err, NotConnectedError) and not _error_logged:
+                print("{path}: polling the NX-OS failed: {err}", err=True)
+                _error_logged = True
+        elif reply is not None:
+            _last_reply = time.monotonic_ns()
+            _stale = False
+            _error_logged = False
+            oper_status, evpn_status = nxos_network_status(reply)
+            on_state(oper_status, evpn_status)
+
+    def _poll():
+        if not _running:
+            return
+        vlan = _vlan
+        vni = _vni
+        if vlan is not None and vni is not None:
+            dev.rpc_xml(on_reply, nxos_network_request(vlan, vni))
+        last = _last_reply
+        if last is not None and not _stale and time.monotonic_ns() - last > _STALE_AFTER_NS:
+            print("{path}: no state from the device for {_STALE_AFTER_NS // 1000000000} s, reporting it as unknown", err=True)
+            _stale = True
+            on_state(None, None)
+        after _POLL_PERIOD: _poll()
+
+    proc def __startup__():
+        _poll()
+
+
 proc def MacVrfTransform(path, update_oper: proc(?y_1_oper.stratoweave_rfs__rfs__mac_vrf_entry)->None, dev: swdev.DeviceMgr):
     provider = await async dev.tree_provider()
     return MacVrfTransformActor(path, update_oper, dev, provider)
@@ -2020,6 +2107,7 @@ actor MacVrfTransformActor(path, update_oper: proc(?y_1_oper.stratoweave_rfs__rf
     _oper = base.MacVrf.new_state(path)
     var _running = True
     var _crpd_poll: ?_CrpdMacVrfPoll = None
+    var _nxos_poll: ?_NxosMacVrfPoll = None
 
     def publish(oper_status: ?str, evpn_status: ?str):
         # A reply to a poll sent before the network was removed would bring
@@ -2054,6 +2142,14 @@ actor MacVrfTransformActor(path, update_oper: proc(?y_1_oper.stratoweave_rfs__rf
                 new_poll = _CrpdMacVrfPoll(path, dev, publish)
                 new_poll.watch(conf.name, conf.vni)
                 _crpd_poll = new_poll
+        elif _NXOS_MODULE in dev.get_modules().0 and vlan is not None:
+            nxos_poll = _nxos_poll
+            if nxos_poll is not None:
+                nxos_poll.watch(vlan, conf.vni)
+            else:
+                new_nxos_poll = _NxosMacVrfPoll(path, dev, publish)
+                new_nxos_poll.watch(vlan, conf.vni)
+                _nxos_poll = new_nxos_poll
 
     def shutdown():
         _running = False
@@ -2061,6 +2157,9 @@ actor MacVrfTransformActor(path, update_oper: proc(?y_1_oper.stratoweave_rfs__rf
         poll = _crpd_poll
         if poll is not None:
             poll.stop()
+        nxos_poll = _nxos_poll
+        if nxos_poll is not None:
+            nxos_poll.stop()
 
 
 proc def IpVrfTransform(path, update_oper: proc(?y_1_oper.stratoweave_rfs__rfs__ip_vrf_entry)->None, dev: swdev.DeviceMgr):
